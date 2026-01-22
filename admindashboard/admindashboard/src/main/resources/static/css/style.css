@@ -1,0 +1,164 @@
+body {
+    background-color: #f8f9fa;
+}
+
+/* Custom Status Colors using RGB */
+.status-urgent {
+    background-color: rgb(220, 53, 69); /* Red */
+    color: white;
+}
+
+.status-warning {
+    background-color: rgb(253, 126, 20); /* Orange */
+    color: white;
+}
+
+.status-moderate {
+    background-color: rgb(255, 193, 7); /* Yellow */
+    color: black;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* --- INTERACTIVE HOVER EFFECTS --- */
+
+/* 1. Interactive Cards (Revenue, Risk, System Health) */
+.card {
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s ease; /* Smooth animation for 0.3 seconds */
+}
+
+/* When hovering over ANY card, lift it up and add a shadow */
+
+/* 1. Only animate the specific Stats cards (Not the table card) */
+.interactive-card {
+    transition: all 0.3s ease;
+}
+
+.interactive-card:hover {
+    transform: translateY(-5px); /* Move up */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Shadow */
+    cursor: pointer;
+}
+
+/* 2. Navbar Buttons (GSTIN & PAN) */
+.nav-btn {
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 20px; /* Makes them look like rounded buttons */
+    transition: background-color 0.2s ease;
+}
+
+.nav-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
+    font-weight: bold;
+}
+
+/* 3. Interactive Table Rows (Only the tasks inside the table) */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: scale(1.01); /* Subtle zoom on the row only */
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+/* 2. Interactive Activity Log Items */
+.list-group-item {
+    transition: background-color 0.2s ease;
+}
+
+/* When hovering over a log entry, slightly darken the background */
+.list-group-item:hover {
+    background-color: #f1f3f5; /* Light grey highlight */
+    cursor: pointer;
+    border-left: 4px solid #0d6efd; /* Add a blue accent line on the left */
+}
+
+/* 3. Interactive Table Rows (Work Show) */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05); /* Slightly darker row on hover */
+    transform: scale(1.01); /* Subtle zoom effect */
+    transition: transform 0.2s ease;
+}
+
+/* === Chat Widget Styling === */
+/* 1. Floating Button Position */
+#chat-toggle-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    z-index: 1000; /* Ensures it sits on top of everything */
+    transition: transform 0.2s;
+}
+
+#chat-toggle-btn:hover {
+    transform: scale(1.1); /* Slight zoom on hover */
+}
+
+/* 2. Chat Window Position */
+#chat-window {
+    position: fixed;
+    bottom: 100px; /* Sits just above the button */
+    right: 30px;
+    width: 350px;
+    z-index: 1000;
+    border-radius: 15px;
+    overflow: hidden; /* Keeps content inside rounded corners */
+}
+
+/* 3. Smooth Fade Animation (Optional) */
+.fade-in-up {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* === Compliance Risk Meter === */
+
+.risk-meter {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* THE MAGIC: Creates the visual "Fill" */
+    /* Yellow (Warning) fill goes up to 85%, rest is transparent */
+    background: conic-gradient(
+        #ffc107 0% 85%,
+        rgba(255, 255, 255, 0.2) 85% 100%
+    );
+
+    /* Adds a subtle glow */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* The White Circle in the middle (Creates the 'Donut' look) */
+.meter-center {
+    width: 25px;
+    height: 25px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    z-index: 10;
+}
