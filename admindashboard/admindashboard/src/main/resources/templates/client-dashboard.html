@@ -10,8 +10,20 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand" href="#"><i class="fas fa-cloud me-2"></i>My Tax Portal</a>
-        <span class="text-white">Welcome, Anil Yadav</span>
+        <a class="navbar-brand fw-bold" href="#"><i class="fas fa-cloud me-2"></i>Tax Portal</a>
+
+        <div class="dropdown">
+            <button class="btn btn-outline-light dropdown-toggle border-0" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-user-circle me-2"></i>My Account
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+                <li><h6 class="dropdown-header">User01</h6></li>
+                <li><span class="dropdown-item-text text-muted small">PAN: ABCDE1234F</span></li>
+                <li><span class="dropdown-item-text text-muted small">+91 98765 43210</span></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="/"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            </ul>
+        </div>
     </div>
 </nav>
 
@@ -74,14 +86,27 @@
                     <i class="fas fa-file-upload me-2"></i>Upload Pending Documents
                 </div>
                 <div class="card-body">
+
                     <div class="alert alert-warning small d-flex align-items-center">
                         <i class="fas fa-bell me-2"></i>
                         <div><strong>Action Required:</strong> Please upload your purchase invoices for Jan 2026.</div>
                     </div>
-                    <div class="input-group mb-3">
+
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Document Type</label>
+                        <select class="form-select">
+                            <option selected>Purchase Invoices (GST)</option>
+                            <option>Bank Statement</option>
+                            <option>Sales Register</option>
+                            <option>Challan Copy</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
                         <input type="file" class="form-control" id="inputGroupFile02">
                         <button class="input-group-text btn btn-dark">Upload</button>
                     </div>
+
                 </div>
             </div>
 
