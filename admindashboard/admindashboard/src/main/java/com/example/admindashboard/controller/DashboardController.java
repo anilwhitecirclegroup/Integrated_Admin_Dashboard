@@ -74,5 +74,11 @@ public class DashboardController {
 
         return "profile";
     }
+
+    // 6. The Notification Center Route
+    @GetMapping("/notifications")
+    public String notificationsPage() {
+        return "notifications";
+    }
 }
 

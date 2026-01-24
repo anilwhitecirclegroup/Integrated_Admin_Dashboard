@@ -20,39 +20,50 @@
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">3</span>
                 </button>
 
-                <ul class="dropdown-menu dropdown-menu-end shadow" style="width: 320px;">
-                    <li><h6 class="dropdown-header">Recent Alerts</h6></li>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="width: 340px;">
+                    <li><h6 class="dropdown-header text-uppercase small fw-bold text-muted spacing-1">Recent Alerts</h6></li>
 
-                    <li><a class="dropdown-item d-flex align-items-start py-2 text-wrap" href="#">
-                        <i class="fas fa-exclamation-circle text-warning mt-1 me-2 flex-shrink-0"></i>
-                        <div>
-                            <small class="fw-bold d-block">Action Required</small>
-                            <small class="text-muted">Please re-upload Jan Invoices. The previous image was blurry.</small>
+                    <li>
+                        <div class="dropdown-item-text d-flex align-items-start py-3 border-bottom">
+                            <div class="bg-warning bg-opacity-10 text-warning rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                <i class="fas fa-exclamation"></i>
+                            </div>
+                            <div>
+                                <small class="fw-bold d-block text-dark">Action Required</small>
+                                <small class="text-muted small text-wrap lh-sm">Please re-upload Jan Invoices. The previous image was blurry.</small>
+                            </div>
                         </div>
-                    </a></li>
+                    </li>
 
-                    <li><hr class="dropdown-divider"></li>
-
-                    <li><a class="dropdown-item d-flex align-items-start py-2 text-wrap" href="#">
-                        <i class="fas fa-check-circle text-success mt-1 me-2 flex-shrink-0"></i>
-                        <div>
-                            <small class="fw-bold d-block">Filing Successful</small>
-                            <small class="text-muted">GSTR-1 for Dec 2025 has been filed successfully.</small>
+                    <li>
+                        <div class="dropdown-item-text d-flex align-items-start py-3 border-bottom">
+                            <div class="bg-success bg-opacity-10 text-success rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div>
+                                <small class="fw-bold d-block text-dark">Filing Successful</small>
+                                <small class="text-muted small text-wrap lh-sm">GSTR-1 for Dec 2025 has been filed successfully.</small>
+                            </div>
                         </div>
-                    </a></li>
+                    </li>
 
-                    <li><hr class="dropdown-divider"></li>
-
-                    <li><a class="dropdown-item d-flex align-items-start py-2 text-wrap" href="#">
-                        <i class="fas fa-info-circle text-primary mt-1 me-2 flex-shrink-0"></i>
-                        <div>
-                            <small class="fw-bold d-block">New Tax Update</small>
-                            <small class="text-muted">Govt has extended the due date for audits.</small>
+                    <li>
+                        <div class="dropdown-item-text d-flex align-items-start py-3">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                <i class="fas fa-info"></i>
+                            </div>
+                            <div>
+                                <small class="fw-bold d-block text-dark">New Tax Update</small>
+                                <small class="text-muted small text-wrap lh-sm">Govt has extended the due date for tax audits.</small>
+                            </div>
                         </div>
-                    </a></li>
+                    </li>
 
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-center small text-primary fw-bold" href="/notifications">View All Notifications</a></li>
+                    <li>
+                        <a class="dropdown-item text-center small text-primary fw-bold py-2 bg-light border-top" href="/notifications">
+                            View All Notifications <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </li>
                 </ul>
             </div>
 
