@@ -1,179 +1,114 @@
+/* =========================================
+   1. GLOBAL & TYPOGRAPHY
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 body {
-    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f2f5; /* Modern, soft gray-blue background */
+    color: #344767; /* Softer text color */
 }
 
-/* Custom Status Colors using RGB */
-.status-urgent {
-    background-color: rgb(220, 53, 69); /* Red */
-    color: white;
-}
-
-.status-warning {
-    background-color: rgb(253, 126, 20); /* Orange */
-    color: white;
-}
-
-.status-moderate {
-    background-color: rgb(255, 193, 7); /* Yellow */
-    color: black;
+/* =========================================
+   2. NAVBAR STYLING
+   ========================================= */
+/* Replaces standard bootstrap blue with a premium gradient */
+.navbar-custom {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .navbar-brand {
-    font-weight: bold;
-    letter-spacing: 1px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
-/* --- INTERACTIVE HOVER EFFECTS --- */
-
-/* 1. Interactive Cards (Revenue, Risk, System Health) */
-.card {
-    border: none;
-    border-radius: 10px;
-    transition: all 0.3s ease; /* Smooth animation for 0.3 seconds */
-}
-
-/* When hovering over ANY card, lift it up and add a shadow */
-
-/* 1. Only animate the specific Stats cards (Not the table card) */
-.interactive-card {
-    transition: all 0.3s ease;
-}
-
-.interactive-card:hover {
-    transform: translateY(-5px); /* Move up */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Shadow */
-    cursor: pointer;
-}
-
-/* 2. Navbar Buttons (GSTIN & PAN) */
-.nav-btn {
-    cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 20px; /* Makes them look like rounded buttons */
-    transition: background-color 0.2s ease;
-}
-
+/* Navbar Buttons (like Notifications) */
 .nav-btn:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
-    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
 }
 
-/* 3. Interactive Table Rows (Only the tasks inside the table) */
-.table-hover tbody tr:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    transform: scale(1.01); /* Subtle zoom on the row only */
-    transition: transform 0.2s ease;
+/* =========================================
+   3. CARDS & INTERACTIVE EFFECTS (THE FIX)
+   ========================================= */
+/* Base Card Style */
+.card {
+    border: none; /* Removes outdated borders */
+    border-radius: 16px; /* Modern rounded corners */
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04); /* Subtle base shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Enables animation */
+    overflow: hidden;
+}
+
+/* HOVER EFFECT: Applies to ALL cards on Admin & Client dashboard */
+.card:hover {
+    transform: translateY(-5px); /* Moves up */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* deeper shadow */
     cursor: pointer;
 }
 
-/* 2. Interactive Activity Log Items */
-.list-group-item {
-    transition: background-color 0.2s ease;
+/* Card Headers */
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 1.25rem;
 }
 
-/* When hovering over a log entry, slightly darken the background */
-.list-group-item:hover {
-    background-color: #f1f3f5; /* Light grey highlight */
-    cursor: pointer;
-    border-left: 4px solid #0d6efd; /* Add a blue accent line on the left */
+/* =========================================
+   4. TABLES & LISTS
+   ========================================= */
+/* Table Hover Effect */
+.table-hover tbody tr {
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-/* 3. Interactive Table Rows (Work Show) */
 .table-hover tbody tr:hover {
-    background-color: rgba(0, 0, 0, 0.05); /* Slightly darker row on hover */
-    transform: scale(1.01); /* Subtle zoom effect */
-    transition: transform 0.2s ease;
-}
-
-/* === Chat Widget Styling === */
-/* 1. Floating Button Position */
-#chat-toggle-btn {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    z-index: 1000; /* Ensures it sits on top of everything */
-    transition: transform 0.2s;
-}
-
-#chat-toggle-btn:hover {
-    transform: scale(1.1); /* Slight zoom on hover */
-}
-
-/* 2. Chat Window Position */
-#chat-window {
-    position: fixed;
-    bottom: 100px; /* Sits just above the button */
-    right: 30px;
-    width: 350px;
-    z-index: 1000;
-    border-radius: 15px;
-    overflow: hidden; /* Keeps content inside rounded corners */
-}
-
-/* 3. Smooth Fade Animation (Optional) */
-.fade-in-up {
-    animation: fadeInUp 0.3s ease-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-/* === Compliance Risk Meter === */
-.risk-meter {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    /* THE MAGIC: Creates the visual "Fill" */
-    /* Yellow (Warning) fill goes up to 85%, rest is transparent */
-    background: conic-gradient(
-        #ffc107 0% 85%,
-        rgba(255, 255, 255, 0.2) 85% 100%
-    );
-
-    /* Adds a subtle glow */
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-}
-
-/* The White Circle in the middle (Creates the 'Donut' look) */
-.meter-center {
-    width: 25px;
-    height: 25px;
-    background-color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 0.8rem;
+    background-color: rgba(0, 0, 0, 0.03); /* Subtle highlight */
+    transform: scale(1.01); /* Tiny zoom for interaction */
     z-index: 10;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-/* FLOATING WIDGET (FAB) STYLES */
+/* Activity Log / List Items */
+.list-group-item {
+    transition: all 0.2s ease;
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+    padding-left: 1.5rem; /* Slight shift to the right */
+    border-left: 4px solid #0d6efd; /* Blue accent line */
+}
+
+/* =========================================
+   5. UTILITY CLASSES (Status Colors)
+   ========================================= */
+.status-urgent { background-color: rgb(220, 53, 69); color: white; }
+.status-warning { background-color: rgb(253, 126, 20); color: white; }
+.status-moderate { background-color: rgb(255, 193, 7); color: black; }
+
+/* =========================================
+   6. WIDGETS (Floating Button & Chat)
+   ========================================= */
+/* Floating Action Button Container */
 .fab-container {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    z-index: 1050; /* Above everything */
+    z-index: 1050;
     display: flex;
-    flex-direction: column-reverse; /* Main button at bottom, items stack up */
+    flex-direction: column-reverse;
     align-items: center;
 }
 
-/* The Main Toggle Button */
+/* Main Bolt Button */
 .fab-main {
     width: 60px;
     height: 60px;
@@ -184,20 +119,20 @@ body {
 }
 .fab-main:hover { transform: scale(1.1); }
 
-/* The Hidden Actions */
+/* Hidden Actions */
 .fab-action-wrapper {
     position: relative;
     margin-bottom: 15px;
     display: flex;
     align-items: center;
-    flex-direction: row-reverse; /* Label to the left of button */
+    flex-direction: row-reverse;
     opacity: 0;
     transform: translateY(20px) scale(0.8);
     transition: all 0.3s;
-    pointer-events: none; /* Can't click when hidden */
+    pointer-events: none;
 }
 
-/* The Small Buttons */
+/* Action Buttons */
 .fab-action {
     width: 50px;
     height: 50px;
@@ -212,7 +147,7 @@ body {
 }
 .fab-action:hover { color: white; filter: brightness(1.1); }
 
-/* The Labels (Tooltips) */
+/* Tooltip Labels */
 .fab-label {
     margin-right: 15px;
     background: rgba(33, 37, 41, 0.9);
@@ -225,14 +160,12 @@ body {
     white-space: nowrap;
 }
 
-/* ACTIVE STATE (When Opened) */
+/* Active State */
 .fab-container.active .fab-action-wrapper {
     opacity: 1;
     transform: translateY(0) scale(1);
     pointer-events: all;
 }
-
-/* Staggered Animation Delays (Bottom to Top) */
 .fab-container.active .fab-action-wrapper:nth-child(2) { transition-delay: 0.05s; }
 .fab-container.active .fab-action-wrapper:nth-child(3) { transition-delay: 0.1s; }
 .fab-container.active .fab-action-wrapper:nth-child(4) { transition-delay: 0.15s; }

@@ -2,10 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Admin Dashboard</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <link href="/css/style.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 
@@ -178,39 +180,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/script.js}"></script>
 
-<button id="chat-toggle-btn" class="btn btn-primary rounded-circle shadow p-3" onclick="toggleChat()">
-    <i class="fas fa-comments fa-lg"></i>
-</button>
 
-<div id="chat-window" class="card shadow d-none">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-        <span><i class="fas fa-user-tie me-2"></i>Manager / Staff Chat</span>
-        <button type="button" class="btn-close btn-close-white btn-sm" onclick="toggleChat()"></button>
-    </div>
 
-    <div class="card-body overflow-auto" style="height: 300px; background-color: #f8f9fa;">
-        <div class="d-flex justify-content-start mb-2">
-            <div class="bg-white text-dark p-2 rounded shadow-sm" style="max-width: 75%;">
-                <small class="fw-bold d-block">Accountant (Staff)</small>
-                Sir, the GST files for Client #402 are ready.
-            </div>
-        </div>
-
-        <div class="d-flex justify-content-end mb-2">
-            <div class="bg-primary text-white p-2 rounded shadow-sm" style="max-width: 75%;">
-                <small class="fw-bold d-block text-white-50">You (Admin)</small>
-                Great! Please upload the JSON proof by 2 PM.
-            </div>
-        </div>
-    </div>
-
-    <div class="card-footer bg-white">
-        <div class="input-group">
-            <input type="text" class="form-control border-0" placeholder="Type a message...">
-            <button class="btn btn-outline-primary border-0"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-</div>
 <div class="modal fade" id="gstModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -258,5 +229,64 @@
         </div>
     </div>
 </div>
+
+<div class="position-fixed bottom-0 end-0 p-4" style="z-index: 1050;">
+    <button class="btn btn-primary rounded-circle shadow-lg d-flex align-items-center justify-content-center"
+            style="width: 60px; height: 60px; transition: transform 0.3s;"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#adminChatDrawer"
+            onmouseover="this.style.transform='scale(1.1)'"
+            onmouseout="this.style.transform='scale(1)'">
+        <i class="fas fa-comments fa-lg"></i>
+    </button>
+</div>
+
+<div class="offcanvas offcanvas-end border-0 shadow-lg" tabindex="-1" id="adminChatDrawer" aria-labelledby="chatLabel">
+
+    <div class="offcanvas-header bg-primary text-white">
+        <h5 class="offcanvas-title fw-bold" id="chatLabel">
+            <i class="fas fa-users-cog me-2"></i>Internal Team Chat
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div class="offcanvas-body bg-light d-flex flex-column p-0">
+
+        <div class="flex-grow-1 p-3 overflow-auto" style="height: 100%;">
+
+            <div class="d-flex align-items-start mb-3">
+                <div class="bg-white p-3 rounded shadow-sm" style="max-width: 85%; border-left: 4px solid #ffc107;">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small class="fw-bold text-dark">Ravi (Accountant)</small>
+                        <small class="text-muted" style="font-size: 0.7rem;">10:30 AM</small>
+                    </div>
+                    <p class="mb-0 small text-secondary">Sir, the GST files for Client #402 are ready for review.</p>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-end flex-column mb-3">
+                <div class="bg-primary text-white p-3 rounded shadow-sm" style="max-width: 85%;">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small class="fw-bold">You (Admin)</small>
+                        <small class="text-white-50" style="font-size: 0.7rem;">10:32 AM</small>
+                    </div>
+                    <p class="mb-0 small">Great work. Please upload the JSON proof to the portal by 2 PM.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="p-3 bg-white border-top">
+            <form class="d-flex gap-2">
+                <button class="btn btn-light border" type="button"><i class="fas fa-paperclip"></i></button>
+                <input type="text" class="form-control" placeholder="Type a message to staff...">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
 </body>
 </html>
