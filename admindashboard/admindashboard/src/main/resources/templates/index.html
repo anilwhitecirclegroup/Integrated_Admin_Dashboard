@@ -10,13 +10,11 @@
         body {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 50px; /* Space for the new section */
         }
 
-        /* SERVICE CARDS */
+        /* --- SERVICE CARDS --- */
         .service-card {
             border: none;
             border-radius: 15px;
@@ -30,7 +28,7 @@
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
         .service-icon-wrapper {
-            height: 140px;
+            height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -43,43 +41,63 @@
             transition: all 0.3s;
         }
 
-        /* LOGIN CONTAINER */
+        /* --- NEW: FEATURE GRID (Glassmorphism) --- */
+        .feature-box {
+            background: rgba(255, 255, 255, 0.1); /* Transparent White */
+            backdrop-filter: blur(10px); /* Blur effect */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        .feature-box:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #4facfe; /* Light Blue Icon */
+        }
+
+        /* --- LOGIN CONTAINER --- */
         #login-container {
-            display: none; /* Hidden initially */
+            display: none;
+            min-height: 80vh; /* Centers vertically */
+            align-items: center;
             animation: fadeIn 0.4s ease-in-out;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Hide tabs by default, we show them via JS */
-        .nav-pills { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container py-5">
 
-    <div id="landing-section" class="text-center">
-        <h1 class="text-white fw-bold mb-3 display-5">Taxes done right, however you choose</h1>
-        <p class="text-white-50 mb-5 fs-5">Select a service to proceed to your secure portal.</p>
+    <div id="landing-section">
 
-        <div class="row justify-content-center g-4">
+        <div class="text-center mb-5">
+            <h1 class="text-white fw-bold mb-3 display-5">Tax filing simplified: You upload, we handle the rest.</h1>
+            <p class="text-white-50 fs-5">Select a service to proceed to your secure portal.</p>
+        </div>
 
+        <div class="row justify-content-center g-4 mb-5">
             <div class="col-md-4 col-lg-3">
                 <div class="card service-card shadow">
                     <div class="service-icon-wrapper">
                         <i class="fas fa-file-invoice-dollar fa-4x text-primary"></i>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body p-4 text-center">
                         <h5 class="card-title fw-bold mb-3">Client Portal</h5>
                         <p class="card-text text-muted small mb-4">
                             Upload documents, track filing status, and view your tax history securely.
                         </p>
-                        <button class="btn btn-primary btn-service w-100" onclick="openPortal('client')">
-                            Get Started
-                        </button>
+                        <button class="btn btn-primary btn-service w-100" onclick="openPortal('client')">Get Started</button>
                     </div>
                 </div>
             </div>
@@ -89,14 +107,12 @@
                     <div class="service-icon-wrapper bg-light">
                         <i class="fas fa-headset fa-4x text-secondary"></i>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body p-4 text-center">
                         <h5 class="card-title fw-bold mb-3 text-secondary">Expert Assist</h5>
                         <p class="card-text text-muted small mb-4">
                             Live guidance from tax experts. <br><strong>(Coming Soon)</strong>
                         </p>
-                        <button class="btn btn-secondary btn-service w-100 disabled" style="cursor: not-allowed;">
-                            Unavailable
-                        </button>
+                        <button class="btn btn-secondary btn-service w-100 disabled">Unavailable</button>
                     </div>
                 </div>
             </div>
@@ -106,19 +122,72 @@
                     <div class="service-icon-wrapper">
                         <i class="fas fa-user-shield fa-4x text-dark"></i>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body p-4 text-center">
                         <h5 class="card-title fw-bold mb-3">Admin Portal</h5>
                         <p class="card-text text-muted small mb-4">
                             Restricted login for Administrators and Tax Experts.
                         </p>
-                        <button class="btn btn-dark btn-service w-100" onclick="openPortal('admin')">
-                            Admin Login
-                        </button>
+                        <button class="btn btn-dark btn-service w-100" onclick="openPortal('admin')">Admin Login</button>
                     </div>
                 </div>
             </div>
-
         </div>
+
+        <div class="row mt-5 pt-4">
+            <div class="col-12 text-center mb-4">
+                <h2 class="text-white fw-bold">Everything you need to file confidently</h2>
+                <p class="text-white-50">Our integrated platform simplifies every step of the tax journey.</p>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="feature-box">
+                    <i class="fas fa-tasks feature-icon"></i>
+                    <h5 class="fw-bold">Live Status Tracking</h5>
+                    <p class="small opacity-75">Watch your filing move from "Docs Uploaded" to "Filed" with our real-time progress bar. </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="feature-box">
+                    <i class="fas fa-heartbeat feature-icon text-warning"></i>
+                    <h5 class="fw-bold">AI Compliance Meter</h5>
+                    <p class="small opacity-75">Our AI monitors due dates and assigns a "Risk Score" so you never miss a deadline. </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="feature-box">
+                    <i class="fas fa-cloud-lock feature-icon text-success"></i>
+                    <h5 class="fw-bold">Secure Cloud Vault</h5>
+                    <p class="small opacity-75">Your documents are auto-provisioned into secure cloud storage upon signup. </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="feature-box">
+                    <i class="fas fa-bell feature-icon text-danger"></i>
+                    <h5 class="fw-bold">Instant Notifications</h5>
+                    <p class="small opacity-75">Get real-time alerts via WhatsApp/SMS for document uploads and filing completions. [cite: 3]</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="feature-box">
+                    <i class="fas fa-check-double feature-icon"></i>
+                    <h5 class="fw-bold">Smart Verification</h5>
+                    <p class="small opacity-75">Built-in GSTIN and PAN verification tools ensure 100% data accuracy. [cite: 6]</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="feature-box">
+                    <i class="fas fa-file-invoice feature-icon text-info"></i>
+                    <h5 class="fw-bold">Auto-Invoicing</h5>
+                    <p class="small opacity-75">System generates digital invoices via Razorpay/PhonePe automatically. [cite: 7]</p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="row justify-content-center" id="login-container">
@@ -138,7 +207,6 @@
                 </div>
 
                 <div class="card-body p-4">
-
                     <div id="client-form-section" style="display: none;">
                         <form action="/client" method="get">
                             <div class="mb-3">
@@ -167,7 +235,6 @@
                             <div th:if="${error}" class="alert alert-danger text-center p-2 mb-3">
                                 <small><i class="fas fa-exclamation-circle me-1"></i> Invalid Credentials</small>
                             </div>
-
                             <div class="mb-3">
                                 <label class="form-label">Username</label>
                                 <input type="text" name="username" class="form-control" placeholder="admin" required>
@@ -181,7 +248,6 @@
                             </button>
                         </form>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -191,15 +257,15 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     function openPortal(type) {
-        // 1. Hide Landing, Show Container
+        // Hide Landing (Cards + Features), Show Login Container
         document.getElementById('landing-section').style.display = 'none';
         document.getElementById('login-container').style.display = 'flex';
 
-        // 2. Hide BOTH forms first
+        // Reset forms
         document.getElementById('client-form-section').style.display = 'none';
         document.getElementById('admin-form-section').style.display = 'none';
 
-        // 3. Show ONLY the requested form and update titles
+        // Toggle Logic
         if (type === 'client') {
             document.getElementById('client-form-section').style.display = 'block';
             document.getElementById('login-title').innerText = "Client Onboarding";
@@ -215,7 +281,7 @@
     }
 
     function showLanding() {
-        // Hide Login, Show Landing
+        // Show Landing (Cards + Features), Hide Login
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('landing-section').style.display = 'block';
     }
