@@ -3,32 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tax Portal | Select Service</title>
+    <title>WhiteCircle Group | Workspace</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
+            /* Kept your existing premium blue gradient */
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding-bottom: 50px; /* Space for the new section */
+            font-family: 'Poppins', sans-serif; /* Ensuring we keep the font upgrade */
+            padding-bottom: 50px;
         }
 
         /* --- SERVICE CARDS --- */
         .service-card {
             border: none;
-            border-radius: 15px;
+            border-radius: 16px;
             transition: all 0.3s ease;
             height: 100%;
             background: white;
             overflow: hidden;
+            position: relative;
         }
         .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
         }
         .service-icon-wrapper {
-            height: 120px;
+            height: 130px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -36,15 +38,15 @@
         }
         .btn-service {
             border-radius: 25px;
-            padding: 10px 25px;
+            padding: 10px 30px;
             font-weight: 600;
             transition: all 0.3s;
         }
 
-        /* --- NEW: FEATURE GRID (Glassmorphism) --- */
+        /* --- FEATURE GRID (Glassmorphism) --- */
         .feature-box {
-            background: rgba(255, 255, 255, 0.1); /* Transparent White */
-            backdrop-filter: blur(10px); /* Blur effect */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 15px;
             padding: 25px;
@@ -59,13 +61,13 @@
         .feature-icon {
             font-size: 2rem;
             margin-bottom: 15px;
-            color: #4facfe; /* Light Blue Icon */
+            color: #4facfe;
         }
 
         /* --- LOGIN CONTAINER --- */
         #login-container {
             display: none;
-            min-height: 80vh; /* Centers vertically */
+            min-height: 70vh;
             align-items: center;
             animation: fadeIn 0.4s ease-in-out;
         }
@@ -82,108 +84,75 @@
     <div id="landing-section">
 
         <div class="text-center mb-5">
-            <h1 class="text-white fw-bold mb-3 display-5">Tax filing simplified: You upload, we handle the rest.</h1>
-            <p class="text-white-50 fs-5">Select a service to proceed to your secure portal.</p>
+            <h1 class="text-white fw-bold mb-2 display-5"><i class="fas fa-circle-notch me-3"></i>WhiteCircle Group</h1>
+            <p class="text-white-50 fs-5">Integrated Workspace & Client Connect</p>
         </div>
 
         <div class="row justify-content-center g-4 mb-5">
-            <div class="col-md-4 col-lg-3">
+
+            <div class="col-md-5 col-lg-4">
                 <div class="card service-card shadow">
                     <div class="service-icon-wrapper">
-                        <i class="fas fa-file-invoice-dollar fa-4x text-primary"></i>
+                        <i class="fas fa-id-card-alt fa-4x text-primary"></i>
                     </div>
                     <div class="card-body p-4 text-center">
-                        <h5 class="card-title fw-bold mb-3">Client Portal</h5>
+                        <h4 class="card-title fw-bold mb-3">Employee Portal</h4>
                         <p class="card-text text-muted small mb-4">
-                            Upload documents, track filing status, and view your tax history securely.
+                            Access CRM, manage projects, apply for leave, and view internal updates.
                         </p>
-                        <button class="btn btn-primary btn-service w-100" onclick="openPortal('client')">Get Started</button>
+                        <button class="btn btn-primary btn-service w-100" onclick="openPortal('employee')">
+                            Employee Login
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4 col-lg-3">
-                <div class="card service-card shadow" style="opacity: 0.7;">
-                    <div class="service-icon-wrapper bg-light">
-                        <i class="fas fa-headset fa-4x text-secondary"></i>
+            <div class="col-md-5 col-lg-4">
+                <div class="card service-card shadow">
+                    <div class="service-icon-wrapper">
+                        <i class="fas fa-briefcase fa-4x text-dark"></i>
                     </div>
                     <div class="card-body p-4 text-center">
-                        <h5 class="card-title fw-bold mb-3 text-secondary">Expert Assist</h5>
+                        <h4 class="card-title fw-bold mb-3">Client Portal</h4>
                         <p class="card-text text-muted small mb-4">
-                            Live guidance from tax experts. <br><strong>(Coming Soon)</strong>
+                            Track project milestones, view invoices, and communicate with the team.
                         </p>
-                        <button class="btn btn-secondary btn-service w-100 disabled">Unavailable</button>
+                        <button class="btn btn-dark btn-service w-100" onclick="openPortal('client')">
+                            Client Login
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4 col-lg-3">
-                <div class="card service-card shadow">
-                    <div class="service-icon-wrapper">
-                        <i class="fas fa-user-shield fa-4x text-dark"></i>
-                    </div>
-                    <div class="card-body p-4 text-center">
-                        <h5 class="card-title fw-bold mb-3">Admin Portal</h5>
-                        <p class="card-text text-muted small mb-4">
-                            Restricted login for Administrators and Tax Experts.
-                        </p>
-                        <button class="btn btn-dark btn-service w-100" onclick="openPortal('admin')">Admin Login</button>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <div class="row mt-5 pt-4">
+        <div class="row mt-5 pt-3">
             <div class="col-12 text-center mb-4">
-                <h2 class="text-white fw-bold">Everything you need to file confidently</h2>
-                <p class="text-white-50">Our integrated platform simplifies every step of the tax journey.</p>
+                <h3 class="text-white fw-bold">Streamlining Operations & Delivery</h3>
+                <p class="text-white-50">One platform for team productivity and client transparency.</p>
             </div>
 
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="feature-box">
                     <i class="fas fa-tasks feature-icon"></i>
-                    <h5 class="fw-bold">Live Status Tracking</h5>
-                    <p class="small opacity-75">Watch your filing move from "Docs Uploaded" to "Filed" with our real-time progress bar. </p>
+                    <h5 class="fw-bold">Project Milestones</h5>
+                    <p class="small opacity-75">Real-time tracking of project phases from Requirement to Delivery.</p>
                 </div>
             </div>
 
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="feature-box">
-                    <i class="fas fa-heartbeat feature-icon text-warning"></i>
-                    <h5 class="fw-bold">AI Compliance Meter</h5>
-                    <p class="small opacity-75">Our AI monitors due dates and assigns a "Risk Score" so you never miss a deadline. </p>
+                    <i class="fas fa-file-invoice-dollar feature-icon text-warning"></i>
+                    <h5 class="fw-bold">Smart Invoicing</h5>
+                    <p class="small opacity-75">Automated invoice generation and milestone-based payment tracking.</p>
                 </div>
             </div>
 
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="feature-box">
-                    <i class="fas fa-cloud-lock feature-icon text-success"></i>
-                    <h5 class="fw-bold">Secure Cloud Vault</h5>
-                    <p class="small opacity-75">Your documents are auto-provisioned into secure cloud storage upon signup. </p>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="feature-box">
-                    <i class="fas fa-bell feature-icon text-danger"></i>
-                    <h5 class="fw-bold">Instant Notifications</h5>
-                    <p class="small opacity-75">Get real-time alerts via WhatsApp/SMS for document uploads and filing completions. [cite: 3]</p>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="feature-box">
-                    <i class="fas fa-check-double feature-icon"></i>
-                    <h5 class="fw-bold">Smart Verification</h5>
-                    <p class="small opacity-75">Built-in GSTIN and PAN verification tools ensure 100% data accuracy. [cite: 6]</p>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="feature-box">
-                    <i class="fas fa-file-invoice feature-icon text-info"></i>
-                    <h5 class="fw-bold">Auto-Invoicing</h5>
-                    <p class="small opacity-75">System generates digital invoices via Razorpay/PhonePe automatically. [cite: 7]</p>
+                    <i class="fas fa-users-cog feature-icon text-success"></i>
+                    <h5 class="fw-bold">Role-Based Access</h5>
+                    <p class="small opacity-75">Secure, dedicated dashboards for Admins, Managers, and Staff.</p>
                 </div>
             </div>
         </div>
@@ -195,59 +164,61 @@
 
             <div class="text-start mb-3">
                 <button class="btn btn-outline-light btn-sm" onclick="showLanding()">
-                    <i class="fas fa-arrow-left me-2"></i>Back to Services
+                    <i class="fas fa-arrow-left me-2"></i>Back to Portal Selection
                 </button>
             </div>
 
             <div class="card border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
 
                 <div class="card-header bg-white border-bottom-0 pt-4 pb-0 text-center">
-                    <h4 class="fw-bold text-primary" id="login-title">Portal Login</h4>
+                    <h4 class="fw-bold" id="login-title">Login</h4>
                     <p class="text-muted small" id="login-subtitle">Please enter your credentials.</p>
                 </div>
 
                 <div class="card-body p-4">
-                    <div id="client-form-section" style="display: none;">
-                        <form action="/client" method="get">
-                            <div class="mb-3">
-                                <label class="form-label">Client Name</label>
-                                <input type="text" name="clientName" class="form-control" placeholder="Ex.Naveen Kumar " required>
+
+                    <div id="employee-form-section" style="display: none;">
+                        <form action="/employee" method="get"> <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted">Corporate Email / Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
+                                <input type="text" name="username" class="form-control" placeholder="user@whitecircle.com" required>
                             </div>
+                        </div>
                             <div class="mb-3">
-                                <label class="form-label">Phone Number</label>
+                                <label class="form-label small fw-bold text-muted">Password</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">+91</span>
-                                    <input type="tel" name="phone" class="form-control" placeholder=" " pattern="[0-9]{10}" maxlength="10" required>
+                                    <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
+                                    <input type="password" name="password" class="form-control" placeholder="••••••" required>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">PAN Number</label>
-                                <input type="text" name="pan" class="form-control text-uppercase" placeholder="Ex.ABCDE1234F" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" maxlength="10" oninput="this.value = this.value.toUpperCase()" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100 py-2">
-                                <i class="fas fa-rocket me-2"></i>Access Client Dashboard
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                                <i class="fas fa-sign-in-alt me-2"></i>Secure Access
                             </button>
                         </form>
                     </div>
 
-                    <div id="admin-form-section" style="display: none;">
-                        <form action="/login" method="post">
-                            <div th:if="${error}" class="alert alert-danger text-center p-2 mb-3">
-                                <small><i class="fas fa-exclamation-circle me-1"></i> Invalid Credentials</small>
+                    <div id="client-form-section" style="display: none;">
+                        <form action="/client" method="get"> <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted">Registered Phone</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">+91</span>
+                                <input type="tel" name="phone" class="form-control" placeholder="9876543210" pattern="[0-9]{10}" required>
                             </div>
+                        </div>
                             <div class="mb-3">
-                                <label class="form-label">Username</label>
-                                <input type="text" name="username" class="form-control" placeholder="admin" required>
+                                <label class="form-label small fw-bold text-muted">Client / Project ID</label>
+                                <input type="text" name="clientId" class="form-control" placeholder="WCG-2026-001" required>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Password</label>
-                                <input type="password" name="password" class="form-control" placeholder="••••••" required>
-                            </div>
-                            <button type="submit" class="btn btn-dark w-100 py-2">
-                                <i class="fas fa-sign-in-alt me-2"></i>Secure Admin Login
+                            <button type="submit" class="btn btn-dark w-100 py-2 fw-bold">
+                                <i class="fas fa-rocket me-2"></i>Access Project Dashboard
                             </button>
                         </form>
                     </div>
+
+                </div>
+                <div class="card-footer bg-light text-center py-3 border-0">
+                    <small class="text-muted">Need help? Contact <a href="#" class="text-decoration-none fw-bold">IT Support</a></small>
                 </div>
             </div>
         </div>
@@ -257,31 +228,31 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     function openPortal(type) {
-        // Hide Landing (Cards + Features), Show Login Container
+        // Hide Landing, Show Login
         document.getElementById('landing-section').style.display = 'none';
         document.getElementById('login-container').style.display = 'flex';
 
         // Reset forms
+        document.getElementById('employee-form-section').style.display = 'none';
         document.getElementById('client-form-section').style.display = 'none';
-        document.getElementById('admin-form-section').style.display = 'none';
 
         // Toggle Logic
-        if (type === 'client') {
-            document.getElementById('client-form-section').style.display = 'block';
-            document.getElementById('login-title').innerText = "Client Onboarding";
+        if (type === 'employee') {
+            document.getElementById('employee-form-section').style.display = 'block';
+            document.getElementById('login-title').innerText = "Employee Portal";
             document.getElementById('login-title').className = "fw-bold text-primary";
-            document.getElementById('login-subtitle').innerText = "Enter details to access your secure cloud.";
+            document.getElementById('login-subtitle').innerText = "Authorized personnel only.";
         }
-        else if (type === 'admin') {
-            document.getElementById('admin-form-section').style.display = 'block';
-            document.getElementById('login-title').innerText = "Admin Portal";
+        else if (type === 'client') {
+            document.getElementById('client-form-section').style.display = 'block';
+            document.getElementById('login-title').innerText = "Client Connect";
             document.getElementById('login-title').className = "fw-bold text-dark";
-            document.getElementById('login-subtitle').innerText = "Restricted access for authorized personnel.";
+            document.getElementById('login-subtitle').innerText = "View project status and invoices.";
         }
     }
 
     function showLanding() {
-        // Show Landing (Cards + Features), Hide Login
+        // Show Landing, Hide Login
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('landing-section').style.display = 'block';
     }

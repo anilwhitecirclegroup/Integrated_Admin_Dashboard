@@ -38,10 +38,10 @@ public class DashboardController {
         }
     }
 
-    // 3. The Admin Dashboard
-    @GetMapping("/dashboard")
-    public String dashboard() {
-        return "dashboard";
+    // 3. The Employee Portal
+    @GetMapping("/employee")
+    public String showEmployeePortal() {
+        return "employee"; // This looks for employee.html
     }
 
     // 4. The Client Dashboard (Updated to accept data)
