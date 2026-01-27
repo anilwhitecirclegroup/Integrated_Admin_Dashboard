@@ -84,7 +84,11 @@
     <div id="landing-section">
 
         <div class="text-center mb-5">
-            <h1 class="text-white fw-bold mb-2 display-5"><i class="fas fa-circle-notch me-3"></i>WhiteCircle Group</h1>
+            <div class="mb-3">
+                <img src="/images/wcg-logo.jpg" alt="WhiteCircle Group"
+                     style="height: 80px; width: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            </div>
+            <h1 class="text-white fw-bold mb-2">WhiteCircle Group</h1>
             <p class="text-white-50 fs-5">Integrated Workspace & Client Connect</p>
         </div>
 
@@ -93,14 +97,14 @@
             <div class="col-md-5 col-lg-4">
                 <div class="card service-card shadow">
                     <div class="service-icon-wrapper">
-                        <i class="fas fa-id-card-alt fa-4x text-primary"></i>
+                        <i class="fas fa-id-card-alt fa-4x" style="color: #1e3c72;"></i>
                     </div>
                     <div class="card-body p-4 text-center">
                         <h4 class="card-title fw-bold mb-3">Employee Portal</h4>
                         <p class="card-text text-muted small mb-4">
                             Access CRM, manage projects, apply for leave, and view internal updates.
                         </p>
-                        <button class="btn btn-primary btn-service w-100" onclick="openPortal('employee')">
+                        <button class="btn btn-dark btn-service w-100" onclick="openPortal('employee')">
                             Employee Login
                         </button>
                     </div>
@@ -110,7 +114,7 @@
             <div class="col-md-5 col-lg-4">
                 <div class="card service-card shadow">
                     <div class="service-icon-wrapper">
-                        <i class="fas fa-briefcase fa-4x text-dark"></i>
+                        <i class="fas fa-briefcase fa-4x" style="color: #1e3c72;"></i>
                     </div>
                     <div class="card-body p-4 text-center">
                         <h4 class="card-title fw-bold mb-3">Client Portal</h4>
@@ -192,7 +196,7 @@
                                     <input type="password" name="password" class="form-control" placeholder="••••••" required>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                            <button type="submit" class="btn btn-dark w-100 py-2 fw-bold">
                                 <i class="fas fa-sign-in-alt me-2"></i>Secure Access
                             </button>
                         </form>
@@ -240,7 +244,7 @@
         if (type === 'employee') {
             document.getElementById('employee-form-section').style.display = 'block';
             document.getElementById('login-title').innerText = "Employee Portal";
-            document.getElementById('login-title').className = "fw-bold text-primary";
+            document.getElementById('login-title').className = "fw-bold text-dark";
             document.getElementById('login-subtitle').innerText = "Authorized personnel only.";
         }
         else if (type === 'client') {

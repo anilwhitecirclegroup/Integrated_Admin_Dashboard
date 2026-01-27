@@ -87,6 +87,7 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .widget-body {
             padding: 15px;
             flex-grow: 1;
@@ -95,7 +96,7 @@
 
         /* App Buttons */
         .app-btn {
-            border: 0.8px solid #475569;
+            border: 0.8px solid var(--bs-primary);
             border-radius: 10px;
             padding: 16px 14px;
             display: flex;
@@ -149,7 +150,6 @@
             height: 100%;
             min-height: 120px;
         }
-
         /* Parallel Columns Helper */
         .parallel-col {
             display: flex;
@@ -157,6 +157,7 @@
             gap: 15px;
             height: 100%;
         }
+
         /* OPTION 1: FORMAL NAVY THEME */
         :root {
             --bs-primary: #1e3a8a; /* Deep Navy */
@@ -322,41 +323,32 @@
             width: 100%; /* Expand to full width on hover */
         }
 
-        /* 10. PROFILE PULSE RING */
-        .profile-btn .rounded-circle {
-            position: relative;
-            z-index: 1;
+        /* --- Special Navy Header (For APPS & SELF SERVICE) --- */
+        .navy-header {
+            background-color: var(--bs-primary); /* Navy Blue Background */
+            color: white !important; /* Main Text White */
+
+            /* Round the top corners to match the card */
+            border-radius: 12px 12px 0 0;
+
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Create the pulsing ring behind the avatar */
-        .profile-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid var(--bs-primary);
-            opacity: 0;
-            z-index: 0;
+        /* Style the "View All" links and "Pen" icons inside this header */
+        .navy-header a,
+        .navy-header i {
+            color: #bfdbfe !important; /* Suggested: Pale Cyan */
+            opacity: 0.9;
+            transition: all 0.2s ease;
         }
-        /* Animate continuously */
-        .profile-btn:hover::before {
-            animation: ripple 1.5s infinite;
-        }
-        @keyframes ripple {
-            0% {
-                width: 100%;
-                height: 100%;
-                opacity: 0.6;
-            }
-            100% {
-                width: 160%; /* Expand outward */
-                height: 160%;
-                opacity: 0; /* Fade out */
-            }
+
+        /* Hover effect for the links/icons */
+        .navy-header a:hover,
+        .navy-header i:hover {
+            color: #ffffff !important; /* Turn pure white on hover */
+            opacity: 1;
+            text-decoration: none;
         }
 
     </style>
@@ -380,8 +372,14 @@
 <div class="main-content">
 
     <div class="top-navbar row align-items-center gx-0">
-        <div class="col-md-4 ps-4">
-            <h4 class="mb-0 fw-bold text-primary"><i class="fas fa-circle-notch me-3"></i>WhiteCircle</h4>
+        <div class="col-md-4 ps-4 d-flex align-items-center">
+            <img src="/images/wcg-logo.jpg"
+                 alt="Logo"
+                 style="height: 65px; width: auto; border-radius: 8px;">
+            <span class="ms-3 fw-bold text-dark"
+                  style="font-size: 1.6rem; letter-spacing: 1px; text-transform: uppercase;">
+        White Circle
+    </span>
         </div>
 
         <div class="col-md-4">
@@ -406,12 +404,11 @@
 
         <div class="col-lg-6">
             <div class="widget-card">
-                <div class="widget-header">
+                <div class="widget-header navy-header">
                     <div class="d-flex align-items-center">
-                        <span>SELF SERVICES</span>
-                        <i class="fas fa-pencil-alt small ms-2 text-muted cursor-pointer" title="Edit"></i>
+                        <i class="fas fa-user-cog me-2"></i>Self Services
                     </div>
-                    <a href="#" class="text-decoration-none small fw-bold">View All</a>
+                    <a href="#" class="small fw-bold">View All</a>
                 </div>
                 <div class="widget-body">
                     <div class="row g-2">
@@ -428,12 +425,11 @@
 
         <div class="col-lg-6">
             <div class="widget-card">
-                <div class="widget-header">
+                <div class="widget-header navy-header">
                     <div class="d-flex align-items-center">
-                        <span>APPLICATIONS</span>
-                        <i class="fas fa-pencil-alt small ms-2 text-muted cursor-pointer" title="Edit"></i>
+                        <i class="fas fa-th me-2"></i>Applications
                     </div>
-                    <a href="#" class="text-decoration-none small fw-bold">View All</a>
+                    <a href="#" class="small fw-bold">View All</a>
                 </div>
                 <div class="widget-body">
                     <div class="row g-2">
@@ -453,7 +449,7 @@
             <div class="widget-card">
                 <div class="widget-header">
                     <span>YEARLY CALENDAR</span>
-                    <a href="#" class="small text-primary fw-bold holiday-link">Holiday List</a>
+                    <a href="#" class="small text-decoration-none fw-bold holiday-link">Holiday List</a>
                 </div>
                 <div class="widget-body d-flex flex-column justify-content-center">
                     <h6 class="fw-bold text-center mb-3">January 2026</h6>
