@@ -79,9 +79,9 @@
 
         .widget-header {
             padding: 12px 20px;
-            border-bottom: 1px solid #f0f0f0;
-            font-weight: 600;
-            color: #495057;
+            border-bottom: 2px solid #cbd5e1;
+            font-weight: 700;
+            color: var(--bs-primary); /* <--- THIS SETS THE NAVY BLUE COLOR */
             font-size: 0.9rem;
             display: flex;
             justify-content: space-between;
@@ -95,28 +95,35 @@
 
         /* App Buttons */
         .app-btn {
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 10px 15px;
+            border: 0.8px solid #475569;
+            border-radius: 10px;
+            padding: 16px 14px;
             display: flex;
             align-items: center;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.04);
             cursor: pointer;
             background: white;
             text-decoration: none;
             color: #343a40;
             height: 100%;
+            position: relative;
         }
+
         .app-btn:hover {
-            border-color: #0d6efd;
-            background: #f8f9fa;
-            transform: translateY(-2px);
+            border-color: var(--bs-primary); /* Navy Blue Highlight */
+            background: #ffffff;
+            /* Lift Up & Deeper Shadow */
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(30, 58, 138, 0.15);
         }
+
         .app-text {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 600;
             line-height: 1.2;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* Holiday List Hover Effect */
@@ -186,7 +193,7 @@
 
     <div class="top-navbar row align-items-center gx-0">
         <div class="col-md-4 ps-4">
-            <h5 class="mb-0 fw-bold text-primary"><i class="fas fa-circle-notch me-3"></i>WhiteCircle</h5>
+            <h4 class="mb-0 fw-bold text-primary"><i class="fas fa-circle-notch me-3"></i>WhiteCircle</h4>
         </div>
 
         <div class="col-md-4">
