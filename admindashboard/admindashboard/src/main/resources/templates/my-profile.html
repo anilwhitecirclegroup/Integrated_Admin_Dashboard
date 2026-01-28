@@ -104,14 +104,68 @@
             background: #f8fafc; border-radius: 12px; cursor: pointer; transition: all 0.3s;
         }
         .resume-box:hover { border-color: var(--bs-primary); background: #eff6ff; }
+
+        /* --- 1. CARD HOVER EFFECTS --- */
+        .pro-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+
+            /* ADD THESE LINES for smooth animation */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        /* The Hover Action */
+        .pro-card:hover {
+            transform: translateY(-7px); /* Lifts the card up */
+            box-shadow: 0 15px 30px rgba(30, 58, 138, 0.12); /* Soft, deep blue shadow */
+            border-color: #cbd5e1; /* Slightly darker border */
+            z-index: 10; /* Brings it on top of other elements */
+        }
+
+        /* --- 2. INPUT FIELD FOCUS EFFECT --- */
+        /* Makes inputs feel alive when clicked */
+        .form-floating > .form-control {
+            transition: all 0.2s ease;
+        }
+        .form-floating > .form-control:focus {
+            transform: scale(1.01); /* Tiny zoom effect */
+            background-color: #fff;
+            border-color: var(--bs-primary);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08);
+        }
+
+        /* --- 3. RESUME BOX HOVER --- */
+        .resume-box {
+            border: 2px dashed #cbd5e1;
+            padding: 30px; text-align: center;
+            background: #f8fafc;
+            border-radius: 12px;
+            cursor: pointer;
+
+            /* Smooth transition */
+            transition: all 0.3s ease;
+        }
+        .resume-box:hover {
+            border-color: var(--bs-primary);
+            background: #eff6ff;
+            transform: translateY(-4px); /* Bounce up */
+            box-shadow: 0 8px 15px rgba(30, 58, 138, 0.15);
+        }
     </style>
 </head>
 <body>
 
 <header class="top-header">
     <div class="page-title">
-        <img src="/images/wcg-logo.jpg" alt="Logo" style="height: 40px; border-radius: 6px;">
-        <span style="border-left: 2px solid #cbd5e1; padding-left: 12px; margin-left: 5px;">My Profile</span>
+        <img src="/images/wcg-logo.jpg" alt="Logo" style="height: 60px; border-radius: 6px;">
+        <span style="border-left: 4px solid #cbd5e1; padding-left: 16px; margin-left: 8px;">My Profile Section</span>
     </div>
     <div class="d-flex align-items-center gap-3">
         <button class="btn btn-outline-success fw-bold px-4 rounded-pill">
@@ -175,8 +229,8 @@
                         <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" id="projCode" placeholder="Code"><label for="projCode">Project Code</label></div></div>
                         <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" id="teamName" placeholder="Team"><label for="teamName">Team / Group</label></div></div>
                         <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" id="custName" placeholder="Customer"><label for="custName">Customer Name</label></div></div>
-                        <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" id="vertical" placeholder="Vertical"><label for="vertical">Vertical</label></div></div>
-                        <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" id="domain" placeholder="Domain"><label for="domain">Domain</label></div></div>
+                        <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" id="vertical" placeholder="Vertical"><label for="vertical">Vertical Name</label></div></div>
+                        <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" id="domain" placeholder="Domain"><label for="domain">Domain/Industry</label></div></div>
                     </div>
                 </div>
             </div>
@@ -223,7 +277,7 @@
                         <div class="d-flex flex-column gap-3">
                             <div class="form-floating"><input type="text" class="form-control" id="repManager" placeholder="Manager"><label for="repManager">Reporting Manager</label></div>
                             <div class="form-floating"><input type="text" class="form-control" id="projManager" placeholder="PM"><label for="projManager">Project Manager</label></div>
-                            <div class="form-floating"><input type="text" class="form-control" id="hrContact" placeholder="HR"><label for="hrContact">BU HR Contact</label></div>
+                            <div class="form-floating"><input type="text" class="form-control" id="hrContact" placeholder="HR"><label for="hrContact">BU-HR Contact</label></div>
                         </div>
                     </div>
                 </div>
