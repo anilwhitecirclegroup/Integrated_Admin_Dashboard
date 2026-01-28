@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Leave - WhiteCircle</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #1e3a8a; /* Navy Blue Theme */
+            --bg-color: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: #334155;
+        }
+
+        /* --- HEADER --- */
+        .top-header {
+            background: white; border-bottom: 1px solid #e2e8f0;
+            padding: 15px 30px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+        .page-title {
+            display: flex; align-items: center;
+        }
+        .btn-back-home {
+            background-color: var(--bs-primary); color: white;
+            border-radius: 50px; padding: 10px 24px; font-weight: 600;
+            font-size: 0.9rem; text-decoration: none; display: flex; align-items: center;
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.2); transition: all 0.3s ease;
+        }
+        .btn-back-home:hover {
+            background-color: #172554; transform: translateY(-2px); color: white;
+        }
+
+        /* --- CONTAINER --- */
+        .main-container {
+            max-width: 1300px;
+            margin: 125px auto 40px;
+            padding: 0 20px;
+        }
+
+        /* --- CARDS --- */
+        .app-card {
+            background: white; border: 1px solid #e2e8f0;
+            border-radius: 16px; overflow: hidden; margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.1);
+        }
+
+        .app-card-header {
+            background: var(--bs-primary); color: white;
+            padding: 15px 25px; font-weight: 700; text-transform: uppercase;
+            font-size: 0.85rem; letter-spacing: 0.5px; display: flex; align-items: center;
+        }
+        .app-card-header i { color: #bfdbfe; margin-right: 10px; font-size: 1.1rem; }
+        .app-card-body { padding: 25px; }
+
+        /* --- FORMS --- */
+        .form-label {
+            font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 6px;
+        }
+        .form-control, .form-select {
+            border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 12px;
+            font-size: 0.95rem;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--bs-primary); box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+        .form-control:read-only { background-color: #f1f5f9; color: #475569; }
+
+        /* --- STATUS BADGES --- */
+        .badge-status { padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+        .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+        .status-approved { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
+        .status-rejected { background: #fef2f2; color: #b91c1c; border: 1px solid #fee2e2; }
+
+    </style>
+</head>
+<body>
+
+<header class="top-header">
+    <div class="page-title">
+        <img src="/images/wcg-logo.jpg" alt="Logo" style="height: 60px; border-radius: 6px;">
+        <span class="fw-bold text-dark" style="border-left: 2px solid #cbd5e1; padding-left: 15px; margin-left: 10px; font-size: 1.5rem; letter-spacing: 0.5px;">
+                APPLY FOR LEAVE
+            </span>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+        <a href="/employee/dashboard" class="btn-back-home">
+            <i class="fas fa-arrow-left me-2"></i> Back to Home
+        </a>
+    </div>
+</header>
+
+<div class="main-container">
+    <div class="row g-4">
+
+        <div class="col-lg-8">
+
+            <div class="app-card">
+                <div class="app-card-header">
+                    <i class="fas fa-user-circle"></i> Applicant Details
+                </div>
+                <div class="app-card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Employee Name</label>
+                            <input type="text" class="form-control fw-bold" value="EMP" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Employee ID</label>
+                            <input type="text" class="form-control" value="WCG-1001" readonly>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Department</label>
+                            <input type="text" class="form-control" value="IT - Software Development" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Reporting Manager</label>
+                            <input type="text" class="form-control" value="Amit Sharma" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-card">
+                <div class="app-card-header">
+                    <i class="fas fa-calendar-plus"></i> New Leave Request
+                </div>
+                <div class="app-card-body">
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Leave Type <span class="text-danger">*</span></label>
+                                <select class="form-select" required>
+                                    <option selected disabled>Select Type...</option>
+                                    <option value="Casual">Casual Leave (CL)</option>
+                                    <option value="Sick">Sick Leave (SL)</option>
+                                    <option value="Earned">Earned Leave (EL)</option>
+                                    <option value="WFH">Work From Home (WFH)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Leave Mode <span class="text-danger">*</span></label>
+                                <select class="form-select" id="leaveMode" onchange="toggleModeFields()" required>
+                                    <option selected disabled>Select Mode...</option>
+                                    <option value="Offline">Offline (Unavailable)</option>
+                                    <option value="Online">Online (Available Remotely)</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">From Date</label>
+                                <input type="date" class="form-control" id="fromDate" onchange="calculateDays()" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">To Date</label>
+                                <input type="date" class="form-control" id="toDate" onchange="calculateDays()" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Total Days</label>
+                                <input type="text" class="form-control fw-bold text-primary" id="totalDays" value="0" readonly>
+                            </div>
+
+                            <div class="col-md-12 d-none" id="onlineSection">
+                                <div class="p-3 bg-light rounded border border-primary-subtle">
+                                    <label class="form-label text-primary">Contact Mode (During Leave)</label>
+                                    <select class="form-select">
+                                        <option>Microsoft Teams</option>
+                                        <option>Phone / Mobile</option>
+                                        <option>Email Only</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 d-none" id="offlineSection">
+                                <div class="p-3 bg-light rounded border">
+                                    <label class="form-label">Current Office Location</label>
+                                    <input type="text" class="form-control" value=" " placeholder="Enter Location">
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Reason for Leave <span class="text-danger">*</span></label>
+                                <textarea class="form-control" rows="3" placeholder="Please describe the reason clearly..."></textarea>
+                            </div>
+
+                            <div class="col-12 text-end mt-4">
+                                <button type="button" class="btn btn-light me-2 border">Cancel</button>
+                                <button type="submit" class="btn btn-primary px-4 fw-bold">
+                                    <i class="fas fa-paper-plane me-2"></i>Submit Request
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="app-card">
+                <div class="app-card-header">
+                    <i class="fas fa-history"></i> Recent Status
+                </div>
+                <div class="app-card-body p-0">
+                    <div class="list-group list-group-flush">
+
+                        <div class="list-group-item p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-bold text-dark">Sick Leave</span>
+                                <span class="badge badge-status status-pending">Pending</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">27 Jan - 29 Jan (3 Days)</small>
+                            <small class="text-secondary" style="font-size: 0.75rem;">Approver: Amit Sharma</small>
+                        </div>
+
+                        <div class="list-group-item p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-bold text-dark">Casual Leave</span>
+                                <span class="badge badge-status status-approved">Approved</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">10 Jan (1 Day)</small>
+                            <small class="text-secondary" style="font-size: 0.75rem;">Approver: Amit Sharma</small>
+                        </div>
+
+                        <div class="list-group-item p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-bold text-dark">WFH</span>
+                                <span class="badge badge-status status-rejected">Rejected</span>
+                            </div>
+                            <small class="text-muted d-block mb-1">02 Jan (1 Day)</small>
+                            <small class="text-secondary" style="font-size: 0.75rem;">Reason: Important Client Visit</small>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="app-card">
+                <div class="app-card-header">
+                    <i class="fas fa-wallet"></i> Yearly Leave Balance
+                </div>
+                <div class="app-card-body">
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="fw-bold text-dark" style="font-size: 0.9rem;">Casual Leave (CL)</span>
+                            <span class="fw-bold text-primary" style="font-size: 0.9rem;">8 / 12 Left</span>
+                        </div>
+                        <div class="progress" style="height: 8px; background-color: #e2e8f0;">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 33%;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <small class="text-muted" style="font-size: 0.75rem;">Used: 4 &bull; Total: 12</small>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="fw-bold text-dark" style="font-size: 0.9rem;">Sick Leave (SL)</span>
+                            <span class="fw-bold text-success" style="font-size: 0.9rem;">10 / 10 Left</span>
+                        </div>
+                        <div class="progress" style="height: 8px; background-color: #e2e8f0;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <small class="text-muted" style="font-size: 0.75rem;">Used: 0 &bull; Total: 10</small>
+                    </div>
+
+                    <div class="p-3 bg-light border rounded">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold text-dark">Earned Leave (EL)</h6>
+                                <small class="text-muted">Accumulated Privilege Leave</small>
+                            </div>
+                            <div class="ms-auto text-end">
+                                <h4 class="mb-0 fw-bold text-dark">18</h4>
+                                <small class="text-muted" style="font-size: 0.7rem;">Days Left</small>
+                            </div>
+                        </div>
+                        <div class="progress mt-2" style="height: 6px; background-color: #e2e8f0;">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <small class="text-muted" style="font-size: 0.7rem;">Used: 2</small>
+                            <small class="text-muted" style="font-size: 0.7rem;">Total Credited: 20</small>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. Toggle Fields based on Leave Mode
+    function toggleModeFields() {
+        const mode = document.getElementById('leaveMode').value;
+        const onlineSec = document.getElementById('onlineSection');
+        const offlineSec = document.getElementById('offlineSection');
+
+        if (mode === 'Online') {
+            onlineSec.classList.remove('d-none');
+            offlineSec.classList.add('d-none');
+        } else if (mode === 'Offline') {
+            onlineSec.classList.add('d-none');
+            offlineSec.classList.remove('d-none');
+        } else {
+            onlineSec.classList.add('d-none');
+            offlineSec.classList.add('d-none');
+        }
+    }
+
+    // 2. Calculate Total Days automatically
+    function calculateDays() {
+        const start = new Date(document.getElementById('fromDate').value);
+        const end = new Date(document.getElementById('toDate').value);
+        const totalInput = document.getElementById('totalDays');
+
+        if (start && end && end >= start) {
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include start date
+            totalInput.value = diffDays;
+        } else {
+            totalInput.value = "0";
+        }
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

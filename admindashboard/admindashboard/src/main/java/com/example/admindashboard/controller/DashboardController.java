@@ -57,6 +57,18 @@ public class DashboardController {
         return "employee"; // This loads employee.html
     }
 
+    //6. "Apply for Leave" Page button
+    @GetMapping("/apply-leave")
+    public String showLeavePage() {
+        return "apply-leave";
+    }
+
+    // 7. "Conference Room" Page button
+    @GetMapping("/conference-room")
+    public String showConferencePage() {
+        return "conference-room";
+    }
+
 
 
     // 6. The Client Dashboard (Updated to accept data)
