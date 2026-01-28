@@ -103,15 +103,88 @@
         }
         .form-floating > .form-control { height: 3.5rem; }
         .form-floating > label { padding: 1rem 0.75rem; }
+
+        /* --- UPDATED TIME COLUMN (Smaller Fonts) --- */
+        .time-col {
+            min-width: 100px;
+            text-align: center;
+            border-right: 1px solid #e2e8f0;
+            padding-right: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .time-start, .time-end {
+            font-size: 0.9rem; /* Previously 1.1rem */
+            font-weight: 700;
+            color: var(--bs-primary);
+            line-height: 1.1;
+        }
+        .time-separator {
+            font-size: 0.7rem; /* Previously 0.75rem */
+            color: #94a3b8;
+            font-weight: 600;
+            margin: 3px 0;
+        }
+
+        /* --- NEW: COPY LINK BOX --- */
+        .meeting-link-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 4px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #64748b;
+            max-width: 250px;
+        }
+        .link-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .btn-copy {
+            background: none; border: none; color: var(--bs-primary);
+            cursor: pointer; padding: 0; font-size: 0.9rem;
+        }
+        .btn-copy:hover { color: #1e40af; }
+
+        /* --- NEW: Hover effect for Meeting Link Box --- */
+        .meeting-link-box {
+            /* Existing styles... keep these */
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            /* ... other existing styles ... */
+
+            /* ADD THIS LINE for smooth color transition */
+            transition: all 0.2s ease;
+        }
+
+        /* The Hover State */
+        .meeting-link-box:hover {
+            background-color: #eef2ff; /* Very light blue background */
+            border-color: var(--bs-primary); /* Navy blue border */
+            cursor: pointer; /* Turns cursor into a hand */
+            box-shadow: 0 2px 5px rgba(30, 58, 138, 0.1);
+        }
+
+        /* Ensure the inner copy button icon turns blue on hover too */
+        .meeting-link-box:hover .btn-copy {
+             color: var(--bs-primary);
+        }
+
     </style>
 </head>
 <body>
 
 <header class="top-header">
     <div class="page-title">
-        <img src="/images/wcg-logo.jpg" alt="Logo" style="height: 50px; border-radius: 6px;">
-        <span class="fw-bold text-dark" style="border-left: 2px solid #cbd5e1; padding-left: 15px; margin-left: 10px; font-size: 1.5rem; letter-spacing: 0.5px;">
-                White Circle
+        <img src="/images/wcg-logo.jpg" alt="Logo" style="height: 60px; border-radius: 6px;">
+        <span class="fw-bold text-dark" style="border-left: 2px solid #cbd5e1; padding-left: 17px; margin-left: 10px; font-size: 1.5rem; letter-spacing: 0.5px;">
+                CONFERENCE ROOM
             </span>
     </div>
     <a href="/employee/dashboard" class="btn-back-home">
@@ -131,7 +204,6 @@
                     <select class="form-select w-auto">
                         <option>All Rooms</option>
                         <option>Board Room A</option>
-                        <option>Conf Hall 1</option>
                         <option>Online Only</option>
                     </select>
                 </div>
@@ -139,7 +211,8 @@
 
             <div class="meeting-card">
                 <div class="time-col">
-                    <div class="time-start">10:00</div>
+                    <div class="time-start">10:00 AM</div>
+                    <div class="time-separator">- to -</div>
                     <div class="time-end">11:30 AM</div>
                 </div>
                 <div class="details-col">
@@ -162,32 +235,39 @@
 
             <div class="meeting-card">
                 <div class="time-col">
-                    <div class="time-start">13:00</div>
-                    <div class="time-end">14:00 PM</div>
+                    <div class="time-start">01:00 PM</div>
+                    <div class="time-separator">- to -</div>
+                    <div class="time-end">02:00 PM</div>
                 </div>
                 <div class="details-col">
                     <div class="d-flex justify-content-between">
                         <div class="meeting-title">Client Project Kickoff</div>
                         <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 d-flex align-items-center">Confirmed</span>
                     </div>
-                    <div class="meeting-organizer"><i class="fas fa-user-circle me-1"></i> Organizer: Anil Yadav</div>
+                    <div class="meeting-organizer"><i class="fas fa-user-circle me-1"></i> Organizer: Abhisek Sharma</div>
 
-                    <div class="d-flex align-items-center gap-2 mt-3">
+                    <div class="d-flex flex-wrap align-items-center gap-3 mt-3">
                             <span class="loc-badge teams-badge">
-                                <i class="fas fa-video"></i> Microsoft Teams
+                                <i class="fas fa-video"></i> MS Teams
                             </span>
                         <a href="#" class="btn-join">
-                            <i class="fas fa-external-link-alt me-1"></i> Join Meeting
+                            <i class="fas fa-video me-1"></i> Join
                         </a>
+
+                        <div class="meeting-link-box" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy Link">
+                            <i class="fas fa-link small"></i>
+                            <span class="link-text">teams.microsoft.com/l/meet...</span>
+                            <button class="btn-copy"><i class="far fa-copy"></i></button>
+                        </div>
                     </div>
-                    <small class="text-muted mt-2 d-block ps-1" style="font-size: 0.75rem;">Link: teams.microsoft.com/l/meetup-join/...</small>
                 </div>
             </div>
 
             <div class="meeting-card">
                 <div class="time-col">
-                    <div class="time-start">15:30</div>
-                    <div class="time-end">16:00 PM</div>
+                    <div class="time-start">03:30 PM</div>
+                    <div class="time-separator">- to -</div>
+                    <div class="time-end">04:00 PM</div>
                 </div>
                 <div class="details-col">
                     <div class="d-flex justify-content-between">
@@ -196,13 +276,19 @@
                     </div>
                     <div class="meeting-organizer"><i class="fas fa-user-circle me-1"></i> Organizer: Rahul Deshmukh</div>
 
-                    <div class="d-flex align-items-center gap-2 mt-3">
+                    <div class="d-flex flex-wrap align-items-center gap-3 mt-3">
                             <span class="loc-badge zoom-badge">
                                 <i class="fas fa-video"></i> Zoom
                             </span>
                         <a href="#" class="btn-join">
-                            <i class="fas fa-external-link-alt me-1"></i> Join Meeting
+                            <i class="fas fa-video me-1"></i> Join
                         </a>
+
+                        <div class="meeting-link-box" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy Link">
+                            <i class="fas fa-link small"></i>
+                            <span class="link-text">zoom.us/j/555111222</span>
+                            <button class="btn-copy"><i class="far fa-copy"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -210,9 +296,10 @@
         </div>
 
         <div class="col-lg-4">
-            <div class="book-card position-sticky" style="top: 140px;"> <div class="book-header">
-                <i class="fas fa-plus-circle me-2"></i> Quick Book Room
-            </div>
+            <div class="book-card position-sticky" style="top: 140px;">
+                <div class="book-header">
+                    <i class="fas fa-plus-circle me-2"></i> Quick Book Room
+                </div>
                 <div class="p-4">
                     <form>
                         <div class="form-floating mb-3">
@@ -241,7 +328,6 @@
                             <select class="form-select">
                                 <option>Board Room A (Floor 2)</option>
                                 <option>Conf Hall 1 (Floor 1)</option>
-                                <option>Huddle Room (Floor 3)</option>
                             </select>
                             <label>Select Room</label>
                         </div>
@@ -250,13 +336,13 @@
                             <div class="col-6">
                                 <div class="form-floating">
                                     <input type="time" class="form-control" id="start">
-                                    <label>Start</label>
+                                    <label for="start">Start Time</label>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-floating">
                                     <input type="time" class="form-control" id="end">
-                                    <label>End</label>
+                                    <label for="end">End Time</label>
                                 </div>
                             </div>
                         </div>
@@ -293,6 +379,14 @@
     }
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            })
+        });
+</script>
 </body>
 </html>
