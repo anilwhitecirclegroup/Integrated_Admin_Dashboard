@@ -57,28 +57,34 @@ public class DashboardController {
         return "employee"; // This loads employee.html
     }
 
-    //6. "Apply for Leave" Page button
+    //6. "Apply for Leave" Page controller
     @GetMapping("/apply-leave")
     public String showLeavePage() {
         return "apply-leave";
     }
 
-    // 7. "Conference Room" Page button
+    // 7. "Conference Room" Page controller
     @GetMapping("/conference-room")
     public String showConferencePage() {
         return "conference-room";
     }
 
-    // 8. "My Approvals" Page Button
+    // 8. "My Approvals" Page controller
     @GetMapping("/my-approvals")
     public String showApprovalsPage() {
         return "my-approvals";
     }
 
-    // 9. "My WhiteCircle" Page
+    // 9. "My WhiteCircle" Page controller
     @GetMapping("/my-whitecircle")
     public String showMyWhiteCircle() {
         return "my-whitecircle";
+    }
+
+    // 10. "Time Sheet" Page controller
+    @GetMapping("/timesheet")
+    public String showTimesheetPage() {
+        return "timesheet";
     }
 
 
