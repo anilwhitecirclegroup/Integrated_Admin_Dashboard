@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance Regularization - WhiteCircle</title>
+    <title>Attendance Regulation - WhiteCircle</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -12,285 +12,347 @@
     <style>
         :root {
             --bs-primary: #1e3a8a; /* Navy Blue Theme */
-            --bg-color: #f8fafc;
+            --bg-color: #f3f4f6;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: #334155;
+            padding-top: 80px; /* Space for fixed header */
         }
 
-        /* --- HEADER --- */
-        .top-header {
-            background: white; border-bottom: 1px solid #e2e8f0;
-            padding: 10px 30px;
+        /* --- 1. HEADER DESIGN (White Variant) --- */
+        .top-nav-bar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            height: 70px;
-        }
-        .btn-back-home {
-            background-color: var(--bs-primary); color: white;
-            border-radius: 50px; padding: 8px 20px; font-weight: 600;
-            font-size: 0.85rem; text-decoration: none; display: flex; align-items: center;
-            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.2); transition: all 0.3s ease;
-        }
-        .btn-back-home:hover { background-color: #172554; transform: translateY(-2px); color: white; }
+            background: white;
+            height: 90px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 30px;
 
-        /* --- CONTAINER --- */
+            /* THE UPGRADE: */
+            /* 1. A subtle separator line */
+            border-bottom: 1px solid #e2e8f0;
+
+            /* 2. A Deep, Soft Shadow with a hint of Navy Blue (rgba(30, 58, 138)) */
+            /* This gives it that "Dashing" floating effect */
+            box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.1),
+                        0 8px 10px -6px rgba(30, 58, 138, 0.1);
+
+            /* Smooth transition if you ever animate scroll */
+            transition: box-shadow 0.3s ease;
+        }
+
+        .brand-section {
+            display: flex; align-items: center;
+            color: #1e3a8a; /* Changed text color to Navy */
+            font-weight: 700; font-size: 1.6rem;
+            min-width: 250px;
+        }
+
+        .nav-tabs-container {
+            display: flex; gap: 10px; flex-grow: 1; justify-content: flex-end; margin-right: 30px;
+        }
+
+        /* Navigation Tabs Styles for White Header */
+        .nav-btn-tab {
+            background: transparent;
+            border: 1px solid #e2e8f0; /* Light gray border */
+            color: #64748b; /* Dark gray text */
+            padding: 8px 20px; border-radius: 30px;
+            font-size: 0.9rem; font-weight: 500; transition: all 0.3s;
+            text-decoration: none; display: flex; align-items: center;
+        }
+        .nav-btn-tab:hover {
+            background: #f1f5f9; /* Light gray hover */
+            color: #1e3a8a; /* Navy text on hover */
+            border-color: #cbd5e1;
+        }
+        .nav-btn-tab.active {
+            background: #1e3a8a; /* Navy background for active */
+            color: white; /* White text for active */
+            border-color: #1e3a8a;
+            font-weight: 600;
+        }
+
+        /* Back Button Style for White Header */
+        .btn-back {
+            background: #1e3a8a; /* Solid Navy background */
+            color: white;
+            padding: 8px 15px; border-radius: 6px; font-size: 0.85rem; text-decoration: none;
+            border: none; transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(30, 58, 138, 0.2);
+        }
+        .btn-back:hover {
+            background: #172554; /* Darker navy on hover */
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* --- MAIN CONTAINER --- */
         .main-container {
-            max-width: 1300px; margin: 100px auto 40px; padding: 0 20px;
+            max-width: 1200px; margin: 30px auto; padding: 0 20px;
         }
 
         /* --- CARD STYLES --- */
-        .app-card {
-            background: white; border: 1.5px solid var(--bs-primary); border-radius: 12px;
-            overflow: hidden; margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            transition: all 0.3s;
-        }
-        .app-card:hover {
-            transform: translateY(-3px); box-shadow: 0 10px 20px rgba(30, 58, 138, 0.1);
+        .feature-card {
+            background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02); overflow: hidden;
+            margin-bottom: 20px;
         }
 
-        .card-header-navy {
-            background: var(--bs-primary); color: white; padding: 12px 20px;
-            font-weight: 700; display: flex; align-items: center; justify-content: space-between;
+        /* UPDATED: Thicker Navy Blue Border (4px) */
+        .border-navy {
+            border: 4px solid #1e3a8a !important;
         }
+
+        .card-header-light {
+            background: #f8fafc; padding: 15px 25px; border-bottom: 1px solid #e2e8f0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* --- BUTTONS & INTERACTIVITY --- */
+        .btn-interactive {
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            border-width: 1px;
+        }
+        .btn-interactive:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        .btn-interactive:active {
+            transform: scale(0.98);
+        }
+
+        .btn-status-draft { background-color: #ffc107; color: #000; border: 1px solid #ffc107; }
+        .btn-status-draft:hover { background-color: #ffca2c; }
+
+        .btn-export { background-color: #6c757d; color: white; border: 1px solid #6c757d; }
+        .btn-export:hover { background-color: #5c636a; color: white; }
 
         /* --- TABLE STYLES --- */
-        .table-custom th {
-            background: #f1f5f9; color: #475569; font-weight: 600; font-size: 0.85rem;
-            text-transform: uppercase; padding: 12px; border-bottom: 2px solid #e2e8f0;
+        .attendance-table th {
+            background: #1e3a8a; color: white; font-weight: 500;
+            text-transform: uppercase; font-size: 0.85rem; padding: 12px 15px;
         }
-        .table-custom td {
-            padding: 12px; vertical-align: middle; font-size: 0.9rem; color: #334155;
-            border-bottom: 1px solid #f1f5f9;
+        .attendance-table td {
+            vertical-align: middle; padding: 10px 15px; border-bottom: 1px solid #f1f5f9;
+            font-size: 0.9rem;
         }
 
-        /* Inputs inside table */
         .tbl-input {
-            border: 1px solid #cbd5e1; border-radius: 6px; padding: 4px 8px; font-size: 0.85rem; width: 100%;
+            width: 100%; border: 1px solid #cbd5e1; border-radius: 4px;
+            padding: 6px 10px; font-size: 0.9rem;
         }
-        .tbl-input:focus { border-color: var(--bs-primary); outline: none; }
+        .tbl-input:focus { outline: 2px solid #bfdbfe; border-color: #3b82f6; }
+        .readonly-cell { background-color: #f8fafc; color: #94a3b8; border: 1px solid #e2e8f0; }
 
-        /* Row Highlights */
-        .row-holiday { background-color: #f0fdf4 !important; } /* Light Green for Holiday */
-        .row-weekend { background-color: #f8fafc !important; color: #94a3b8; } /* Gray for Weekend */
-        .row-late { border-left: 4px solid #f59e0b; } /* Orange mark for Late */
+        .row-holiday { background-color: #f0fdf4; }
+        .row-weekend { background-color: #f8fafc; }
 
-        /* Badges */
-        .status-pill {
-            padding: 4px 10px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; display: inline-block;
+        /* --- FOOTER SUMMARY --- */
+        .summary-box {
+            background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+            display: flex; margin-top: 20px;
         }
-        .st-present { background: #dcfce7; color: #15803d; }
-        .st-late { background: #ffedd5; color: #c2410c; }
-        .st-holiday { background: #dbeafe; color: #1e40af; }
-        .st-weekend { background: #f1f5f9; color: #64748b; }
-        .st-half { background: #fce7f3; color: #be185d; }
-
-        /* --- SUMMARY FOOTER --- */
-        .summary-item {
-            text-align: center; border-right: 1px solid #e2e8f0; padding: 10px;
+        .sum-item {
+            flex: 1; padding: 15px; text-align: center; border-right: 1px solid #e2e8f0;
         }
-        .summary-item:last-child { border-right: none; }
-        .sum-val { font-size: 1.25rem; font-weight: 800; color: var(--bs-primary); }
-        .sum-label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .sum-item:last-child { border-right: none; }
+        .sum-val { font-size: 1.25rem; font-weight: 800; color: #1e3a8a; }
+        .sum-lbl { font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 600; margin-top: 5px; }
 
     </style>
 </head>
 <body>
 
-<header class="top-header">
-    <div class="d-flex align-items-center">
-        <img src="/images/wcg-logo.jpg" alt="Logo" style="height: 45px; border-radius: 6px;">
-        <span class="fw-bold ms-3 text-dark fs-5">White Circle Group</span>
+<nav class="top-nav-bar">
+    <div class="brand-section">
+        <i class="fas fa-clipboard-list me-3 text-primary"></i>
+        Attendance Regulation
     </div>
-    <a href="/employee/dashboard" class="btn-back-home">
-        <i class="fas fa-arrow-left me-2"></i> Back to Home
+    <div class="nav-tabs-container">
+        <a href="#dashboard" class="nav-btn-tab active" id="tab-dash" onclick="switchTab('dash')">
+            <i class="fas fa-columns me-2"></i>Dashboard
+        </a>
+        <a href="#time-attendance" class="nav-btn-tab" id="tab-time" onclick="switchTab('time')">
+            <i class="fas fa-clock me-2"></i>Time & Attendance
+        </a>
+    </div>
+    <a href="/employee/dashboard" class="btn-back">
+        <i class="fas fa-arrow-left me-2"></i>Back to Home
     </a>
-</header>
+</nav>
 
 <div class="main-container">
 
-    <div class="app-card">
-        <div class="card-header-navy">
-            <span><i class="fas fa-user-clock me-2"></i> Attendance Regularization</span>
-            <span class="badge bg-white text-primary px-3 py-2 rounded-pill">Status: Draft</span>
-        </div>
-        <div class="p-4">
-            <div class="row g-3 align-items-end">
-                <div class="col-md-3">
+    <div id="view-dashboard" class="fade-in">
+
+        <div class="feature-card border-navy p-4">
+            <div class="row g-3">
+                <div class="col-md-4">
                     <label class="form-label small fw-bold text-muted">Employee Name</label>
                     <div class="input-group">
                         <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
-                        <input class="form-control" list="empOptions" id="empData" placeholder="Search Employee...">
+                        <input class="form-control" list="empOptions" placeholder="Search...">
                         <datalist id="empOptions">
                             <option value="Anil Yadav">
                             <option value="Amit Sharma">
-                            <option value="Rahul Deshmukh">
                         </datalist>
                     </div>
                 </div>
-
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <label class="form-label small fw-bold text-muted">Employee ID</label>
                     <input type="text" class="form-control bg-light" value="WCG-1001" readonly>
                 </div>
-
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label class="form-label small fw-bold text-muted">Select Week</label>
                     <input type="week" class="form-control" value="2026-W33">
-                    <small class="text-primary fw-bold" style="font-size: 0.7rem;">12 Aug - 18 Aug 2026</small>
-                </div>
-
-                <div class="col-md-4 text-end">
-                    <button class="btn btn-outline-primary me-2"><i class="fas fa-save me-1"></i> Save Draft</button>
-                    <button class="btn btn-primary me-2"><i class="fas fa-paper-plane me-1"></i> Submit Week</button>
-                    <button class="btn btn-secondary" disabled title="Available after approval"><i class="fas fa-file-pdf"></i></button>
+                    <small class="text-primary fw-bold" style="font-size: 0.7rem;">Mon 12 Aug - Sun 18 Aug</small>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="app-card">
-        <div class="table-responsive">
-            <table class="table table-custom table-hover mb-0">
-                <thead>
-                <tr>
-                    <th style="width: 10%;">Day</th>
-                    <th style="width: 10%;">Date</th>
-                    <th>Planned</th>
-                    <th>In Time</th>
-                    <th>Out Time</th>
-                    <th>Break</th>
-                    <th>Actual</th>
-                    <th>Status</th>
-                    <th>Approval</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="row-late">
-                    <td class="fw-bold">Monday</td>
-                    <td>12-Aug</td>
-                    <td>9.0</td>
-                    <td><input type="time" class="tbl-input" value="09:35"></td>
-                    <td><input type="time" class="tbl-input" value="18:30"></td>
-                    <td><input type="number" class="tbl-input" value="1.0" step="0.5"></td>
-                    <td class="fw-bold text-dark">8.9</td>
-                    <td><span class="status-pill st-late">Present (Late)</span></td>
-                    <td><span class="text-warning fw-bold small"><i class="fas fa-clock me-1"></i>Pending</span></td>
-                </tr>
+        <div class="feature-card mb-0">
+            <div class="card-header-light">
+                <h6 class="fw-bold m-0 text-dark">Weekly Timesheet</h6>
+                <small class="text-muted">Enter hours in decimal format (e.g. 8.5)</small>
+            </div>
+            <div class="table-responsive">
+                <table class="table attendance-table mb-0">
+                    <thead>
+                    <tr>
+                        <th width="20%">Day / Date</th>
+                        <th width="15%">Planned Hours</th>
+                        <th width="15%">Recorded Hours</th>
+                        <th width="50%">Comments / Mode</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="fw-bold">Monday <span class="text-muted small ms-1">12-Aug</span></td>
+                        <td>9.0</td>
+                        <td><input type="number" class="tbl-input" value="8.9"></td>
+                        <td><input type="text" class="tbl-input" value="Present (Late) - Online"></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Tuesday <span class="text-muted small ms-1">13-Aug</span></td>
+                        <td>9.0</td>
+                        <td><input type="number" class="tbl-input" value="9.1"></td>
+                        <td><input type="text" class="tbl-input" value="Present - Office"></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Wednesday <span class="text-muted small ms-1">14-Aug</span></td>
+                        <td>9.0</td>
+                        <td><input type="number" class="tbl-input" value="8.9"></td>
+                        <td><input type="text" class="tbl-input" value="Present - Office"></td>
+                    </tr>
+                    <tr class="row-holiday">
+                        <td class="fw-bold text-success">Thursday <span class="small ms-1">15-Aug</span></td>
+                        <td>9.0</td>
+                        <td><input type="text" class="tbl-input readonly-cell" value="0.0" readonly></td>
+                        <td><input type="text" class="tbl-input readonly-cell" value="Holiday (Independence Day) - Auto" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Friday <span class="text-muted small ms-1">16-Aug</span></td>
+                        <td>9.0</td>
+                        <td><input type="number" class="tbl-input" value="6.8"></td>
+                        <td><input type="text" class="tbl-input" value="Half Day - Personal Work"></td>
+                    </tr>
+                    <tr class="row-weekend">
+                        <td class="fw-bold text-muted">Saturday <span class="small ms-1">17-Aug</span></td>
+                        <td>0.0</td>
+                        <td><input type="text" class="tbl-input readonly-cell" value="0.0" readonly></td>
+                        <td><input type="text" class="tbl-input readonly-cell" value="Weekend - Auto" readonly></td>
+                    </tr>
+                    <tr class="row-weekend">
+                        <td class="fw-bold text-muted">Sunday <span class="small ms-1">18-Aug</span></td>
+                        <td>0.0</td>
+                        <td><input type="text" class="tbl-input readonly-cell" value="0.0" readonly></td>
+                        <td><input type="text" class="tbl-input readonly-cell" value="Weekend - Auto" readonly></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-                <tr>
-                    <td class="fw-bold">Tuesday</td>
-                    <td>13-Aug</td>
-                    <td>9.0</td>
-                    <td><input type="time" class="tbl-input" value="09:30"></td>
-                    <td><input type="time" class="tbl-input" value="18:40"></td>
-                    <td><input type="number" class="tbl-input" value="1.0"></td>
-                    <td class="fw-bold text-dark">9.1</td>
-                    <td><span class="status-pill st-present">Present</span></td>
-                    <td><span class="text-warning fw-bold small"><i class="fas fa-clock me-1"></i>Pending</span></td>
-                </tr>
-
-                <tr>
-                    <td class="fw-bold">Wednesday</td>
-                    <td>14-Aug</td>
-                    <td>9.0</td>
-                    <td><input type="time" class="tbl-input" value="09:25"></td>
-                    <td><input type="time" class="tbl-input" value="18:20"></td>
-                    <td><input type="number" class="tbl-input" value="1.0"></td>
-                    <td class="fw-bold text-dark">8.9</td>
-                    <td><span class="status-pill st-present">Present</span></td>
-                    <td><span class="text-warning fw-bold small"><i class="fas fa-clock me-1"></i>Pending</span></td>
-                </tr>
-
-                <tr class="row-holiday">
-                    <td class="fw-bold text-primary">Thursday</td>
-                    <td class="text-primary">15-Aug</td>
-                    <td>9.0</td>
-                    <td class="text-center text-muted">—</td>
-                    <td class="text-center text-muted">—</td>
-                    <td class="text-center text-muted">—</td>
-                    <td class="fw-bold">0.0</td>
-                    <td><span class="status-pill st-holiday">Holiday (I-Day)</span></td>
-                    <td><span class="text-success fw-bold small"><i class="fas fa-check-circle me-1"></i>Auto</span></td>
-                </tr>
-
-                <tr>
-                    <td class="fw-bold">Friday</td>
-                    <td>16-Aug</td>
-                    <td>9.0</td>
-                    <td><input type="time" class="tbl-input" value="09:45"></td>
-                    <td><input type="time" class="tbl-input" value="17:30"></td>
-                    <td><input type="number" class="tbl-input" value="1.0"></td>
-                    <td class="fw-bold text-danger">6.8</td>
-                    <td><span class="status-pill st-half">Half Day</span></td>
-                    <td><span class="text-warning fw-bold small"><i class="fas fa-clock me-1"></i>Pending</span></td>
-                </tr>
-
-                <tr class="row-weekend">
-                    <td class="fw-bold">Saturday</td>
-                    <td>17-Aug</td>
-                    <td>0.0</td>
-                    <td class="text-center">—</td>
-                    <td class="text-center">—</td>
-                    <td class="text-center">—</td>
-                    <td>0.0</td>
-                    <td><span class="status-pill st-weekend">Weekend</span></td>
-                    <td><span class="text-muted fw-bold small">Auto</span></td>
-                </tr>
-
-                <tr class="row-weekend">
-                    <td class="fw-bold">Sunday</td>
-                    <td>18-Aug</td>
-                    <td>0.0</td>
-                    <td class="text-center">—</td>
-                    <td class="text-center">—</td>
-                    <td class="text-center">—</td>
-                    <td>0.0</td>
-                    <td><span class="status-pill st-weekend">Weekend</span></td>
-                    <td><span class="text-muted fw-bold small">Auto</span></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="app-card">
-        <div class="p-4">
-            <div class="row align-items-center">
-                <div class="col summary-item">
-                    <div class="sum-val">36.0</div>
-                    <div class="sum-label">Total Planned</div>
+            <div class="d-flex justify-content-between align-items-center p-3 bg-light border-top">
+                <div>
+                    <button class="btn btn-status-draft btn-interactive rounded-pill px-4 fw-bold">
+                        <i class="fas fa-hourglass-half me-2"></i>Draft
+                    </button>
                 </div>
 
-                <div class="col summary-item">
-                    <div class="sum-val text-dark">33.7</div>
-                    <div class="sum-label">Total Actual</div>
-                </div>
-
-                <div class="col summary-item">
-                    <div class="sum-val text-success">0.1</div>
-                    <div class="sum-label">Overtime (Hrs)</div>
-                </div>
-
-                <div class="col summary-item">
-                    <div class="sum-val text-primary">1 Day</div>
-                    <div class="sum-label">Leave / Holiday</div>
-                </div>
-
-                <div class="col summary-item border-0">
-                    <div class="sum-val text-warning" style="font-size: 1rem;">Awaiting Approval</div>
-                    <div class="sum-label">Week Status</div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-export btn-interactive px-3 fw-bold">
+                        <i class="fas fa-file-pdf me-2"></i>Export PDF
+                    </button>
+                    <button class="btn btn-outline-primary btn-interactive px-4 fw-bold">
+                        Save Draft
+                    </button>
+                    <button class="btn btn-primary btn-interactive px-4 fw-bold">
+                        Submit Week
+                    </button>
                 </div>
             </div>
         </div>
+
+        <div class="summary-box">
+            <div class="sum-item">
+                <div class="sum-val">36.0</div>
+                <div class="sum-lbl">Total Planned</div>
+            </div>
+            <div class="sum-item">
+                <div class="sum-val text-dark">33.7</div>
+                <div class="sum-lbl">Total Actual</div>
+            </div>
+            <div class="sum-item">
+                <div class="sum-val text-success">0.1</div>
+                <div class="sum-lbl">Overtime</div>
+            </div>
+            <div class="sum-item">
+                <div class="sum-val text-primary">1 Day</div>
+                <div class="sum-lbl">Leave / Holiday</div>
+            </div>
+            <div class="sum-item">
+                <div class="sum-val text-warning" style="font-size: 1.1rem;">Awaiting Approval</div>
+                <div class="sum-lbl">Week Status</div>
+            </div>
+        </div>
+
+        <div class="feature-card mt-4 p-4 bg-light border-0">
+            <h6 class="fw-bold text-dark mb-3"><i class="fas fa-code me-2 text-primary"></i>Instructions</h6>
+            <ul class="text-muted small mb-0 ps-3">
+                <li class="mb-2"><strong>Input Fields:</strong> Recorded Hours must be in decimal format (e.g., 8.5 for 8 hours 30 mins).</li>
+                <li class="mb-2"><strong>Auto-sum:</strong> Ensure Total Recorded Hours for Mon-Fri do not exceed Total Planned Hours, unless Overtime is approved.</li>
+                <li><strong>Weekend:</strong> These fields are editable only if optional weekend work has been pre-approved.</li>
+            </ul>
+        </div>
+
+    </div> <div id="view-time" style="display: none;">
+    <div class="alert alert-info text-center">
+        <i class="fas fa-info-circle me-2"></i> Detailed In/Out Logs View (Placeholder)
     </div>
+</div>
 
 </div>
+
+<script>
+    function switchTab(tabName) {
+        document.querySelectorAll('.nav-btn-tab').forEach(el => el.classList.remove('active'));
+        document.getElementById('view-dashboard').style.display = 'none';
+        document.getElementById('view-time').style.display = 'none';
+
+        if(tabName === 'dash') {
+            document.getElementById('tab-dash').classList.add('active');
+            document.getElementById('view-dashboard').style.display = 'block';
+        } else {
+            document.getElementById('tab-time').classList.add('active');
+            document.getElementById('view-time').style.display = 'block';
+        }
+    }
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
