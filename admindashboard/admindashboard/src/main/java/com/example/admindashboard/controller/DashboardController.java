@@ -87,6 +87,11 @@ public class DashboardController {
         return "timesheet";
     }
 
+    @GetMapping("/attendance")
+    public String showAttendancePage() {
+        return "attendance";
+    }
+
 
 
     // 6. The Client Dashboard (Updated to accept data)
