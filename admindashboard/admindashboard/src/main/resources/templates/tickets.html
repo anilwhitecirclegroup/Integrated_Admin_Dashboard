@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhiteCircle Portal</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #1e3a8a; /* Navy Blue Theme */
+            --bg-color: #f3f4f6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: #334155;
+            padding-top: 90px; /* Space for fixed header */
+        }
+
+        /* --- DASHING WHITE HEADER --- */
+        .top-nav-bar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: white;
+            height: 70px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 30px;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.1),
+                        0 8px 10px -6px rgba(30, 58, 138, 0.1);
+        }
+
+        .brand-section {
+            display: flex; align-items: center;
+            color: #1e3a8a;
+            font-weight: 700;
+            font-size: 1.5rem;
+            min-width: 250px;
+        }
+
+        .btn-back {
+            background: #1e3a8a; color: white;
+            padding: 8px 20px; border-radius: 6px; font-size: 0.85rem; text-decoration: none;
+            border: none; transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(30, 58, 138, 0.2);
+        }
+        .btn-back:hover { background: #172554; color: white; transform: translateY(-1px); }
+
+        /* --- MAIN CONTAINER --- */
+        .main-container {
+            max-width: 1200px; margin: 0 auto; padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav-bar">
+    <div class="brand-section">
+        <i class="fas fa-layer-group me-3 text-primary"></i>
+        Page Title
+    </div>
+    <a href="/employee/dashboard" class="btn-back">
+        <i class="fas fa-arrow-left me-2"></i>Back to Home
+    </a>
+</nav>
+
+<div class="main-container">
+    <div class="alert alert-light border text-center mt-5">
+        <h5 class="text-muted">Work in Progress</h5>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

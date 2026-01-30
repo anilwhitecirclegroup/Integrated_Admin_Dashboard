@@ -99,9 +99,20 @@ public class DashboardController {
         return "password-reset";
     }
 
+    // 13. Payroll Page
+    @GetMapping("/payroll")
+    public String showPayrollPage() { return "payroll"; }
+
+    // 14. Log Tickets / Helpdesk Page
+    @GetMapping("/tickets")
+    public String showTicketsPage() { return "tickets"; }
+
+    // 15. Email Signature Generator Page
+    @GetMapping("/email-signature")
+    public String showEmailSignaturePage() { return "email-signature"; }
 
 
-    // 6. The Client Dashboard (Updated to accept data)
+    //  The Client Dashboard (Updated to accept data)
     @GetMapping("/client")
     public String clientDashboard(@RequestParam String clientName,
                                   @RequestParam String phone,
@@ -116,7 +127,7 @@ public class DashboardController {
         return "client-dashboard";
     }
 
-    // 6. The Notification Center Route
+    //  The Notification Center Route
     @GetMapping("/notifications")
     public String notificationsPage() {
         return "notifications";
