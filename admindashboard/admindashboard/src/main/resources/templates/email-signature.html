@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhiteCircle Portal</title>
+    <title>Email Signature - WhiteCircle</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -19,7 +19,7 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: #334155;
-            padding-top: 90px; /* Space for fixed header */
+            padding-top: 80px;
         }
 
         /* --- DASHING WHITE HEADER --- */
@@ -36,10 +36,7 @@
 
         .brand-section {
             display: flex; align-items: center;
-            color: #1e3a8a;
-            font-weight: 700;
-            font-size: 1.5rem;
-            min-width: 250px;
+            color: #1e3a8a; font-weight: 700; font-size: 1.5rem; min-width: 250px;
         }
 
         .btn-back {
@@ -50,29 +47,214 @@
         }
         .btn-back:hover { background: #172554; color: white; transform: translateY(-1px); }
 
-        /* --- MAIN CONTAINER --- */
-        .main-container {
-            max-width: 1200px; margin: 0 auto; padding: 0 20px;
+        /* --- MAIN CARD --- */
+        .signature-card {
+            max-width: 900px; /* Wider for Split View */
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            border: 2px solid var(--bs-primary); /* Navy Border */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 30px;
+            transition: transform 0.3s ease;
         }
+        .signature-card:hover { transform: translateY(-5px); }
+
+        .card-title { color: var(--bs-primary); font-weight: 800; margin-bottom: 20px; }
+
+        /* --- FORM STYLES --- */
+        .form-label { font-weight: 600; color: #475569; font-size: 0.9rem; }
+        .form-control { background: #f8fafc; border: 1px solid #cbd5e1; }
+        .form-control:focus {
+            background: white; box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1); border-color: var(--bs-primary);
+        }
+
+        /* --- PREVIEW BOX --- */
+        .preview-container {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* The Actual Signature Style (simulates email look) */
+        .sig-box {
+            background: white;
+            padding: 20px;
+            border-left: 4px solid #1e3a8a;
+            font-family: Arial, sans-serif; /* Standard email font */
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .sig-name { font-size: 18px; font-weight: bold; color: #1e3a8a; margin: 0; }
+        .sig-role { font-size: 14px; color: #64748b; margin-bottom: 8px; display: block; }
+        .sig-divider { height: 1px; background: #e2e8f0; margin: 10px 0; }
+        .sig-contact { font-size: 13px; color: #334155; margin-bottom: 4px; display: flex; align-items: center; }
+        .sig-contact i { color: #1e3a8a; width: 20px; }
+
+        .sig-logo { height: 40px; margin-top: 10px; }
+        .sig-slogan { font-size: 11px; color: #94a3b8; font-style: italic; margin-top: 5px; }
+
+        /* --- COPY BUTTON (Interactive) --- */
+        .btn-interactive {
+            transition: all 0.2s; position: relative;
+        }
+        .btn-interactive:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .btn-interactive:active { transform: scale(0.98); }
+
+        /* Toast Notification */
+        .toast-custom {
+            position: fixed; bottom: 30px; right: 30px;
+            background: #1e3a8a; color: white; padding: 12px 25px;
+            border-radius: 50px; box-shadow: 0 5px 15px rgba(30,58,138,0.3);
+            display: none; align-items: center; gap: 10px; z-index: 2000;
+        }
+
     </style>
 </head>
 <body>
 
 <nav class="top-nav-bar">
     <div class="brand-section">
-        <i class="fas fa-layer-group me-3 text-primary"></i>
-        Page Title
+        <i class="fas fa-signature me-3 text-primary"></i>
+        Email Signature
     </div>
     <a href="/employee/dashboard" class="btn-back">
         <i class="fas fa-arrow-left me-2"></i>Back to Home
     </a>
 </nav>
 
-<div class="main-container">
-    <div class="alert alert-light border text-center mt-5">
-        <h5 class="text-muted">Work in Progress</h5>
+<div class="container mb-5" style="margin-top: 50px;">
+
+    <div class="signature-card">
+        <div class="row g-4">
+
+            <div class="col-md-5">
+                <h4 class="card-title">Edit Details</h4>
+
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Employee Name</label>
+                        <input type="text" class="form-control" id="inpName" value="Anil Yadav" oninput="updatePreview()">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Role / Designation</label>
+                        <input type="text" class="form-control" id="inpRole" value="Senior Java Developer" oninput="updatePreview()">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mobile Number</label>
+                        <input type="text" class="form-control" id="inpMobile" value="+91 98765 43210" oninput="updatePreview()">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Company Slogan</label>
+                        <input type="text" class="form-control bg-light" value="Innovating the Future" readonly>
+                        <div class="form-text small">Company slogan is standard for all employees.</div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="button" class="btn btn-primary w-100 fw-bold py-2 btn-interactive" onclick="copySignature()">
+                            <i class="far fa-copy me-2"></i>Copy Signature
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-7">
+                <h4 class="card-title">Live Preview</h4>
+                <div class="preview-container">
+
+                    <div id="signature-wrapper">
+                        <div class="sig-box">
+                            <table border="0" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif;">
+                                <tr>
+                                    <td>
+                                        <h3 id="prevName" class="sig-name">Anil Yadav</h3>
+                                        <span id="prevRole" class="sig-role">Senior Java Developer</span>
+
+                                        <div class="sig-divider"></div>
+
+                                        <div class="sig-contact">
+                                            <i class="fas fa-phone-alt"></i>
+                                            <span id="prevMobile">+91 98765 43210</span>
+                                        </div>
+                                        <div class="sig-contact">
+                                            <i class="fas fa-envelope"></i>
+                                            <span>anil.yadav@whitecircle.com</span>
+                                        </div>
+                                        <div class="sig-contact">
+                                            <i class="fas fa-globe"></i>
+                                            <span>www.whitecircle.com</span>
+                                        </div>
+
+                                        <div style="margin-top: 15px;">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-circle text-primary fs-3 me-2"></i>
+                                                <span class="fw-bold text-dark">WhiteCircle Group</span>
+                                            </div>
+                                            <div class="sig-slogan">"Innovating the Future"</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
+
+<div id="copyToast" class="toast-custom">
+    <i class="fas fa-check-circle"></i> Signature copied to clipboard!
+</div>
+
+<script>
+    // 1. Live Preview Update
+    function updatePreview() {
+        document.getElementById('prevName').textContent = document.getElementById('inpName').value;
+        document.getElementById('prevRole').textContent = document.getElementById('inpRole').value;
+        document.getElementById('prevMobile').textContent = document.getElementById('inpMobile').value;
+    }
+
+    // 2. Copy Functionality
+    function copySignature() {
+        const range = document.createRange();
+        const selection = window.getSelection();
+        const element = document.getElementById('signature-wrapper'); // Copy the wrapper content
+
+        selection.removeAllRanges();
+        range.selectNodeContents(element);
+        selection.addRange(range);
+
+        try {
+            document.execCommand('copy');
+            showToast();
+        } catch (err) {
+            alert('Failed to copy');
+        }
+
+        selection.removeAllRanges();
+    }
+
+    // 3. Toast Animation
+    function showToast() {
+        const toast = document.getElementById('copyToast');
+        toast.style.display = 'flex';
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3000);
+    }
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
