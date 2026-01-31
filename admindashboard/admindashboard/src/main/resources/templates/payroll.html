@@ -164,11 +164,24 @@
         }
         .panel-title { font-weight: 700; color: white; margin: 0; font-size: 1rem; }
 
+        /* --- HEADER BUTTONS RESTORED (Previous Style) --- */
+
+        /* 1. Reset the "View All" buttons inside the Navy Header to be transparent */
         .panel-header .btn-action-sm {
-            color: #bfdbfe; border-color: #bfdbfe;
+            background-color: transparent;
+            border: 1px solid #bfdbfe;
+            color: #bfdbfe;
+            box-shadow: none;
+            border-radius: 4px;
         }
+
+        /* 2. Hover Effect: Just brightens up (Subtle) */
         .panel-header .btn-action-sm:hover {
-            color: white; border-color: white; background: rgba(255,255,255,0.1);
+            background-color: rgba(255, 255, 255, 0.15); /* Slight glass effect */
+            color: white !important;
+            border-color: white;
+            transform: translateY(-1px);
+            box-shadow: none;
         }
 
         .table-custom th { font-size: 0.8rem; text-transform: uppercase; color: #64748b; background: white; border-bottom: 2px solid #f1f5f9; }
