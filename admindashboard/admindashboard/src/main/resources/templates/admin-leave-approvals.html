@@ -70,7 +70,7 @@
 
         /* --- TABS --- */
         .nav-pills {
-            background: white; padding: 8px; border-radius: 50px;
+            background: white; padding: 8px; border-radius: 30px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             display: inline-flex; margin-bottom: 25px;
             border: 1px solid #e2e8f0;
@@ -91,37 +91,145 @@
         }
         .nav-link.active .badge-count { background: rgba(255,255,255,0.25); color: white; }
 
-        /* --- CARDS --- */
+        /* --- UNIFIED CARDS --- */
         .approval-card {
-            background: white; border: 1px solid #e2e8f0; border-radius: 12px;
-            padding: 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;
-            transition: transform 0.2s, box-shadow 0.2s; border-left: 5px solid transparent;
+            background: white;
+            border: 1px solid #e2e8f0; /* Thin border outlining the specific card area */
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother, more premium transition */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); /* Subtle resting shadow */
+
+            /* Crucial for the left navy border to stay inside the rounded corners */
+            position: relative;
+            overflow: hidden;
         }
-        .approval-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.03); border-color: #cbd5e1; }
 
-        .border-pending { border-left-color: #0d6efd; }
-        .border-approved { border-left-color: #198754; opacity: 0.85; }
-        .border-rejected { border-left-color: #dc3545; opacity: 0.85; }
+        /* 1. Enhanced Hover State for the Card */
+        .approval-card:hover {
+            transform: translateY(-4px); /* Lifts the card up */
+            box-shadow: 0 12px 24px rgba(30, 58, 138, 0.08); /* Deep, soft shadow */
+            border-color: #cbd5e1; /* Darkens the thin border slightly on hover */
+        }
 
-        .emp-initials { width: 50px; height: 50px; background: #e0e7ff; color: var(--bs-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; margin-right: 15px; }
+        /* --- 2. The Left Border (Start Navy, Fade on Hover) --- */
+        .approval-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background-color: var(--bs-primary); /* Starts Navy */
+            border-radius: 12px 0 0 12px;
+            transition: background-color 0.3s ease; /* Smooth color fade */
+        }
+
+        .approval-card:hover::before {
+            background-color: transparent; /* Fades out to match the white card */
+        }
+
+        /* --- 3. The Avatar (Start Navy, Turn Light on Hover) --- */
+        .emp-initials {
+            width: 50px;
+            height: 50px;
+            background-color: var(--bs-primary);
+            color: white;
+            border: 1px solid var(--bs-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            transition: all 0.3s ease;
+            z-index: 1; /* Keeps avatar above the border fade */
+        }
+
+        .approval-card:hover .emp-initials {
+            background-color: #f8fafc;
+            color: var(--bs-primary);
+            border-color: #e2e8f0;
+        }
+
+        /* --- TEXT & INFO STYLES --- */
         .req-info { flex-grow: 1; }
         .emp-name { font-weight: 700; color: #1e293b; font-size: 1.1rem; margin-bottom: 2px; }
-        .emp-id { font-size: 0.8rem; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: #64748b; margin-left: 8px; }
+        .emp-id { font-size: 0.75rem; background: #f1f5f9; padding: 3px 8px; border-radius: 6px; color: #64748b; margin-left: 8px; font-weight: 600; border: 1px solid #e2e8f0;}
         .leave-details { font-size: 0.9rem; color: #475569; margin-top: 5px; }
-        .leave-dates { font-size: 0.85rem; color: #1e3a8a; font-weight: 600; background: #eff6ff; padding: 4px 10px; border-radius: 20px; display: inline-block; margin-top: 8px; }
+        .leave-dates { font-size: 0.85rem; color: #1e3a8a; font-weight: 600; background: #eff6ff; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-top: 8px; border: 1px solid #dbeafe;}
 
+        /* --- 4. BUTTONS & ACTIONS (Upgraded Hover Effects) --- */
         .action-group { display: flex; gap: 10px; align-items: center; }
-        .btn-action { padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; transition: all 0.2s; border: none; }
-        .btn-view { background: #f1f5f9; color: #475569; }
-        .btn-view:hover { background: #e2e8f0; }
-        .btn-approve { background: #dcfce7; color: #16a34a; }
-        .btn-approve:hover { background: #16a34a; color: white; }
-        .btn-deny { background: #fee2e2; color: #dc2626; }
-        .btn-deny:hover { background: #dc2626; color: white; }
 
-        .status-badge { padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
-        .bg-approved { background: #dcfce7; color: #15803d; }
-        .bg-denied { background: #fee2e2; color: #b91c1c; }
+        .btn-action {
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease; /* Ensures smooth animations for all buttons */
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        /* Details Button: Starts Light Gray -> Turns Navy + Lift + Shadow */
+        .btn-view {
+            background: #f8fafc;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+        .btn-view:hover {
+            background: var(--bs-primary);
+            color: white;
+            border-color: var(--bs-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.25);
+        }
+
+        /* Approve Button: Starts Green -> Darker Green + Lift + Shadow */
+        .btn-approve {
+            background: #16a34a;
+            color: white;
+            border: 1px solid #16a34a;
+        }
+        .btn-approve:hover {
+            background: #15803d;
+            border-color: #15803d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(22, 163, 74, 0.3);
+        }
+
+        /* Reject Button: Starts White w/ Red Text -> Turns Solid Red + Lift + Shadow */
+        .btn-deny {
+            background: white;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        .btn-deny:hover {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);
+        }
+
+        /* Elegant Status Badges */
+        .status-badge {
+            padding: 6px 16px; border-radius: 50px; font-size: 0.75rem;
+            font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .badge-pending { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+        .badge-approved { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+        .badge-rejected { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
     </style>
 </head>
 <body>
@@ -165,19 +273,19 @@
     <div class="tab-content" id="approvalTabsContent">
 
         <div class="tab-pane fade show active" id="pending" role="tabpanel">
-            <div th:if="${pendingLeaves == null or pendingLeaves.isEmpty()}" class="text-center p-5 bg-white rounded shadow-sm text-muted border">
+            <div th:if="${pendingLeaves == null or pendingLeaves.isEmpty()}" class="text-center p-5 bg-white rounded-4 shadow-sm text-muted border">
                 <i class="fas fa-mug-hot fa-3x mb-3 text-light"></i>
-                <h5>All caught up!</h5>
-                <p>There are no pending leave requests to review.</p>
+                <h5 class="fw-bold text-dark">All caught up!</h5>
+                <p class="mb-0">There are no pending leave requests to review.</p>
             </div>
 
-            <div th:each="leave : ${pendingLeaves}" class="approval-card border-pending">
+            <div th:each="leave : ${pendingLeaves}" class="approval-card">
                 <div class="d-flex align-items-center w-100">
                     <div class="emp-initials"><i class="fas fa-user"></i></div>
                     <div class="req-info">
                         <div class="emp-name" th:text="${leave.user.fullName}">Employee Name <span class="emp-id" th:text="${leave.user.username}">EMP000</span></div>
                         <div class="leave-details">
-                            <strong th:text="${leave.leaveType}">Leave Type</strong> | <span th:text="${leave.leaveMode}">Mode</span> |
+                            <strong class="text-dark" th:text="${leave.leaveType}">Leave Type</strong> | <span th:text="${leave.leaveMode}">Mode</span> |
                             <span class="text-dark fw-bold" th:text="${leave.totalDays} + ' Day(s)'">0 Days</span>
                         </div>
                         <div class="leave-dates">
@@ -186,68 +294,77 @@
                         </div>
                     </div>
 
-                    <div class="action-group">
-                        <button class="btn-action btn-view" data-bs-toggle="modal" th:attr="data-bs-target='#detailsModal'+${leave.id}">
-                            <i class="fas fa-eye"></i> View Details
-                        </button>
-                        <button class="btn-action btn-approve" th:onclick="|approveLeave(${leave.id})|">
-                            <i class="fas fa-check"></i> Approve
-                        </button>
-                        <button class="btn-action btn-deny" th:onclick="|openRejectModal(${leave.id})|">
-                            <i class="fas fa-times"></i> Reject
-                        </button>
+                    <div class="d-flex flex-column align-items-end gap-3">
+                        <span class="status-badge badge-pending"><i class="fas fa-circle-notch fa-spin"></i> Pending</span>
+                        <div class="action-group">
+                            <button class="btn-action btn-view" data-bs-toggle="modal" th:attr="data-bs-target='#detailsModal'+${leave.id}">
+                                <i class="fas fa-eye"></i> Details
+                            </button>
+                            <button class="btn-action btn-deny" th:onclick="|openRejectModal(${leave.id})|">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                            <button class="btn-action btn-approve" th:onclick="|approveLeave(${leave.id})|">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="tab-pane fade" id="approved" role="tabpanel">
-            <div th:if="${approvedLeaves == null or approvedLeaves.isEmpty()}" class="text-center p-5 bg-white rounded shadow-sm text-muted border">
-                <p>No approved leaves found.</p>
+            <div th:if="${approvedLeaves == null or approvedLeaves.isEmpty()}" class="text-center p-5 bg-white rounded-4 shadow-sm text-muted border">
+                <p class="mb-0">No approved leaves found.</p>
             </div>
 
-            <div th:each="leave : ${approvedLeaves}" class="approval-card border-approved">
+            <div th:each="leave : ${approvedLeaves}" class="approval-card">
                 <div class="d-flex align-items-center w-100">
-                    <div class="emp-initials bg-success text-white"><i class="fas fa-check"></i></div>
+                    <div class="emp-initials"><i class="fas fa-user"></i></div>
                     <div class="req-info">
                         <div class="emp-name" th:text="${leave.user.fullName}">Employee Name <span class="emp-id" th:text="${leave.user.username}">EMP000</span></div>
                         <div class="leave-details">
-                            <strong th:text="${leave.leaveType}">Leave Type</strong> | <span th:text="${leave.totalDays} + ' Day(s)'">0 Days</span>
+                            <strong class="text-dark" th:text="${leave.leaveType}">Leave Type</strong> | <span class="text-dark fw-bold" th:text="${leave.totalDays} + ' Day(s)'">0 Days</span>
                         </div>
-                        <div class="leave-dates text-success bg-success bg-opacity-10">
+                        <div class="leave-dates">
+                            <i class="far fa-calendar-alt me-1"></i>
                             <span th:text="${leave.fromDate}">Start</span> to <span th:text="${leave.toDate}">End</span>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
+
+                    <div class="d-flex flex-column align-items-end gap-3">
+                        <span class="status-badge badge-approved"><i class="fas fa-check-circle"></i> Approved</span>
                         <button class="btn-action btn-view" data-bs-toggle="modal" th:attr="data-bs-target='#detailsModal'+${leave.id}">
                             <i class="fas fa-eye"></i> View Details
                         </button>
-                        <span class="status-badge bg-approved">Approved</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="tab-pane fade" id="rejected" role="tabpanel">
-            <div th:if="${rejectedLeaves == null or rejectedLeaves.isEmpty()}" class="text-center p-5 bg-white rounded shadow-sm text-muted border">
-                <p>No rejected leaves found.</p>
+            <div th:if="${rejectedLeaves == null or rejectedLeaves.isEmpty()}" class="text-center p-5 bg-white rounded-4 shadow-sm text-muted border">
+                <p class="mb-0">No rejected leaves found.</p>
             </div>
 
-            <div th:each="leave : ${rejectedLeaves}" class="approval-card border-rejected">
+            <div th:each="leave : ${rejectedLeaves}" class="approval-card">
                 <div class="d-flex align-items-center w-100">
-                    <div class="emp-initials bg-danger text-white"><i class="fas fa-times"></i></div>
+                    <div class="emp-initials"><i class="fas fa-user"></i></div>
                     <div class="req-info">
                         <div class="emp-name" th:text="${leave.user.fullName}">Employee Name <span class="emp-id" th:text="${leave.user.username}">EMP000</span></div>
-                        <div class="leave-details">
-                            <strong th:text="${leave.leaveType}">Leave Type</strong>
+                        <div class="leave-details mb-2">
+                            <strong class="text-dark" th:text="${leave.leaveType}">Leave Type</strong> | <span class="text-dark fw-bold" th:text="${leave.totalDays} + ' Day(s)'">0 Days</span>
                         </div>
-                        <div class="text-danger small mt-2 fw-bold" th:text="'Note: ' + ${leave.adminComments != null ? leave.adminComments : 'No reason provided'}">Reason</div>
+                        <div class="p-2 bg-light rounded border text-muted small" style="max-width: 80%;">
+                            <i class="fas fa-comment-dots me-1 text-danger"></i>
+                            <span th:text="${leave.adminComments != null ? leave.adminComments : 'No specific reason provided.'}">Reason</span>
+                        </div>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
+
+                    <div class="d-flex flex-column align-items-end gap-3">
+                        <span class="status-badge badge-rejected"><i class="fas fa-times-circle"></i> Rejected</span>
                         <button class="btn-action btn-view" data-bs-toggle="modal" th:attr="data-bs-target='#detailsModal'+${leave.id}">
                             <i class="fas fa-eye"></i> View Details
                         </button>
-                        <span class="status-badge bg-denied">Rejected</span>
                     </div>
                 </div>
             </div>
