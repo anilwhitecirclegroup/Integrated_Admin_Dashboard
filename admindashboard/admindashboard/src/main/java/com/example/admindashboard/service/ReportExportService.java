@@ -149,6 +149,74 @@ public class ReportExportService {
         outputStream.close();
     }
 
+    // ==========================================
+    // EXPORT ATTENDANCE REPORT TO EXCEL
+    // ==========================================
+    public void exportAttendanceReportToExcel(HttpServletResponse response, List<com.example.admindashboard.model.Attendance> attendanceList) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Attendance Report");
+
+        // 1. DEFINE HEADERS (Removed "Approved By")
+        String[] columns = {
+                "Employee ID",
+                "Employee Name",
+                "Designation",
+                "Week Range",
+                "Submitted On",
+                "Total Hours",
+                "Status"
+        };
+
+        // 2. CREATE HEADER ROW
+        Row headerRow = sheet.createRow(0);
+        CellStyle headerStyle = createHeaderStyle(workbook);
+
+        for (int i = 0; i < columns.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(columns[i]);
+            cell.setCellStyle(headerStyle);
+        }
+
+        // 3. FILL DATA ROWS
+        int rowIdx = 1;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        for (com.example.admindashboard.model.Attendance att : attendanceList) {
+            Row row = sheet.createRow(rowIdx++);
+
+            // Employee Details
+            row.createCell(0).setCellValue(att.getUser() != null ? att.getUser().getUsername() : "N/A");
+            row.createCell(1).setCellValue(att.getUser() != null ? att.getUser().getFullName() : "N/A");
+
+            String designation = att.getUser() != null ? att.getUser().getDesignation() : null;
+            row.createCell(2).setCellValue(designation != null && !designation.isEmpty() ? designation : "N/A");
+
+            // Week Range (Using String directly)
+            String weekStart = att.getWeekStartDate() != null ? att.getWeekStartDate() : "N/A";
+            String weekEnd = att.getWeekEndDate() != null ? att.getWeekEndDate() : "N/A";
+            row.createCell(3).setCellValue(weekStart + " to " + weekEnd);
+
+            // Submission Date (Using submittedOn)
+            if (att.getSubmittedOn() != null) {
+                row.createCell(4).setCellValue(att.getSubmittedOn().format(formatter));
+            } else {
+                row.createCell(4).setCellValue("Not Submitted");
+            }
+
+            // Hours & Status (Using String directly and approvalStatus)
+            row.createCell(5).setCellValue(att.getTotalHours() != null ? att.getTotalHours() : "0");
+            row.createCell(6).setCellValue(att.getApprovalStatus() != null ? att.getApprovalStatus() : "Pending");
+        }
+
+        for (int i = 0; i < columns.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        ServletOutputStream outputStream = response.getOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+        outputStream.close();
+    }
 
 
     // --- 3. HELPER METHOD: CREATE HEADER STYLE (This fixes the error) ---
@@ -169,5 +237,90 @@ public class ReportExportService {
         style.setAlignment(HorizontalAlignment.CENTER);
 
         return style;
+    }
+
+
+    // EXPORT LEAVES TO EXCEL
+    // ==========================================
+    public void exportLeaveReportToExcel(jakarta.servlet.http.HttpServletResponse response, java.util.List<com.example.admindashboard.model.LeaveRequest> leaves) throws java.io.IOException {
+        try (org.apache.poi.ss.usermodel.Workbook workbook = new org.apache.poi.xssf.usermodel.XSSFWorkbook();
+             java.io.OutputStream out = response.getOutputStream()) {
+
+            org.apache.poi.ss.usermodel.Sheet sheet = workbook.createSheet("Leave Report");
+
+            // Header Row
+            org.apache.poi.ss.usermodel.Row headerRow = sheet.createRow(0);
+            String[] columns = {"Employee Name", "EMP ID", "Leave Type", "Start Date", "End Date", "Total Days", "Status", "Reason"};
+
+            org.apache.poi.ss.usermodel.Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            org.apache.poi.ss.usermodel.CellStyle headerStyle = workbook.createCellStyle();
+            headerStyle.setFont(headerFont);
+
+            for (int i = 0; i < columns.length; i++) {
+                org.apache.poi.ss.usermodel.Cell cell = headerRow.createCell(i);
+                cell.setCellValue(columns[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            // Data Rows
+            int rowIdx = 1;
+            for (com.example.admindashboard.model.LeaveRequest leave : leaves) {
+                org.apache.poi.ss.usermodel.Row row = sheet.createRow(rowIdx++);
+                row.createCell(0).setCellValue(leave.getUser() != null ? leave.getUser().getFullName() : "N/A");
+                row.createCell(1).setCellValue(leave.getUser() != null ? leave.getUser().getUsername() : "N/A");
+                row.createCell(2).setCellValue(leave.getLeaveType() != null ? leave.getLeaveType() : "N/A");
+                row.createCell(3).setCellValue(leave.getFromDate() != null ? leave.getFromDate().toString() : "");
+                row.createCell(4).setCellValue(leave.getToDate() != null ? leave.getToDate().toString() : "");
+                row.createCell(5).setCellValue(leave.getTotalDays() != null ? leave.getTotalDays() : 0.0);
+                row.createCell(6).setCellValue(leave.getStatus() != null ? leave.getStatus() : "Pending");
+                row.createCell(7).setCellValue(leave.getReason() != null ? leave.getReason() : "");
+            }
+
+            for (int i = 0; i < columns.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            workbook.write(out);
+        }
+    }
+
+    // EXPORT LEAVES TO PDF
+    // ==========================================
+    public void exportLeaveReportToPdf(jakarta.servlet.http.HttpServletResponse response, java.util.List<com.example.admindashboard.model.LeaveRequest> leaves) throws java.io.IOException {
+        try {
+            com.lowagie.text.Document document = new com.lowagie.text.Document(com.lowagie.text.PageSize.A4.rotate()); // Landscape for more columns
+            com.lowagie.text.pdf.PdfWriter.getInstance(document, response.getOutputStream());
+            document.open();
+
+            com.lowagie.text.Font titleFont = new com.lowagie.text.Font(com.lowagie.text.Font.HELVETICA, 18, com.lowagie.text.Font.BOLD);
+            document.add(new com.lowagie.text.Paragraph("Monthly Leave Report", titleFont));
+            document.add(new com.lowagie.text.Paragraph(" "));
+
+            com.lowagie.text.pdf.PdfPTable table = new com.lowagie.text.pdf.PdfPTable(7);
+            table.setWidthPercentage(100);
+
+            String[] headers = {"Employee", "ID", "Type", "Start", "End", "Days", "Status"};
+            com.lowagie.text.Font headerFont = new com.lowagie.text.Font(com.lowagie.text.Font.HELVETICA, 12, com.lowagie.text.Font.BOLD);
+
+            for (String header : headers) {
+                table.addCell(new com.lowagie.text.Paragraph(header, headerFont));
+            }
+
+            for (com.example.admindashboard.model.LeaveRequest leave : leaves) {
+                table.addCell(leave.getUser() != null ? leave.getUser().getFullName() : "N/A");
+                table.addCell(leave.getUser() != null ? leave.getUser().getUsername() : "N/A");
+                table.addCell(leave.getLeaveType() != null ? leave.getLeaveType() : "N/A");
+                table.addCell(leave.getFromDate() != null ? leave.getFromDate().toString() : "");
+                table.addCell(leave.getToDate() != null ? leave.getToDate().toString() : "");
+                table.addCell(String.valueOf(leave.getTotalDays() != null ? leave.getTotalDays() : 0.0));
+                table.addCell(leave.getStatus() != null ? leave.getStatus() : "Pending");
+            }
+
+            document.add(table);
+            document.close();
+        } catch (Exception e) {
+            throw new java.io.IOException("Error generating PDF: " + e.getMessage());
+        }
     }
 }

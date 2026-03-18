@@ -1,7 +1,9 @@
 package com.example.admindashboard.controller;
 
+import com.example.admindashboard.model.Attendance;
 import com.example.admindashboard.model.Timesheet;
 import com.example.admindashboard.model.User;
+import com.example.admindashboard.repository.AttendanceRepository;
 import com.example.admindashboard.repository.TimesheetRepository;
 import com.example.admindashboard.repository.UserRepository;
 import com.example.admindashboard.service.ReportExportService;
@@ -31,11 +33,13 @@ public class ReportController {
     @Autowired
     private TimesheetRepository timesheetRepository;
 
+    // UNCOMMENTED AND ACTIVE NOW!
+    @Autowired
+    private AttendanceRepository attendanceRepository;
+
     @Autowired
     private ReportExportService exportService;
 
-    // TODO: Uncomment when Attendance/Leave Repositories are created
-    // @Autowired private AttendanceRepository attendanceRepository;
     // @Autowired private LeaveRepository leaveRepository;
 
     @GetMapping("/admin/timesheets/view")
@@ -81,7 +85,6 @@ public class ReportController {
                         Sort.by("username").ascending() : Sort.by("username").descending();
                 Pageable empPageable = PageRequest.of(page, size, sort);
 
-                // Ensure we are fetching real data and passing the search term correctly
                 Page<User> employeePage = (search == null || search.isEmpty()) ?
                         userRepository.findByRole("EMPLOYEE", empPageable) :
                         userRepository.searchEmployees(search, empPageable);
@@ -89,38 +92,37 @@ public class ReportController {
                 model.addAttribute("dataPage", employeePage);
                 return "admin/employee-master-report";
 
-
             case "timesheet":
-                // 1. Standard Pagination & Sorting
                 Pageable timePageable = PageRequest.of(page, size, Sort.by("weekStartDate").descending());
-                // 2. Prepare Keyword
                 keyword = (search != null) ? search : "";
-                // 3. Fetch Data from Repository
                 Page<Timesheet> timesheetPage = timesheetRepository.searchTimesheets(from, to, keyword, timePageable);
-                // 4. Send to UI (We will handle the "Week Range" display in the HTML instead)
                 model.addAttribute("dataPage", timesheetPage);
                 return "admin/timesheets-report";
 
-
-
             case "attendance":
-                // return "admin/attendance-report"; // Create this file to avoid errors
-                return "admin/attendance-report"; // Temporary fallback
+                Pageable attPageable = PageRequest.of(page, size, Sort.by("weekStartDate").descending());
+                keyword = (search != null) ? search : "";
+
+                // NEW: Convert LocalDate to String for the DB comparison
+                String fromStr = (from != null) ? from.toString() : null;
+                String toStr = (to != null) ? to.toString() : null;
+
+                Page<Attendance> attendancePage = attendanceRepository.searchAttendance(fromStr, toStr, keyword, attPageable);
+                model.addAttribute("dataPage", attendancePage);
+                return "admin/attendance-report";
 
             case "leave":
-                // return "admin/leave-report"; // Create this file to avoid errors
-                return "admin/leave-report"; // Temporary fallback
+                return "admin/leave-report";
 
             default:
                 return "redirect:/admin/reports?type=employee";
         }
     }
 
-
     @GetMapping("/admin/reports/download")
     public void downloadReport(
             @RequestParam String type,
-            @RequestParam(required = false) String search, // ADDED: Capture search term
+            @RequestParam(required = false) String search,
             @RequestParam(required = false) LocalDate from,
             @RequestParam(required = false) LocalDate to,
             HttpServletResponse response) throws IOException {
@@ -136,24 +138,30 @@ public class ReportController {
         if ("employee".equals(type)) {
             List<User> exportList;
             if (search != null && !search.isEmpty()) {
-                // Fetch ONLY the searched employees for the Excel
                 exportList = userRepository.findByFullNameContainingIgnoreCaseOrUsernameContainingIgnoreCase(search, search);
-                // Filter list to only include EMPLOYEES
                 exportList = exportList.stream().filter(u -> "EMPLOYEE".equals(u.getRole())).toList();
             } else {
                 exportList = userRepository.findByRoleOrderByUsernameAsc("EMPLOYEE");
             }
             exportService.exportEmployeeReportToExcel(response, exportList);
         }
-
         else if ("timesheet".equals(type)) {
             List<Timesheet> exportList;
             String keyword = (search != null) ? search : "";
-
-            // Use the same search logic as the UI to ensure Excel matches the screen
             exportList = timesheetRepository.findTimesheetsBySearchCriteria(from, to, keyword);
-
             exportService.exportTimesheetReportToExcel(response, exportList);
+        }
+        // NEW: Export Attendance Data
+        else if ("attendance".equals(type)) {
+            List<Attendance> exportList;
+            String keyword = (search != null) ? search : "";
+
+            // NEW: Convert LocalDate to String for the DB comparison
+            String fromStr = (from != null) ? from.toString() : null;
+            String toStr = (to != null) ? to.toString() : null;
+
+            exportList = attendanceRepository.findAttendanceBySearchCriteria(fromStr, toStr, keyword);
+            exportService.exportAttendanceReportToExcel(response, exportList);
         }
     }
 }
