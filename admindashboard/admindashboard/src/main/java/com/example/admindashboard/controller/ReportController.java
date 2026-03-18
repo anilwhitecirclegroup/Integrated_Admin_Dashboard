@@ -31,7 +31,7 @@ public class ReportController {
     private UserRepository userRepository;
 
     @Autowired
-    private TimesheetRepository timesheetRepository;
+    private com.example.admindashboard.repository.WeeklyTimesheetRepository weeklyTimesheetRepository;
 
     // UNCOMMENTED AND ACTIVE NOW!
     @Autowired
@@ -47,7 +47,8 @@ public class ReportController {
         List<User> employees = userRepository.findByRoleOrderByUsernameAsc("EMPLOYEE");
         model.addAttribute("employees", employees);
 
-        List<Timesheet> allTimesheets = timesheetRepository.findAll();
+        // FIX: Change Timesheet to WeeklyTimesheet and use the new repository
+        List<com.example.admindashboard.model.WeeklyTimesheet> allTimesheets = weeklyTimesheetRepository.findAll();
         model.addAttribute("allTimesheets", allTimesheets != null ? allTimesheets : new ArrayList<>());
 
         return "admin/admin-weekly-timesheet-report";
@@ -95,7 +96,11 @@ public class ReportController {
             case "timesheet":
                 Pageable timePageable = PageRequest.of(page, size, Sort.by("weekStartDate").descending());
                 keyword = (search != null) ? search : "";
-                Page<Timesheet> timesheetPage = timesheetRepository.searchTimesheets(from, to, keyword, timePageable);
+
+                // Uses your new WeeklyTimesheet model and repository!
+                Page<com.example.admindashboard.model.WeeklyTimesheet> timesheetPage =
+                        weeklyTimesheetRepository.searchTimesheets(from, to, keyword, timePageable);
+
                 model.addAttribute("dataPage", timesheetPage);
                 return "admin/timesheets-report";
 
@@ -145,13 +150,15 @@ public class ReportController {
             }
             exportService.exportEmployeeReportToExcel(response, exportList);
         }
+
         else if ("timesheet".equals(type)) {
-            List<Timesheet> exportList;
+            List<com.example.admindashboard.model.WeeklyTimesheet> exportList;
             String keyword = (search != null) ? search : "";
-            exportList = timesheetRepository.findTimesheetsBySearchCriteria(from, to, keyword);
+
+            exportList = weeklyTimesheetRepository.findTimesheetsBySearchCriteria(from, to, keyword);
             exportService.exportTimesheetReportToExcel(response, exportList);
         }
-        // NEW: Export Attendance Data
+
         else if ("attendance".equals(type)) {
             List<Attendance> exportList;
             String keyword = (search != null) ? search : "";

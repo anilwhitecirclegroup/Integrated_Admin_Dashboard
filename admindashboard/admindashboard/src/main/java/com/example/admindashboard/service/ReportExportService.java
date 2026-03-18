@@ -69,24 +69,20 @@ public class ReportExportService {
         outputStream.close();
     }
 
-    //---- 2. EXPORT TIMESHEET REPORT
-    public void exportTimesheetReportToExcel(HttpServletResponse response, List<Timesheet> timesheets) throws IOException {
+    //---- 2. EXPORT WEEKLY TIMESHEET REPORT
+    //---- 2. EXPORT WEEKLY TIMESHEET REPORT (Detailed Task Breakdown)
+    public void exportTimesheetReportToExcel(HttpServletResponse response, List<com.example.admindashboard.model.WeeklyTimesheet> timesheets) throws IOException {
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Timesheet Report");
+        Sheet sheet = workbook.createSheet("Timesheet Details");
 
-        // 1. DEFINE HEADERS (Exact Order)
+        // 1. Expanded Headers to include daily breakdown and task totals
         String[] columns = {
-                "Employee ID",      // Index 0
-                "Employee Name",    // Index 1
-                "Designation",      // Index 2 (NEW)
-                "Week Range",       // Index 3
-                "Submitted On",     // Index 4
-                "Total Hours",      // Index 5
-                "Status",           // Index 6
-                "Approved By"       // Index 7 (NEW)
+                "Employee ID", "Employee Name", "Designation", "Week Range",
+                "Project ID", "Task ID", "Task Type",
+                "Mon", "Tue", "Wed", "Thu", "Fri",
+                "Task Total", "Overall Week Total", "Status", "Submitted On"
         };
 
-        // 2. CREATE HEADER ROW
         Row headerRow = sheet.createRow(0);
         CellStyle headerStyle = createHeaderStyle(workbook);
 
@@ -96,60 +92,80 @@ public class ReportExportService {
             cell.setCellStyle(headerStyle);
         }
 
-        // 3. FILL DATA ROWS (Strict Index Mapping)
         int rowIdx = 1;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-        for (Timesheet ts : timesheets) {
-            Row row = sheet.createRow(rowIdx++);
+        // 2. Loop through timesheets, and then loop through the tasks INSIDE the timesheet
+        for (com.example.admindashboard.model.WeeklyTimesheet ts : timesheets) {
+            String empId = ts.getUser() != null ? ts.getUser().getUsername() : "N/A";
+            String empName = ts.getUser() != null ? ts.getUser().getFullName() : "N/A";
+            String designation = ts.getUser() != null && ts.getUser().getDesignation() != null ? ts.getUser().getDesignation() : "N/A";
 
-            // --- COL 0: Employee ID ---
-            row.createCell(0).setCellValue(ts.getUser().getUsername());
+            String weekRange = (ts.getWeekStartDate() != null && ts.getWeekEndDate() != null) ?
+                    ts.getWeekStartDate().format(formatter) + " to " + ts.getWeekEndDate().format(formatter) : "N/A";
 
-            // --- COL 1: Name ---
-            row.createCell(1).setCellValue(ts.getUser().getFullName());
+            String submittedOn = ts.getSubmittedAt() != null ? ts.getSubmittedAt().format(formatter) : "Not Submitted";
+            double weekTotal = ts.getTotalWeekHours() != null ? ts.getTotalWeekHours() : 0.0;
+            String status = ts.getStatus() != null ? ts.getStatus() : "DRAFT";
 
-            // --- COL 2: Designation (The Missing Piece!) ---
-            String designation = ts.getUser().getDesignation();
-            row.createCell(2).setCellValue(designation != null && !designation.isEmpty() ? designation : "N/A");
+            // If the timesheet has logged tasks, print a row for each task
+            if (ts.getEntries() != null && !ts.getEntries().isEmpty()) {
+                for (com.example.admindashboard.model.WeeklyTimesheetEntry entry : ts.getEntries()) {
+                    Row row = sheet.createRow(rowIdx++);
 
-            // --- COL 3: Week Range ---
-            // Calculate End Date (Start + 6 days)
-            String startDate = ts.getWeekStartDate().format(formatter);
-            String endDate = ts.getWeekStartDate().plusDays(6).format(formatter);
-            row.createCell(3).setCellValue(startDate + " - " + endDate);
+                    row.createCell(0).setCellValue(empId);
+                    row.createCell(1).setCellValue(empName);
+                    row.createCell(2).setCellValue(designation);
+                    row.createCell(3).setCellValue(weekRange);
 
-            // --- COL 4: Submitted On ---
-            if (ts.getSubmissionDate() != null) {
-                row.createCell(4).setCellValue(ts.getSubmissionDate().format(formatter));
+                    row.createCell(4).setCellValue(entry.getProjectId() != null ? "PRJ-" + entry.getProjectId() : "N/A");
+                    row.createCell(5).setCellValue(entry.getTaskId() != null ? "TSK-" + entry.getTaskId() : "N/A");
+                    row.createCell(6).setCellValue(entry.getType() != null ? entry.getType() : "Standard");
+
+                    row.createCell(7).setCellValue(entry.getMonHours() != null ? entry.getMonHours() : 0.0);
+                    row.createCell(8).setCellValue(entry.getTueHours() != null ? entry.getTueHours() : 0.0);
+                    row.createCell(9).setCellValue(entry.getWedHours() != null ? entry.getWedHours() : 0.0);
+                    row.createCell(10).setCellValue(entry.getThuHours() != null ? entry.getThuHours() : 0.0);
+                    row.createCell(11).setCellValue(entry.getFriHours() != null ? entry.getFriHours() : 0.0);
+
+                    row.createCell(12).setCellValue(entry.getRowTotalHours() != null ? entry.getRowTotalHours() : 0.0);
+                    row.createCell(13).setCellValue(weekTotal);
+                    row.createCell(14).setCellValue(status);
+                    row.createCell(15).setCellValue(submittedOn);
+                }
             } else {
-                row.createCell(4).setCellValue("Not Submitted");
+                // Fallback row if they created a timesheet but haven't logged any specific tasks yet
+                Row row = sheet.createRow(rowIdx++);
+                row.createCell(0).setCellValue(empId);
+                row.createCell(1).setCellValue(empName);
+                row.createCell(2).setCellValue(designation);
+                row.createCell(3).setCellValue(weekRange);
+                row.createCell(4).setCellValue("No Projects Logged");
+                row.createCell(5).setCellValue("-");
+                row.createCell(6).setCellValue("-");
+                row.createCell(7).setCellValue(0.0);
+                row.createCell(8).setCellValue(0.0);
+                row.createCell(9).setCellValue(0.0);
+                row.createCell(10).setCellValue(0.0);
+                row.createCell(11).setCellValue(0.0);
+                row.createCell(12).setCellValue(0.0);
+                row.createCell(13).setCellValue(weekTotal);
+                row.createCell(14).setCellValue(status);
+                row.createCell(15).setCellValue(submittedOn);
             }
-
-            // --- COL 5: Total Hours ---
-            row.createCell(5).setCellValue(ts.getTotalHours() != null ? ts.getTotalHours() : 0.0);
-
-            // --- COL 6: Status ---
-            row.createCell(6).setCellValue(ts.getStatus());
-
-            // --- COL 7: Approved By ---
-            String approver = ts.getApprovedBy();
-            row.createCell(7).setCellValue(approver != null && !approver.isEmpty() ? approver : "-");
         }
 
-        // 4. AUTO-SIZE COLUMNS
         for (int i = 0; i < columns.length; i++) {
             sheet.autoSizeColumn(i);
         }
 
-        // 5. WRITE OUTPUT
         ServletOutputStream outputStream = response.getOutputStream();
         workbook.write(outputStream);
         workbook.close();
         outputStream.close();
     }
 
-    // ==========================================
+
     // EXPORT ATTENDANCE REPORT TO EXCEL
     // ==========================================
     public void exportAttendanceReportToExcel(HttpServletResponse response, List<com.example.admindashboard.model.Attendance> attendanceList) throws IOException {

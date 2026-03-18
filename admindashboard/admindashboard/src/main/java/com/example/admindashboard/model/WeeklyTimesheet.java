@@ -14,9 +14,10 @@ public class WeeklyTimesheet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // FIX: Bypassing the Employee entity and just storing the ID
-    @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
+    // Re-linking the User entity so Thymeleaf and Search can access the employee's name!
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id", nullable = false)
+    private User user;
 
     @Column(name = "week_start_date", nullable = false)
     private LocalDate weekStartDate;
@@ -46,8 +47,8 @@ public class WeeklyTimesheet {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Long getEmployeeId() { return employeeId; }
-    public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
     public LocalDate getWeekStartDate() { return weekStartDate; }
     public void setWeekStartDate(LocalDate weekStartDate) { this.weekStartDate = weekStartDate; }

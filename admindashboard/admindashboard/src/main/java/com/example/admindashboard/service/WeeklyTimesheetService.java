@@ -35,8 +35,8 @@ public class WeeklyTimesheetService {
     @Autowired
     private UserRepository userRepository;
 
-    // --- NEW HELPER METHOD: Grabs the dynamic ID from Spring Security ---
-    private Long getLoggedInEmployeeId() {
+    // --- HELPER METHOD: Grabs the full User object from Spring Security ---
+    private User getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
@@ -44,22 +44,24 @@ public class WeeklyTimesheetService {
         }
         String currentUsername = authentication.getName(); // This gets "EMP001"
         Optional<User> currentUserOpt = userRepository.findByUsername(currentUsername);
+
         if (currentUserOpt.isEmpty()) {
             throw new RuntimeException("User not found for username: " + currentUsername);
         }
 
-        return currentUserOpt.get().getId(); // Returns the Long ID for the database
+        return currentUserOpt.get(); // Returns the actual User object
     }
 
     @Transactional
     public void saveWeeklyTimesheet(TimesheetSubmissionDTO payload) {
 
-        // DYNAMIC FIX: Now it uses the logged-in user instead of 1L
-        Long currentEmployeeId = getLoggedInEmployeeId();
+        // FIX 1: Get the full User object instead of just the ID
+        User currentUser = getLoggedInUser();
 
         // 1. Check if a timesheet already exists for this week and employee
         Optional<WeeklyTimesheet> existingTimesheetOpt =
-                timesheetRepository.findByEmployeeIdAndWeekStartDate(currentEmployeeId, payload.getWeekStartDate());
+                timesheetRepository.findByUserAndWeekStartDate(currentUser, payload.getWeekStartDate());
+
         WeeklyTimesheet timesheet;
 
         if (existingTimesheetOpt.isPresent()) {
@@ -82,8 +84,8 @@ public class WeeklyTimesheetService {
             // CREATE NEW TIMESHEET
             timesheet = new WeeklyTimesheet();
 
-            // FIX: Save the raw ID directly
-            timesheet.setEmployeeId(currentEmployeeId);
+            // FIX 2: Set the full User object instead of employeeId
+            timesheet.setUser(currentUser);
 
             timesheet.setWeekStartDate(payload.getWeekStartDate());
             timesheet.setWeekEndDate(payload.getWeekEndDate());
@@ -98,7 +100,6 @@ public class WeeklyTimesheetService {
             for (TimesheetRowDTO rowDto : payload.getRows()) {
                 WeeklyTimesheetEntry entry = new WeeklyTimesheetEntry();
 
-                // FIX: Save the raw IDs directly
                 entry.setProjectId(rowDto.getProjectId());
                 entry.setTaskId(rowDto.getTaskId());
                 entry.setType(rowDto.getType());
@@ -114,6 +115,7 @@ public class WeeklyTimesheetService {
 
                 // Crucial Step: Link the child to the parent
                 entry.setWeeklyTimesheet(timesheet);
+
                 // Add the row
                 timesheet.getEntries().add(entry);
             }
@@ -124,15 +126,15 @@ public class WeeklyTimesheetService {
     }
 
     public List<WeeklyTimesheet> getAllMyTimesheets() {
-        // DYNAMIC FIX
-        Long currentEmployeeId = getLoggedInEmployeeId();
-        return timesheetRepository.findByEmployeeIdOrderByWeekStartDateDesc(currentEmployeeId);
+        // FIX 3: Pass User object to repository
+        User currentUser = getLoggedInUser();
+        return timesheetRepository.findByUserOrderByWeekStartDateDesc(currentUser);
     }
 
     public Optional<WeeklyTimesheet> getTimesheetByWeekStartDate(LocalDate startDate) {
-        // DYNAMIC FIX
-        Long currentEmployeeId = getLoggedInEmployeeId();
-        return timesheetRepository.findByEmployeeIdAndWeekStartDate(currentEmployeeId, startDate);
+        // FIX 4: Pass User object to repository
+        User currentUser = getLoggedInUser();
+        return timesheetRepository.findByUserAndWeekStartDate(currentUser, startDate);
     }
 
     // ==========================================

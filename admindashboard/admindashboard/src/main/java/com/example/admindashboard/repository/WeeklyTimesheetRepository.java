@@ -1,23 +1,46 @@
 package com.example.admindashboard.repository;
 
 import com.example.admindashboard.model.WeeklyTimesheet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
-@Repository
 public interface WeeklyTimesheetRepository extends JpaRepository<WeeklyTimesheet, Long> {
 
-    // Custom query to find if this employee already started a timesheet for this specific week
-    Optional<WeeklyTimesheet> findByEmployeeIdAndWeekStartDate(Long employeeId, LocalDate weekStartDate);
+    java.util.Optional<WeeklyTimesheet> findByUserAndWeekStartDate(com.example.admindashboard.model.User user, LocalDate weekStartDate);
 
-    // Fetch all timesheets for an employee, newest first
-    List<WeeklyTimesheet> findByEmployeeIdOrderByWeekStartDateDesc(Long employeeId);
+    List<WeeklyTimesheet> findByUserOrderByWeekStartDateDesc(com.example.admindashboard.model.User user);
 
-    // Fetches timesheets by Employee ID and Status, sorting the newest ones to the top
-    List<WeeklyTimesheet> findByEmployeeIdAndStatusIgnoreCaseOrderByIdDesc(Long employeeId, String status);
+    List<WeeklyTimesheet> findByUserAndStatusIgnoreCaseOrderByIdDesc(com.example.admindashboard.model.User user, String status);
 
+
+    // 1. For the UI Table (Returns Paginated Data)
+    @Query("SELECT w FROM WeeklyTimesheet w WHERE " +
+            "(cast(:fromDate as date) IS NULL OR w.weekStartDate >= :fromDate) AND " +
+            "(cast(:toDate as date) IS NULL OR w.weekStartDate <= :toDate) AND " +
+            "(cast(:keyword as text) IS NULL OR :keyword = '' OR " +
+            "LOWER(w.user.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(w.user.username) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    Page<WeeklyTimesheet> searchTimesheets(
+            @Param("fromDate") LocalDate fromDate,
+            @Param("toDate") LocalDate toDate,
+            @Param("keyword") String keyword,
+            Pageable pageable);
+
+    // 2. For the Excel Export (Returns Full List Data)
+    @Query("SELECT w FROM WeeklyTimesheet w WHERE " +
+            "(cast(:fromDate as date) IS NULL OR w.weekStartDate >= :fromDate) AND " +
+            "(cast(:toDate as date) IS NULL OR w.weekStartDate <= :toDate) AND " +
+            "(cast(:keyword as text) IS NULL OR :keyword = '' OR " +
+            "LOWER(w.user.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(w.user.username) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    List<WeeklyTimesheet> findTimesheetsBySearchCriteria(
+            @Param("fromDate") LocalDate fromDate,
+            @Param("toDate") LocalDate toDate,
+            @Param("keyword") String keyword);
 }
