@@ -2,227 +2,158 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Attendance Regularization | Admin</title>
+    <title>Attendance Regularization | Admin Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --primary: #1a237e;
+            --primary-blue: #1e3a8a;
             --bg-light: #f4f6f9;
         }
+
         body { background-color: var(--bg-light); font-family: 'Segoe UI', sans-serif; }
 
-        /* --- 1. UPDATED NAVBAR (Matches Timesheet Page) --- */
         .navbar-custom {
-            background-color: var(--primary);
+            background-color: var(--primary-blue);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding-top: 25px;    /* Increased Height */
-            padding-bottom: 25px; /* Increased Height */
+            padding: 25px 0;
         }
 
-        /* Layout Grid */
-        .req-card {
-            background: white;
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            transition: transform 0.2s, box-shadow 0.2s;
-            overflow: hidden;
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: row;
-        }
-        .req-card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.08); }
-
-        /* Left Side: Date Box */
-        .date-box {
-            background-color: #e8eaf6;
-            color: var(--primary);
-            width: 90px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-right: 1px solid #eee;
-            padding: 15px;
-        }
-        .date-day { font-size: 1.8rem; font-weight: 800; line-height: 1; }
-        .date-month { font-size: 0.85rem; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
-
-        /* Middle: Content */
-        .card-content { padding: 20px; flex-grow: 1; }
-
-        /* Right Side: Actions */
-        .action-box {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 15px;
-            border-left: 1px solid #f0f0f0;
-            background: #fafafa;
-            width: 140px;
-            gap: 10px;
+        .card-custom {
+            border: none; border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            background-color: white; margin-bottom: 20px;
         }
 
-        /* Badges */
-        .badge-type { padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .card-header-custom {
+            background-color: var(--primary-blue); color: white;
+            padding: 12px 20px; font-weight: 600; display: flex; align-items: center;
+        }
+
+        .nav-pills .nav-link {
+            color: #555; font-weight: 600; padding: 8px 25px;
+            border-radius: 50px; margin: 0 8px; transition: all 0.3s ease;
+        }
+
+        /* --- ACTIVE TAB COLORS --- */
+        #tab-pending.active { background-color: #0d6efd; color: white; }
+        #tab-approved.active { background-color: #198754; color: white; }
+        #tab-rejected.active { background-color: #dc3545; color: white; }
+
+        /* Row Design */
+        .reg-row {
+            border: 1px solid #e9ecef; border-radius: 8px;
+            padding: 12px 15px; margin-bottom: 8px;
+            background: white; display: flex; align-items: center;
+            justify-content: space-between; transition: 0.2s;
+        }
+        .reg-row:hover { transform: translateY(-2px); box-shadow: 0 3px 10px rgba(0,0,0,0.05); }
+
+        .avatar-circle {
+            width: 40px; height: 40px; background-color: #e8eaf6;
+            color: var(--primary-blue); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; margin-right: 12px;
+        }
+
+        .badge-type { font-size: 0.7rem; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; }
         .type-late { background-color: #fff3cd; color: #856404; }
         .type-id { background-color: #cff4fc; color: #055160; }
         .type-wfh { background-color: #e2e3e5; color: #383d41; }
 
-        /* Buttons */
-        .btn-action { width: 100%; border-radius: 6px; font-weight: 600; font-size: 0.85rem; text-align: center; padding: 8px 0; border: none; transition: 0.2s; }
-        .btn-approve { background-color: #d1e7dd; color: #0f5132; }
-        .btn-approve:hover { background-color: #198754; color: white; }
-        .btn-reject { background-color: #f8d7da; color: #842029; }
-        .btn-reject:hover { background-color: #dc3545; color: white; }
-
-        /* Tabs */
-        .nav-pills .nav-link {
-            color: #666; font-weight: 600; border-radius: 30px; padding: 8px 25px;
-            background: white; border: 1px solid #eee; margin-right: 10px;
-        }
-        .nav-pills .nav-link.active { background-color: var(--primary); color: white; border-color: var(--primary); }
+        .btn-custom { border-radius: 30px; font-weight: 600; font-size: 0.8rem; border: none; padding: 5px 15px; }
+        .btn-approve { background-color: #d1e7dd; color: #198754; margin-right: 5px; }
+        .btn-reject { background-color: #f8d7da; color: #dc3545; }
     </style>
 </head>
 <body>
 
 <nav class="navbar navbar-custom navbar-dark mb-4">
     <div class="container">
-        <span class="navbar-brand fw-bold fs-4">
-            <i class="fas fa-user-clock me-2"></i> Regularization Approvals
-        </span>
-
-        <a href="/admin/dashboard" class="btn btn-outline-light btn-sm px-4 rounded-0 fw-bold">
-            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
-        </a>
+        <span class="navbar-brand fw-bold fs-4"><i class="fas fa-user-clock me-2"></i> Attendance Regularization</span>
+        <a href="/admin/dashboard" class="btn btn-outline-light btn-sm px-4 fw-bold"><i class="fas fa-arrow-left me-2"></i>Back</a>
     </div>
 </nav>
 
 <div class="container">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="fw-bold mb-1 text-dark">Employee Requests</h4>
-            <p class="text-muted small mb-0">Manage forgot ID, late marks, and WFH requests</p>
-        </div>
-        <ul class="nav nav-pills">
-            <li class="nav-item"><a class="nav-link active" href="#" onclick="loadRequests('Pending', this)">Pending</a></li>
-            <li class="nav-item"><a class="nav-link" href="#" onclick="loadRequests('Approved', this)">Approved</a></li>
-            <li class="nav-item"><a class="nav-link" href="#" onclick="loadRequests('Rejected', this)">Rejected</a></li>
-        </ul>
-    </div>
-
-    <div id="requestContainer" class="row">
-        <div class="text-center py-5">
-            <div class="spinner-border text-primary" role="status"></div>
-            <p class="mt-2 text-muted">Loading...</p>
+    <div class="d-flex justify-content-center mb-4">
+        <div class="nav nav-pills bg-white p-2 rounded-pill shadow-sm">
+            <button class="nav-link active" id="tab-pending" onclick="loadRequests('Pending')">Pending</button>
+            <button class="nav-link" id="tab-approved" onclick="loadRequests('Approved')">Approved</button>
+            <button class="nav-link" id="tab-rejected" onclick="loadRequests('Rejected')">Rejected</button>
         </div>
     </div>
 
+    <div class="card card-custom">
+        <div class="card-header-custom"><i class="fas fa-list me-2"></i> <span id="listHeader">Pending Requests</span></div>
+        <div class="card-body p-3" id="requestList" style="min-height: 250px;">
+        </div>
+    </div>
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => loadRequests('Pending', document.querySelector('.nav-link.active')));
+    document.addEventListener("DOMContentLoaded", () => loadRequests('Pending'));
 
-    function loadRequests(status, btnElement) {
-        // 1. Update Tabs
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-        if(btnElement) btnElement.classList.add('active');
+    function loadRequests(status) {
+        // UI Updates
+        document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+        if(status === 'Pending') document.getElementById('tab-pending').classList.add('active');
+        if(status === 'Approved') document.getElementById('tab-approved').classList.add('active');
+        if(status === 'Rejected') document.getElementById('tab-rejected').classList.add('active');
+        document.getElementById('listHeader').innerText = status + " Requests";
 
-        const container = document.getElementById('requestContainer');
-        container.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary"></div></div>';
+        const container = document.getElementById('requestList');
+        container.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div></div>';
 
-        // 2. Fetch Data
         fetch(`/api/admin/regularization/list?status=${status}`)
             .then(res => res.json())
             .then(data => {
                 container.innerHTML = '';
-
                 if(data.length === 0) {
-                    container.innerHTML = `
-                        <div class="col-12 text-center py-5">
-                            <i class="fas fa-clipboard-check fa-3x text-muted mb-3 opacity-25"></i>
-                            <h5 class="text-muted">No ${status.toLowerCase()} requests found</h5>
-                        </div>`;
+                    container.innerHTML = '<div class="text-center py-5 text-muted">No records found.</div>';
                     return;
                 }
-
                 data.forEach(req => {
-                    const d = new Date(req.date);
-                    const day = d.getDate();
-                    const month = d.toLocaleString('default', { month: 'short' });
+                    const name = req.user ? req.user.fullName : 'Unknown User';
+                    const initials = name.substring(0,2).toUpperCase();
 
                     let typeClass = 'type-wfh';
-                    let icon = 'fa-laptop-house';
-                    if(req.type.toLowerCase().includes('late')) { typeClass = 'type-late'; icon = 'fa-clock'; }
-                    if(req.type.toLowerCase().includes('id')) { typeClass = 'type-id'; icon = 'fa-id-card'; }
+                    if(req.type.toLowerCase().includes('late')) typeClass = 'type-late';
+                    if(req.type.toLowerCase().includes('id')) typeClass = 'type-id';
 
-                    const html = `
-                    <div class="col-lg-6">
-                        <div class="req-card">
-                            <div class="date-box">
-                                <span class="date-day">${day}</span>
-                                <span class="date-month">${month}</span>
-                            </div>
-                            <div class="card-content">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h5 class="fw-bold text-dark mb-0">${req.user ? req.user.fullName : 'Unknown User'}</h5>
-                                    <span class="badge-type ${typeClass}"><i class="fas ${icon} me-1"></i>${req.type}</span>
+                    container.innerHTML += `
+                        <div class="reg-row">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle">${initials}</div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">${name}</h6>
+                                    <small class="text-muted">${req.date} <span class="mx-1">•</span> <span class="badge-type ${typeClass}">${req.type}</span></small>
                                 </div>
-                                <p class="text-muted small mb-0" style="line-height: 1.5;">
-                                    <i class="fas fa-quote-left text-primary opacity-25 me-1"></i>
-                                    ${req.reason}
-                                </p>
-                                ${status !== 'Pending' && req.hrComments ? `<div class="mt-2 small text-danger fw-bold">HR Note: ${req.hrComments}</div>` : ''}
                             </div>
-                            <div class="action-box">
+                            <div class="flex-grow-1 px-4 small text-muted italic">"${req.reason}"</div>
+                            <div>
                                 ${status === 'Pending' ? `
-                                    <button class="btn-action btn-approve" onclick="updateStatus(${req.id}, 'Approved')">
-                                        <i class="fas fa-check me-1"></i> Approve
-                                    </button>
-                                    <button class="btn-action btn-reject" onclick="updateStatus(${req.id}, 'Rejected')">
-                                        <i class="fas fa-times me-1"></i> Reject
-                                    </button>
-                                ` : `
-                                    <div class="text-center">
-                                        <span class="badge ${status === 'Approved' ? 'bg-success' : 'bg-danger'} px-3 py-2 rounded-pill">${status}</span>
-                                    </div>
-                                `}
+                                    <button class="btn-custom btn-approve" onclick="updateStatus(${req.id}, 'Approved')">Approve</button>
+                                    <button class="btn-custom btn-reject" onclick="updateStatus(${req.id}, 'Rejected')">Reject</button>
+                                ` : `<span class="badge ${status==='Approved'?'bg-success':'bg-danger'} rounded-pill">${status}</span>`}
                             </div>
                         </div>
-                    </div>`;
-
-                    container.innerHTML += html;
+                    `;
                 });
-            })
-            .catch(err => {
-                console.error(err);
-                container.innerHTML = `<div class="alert alert-danger">Error loading data</div>`;
             });
     }
 
     function updateStatus(id, newStatus) {
-        if (!confirm(`Are you sure you want to ${newStatus}?`)) return;
-
+        if (!confirm(`Confirm ${newStatus}?`)) return;
         let url = `/api/admin/regularization/${id}/${newStatus}`;
         if (newStatus === 'Rejected') {
-            const reason = prompt("Reason for rejection:");
+            const reason = prompt("Reason:");
             if (!reason) return;
             url += `?comments=${encodeURIComponent(reason)}`;
         }
-
-        fetch(url, { method: 'POST' })
-            .then(res => {
-                if(res.ok) {
-                    loadRequests('Pending', document.querySelector('.nav-link.active'));
-                } else {
-                    alert("Something went wrong.");
-                }
-            });
+        fetch(url, { method: 'POST' }).then(res => { if(res.ok) loadRequests('Pending'); });
     }
 </script>
-
 </body>
 </html>

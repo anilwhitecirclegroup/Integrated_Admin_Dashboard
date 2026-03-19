@@ -18,6 +18,7 @@ public interface WeeklyTimesheetRepository extends JpaRepository<WeeklyTimesheet
 
     List<WeeklyTimesheet> findByUserAndStatusIgnoreCaseOrderByIdDesc(com.example.admindashboard.model.User user, String status);
 
+    List<WeeklyTimesheet> findByStatus(String status);
 
     // 1. For the UI Table (Returns Paginated Data)
     @Query("SELECT w FROM WeeklyTimesheet w WHERE " +

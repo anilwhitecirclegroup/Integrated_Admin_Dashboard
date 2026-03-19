@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "weekly_timesheet")
@@ -17,6 +18,7 @@ public class WeeklyTimesheet {
     // Re-linking the User entity so Thymeleaf and Search can access the employee's name!
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // <--- ADD THIS LINE
     private User user;
 
     @Column(name = "week_start_date", nullable = false)

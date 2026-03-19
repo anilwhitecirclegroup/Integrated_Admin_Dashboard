@@ -1,420 +1,334 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Timesheet Approvals | Admin Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- THEME COLORS --- */
         :root {
             --primary-blue: #1e3a8a;
-            --bg-light: #f4f6f9;
+            --primary-light: #2563eb;
+            --bg-light: #f8fafc;
         }
 
-        body {
-            background-color: var(--bg-light);
-            font-family: 'Segoe UI', sans-serif;
-        }
+        body { background-color: var(--bg-light); font-family: 'Inter', sans-serif; color: #334155; }
 
-        /* 1. Navbar Styling */
+        /* Navbar */
         .navbar-custom {
-            background-color: var(--primary-blue);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding-top: 25px;
-            padding-bottom: 25px;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #172554 100%);
+            padding: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
-
-        /* 2. Main Card Styling (Compact) */
-        .card-custom {
-            border: none;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            overflow: hidden;
-            background-color: white;
-            margin-bottom: 20px;
+        .btn-dashboard-back {
+            color: white; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 8px; padding: 8px 18px; font-size: 0.9rem; font-weight: 600;
+            text-decoration: none; transition: all 0.3s ease;
         }
+        .btn-dashboard-back:hover { background-color: white; color: var(--primary-blue); transform: translateY(-1px); }
 
-        .card-header-custom {
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 12px 20px; /* Reduced padding */
-            font-weight: 600;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-        }
-
-        /* 3. Tab Styling */
+        /* Tabs */
+        .nav-pills { background: #ffffff; padding: 6px; border-radius: 50px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
         .nav-pills .nav-link {
-            color: #555;
-            font-weight: 600;
-            padding: 8px 25px; /* Reduced padding */
-            border-radius: 50px;
-            margin: 0 8px;
-            border: 1px solid transparent;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
+            color: #64748b; font-weight: 600; padding: 10px 30px; border-radius: 50px; margin: 0 4px; transition: all 0.3s ease;
+        }
+        #tab-pending.active { background-color: #3b82f6; color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+        #tab-approved.active { background-color: #10b981; color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+        #tab-rejected.active { background-color: #ef4444; color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+
+        /* Row Design & Animations */
+        @keyframes slideFadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .nav-pills .nav-link:hover { background-color: #e2e6ea; color: var(--primary-blue); }
-
-        /* --- ACTIVE TAB COLORS --- */
-        #tab-pending.active { background-color: #0d6efd; color: white; box-shadow: 0 3px 6px rgba(13, 110, 253, 0.4); }
-        #tab-approved.active { background-color: #198754; color: white; box-shadow: 0 3px 6px rgba(25, 135, 84, 0.4); }
-        #tab-rejected.active { background-color: #dc3545; color: white; box-shadow: 0 3px 6px rgba(220, 53, 69, 0.4); }
-
-        /* 4. List Item Row Design (COMPACT VERSION) */
         .timesheet-row {
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 10px 15px; /* SIGNIFICANTLY REDUCED from 20px */
-            margin-bottom: 8px; /* Reduced from 12px */
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px; margin-bottom: 12px;
+            background: #ffffff; display: flex; align-items: center; justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideFadeIn 0.4s ease forwards;
+            opacity: 0; /* Starts hidden for animation */
         }
-
         .timesheet-row:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            border-color: #dfe6ed;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -5px rgba(0,0,0,0.08);
+            border-color: #cbd5e1;
         }
 
-        /* Compact Avatar */
         .avatar-circle {
-            width: 40px; height: 40px; /* Reduced from 50px */
-            background-color: #e8eaf6;
-            color: var(--primary-blue);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold; font-size: 1rem; /* Reduced font */
-            margin-right: 12px;
+            width: 48px; height: 48px; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            color: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1.1rem; margin-right: 16px; border: 1px solid #bfdbfe;
         }
 
-        /* Compact Buttons */
-        .btn-custom {
-            padding: 4px 15px; /* Smaller buttons */
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            border: none;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+        /* Buttons */
+        .btn-view {
+            background: #f1f5f9; color: #3b82f6; border: none; width: 40px; height: 40px;
+            border-radius: 50%; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center;
         }
+        .btn-view:hover { background: #3b82f6; color: white; transform: scale(1.1); box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); }
 
-        .btn-custom-approve { background-color: #d1e7dd; color: #198754; }
-        .btn-custom-approve:hover { background-color: #198754; color: white; }
+        .btn-action { border: none; border-radius: 30px; padding: 6px 20px; font-weight: 600; font-size: 0.85rem; transition: all 0.2s; }
+        .btn-approve { background-color: #dcfce7; color: #166534; margin-right: 8px; }
+        .btn-approve:hover { background-color: #16a34a; color: white; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); transform: translateY(-1px); }
+        .btn-reject { background-color: #fee2e2; color: #991b1b; }
+        .btn-reject:hover { background-color: #dc2626; color: white; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25); transform: translateY(-1px); }
 
-        .btn-custom-reject { background-color: #f8d7da; color: #dc3545; }
-        .btn-custom-reject:hover { background-color: #dc3545; color: white; }
-
-        .btn-custom-view {
-            width: 30px; height: 30px; /* Smaller View Icon */
-            border-radius: 50%;
-            background-color: #e3f2fd;
-            color: #0d6efd;
-            display: flex; align-items: center; justify-content: center;
-            border: none;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-        }
-        .btn-custom-view:hover { background-color: #0d6efd; color: white; }
-
-        /* --- MODAL STYLING --- */
-        .modal-header { background-color: var(--primary-blue); color: white; padding: 10px 20px; }
-        .modal-user-info { display: flex; align-items: center; margin-bottom: 15px; }
-        .modal-avatar {
-            width: 50px; height: 50px; background: white; color: var(--primary-blue);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; font-weight: bold; margin-right: 15px; border: 2px solid #e3f2fd;
-        }
-        .info-card { background-color: #f8f9fa; border-radius: 6px; padding: 10px; text-align: center; }
-        .info-label { font-size: 0.75rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; }
-        .info-value { font-size: 1rem; font-weight: bold; color: #2c3e50; }
-
+        /* Modal Polish */
+        .modal-content { border-radius: 16px; overflow: hidden; border: none; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        .modal-header-custom { background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light) 100%); color: white; padding: 20px 24px; border: none; }
+        .table-custom { border-radius: 8px; overflow: hidden; border-collapse: separate; border-spacing: 0; border: 1px solid #e2e8f0; }
+        .table-custom th { background-color: #f8fafc; color: #475569; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; padding: 12px; border-bottom: 2px solid #e2e8f0; }
+        .table-custom td { padding: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        .table-custom tbody tr:hover { background-color: #f8fafc; }
+        .table-custom tbody tr:last-child td { border-bottom: none; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-custom navbar-dark mb-4">
-    <div class="container">
-        <span class="navbar-brand fw-bold fs-4">
-            <i class="fas fa-user-tie me-2"></i> Timesheet Approvals
+<nav class="navbar navbar-custom navbar-dark mb-5">
+    <div class="container d-flex justify-content-between align-items-center">
+        <span class="navbar-brand fw-bold fs-4 d-flex align-items-center m-0">
+            <div class="bg-white bg-opacity-10 p-2 rounded me-3 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                <i class="fas fa-calendar-check text-white"></i>
+            </div>
+            Weekly Timesheet Approvals
         </span>
-        <a href="/admin/dashboard" class="btn btn-outline-light btn-sm px-4 rounded-0 fw-bold">
+        <a href="/admin/dashboard" class="btn-dashboard-back">
             <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
         </a>
     </div>
 </nav>
 
-<div class="container">
-
-    <div class="text-center mb-4">
-        <h4 class="fw-bold text-dark mb-1">Review, approve, and manage employee weekly timesheets</h4>
-    </div>
-
-    <div class="d-flex justify-content-center mb-3">
-        <div class="nav nav-pills bg-white p-2 rounded-pill shadow-sm">
-            <button class="nav-link active" id="tab-pending" onclick="loadTimesheets('Submitted')">
+<div class="container" style="max-width: 1100px;">
+    <div class="d-flex justify-content-center mb-4">
+        <div class="nav nav-pills d-inline-flex">
+            <button class="nav-link active" id="tab-pending" onclick="loadTimesheets('SUBMITTED')">
                 <i class="fas fa-hourglass-half me-2"></i>Pending
             </button>
-            <button class="nav-link" id="tab-approved" onclick="loadTimesheets('Approved')">
+            <button class="nav-link" id="tab-approved" onclick="loadTimesheets('APPROVED')">
                 <i class="fas fa-check-circle me-2"></i>Approved
             </button>
-            <button class="nav-link" id="tab-rejected" onclick="loadTimesheets('Rejected')">
+            <button class="nav-link" id="tab-rejected" onclick="loadTimesheets('REJECTED')">
                 <i class="fas fa-times-circle me-2"></i>Rejected
             </button>
         </div>
     </div>
 
-    <div class="card card-custom">
-        <div class="card-header-custom">
-            <i class="fas fa-list me-2"></i> <span id="listHeader">Request List</span>
+    <div class="card border-0 shadow-sm rounded-4 mb-5" style="border: 1px solid #e2e8f0 !important;">
+        <div class="card-header border-bottom py-3 px-4 d-flex align-items-center" style="background: linear-gradient(135deg, var(--primary-blue) 0%, #172554 100%); border-top-left-radius: 15px; border-top-right-radius: 15px;">
+            <i class="fas fa-list text-white fs-5 me-3 opacity-75"></i>
+            <h5 class="fw-bold text-white m-0" id="listHeaderTitle">Weekly Timesheet Requests</h5>
         </div>
-        <div class="card-body p-3" style="min-height: 300px; background-color: white;">
-            <div id="timesheetList">
-                <div class="text-center mt-5">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <p class="mt-2 text-muted">Loading requests...</p>
-                </div>
-            </div>
+        <div class="card-body p-4" id="timesheetList" style="min-height: 350px; background-color: #fafbfc;">
         </div>
     </div>
-
 </div>
 
 <div class="modal fade" id="detailsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title fw-bold"><i class="fas fa-file-invoice me-2"></i> Timesheet Details</h6>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <div class="modal-header modal-header-custom d-flex justify-content-between align-items-center">
+                <h5 class="modal-title fw-bold m-0"><i class="fas fa-calendar-week me-2"></i>Detailed Weekly View</h5>
+                <button type="button" class="btn-close btn-close-white opacity-75 shadow-none" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body p-4">
-                <div id="modalContent">Loading...</div>
-            </div>
-            <div class="modal-footer bg-light border-0 py-2">
-                <button type="button" class="btn btn-secondary btn-sm px-4" data-bs-dismiss="modal">Close</button>
+            <div class="modal-body p-4 p-lg-5" id="modalContent">
             </div>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
     let currentData = [];
-    let activeStatus = 'Submitted';
 
-    document.addEventListener("DOMContentLoaded", () => loadTimesheets('Submitted'));
+    const projectMap = { 1: "HRMS Internal Module", 2: "Client Alpha Website", 3: "Company Meetings" };
+    const taskMap = { 1: "Frontend Development", 2: "Backend API Setup", 3: "Testing & Debugging", 4: "Sprint Planning", 5: "Client Sync" };
+
+    document.addEventListener("DOMContentLoaded", () => loadTimesheets('SUBMITTED'));
 
     function loadTimesheets(status) {
-        activeStatus = status;
-
-        // Reset Tabs
         document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+        if(status === 'SUBMITTED') document.getElementById('tab-pending').classList.add('active');
+        if(status === 'APPROVED') document.getElementById('tab-approved').classList.add('active');
+        if(status === 'REJECTED') document.getElementById('tab-rejected').classList.add('active');
 
-        // Set Active Color
-        if(status === 'Submitted') document.getElementById('tab-pending').classList.add('active');
-        if(status === 'Approved') document.getElementById('tab-approved').classList.add('active');
-        if(status === 'Rejected') document.getElementById('tab-rejected').classList.add('active');
-
-        // Update Header
-        const headerMap = {
-            'Submitted': 'Pending Requests',
-            'Approved': 'Approved Timesheets History',
-            'Rejected': 'Rejected Timesheets History'
-        };
-        document.getElementById('listHeader').innerText = headerMap[status];
+        const titles = { 'SUBMITTED': 'Pending Approvals', 'APPROVED': 'Approved History', 'REJECTED': 'Rejected History' };
+        document.getElementById('listHeaderTitle').innerText = titles[status];
 
         const container = document.getElementById('timesheetList');
-        container.innerHTML = '<div class="text-center mt-5"><div class="spinner-border text-primary"></div></div>';
+        container.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div><p class="mt-3 text-muted fw-medium">Loading requests...</p></div>';
 
         fetch(`/api/admin/timesheet/list?status=${status}`)
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error("Server Error: " + res.status);
+                return res.json();
+            })
             .then(data => {
                 currentData = data;
-                renderCards(data);
+                container.innerHTML = '';
+                if(data.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-5">
+                            <i class="fas fa-folder-open fa-3x text-muted opacity-25 mb-3"></i>
+                            <h5 class="text-muted fw-medium">No ${status.toLowerCase()} timesheets found.</h5>
+                        </div>`;
+                    return;
+                }
+                data.forEach((ts, index) => {
+                    const name = ts.user ? ts.user.fullName : 'Unknown Employee';
+                    const initials = name.substring(0,2).toUpperCase();
+                    const empId = ts.user && ts.user.username ? ts.user.username : 'N/A';
+
+                    let subDate = 'N/A';
+                    if (ts.submissionDate) subDate = ts.submissionDate;
+                    else if (ts.submittedAt) subDate = ts.submittedAt.split('T')[0];
+
+                    const animationDelay = index * 0.05;
+
+                    container.innerHTML += `
+                        <div class="timesheet-row" style="animation-delay: ${animationDelay}s;">
+
+                            <div class="d-flex align-items-center" style="width: 35%;">
+                                <div class="avatar-circle">${initials}</div>
+                                <div>
+                                    <div class="d-flex align-items-center mb-1">
+                                        <h6 class="mb-0 fw-bold text-dark fs-6 me-2">${name}</h6>
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle" style="font-size: 0.65rem; padding: 3px 8px; letter-spacing: 0.5px;">${empId}</span>
+                                    </div>
+                                    <div class="text-muted small">
+                                        <i class="far fa-calendar-alt me-1 text-primary opacity-75"></i> ${ts.weekStartDate} to ${ts.weekEndDate}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="width: 20%;">
+                                <span class="d-block text-muted fw-bold mb-1" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">Submitted On</span>
+                                <span class="text-dark fw-medium small"><i class="fas fa-paper-plane me-1 text-primary opacity-50"></i> ${subDate}</span>
+                            </div>
+
+                            <div style="width: 15%;">
+                                <span class="d-block text-muted fw-bold mb-1" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">Total Hours</span>
+                                <span class="badge bg-light text-dark border"><i class="far fa-clock me-1 text-primary"></i> ${ts.totalWeekHours} Hrs</span>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-end" style="width: 30%;">
+                                <button class="btn-view me-3" onclick="viewDetails(${ts.id})" title="View Details"><i class="fas fa-eye"></i></button>
+                                ${status === 'SUBMITTED' ? `
+                                    <button class="btn-action btn-approve" onclick="updateStatus(${ts.id}, 'APPROVED')"><i class="fas fa-check me-1"></i> Approve</button>
+                                    <button class="btn-action btn-reject" onclick="updateStatus(${ts.id}, 'REJECTED')"><i class="fas fa-times me-1"></i> Reject</button>
+                                ` : `<span class="badge ${status==='APPROVED'?'bg-success':'bg-danger'} rounded-pill px-4 py-2 fw-bold shadow-sm" style="font-size: 0.8rem;"><i class="fas ${status==='APPROVED'?'fa-check-circle':'fa-times-circle'} me-1"></i> ${status}</span>`}
+                            </div>
+
+                        </div>
+                    `;
+                });
             })
             .catch(err => {
                 console.error(err);
-                container.innerHTML = '<div class="alert alert-danger text-center">Failed to load data.</div>';
+                container.innerHTML = '<div class="alert alert-danger text-center"><i class="fas fa-exclamation-triangle me-2"></i> Failed to load data. Please refresh the page.</div>';
             });
-    }
-
-    function renderCards(data) {
-        const container = document.getElementById('timesheetList');
-        container.innerHTML = '';
-
-        if (data.length === 0) {
-            container.innerHTML = `
-                <div class="text-center py-5 text-muted">
-                    <i class="fas fa-folder-open fa-3x mb-3 opacity-25"></i>
-                    <h5>No records found</h5>
-                    <p>There are no ${activeStatus.toLowerCase()} timesheets at the moment.</p>
-                </div>`;
-            return;
-        }
-
-        data.forEach(item => {
-            const userName = item.user ? (item.user.fullName || item.user.username) : "Unknown User";
-            const initials = userName.substring(0, 2).toUpperCase();
-
-            let badgeClass = 'bg-secondary';
-            if (item.status === 'Approved') badgeClass = 'bg-success';
-            if (item.status === 'Rejected') badgeClass = 'bg-danger';
-
-            // COMPACT ROW DESIGN
-            const card = `
-                <div class="timesheet-row">
-                    <div class="d-flex align-items-center">
-                        <div class="avatar-circle">${initials}</div>
-                        <div>
-                            <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.95rem;">${userName}</h6>
-                            <small class="text-muted" style="font-size: 0.8rem;">
-                                <i class="far fa-calendar-alt me-1"></i> ${item.weekStartDate} to ${item.weekEndDate}
-                                <span class="mx-2">•</span>
-                                <strong class="text-dark">${item.totalHours || 0} Hrs</strong>
-                            </small>
-                        </div>
-                    </div>
-
-                    <div class="d-flex align-items-center">
-                        <button class="btn-custom-view me-2" onclick="viewDetails(${item.id})" title="View Details">
-                            <i class="fas fa-eye"></i>
-                        </button>
-
-                        ${item.status === 'Submitted' ? `
-                             <button class="btn-custom btn-custom-approve me-2" onclick="updateStatus(${item.id}, 'Approved')">
-                                <i class="fas fa-check"></i> Approve
-                             </button>
-                             <button class="btn-custom btn-custom-reject" onclick="updateStatus(${item.id}, 'Rejected')">
-                                <i class="fas fa-times"></i> Reject
-                             </button>
-                        ` : `
-                             <span class="badge ${badgeClass} rounded-pill px-3 py-1" style="font-size: 0.8rem;">${item.status}</span>
-                        `}
-                    </div>
-                </div>
-            `;
-            container.innerHTML += card;
-        });
     }
 
     function viewDetails(id) {
-        const item = currentData.find(t => t.id === id);
-        if (!item) return;
+        // 1. Use loose equality (==) in case ID types mismatch
+        const ts = currentData.find(item => item.id == id);
 
-        const userName = item.user ? (item.user.fullName || item.user.username) : "Unknown";
-        const userInitials = userName.substring(0,2).toUpperCase();
-        const userRole = item.user && item.user.designation ? item.user.designation : "EMPLOYEE";
+        if(!ts) {
+            console.error("Timesheet not found!");
+            return;
+        }
 
-        // FIX: Extract the Employee ID safely
-        const empId = item.user && item.user.username ? item.user.username : "N/A";
+        let rows = '';
 
-        // FIX: Look for 'totalHours', not 'totalWeekHours'
-        const totalHrsDisplay = item.totalHours || item.totalHours || 0;
+        // 2. THE FIX: Safety check! Only loop if entries exist.
+        if (ts.entries && ts.entries.length > 0) {
+            ts.entries.forEach(e => {
+                const projectName = projectMap[e.projectId] || "Other / Miscellaneous";
+                const taskName = taskMap[e.taskId] || "General Task";
 
-        let entriesHtml = `
-            <table class="table table-hover table-bordered mt-2 table-sm">
-                <thead class="table-light">
+                rows += `
                     <tr>
-                        <th style="width: 25%;">Date</th>
-                        <th>Task Description</th>
-                        <th style="width: 15%; text-align: center;">Hours</th>
-                    </tr>
-                </thead>
-                <tbody>`;
-
-        if (item.entries && item.entries.length > 0) {
-            item.entries.forEach(e => {
-                entriesHtml += `
-                    <tr>
-                        <td class="fw-bold text-secondary small">${e.date}</td>
-                        <td class="small">${e.taskDescription || 'Regular Work Hours'}</td>
-                        <td class="text-center fw-bold small">${e.hours}</td>
+                        <td class="ps-4">
+                            <div class="fw-bold text-dark" style="font-size: 0.9rem;">${projectName}</div>
+                            <div class="text-muted" style="font-size: 0.75rem;"><i class="fas fa-tasks me-1 opacity-50"></i>${taskName}</div>
+                        </td>
+                        <td class="small"><span class="badge bg-light text-secondary border">${e.type || 'Billable'}</span></td>
+                        <td class="text-center">${e.monHours || 0}</td>
+                        <td class="text-center">${e.tueHours || 0}</td>
+                        <td class="text-center">${e.wedHours || 0}</td>
+                        <td class="text-center">${e.thuHours || 0}</td>
+                        <td class="text-center">${e.friHours || 0}</td>
+                        <td class="text-center text-black-50" style="background-color: #fdfdfd;">${e.satHours || 0}</td>
+                        <td class="text-center text-black-50" style="background-color: #fdfdfd;">${e.sunHours || 0}</td>
+                        <td class="text-center fw-bold text-primary pe-4" style="background-color: #eff6ff;">${e.rowTotalHours || 0}</td>
                     </tr>`;
             });
         } else {
-            entriesHtml += '<tr><td colspan="3" class="text-center text-muted small">No daily entries found</td></tr>';
+            // Fallback UI if the timesheet is completely empty
+            rows = `<tr><td colspan="10" class="text-center text-muted py-4"><i class="fas fa-exclamation-circle me-2"></i> No daily tasks logged for this timesheet.</td></tr>`;
         }
-        entriesHtml += '</tbody></table>';
 
-        const modalBody = `
-            <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
-                <div class="bg-light text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; font-weight: bold; font-size: 1.2rem; border: 2px solid #1e3a8a;">
-                    ${userInitials}
-                </div>
+        document.getElementById('modalContent').innerHTML = `
+            <div class="d-flex justify-content-between align-items-end mb-4 pb-3 border-bottom">
                 <div>
-                    <div class="d-flex align-items-center">
-                        <h5 class="mb-0 fw-bold text-dark me-2">${userName}</h5>
-                        <span class="text-muted fw-bold small me-2">${empId}</span>
-                        <span class="badge bg-secondary" style="font-size: 0.7rem; text-transform: uppercase;">${userRole}</span>
-                    </div>
+                    <h4 class="fw-bold text-dark mb-1">${ts.user ? ts.user.fullName : 'Unknown Employee'}</h4>
+                    <p class="text-muted small m-0"><i class="far fa-calendar-alt me-2"></i>Week of <span class="fw-bold text-dark">${ts.weekStartDate}</span> to <span class="fw-bold text-dark">${ts.weekEndDate}</span></p>
+                </div>
+                <div class="text-end">
+                    <span class="d-block text-uppercase text-muted fw-bold mb-1" style="font-size: 0.7rem; letter-spacing: 0.5px;">Total Logged</span>
+                    <h3 class="fw-bold text-primary m-0">${ts.totalWeekHours || 0} <span class="fs-6 text-muted fw-normal">Hrs</span></h3>
                 </div>
             </div>
 
-            <div class="row mb-4 text-center">
-                <div class="col-md-4">
-                    <div class="bg-light rounded p-2 border">
-                        <div class="text-muted small fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Week Start</div>
-                        <div class="text-primary fw-bold">${item.weekStartDate}</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="bg-light rounded p-2 border">
-                        <div class="text-muted small fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Week End</div>
-                        <div class="text-primary fw-bold">${item.weekEndDate}</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="bg-light rounded p-2 border">
-                        <div class="text-muted small fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Total Hours</div>
-                        <div class="text-success fw-bold">${totalHrsDisplay} Hrs</div>
-                    </div>
-                </div>
+            <div class="table-responsive">
+                <table class="table table-custom mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4 text-start">Project & Task</th>
+                            <th>Type</th>
+                            <th class="text-center">Mon</th>
+                            <th class="text-center">Tue</th>
+                            <th class="text-center">Wed</th>
+                            <th class="text-center">Thu</th>
+                            <th class="text-center">Fri</th>
+                            <th class="text-center text-muted">Sat</th>
+                            <th class="text-center text-muted">Sun</th>
+                            <th class="text-center pe-4" style="background-color: #eff6ff; color: var(--primary-blue);">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
             </div>
 
-            ${item.comments ? `
-                <div class="alert alert-warning d-flex align-items-center mb-3 p-2 shadow-sm border-0" style="background-color: #fff3cd;">
-                    <i class="fas fa-comment-dots me-2 text-warning"></i>
-                    <div class="small text-dark"><strong>HR Note:</strong> ${item.comments}</div>
+            ${ts.overallComments ? `
+                <div class="mt-4 p-4 rounded-3" style="background-color: #fffbeb; border: 1px solid #fde68a;">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-comment-dots text-warning fs-5 me-2"></i>
+                        <span class="text-uppercase fw-bold text-dark" style="font-size: 0.8rem; letter-spacing: 0.5px;">Employee Comments</span>
+                    </div>
+                    <p class="mb-0 text-dark" style="font-size: 0.9rem;">${ts.overallComments}</p>
                 </div>` : ''}
-
-            <h6 class="fw-bold text-secondary mb-3 small text-uppercase"><i class="fas fa-calendar-week me-2"></i>Daily Breakdown</h6>
-            ${entriesHtml}
         `;
 
-        document.getElementById('modalContent').innerHTML = modalBody;
-        new bootstrap.Modal(document.getElementById('detailsModal')).show();
+        // 3. THE FIX: Proper Bootstrap 5 Modal Trigger
+        const modalElement = document.getElementById('detailsModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+        modalInstance.show();
     }
 
     function updateStatus(id, newStatus) {
-        if (!confirm(`Are you sure you want to ${newStatus === 'Approved' ? 'APPROVE' : 'REJECT'} this timesheet?`)) return;
-
+        if(!confirm(`Are you sure you want to ${newStatus === 'APPROVED' ? 'Approve' : 'Reject'} this timesheet?`)) return;
         let url = `/api/admin/timesheet/${id}/${newStatus}`;
-        if (newStatus === 'Rejected') {
-            const reason = prompt("Please enter the reason for rejection:");
-            if (!reason) return;
-            url += `?comments=${encodeURIComponent(reason)}`;
+        if(newStatus === 'REJECTED') {
+            const msg = prompt("Please provide a reason for rejection (this will be sent to the employee):");
+            if(!msg) return;
+            url += `?comments=${encodeURIComponent(msg)}`;
         }
-
-        fetch(url, { method: 'POST' })
-            .then(res => {
-                if (res.ok) {
-                    loadTimesheets('Submitted');
-                } else {
-                    alert("Error updating status");
-                }
-            });
+        fetch(url, {method: 'POST'}).then(res => { if(res.ok) loadTimesheets('SUBMITTED'); });
     }
 </script>
-
 </body>
 </html>

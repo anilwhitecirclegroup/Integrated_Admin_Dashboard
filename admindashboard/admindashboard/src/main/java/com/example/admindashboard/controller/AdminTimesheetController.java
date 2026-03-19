@@ -1,11 +1,12 @@
 package com.example.admindashboard.controller;
 
-import com.example.admindashboard.model.Timesheet;
-import com.example.admindashboard.repository.TimesheetRepository; // Direct Repo access for simplicity
+import com.example.admindashboard.model.WeeklyTimesheet;
+import com.example.admindashboard.repository.WeeklyTimesheetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,37 +15,33 @@ import java.util.Optional;
 public class AdminTimesheetController {
 
     @Autowired
-    private TimesheetRepository timesheetRepository;
+    private WeeklyTimesheetRepository timesheetRepository;
 
-    // 1. GET List (We did this yesterday)
+    // 1. Fetch timesheets by status (SUBMITTED, APPROVED, REJECTED)
     @GetMapping("/list")
-    public ResponseEntity<List<Timesheet>> getTimesheetsByStatus(@RequestParam String status) {
+    public ResponseEntity<List<WeeklyTimesheet>> getTimesheets(@RequestParam String status) {
+        // Note: Using "SUBMITTED" to match your model's status for pending items
         return ResponseEntity.ok(timesheetRepository.findByStatus(status));
     }
 
-    // 2. POST Update Status (THIS WAS MISSING!)
-    // Usage: /api/admin/timesheet/5/Approved
+    // 2. Approve or Reject
     @PostMapping("/{id}/{status}")
     public ResponseEntity<?> updateStatus(
             @PathVariable Long id,
             @PathVariable String status,
             @RequestParam(required = false) String comments) {
 
-        Optional<Timesheet> optionalTimesheet = timesheetRepository.findById(id);
+        Optional<WeeklyTimesheet> tsOpt = timesheetRepository.findById(id);
 
-        if (optionalTimesheet.isPresent()) {
-            Timesheet t = optionalTimesheet.get();
-            t.setStatus(status);
-
-            // If there's a comment (like for Rejection), save it
-            if (comments != null && !comments.isEmpty()) {
-                t.setComments(comments);
+        if (tsOpt.isPresent()) {
+            WeeklyTimesheet ts = tsOpt.get();
+            ts.setStatus(status);
+            if (comments != null) {
+                ts.setOverallComments(comments);
             }
-
-            timesheetRepository.save(t);
-            return ResponseEntity.ok("Status updated successfully");
-        } else {
-            return ResponseEntity.notFound().build();
+            timesheetRepository.save(ts);
+            return ResponseEntity.ok("Timesheet " + status);
         }
+        return ResponseEntity.notFound().build();
     }
 }
