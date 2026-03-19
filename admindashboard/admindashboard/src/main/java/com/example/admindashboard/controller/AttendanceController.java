@@ -14,29 +14,6 @@ public class AttendanceController {
     @Autowired
     private AttendanceService attendanceService;
 
-    // API 1: Check-In
-    // The "Principal" object automatically gets the logged-in user's username
-    @PostMapping("/check-in")
-    public ResponseEntity<String> checkIn(Principal principal) {
-        String result = attendanceService.checkIn(principal.getName());
-        if (result.contains("Successful")) {
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.badRequest().body(result);
-        }
-    }
-
-    // API 2: Check-Out
-    @PostMapping("/check-out")
-    public ResponseEntity<String> checkOut(Principal principal) {
-        String result = attendanceService.checkOut(principal.getName());
-        if (result.contains("Successful")) {
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.badRequest().body(result);
-        }
-    }
-
     @PostMapping("/save")
     public ResponseEntity<?> saveAttendanceDraft(@RequestBody java.util.Map<String, Object> attendanceData, Principal principal) {
         try {
@@ -48,7 +25,7 @@ public class AttendanceController {
         }
     }
 
-    // API 4: Submit for Approval
+    // Submit for Approval
     @PostMapping("/submit/{id}")
     public ResponseEntity<?> submitAttendance(@PathVariable Long id, Principal principal) {
         try {
@@ -60,7 +37,7 @@ public class AttendanceController {
         }
     }
 
-    // API 5: Get My Attendance History
+    //  Get My Attendance History
     @GetMapping("/my-history")
     public ResponseEntity<?> getMyHistory(Principal principal) {
         try {

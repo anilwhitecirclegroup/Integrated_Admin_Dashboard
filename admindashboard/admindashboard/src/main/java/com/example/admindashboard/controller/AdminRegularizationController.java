@@ -1,7 +1,7 @@
 package com.example.admindashboard.controller;
 
-import com.example.admindashboard.model.AttendanceRegularization;
-import com.example.admindashboard.repository.AttendanceRegularizationRepository;
+import com.example.admindashboard.model.Timesheet;
+import com.example.admindashboard.repository.TimesheetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +14,12 @@ import java.util.Optional;
 public class AdminRegularizationController {
 
     @Autowired
-    private AttendanceRegularizationRepository regularizationRepository;
+    private TimesheetRepository timesheetRepository;
 
-    // 1. Get List of Requests (Pending/Approved/Rejected)
+    // 1. Get List of Requests (PENDING, APPROVED, DENIED)
     @GetMapping("/list")
-    public ResponseEntity<List<AttendanceRegularization>> getRequests(@RequestParam String status) {
-        return ResponseEntity.ok(regularizationRepository.findByStatus(status));
+    public ResponseEntity<List<Timesheet>> getRequests(@RequestParam String status) {
+        return ResponseEntity.ok(timesheetRepository.findByStatus(status));
     }
 
     // 2. Approve or Reject Request
@@ -29,16 +29,18 @@ public class AdminRegularizationController {
             @PathVariable String status,
             @RequestParam(required = false) String comments) {
 
-        Optional<AttendanceRegularization> requestOpt = regularizationRepository.findById(id);
+        Optional<Timesheet> requestOpt = timesheetRepository.findById(id);
 
         if (requestOpt.isPresent()) {
-            AttendanceRegularization req = requestOpt.get();
+            Timesheet req = requestOpt.get();
             req.setStatus(status);
 
-            // Ensure your Model has this field!
-            if (comments != null) req.setHrComments(comments);
+            // Using the 'comments' field from your Timesheet model
+            if (comments != null && !comments.isEmpty()) {
+                req.setComments(comments);
+            }
 
-            regularizationRepository.save(req);
+            timesheetRepository.save(req);
             return ResponseEntity.ok("Request updated successfully");
         } else {
             return ResponseEntity.notFound().build();

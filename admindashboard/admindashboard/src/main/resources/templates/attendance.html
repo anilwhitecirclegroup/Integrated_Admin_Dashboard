@@ -184,9 +184,16 @@
         if (!weekInput.value) return;
 
         const [year, week] = weekInput.value.split('-W');
-        const firstDay = new Date(year, 0, 1);
-        const daysToMon = (firstDay.getDay() === 0 ? 1 : (8 - firstDay.getDay())) % 7;
-        const monday = new Date(year, 0, 1 + daysToMon + (week - 1) * 7);
+
+        // THE FIX: Accurate ISO 8601 Week Calculation
+        // January 4th is always guaranteed to be in Week 1. Find the Monday of that week.
+        const jan4 = new Date(year, 0, 4);
+        const dayDiff = (jan4.getDay() || 7) - 1; // getDay() is 0 for Sunday, we want 1-7 for Mon-Sun
+        const mondayWeek1 = new Date(year, 0, 4 - dayDiff);
+
+        // Add the required number of weeks to reach the selected week
+        const monday = new Date(mondayWeek1);
+        monday.setDate(mondayWeek1.getDate() + (week - 1) * 7);
 
         tableBody.innerHTML = "";
         const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -402,11 +409,12 @@
             return; // Stop the process if they click Cancel
         }
 
-        // Save the draft silently (pass 'false' so the draft alert doesn't pop up)
-        const savedSheet = await saveDraft(f
+        // THE FIX IS HERE: Completed the 'false);' syntax
+        const savedSheet = await saveDraft(false);
+
         if (savedSheet && savedSheet.id) {
             try {
-                // FIXED: Point to the Attendance submit endpoint
+                // Point to the Attendance submit endpoint
                 const response = await fetch(`/api/attendance/submit/${savedSheet.id}`, {
                     method: 'POST'
                 });
