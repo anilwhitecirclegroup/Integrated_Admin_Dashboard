@@ -493,6 +493,13 @@ public class DashboardController {
         return "redirect:/admin/timesheet-approval";
     }
 
+    @GetMapping("/admin/add-client")
+    public String showAddClientPage() {
+        // Since the file is directly in the templates folder,
+        // we just return the exact file name without the .html extension
+        return "add-new-client";
+    }
+
     @GetMapping("/admin/staff")
     public String showStaffDirectory(Model model, @RequestParam(required = false) String keyword) {
         List<User> staffList;

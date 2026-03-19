@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboard New Client | Admin Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #1e3a8a;
+            --bs-primary-dark: #172554;
+            --bg-color: #f4f6f9;
+        }
+
+        body { background-color: var(--bg-color); font-family: 'Inter', sans-serif; color: #334155; padding-bottom: 40px; }
+
+        /* Premium Gradient Navbar */
+        .navbar-custom {
+            background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
+            padding: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .btn-dashboard-back {
+            color: white; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 6px; padding: 6px 16px; font-size: 0.85rem; font-weight: 600;
+            text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
+        }
+        .btn-dashboard-back:hover { background-color: white; color: var(--bs-primary); transform: translateY(-1px); }
+
+        /* Header Text */
+        .page-title { font-size: 1.75rem; font-weight: 700; color: #0f172a; margin-top: 25px; margin-bottom: 5px; text-align: center; }
+        .page-subtitle { font-size: 0.9rem; color: #64748b; text-align: center; margin-bottom: 30px; }
+
+        /* Form Section Cards */
+        .form-section-card {
+            background: white; border: 1px solid #e2e8f0; border-radius: 8px;
+            overflow: hidden; height: 100%; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        }
+        .form-section-header {
+            background-color: var(--bs-primary); color: white; padding: 12px 20px;
+            font-weight: 600; font-size: 0.95rem; display: flex; align-items: center;
+        }
+
+        /* Inputs & Labels */
+        .form-label { font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 6px; }
+        .form-control, .form-select {
+            border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 15px; font-size: 0.9rem; transition: all 0.2s;
+            background-color: #f8fafc;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); background-color: white;
+        }
+
+        /* Submit Button Area */
+        .submit-container {
+            background: white; border: 1px solid #e2e8f0; border-radius: 8px;
+            padding: 20px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            display: flex; justify-content: space-between; align-items: center; margin-top: 20px;
+        }
+        .btn-submit {
+            background-color: var(--bs-primary); color: white; padding: 12px 40px;
+            border-radius: 8px; font-weight: 600; border: none; transition: all 0.3s; font-size: 1rem;
+        }
+        .btn-submit:hover { background-color: var(--bs-primary-dark); transform: translateY(-2px); box-shadow: 0 8px 15px rgba(30, 58, 138, 0.2); }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-custom navbar-dark">
+    <div class="container d-flex justify-content-between align-items-center">
+        <span class="navbar-brand fw-bold fs-5 d-flex align-items-center m-0">
+            <i class="fas fa-handshake me-3 fs-4 text-white opacity-75"></i>
+            Onboard New Client
+        </span>
+        <a href="/admin/dashboard" class="btn-dashboard-back">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+</nav>
+
+<div class="container" style="max-width: 1200px;">
+
+    <div class="page-title">New Client Registration Form</div>
+    <div class="page-subtitle">Please fill the data/details for the new client in the fields below. Ensure all mandatory fields (*) are correct.</div>
+
+    <form action="/admin/save-client" method="post">
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="form-section-card">
+                    <div class="form-section-header">
+                        <i class="fas fa-building me-2 opacity-75"></i> Company Profile
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Client ID *</label>
+                                <input type="text" class="form-control" name="clientId" placeholder="e.g. CLI-2026-WCG" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Company Name *</label>
+                                <input type="text" class="form-control" name="companyName" placeholder="Global Tech Solutions" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Domain / Specialization</label>
+                                <input type="text" class="form-control" name="domain" placeholder="e.g. IT & Services, Finance">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Account Status</label>
+                                <select class="form-select" name="accountStatus">
+                                    <option value="Active Contract" selected>Active Contract</option>
+                                    <option value="Onboarding">Onboarding</option>
+                                    <option value="Prospect">Prospect</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-section-card">
+                    <div class="form-section-header">
+                        <i class="fas fa-address-book me-2 opacity-75"></i> Primary Contact Details
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Contact Person Name *</label>
+                                <input type="text" class="form-control" name="contactPerson" placeholder="Full Name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Official Email *</label>
+                                <input type="email" class="form-control" name="officialEmail" placeholder="admin@company.com" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number *</label>
+                                <input type="text" class="form-control" name="phoneNumber" placeholder="+91 98765 43210" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-section-card">
+                    <div class="form-section-header">
+                        <i class="fas fa-sitemap me-2 opacity-75"></i> Internal Allocation & Management
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Assigned Team / Department</label>
+                                <select class="form-select" name="assignedTeam">
+                                    <option value="" selected disabled>Select internal team...</option>
+                                    <option value="Development Squad A">Development Squad A</option>
+                                    <option value="QA & Testing">QA & Testing</option>
+                                    <option value="Cloud Infrastructure">Cloud Infrastructure</option>
+                                    <option value="Marketing & Design">Marketing & Design</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Project Manager</label>
+                                <input type="text" class="form-control" name="projectManager" placeholder="Manager Name">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Primary Assigned Employee</label>
+                                <input type="text" class="form-control" name="assignedEmployee" placeholder="Lead Dev / Agent">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-section-card">
+                    <div class="form-section-header">
+                        <i class="fas fa-map-marker-alt me-2 opacity-75"></i> Billing & Location
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Complete Billing Address</label>
+                                <textarea class="form-control" name="billingAddress" rows="2" placeholder="Building, Street, Area..."></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">City</label>
+                                <input type="text" class="form-control" name="city" placeholder="e.g. Pune">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Country / Region</label>
+                                <input type="text" class="form-control" name="country" placeholder="e.g. India">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="submit-container">
+            <div class="text-muted small">
+                <i class="fas fa-info-circle me-1"></i> A confirmation email will be sent to the Primary Contact once the profile is created.
+            </div>
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-user-plus me-2"></i> Create Client Profile
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
