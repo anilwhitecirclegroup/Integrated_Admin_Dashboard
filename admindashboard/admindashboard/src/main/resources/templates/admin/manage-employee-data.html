@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Employee Data - Admin Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #1e3a8a;
+            --bs-primary-dark: #172554;
+            --bg-color: #f8fafc;
+        }
+
+        body { background-color: var(--bg-color); font-family: 'Inter', sans-serif; color: #334155; }
+
+        /* Premium Gradient Navbar */
+        .navbar-custom {
+            background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
+            height: 85px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        .btn-dashboard-back {
+            color: white; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 8px; padding: 8px 18px; font-size: 0.9rem; font-weight: 600;
+            text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
+        }
+        .btn-dashboard-back:hover { background-color: white; color: var(--bs-primary); transform: translateY(-1px); }
+
+        /* Soft Shadow Cards - BASE STYLE UPDATED */
+        .filter-card, .table-card, .form-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0; /* Thin border */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); /* Subtle base shadow */
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
+        }
+
+        .form-card:hover {
+            transform: translateY(-5px); /* Lift effect */
+            box-shadow: 0 20px 25px -5px rgba(30, 58, 138, 0.1), 0 10px 10px -5px rgba(30, 58, 138, 0.04); /* Deeper primary-colored shadow */
+            border-color: var(--bs-primary); /* Highlight border on hover */
+        }
+
+        .form-card:hover .form-control:disabled {
+            background-color: #f1f5f9 !important;
+        }
+
+        /* --- ACTIVE SEARCH HIGHLIGHTS --- */
+        .active-search-container {
+            border: 2px solid #3b82f6 !important;
+            background-color: #eff6ff !important;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+        }
+        .active-search-btn {
+            background-color: #1d4ed8 !important;
+            border-color: #1d4ed8 !important;
+            box-shadow: 0 4px 15px rgba(29, 78, 216, 0.4) !important;
+            transform: translateY(-1px);
+        }
+        .clear-search-btn { cursor: pointer; transition: transform 0.2s; }
+        .clear-search-btn:hover { transform: scale(1.15); }
+
+        /* Search & Form Elements */
+        .form-label-sm { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;}
+        .form-control, .form-select { background-color: #f8fafc; border: 1px solid #e2e8f0; transition: all 0.2s; }
+        .form-control:focus, .form-select:focus { border-color: #93c5fd; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+        /* --- UPGRADED TABLE STYLING --- */
+        .table > :not(caption) > * > * { padding: 1.25rem 1rem; border-bottom: 1px solid #e2e8f0; }
+        thead th { background-color: #e2e8f0 !important; color: #475569; font-size: 0.75rem; letter-spacing: 0.5px; border-bottom: 2px solid #cbd5e1 !important;}
+
+        /* Alternating Row Colors */
+        .table tbody tr:nth-child(even) { background-color: #f8fafc; }
+        .table tbody tr:nth-child(odd) { background-color: #ffffff; }
+
+        /* Flicker-Free Hover Effect */
+        .table-hover tbody tr { transition: background-color 0.2s ease, box-shadow 0.2s ease; cursor: default; }
+        .table-hover tbody tr:hover {
+            background-color: #f1f5f9 !important;
+            box-shadow: inset 4px 0 0 0 var(--bs-primary); /* Uses inset shadow instead of scaling layout! */
+        }
+
+        /* Action Buttons */
+        .btn-action {
+            color: var(--bs-primary); border: 1px solid #cbd5e1; background: white;
+            font-weight: 600; padding: 6px 16px; border-radius: 50px; transition: all 0.2s; text-decoration: none; display: inline-block;
+        }
+        .btn-action:hover {
+            background: var(--bs-primary); color: white; border-color: var(--bs-primary);
+            transform: translateY(-2px); box-shadow: 0 6px 12px rgba(30, 58, 138, 0.25);
+        }
+
+        /* Section Headers for Edit Page */
+        .section-header {
+            background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 15px 24px;
+            font-weight: 700; color: var(--bs-primary); display: flex; align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-custom navbar-dark mb-4">
+    <div class="container-fluid px-5 d-flex justify-content-between align-items-center">
+        <span class="navbar-brand fw-bold d-flex align-items-center m-0">
+            <div class="bg-white bg-opacity-10 p-2 rounded me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                <i class="fas fa-users-cog fs-5 text-white"></i>
+            </div>
+            <span class="fs-4">Manage Employee Data</span>
+        </span>
+        <a href="/admin/dashboard" class="btn-dashboard-back">
+            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+        </a>
+    </div>
+</nav>
+
+<div class="container-fluid px-4 px-lg-5 mb-5" style="max-width: 1450px;">
+
+    <div th:if="${!editMode}">
+
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show shadow border-0 rounded-4 px-4 py-3 d-flex align-items-center mb-4" role="alert" style="background-color: #ecfdf5; border-left: 5px solid #10b981 !important;">
+            <i class="fas fa-check-circle text-success fs-3 me-3"></i>
+            <div>
+                <h6 class="alert-heading fw-bold text-success mb-1">Update Successful</h6>
+                <p class="mb-0 text-success-emphasis small" th:text="${successMessage}"></p>
+            </div>
+            <button type="button" class="btn-close shadow-none" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="card filter-card mb-4">
+            <div class="card-body p-4">
+                <form action="/admin/manage-employees" method="get">
+                    <div class="row g-4 align-items-end">
+                        <div class="col-md-5">
+                            <label class="form-label-sm" th:classappend="${currentSearch != null and !currentSearch.empty} ? 'text-primary'">Search Employee</label>
+
+                            <div class="input-group rounded transition-all"
+                                 th:classappend="${currentSearch != null and !currentSearch.empty} ? 'active-search-container' : 'shadow-sm border'">
+                                <span class="input-group-text bg-transparent border-0"><i class="fas fa-search" th:classappend="${currentSearch != null and !currentSearch.empty} ? 'text-primary' : 'text-muted'"></i></span>
+
+                                <input type="text" name="search" class="form-control bg-transparent border-0 ps-0 shadow-none"
+                                       placeholder="Name or EMP ID..." th:value="${currentSearch}">
+
+                                <a th:if="${currentSearch != null and !currentSearch.empty}"
+                                   href="/admin/manage-employees" class="input-group-text bg-transparent border-0 text-danger text-decoration-none fs-5 clear-search-btn" title="Clear Search">
+                                    <i class="fas fa-times-circle"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label-sm">Sort By</label>
+                            <select name="sort" class="form-select shadow-sm">
+                                <option value="empId" th:selected="${currentSort == 'empId'}">Employee ID</option>
+                                <option value="name" th:selected="${currentSort == 'name'}">Alphabetical (Name)</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary fw-bold shadow-sm px-4"
+                                        th:classappend="${currentSearch != null and !currentSearch.empty} ? 'active-search-btn'">
+                                    <i class="fas fa-filter me-2"></i>Apply Filters
+                                </button>
+                                <a href="/admin/manage-employees" class="btn btn-light border fw-bold shadow-sm" title="Clear Filters"><i class="fas fa-redo"></i> Reset</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card table-card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                        <tr>
+                            <th class="ps-4 text-uppercase py-3">Emp ID</th>
+                            <th class="text-uppercase py-3">Full Name</th>
+                            <th class="text-uppercase py-3">Designation</th>
+                            <th class="text-uppercase py-3">Business Unit</th>
+                            <th class="text-uppercase py-3">Location</th>
+                            <th class="text-end pe-4 text-uppercase py-3">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="emp : ${employees}">
+                            <td class="ps-4 fw-bold text-primary" th:text="${emp.username}">ID</td>
+                            <td class="fw-bold text-dark" th:text="${emp.fullName}">Name</td>
+                            <td class="text-muted fw-medium" th:text="${emp.designation != null ? emp.designation : '-'}">Role</td>
+                            <td><span class="badge bg-secondary bg-opacity-10 text-secondary fw-bold px-3 py-2" th:text="${emp.businessUnit != null ? emp.businessUnit : 'Unassigned'}">BU</span></td>
+                            <td class="text-muted fw-medium" th:text="${emp.workLocation != null ? emp.workLocation : '-'}">Location</td>
+                            <td class="text-end pe-4">
+                                <a th:href="@{/admin/manage-employees/edit/{id}(id=${emp.id})}" class="btn-action">
+                                    <i class="fas fa-user-edit me-1"></i> Edit / View Full
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${employees == null or employees.empty}">
+                            <td colspan="6" class="text-center py-5 text-muted fw-medium bg-white">
+                                <i class="fas fa-users-slash fs-2 mb-3 d-block opacity-25"></i>No employees match your search criteria.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div th:if="${editMode}">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold text-dark m-0">Employee Master Record</h3>
+                <p class="text-muted m-0">Managing data for <span class="fw-bold text-primary" th:text="${emp.username}"></span></p>
+            </div>
+            <a href="/admin/manage-employees" class="btn btn-outline-secondary fw-bold rounded-pill px-4 shadow-sm">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+
+        <form action="/admin/update-employee" method="post">
+            <input type="hidden" name="id" th:value="${emp.id}">
+
+            <div class="card form-card mb-4 border-0">
+                <div class="section-header border-bottom">
+                    <i class="fas fa-id-card me-2"></i> Section 1: Identity & Professional Details
+                </div>
+                <div class="card-body p-4 p-lg-5">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Employee ID</label>
+                            <input type="text" class="form-control fw-bold bg-light" th:value="${emp.username}" disabled title="EMP ID cannot be changed">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Full Name</label>
+                            <input type="text" class="form-control" name="fullName" th:value="${emp.fullName}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Official Email</label>
+                            <input type="email" class="form-control" name="email" th:value="${emp.email}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Designation</label>
+                            <input type="text" class="form-control" name="designation" th:value="${emp.designation}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Total Experience</label>
+                            <input type="text" class="form-control" name="experience" th:value="${emp.experience}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Joining Date</label>
+                            <input type="date" class="form-control" name="joiningDate" th:value="${emp.joiningDate}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card form-card mb-4 border-0">
+                <div class="section-header border-bottom">
+                    <i class="fas fa-briefcase me-2"></i> Section 2: Work & Project Allocation
+                </div>
+                <div class="card-body p-4 p-lg-5">
+                    <div class="row g-4">
+                        <div class="col-md-3">
+                            <label class="form-label-sm">Business Unit</label>
+                            <input type="text" class="form-control" name="businessUnit" th:value="${emp.businessUnit}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-sm">Account Name</label>
+                            <input type="text" class="form-control" name="accountName" th:value="${emp.accountName}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-sm">Project Name</label>
+                            <input type="text" class="form-control" name="projectName" th:value="${emp.projectName}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-sm">Project Code</label>
+                            <input type="text" class="form-control" name="projectCode" th:value="${emp.projectCode}">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label-sm">Customer Name</label>
+                            <input type="text" class="form-control" name="customerName" th:value="${emp.customerName}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-sm">Team Group</label>
+                            <input type="text" class="form-control" name="teamGroup" th:value="${emp.teamGroup}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-sm">Vertical Name</label>
+                            <input type="text" class="form-control" name="verticalName" th:value="${emp.verticalName}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-sm">Domain/Industry</label>
+                            <input type="text" class="form-control" name="domainIndustry" th:value="${emp.domainIndustry}">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Reporting Manager</label>
+                            <input type="text" class="form-control" name="reportingManager" th:value="${emp.reportingManager}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Project Manager</label>
+                            <input type="text" class="form-control" name="projectManager" th:value="${emp.projectManager}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-sm">BU-HR Contact</label>
+                            <input type="text" class="form-control" name="buHrContact" th:value="${emp.buHrContact}">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Work Location</label>
+                            <input type="text" class="form-control" name="workLocation" th:value="${emp.workLocation}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-sm">City</label>
+                            <input type="text" class="form-control" name="city" th:value="${emp.city}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Country</label>
+                            <input type="text" class="form-control" name="country" th:value="${emp.country}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card form-card mb-4 border-0">
+                <div class="section-header border-bottom">
+                    <i class="fas fa-home me-2"></i> Section 3: Personal & Document Details
+                </div>
+                <div class="card-body p-4 p-lg-5">
+                    <h6 class="fw-bold mb-3 text-dark border-bottom pb-2">Basic Info & Documents</h6>
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-3">
+                            <label class="form-label-sm">Date of Birth</label>
+                            <input type="date" class="form-control" name="dob" th:value="${emp.employeeProfile.dob}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-sm">Gender</label>
+                            <select class="form-select" name="gender">
+                                <option value="">Select...</option>
+                                <option value="Male" th:selected="${emp.employeeProfile.gender == 'Male'}">Male</option>
+                                <option value="Female" th:selected="${emp.employeeProfile.gender == 'Female'}">Female</option>
+                                <option value="Other" th:selected="${emp.employeeProfile.gender == 'Other'}">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-sm">Aadhar Number</label>
+                            <input type="text" class="form-control" name="aadharNo" th:value="${emp.employeeProfile.aadharNo}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-sm">PAN Number</label>
+                            <input type="text" class="form-control" name="panNo" th:value="${emp.employeeProfile.panNo}">
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold mb-3 text-dark border-bottom pb-2 mt-4">Contact Information</h6>
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Personal Mobile</label>
+                            <input type="text" class="form-control" name="mobileNumber" th:value="${emp.mobileNumber}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Alternate Mobile</label>
+                            <input type="text" class="form-control" name="altMobile" th:value="${emp.employeeProfile.altMobile}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Personal Email</label>
+                            <input type="email" class="form-control" name="personalEmail" th:value="${emp.employeeProfile.personalEmail}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-sm">Permanent Address</label>
+                            <textarea class="form-control" rows="2" name="permanentAddress" th:text="${emp.employeeProfile.permanentAddress}"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-sm">Working / Current Address</label>
+                            <textarea class="form-control" rows="2" name="workingAddress" th:text="${emp.employeeProfile.workingAddress}"></textarea>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold mb-3 text-dark border-bottom pb-2 mt-4">Emergency Contact</h6>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Contact Name</label>
+                            <input type="text" class="form-control" name="emergencyContactName" th:value="${emp.employeeProfile.emergencyContactName}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Relationship</label>
+                            <input type="text" class="form-control" name="relationWithEmployee" th:value="${emp.employeeProfile.relationWithEmployee}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-sm">Emergency Phone</label>
+                            <input type="text" class="form-control" name="emergencyPhone" th:value="${emp.employeeProfile.emergencyPhone}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card form-card shadow-lg border-primary border-2 sticky-bottom mb-4" style="bottom: 20px; z-index: 1000;">
+                <div class="card-body d-flex justify-content-between align-items-center p-3 px-4 bg-light">
+                    <span class="text-muted fw-bold"><i class="fas fa-info-circle me-2"></i>Review all three sections before saving.</span>
+                    <button type="submit" class="btn btn-success fw-bold px-5 py-2 shadow-sm rounded-pill" style="font-size: 1.1rem;">
+                        <i class="fas fa-save me-2"></i> Save All Changes
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
