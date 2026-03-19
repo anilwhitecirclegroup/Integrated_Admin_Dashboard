@@ -75,7 +75,7 @@
 
         /* --- LOGIN CONTAINER --- */
         #login-container {
-            display: none; /* Hidden by default until button click */
+            display: none;
             min-height: 70vh;
             align-items: center;
             animation: fadeIn 0.4s ease-in-out;
@@ -83,6 +83,23 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- NEW: FORM REFINEMENTS --- */
+        /* Make placeholders noticeably lighter */
+        .form-control::placeholder {
+            color: #adb5bd !important;
+            opacity: 0.6;
+            font-weight: 400;
+        }
+        /* Style for the eye icon button */
+        .btn-toggle-password {
+            border-color: #dee2e6; /* matches standard bootstrap input border */
+            color: #6c757d;
+        }
+        .btn-toggle-password:hover {
+            background-color: #e9ecef;
+            color: #343a40;
         }
     </style>
 </head>
@@ -194,7 +211,7 @@
                     <div id="employee-form-section">
                         <form action="/perform_login" method="post">
                             <div class="mb-3">
-                                <label class="form-label fw-bold small text-secondary">User ID</label>
+                                <label class="form-label fw-bold small text-dark">User ID</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i class="fas fa-id-badge"></i></span>
                                     <input type="text" name="username" class="form-control bg-light border-start-0"
@@ -204,11 +221,14 @@
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label fw-bold small text-secondary">Password</label>
+                                <label class="form-label fw-bold small text-dark">Password</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock"></i></span>
-                                    <input type="password" name="password" class="form-control bg-light border-start-0"
+                                    <input type="password" name="password" id="employeePassword" class="form-control bg-light border-start-0 border-end-0"
                                            placeholder="••••••" required>
+                                    <button class="btn bg-light btn-toggle-password border-start-0" type="button" onclick="togglePassword('employeePassword', 'eyeIconEmp')">
+                                        <i class="fas fa-eye" id="eyeIconEmp"></i>
+                                    </button>
                                 </div>
                             </div>
 
@@ -221,20 +241,24 @@
                     <div id="client-form-section" style="display: none;">
                         <form action="/perform_login" method="post">
                             <div class="mb-3">
-                                <label class="form-label small fw-bold text-muted">Client ID</label>
+                                <label class="form-label small fw-bold text-dark">Client ID</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i class="fas fa-user-tie"></i></span>
                                     <input type="text" name="username" class="form-control bg-light border-start-0"
                                            placeholder="e.g. CLI001" required>
                                 </div>
+                                <div class="form-text small">Use your Client (CLI) ID.</div>
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label small fw-bold text-muted">Password</label>
+                                <label class="form-label small fw-bold text-dark">Password</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i class="fas fa-key"></i></span>
-                                    <input type="password" name="password" class="form-control bg-light border-start-0"
+                                    <input type="password" name="password" id="clientPassword" class="form-control bg-light border-start-0 border-end-0"
                                            placeholder="••••••" required>
+                                    <button class="btn bg-light btn-toggle-password border-start-0" type="button" onclick="togglePassword('clientPassword', 'eyeIconCli')">
+                                        <i class="fas fa-eye" id="eyeIconCli"></i>
+                                    </button>
                                 </div>
                             </div>
 
@@ -260,24 +284,17 @@
     const urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.has('error')) {
-        // 1. Force the login portal to open so the user sees the error
         openPortal('employee');
-
-        // 2. THE FIX: Remove the '?error' from the URL without reloading
-        // This ensures that the next manual refresh will be a clean one.
         window.history.replaceState({}, document.title, window.location.pathname);
     }};
 
     function openPortal(type) {
-        // Hide Landing, Show Login
         document.getElementById('landing-section').style.display = 'none';
         document.getElementById('login-container').style.display = 'flex';
 
-        // Reset forms visibility
         document.getElementById('employee-form-section').style.display = 'none';
         document.getElementById('client-form-section').style.display = 'none';
 
-        // Toggle Logic
         if (type === 'employee') {
             document.getElementById('employee-form-section').style.display = 'block';
             document.getElementById('login-title').innerText = "Employee Portal";
@@ -291,9 +308,24 @@
     }
 
     function showLanding() {
-        // Show Landing, Hide Login
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('landing-section').style.display = 'block';
+    }
+
+    // NEW: Function to toggle password visibility
+    function togglePassword(inputId, iconId) {
+        const passwordInput = document.getElementById(inputId);
+        const eyeIcon = document.getElementById(iconId);
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            eyeIcon.classList.remove("fa-eye");
+            eyeIcon.classList.add("fa-eye-slash");
+        } else {
+            passwordInput.type = "password";
+            eyeIcon.classList.remove("fa-eye-slash");
+            eyeIcon.classList.add("fa-eye");
+        }
     }
 </script>
 </body>
