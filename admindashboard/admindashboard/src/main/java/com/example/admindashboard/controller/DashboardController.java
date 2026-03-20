@@ -11,6 +11,8 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
+
 import com.example.admindashboard.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,10 @@ import com.example.admindashboard.repository.TimesheetRepository;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.admindashboard.model.EmployeeProfile;
 import com.whitecircle.hrms.repository.ServiceRequestRepository;
+import com.example.admindashboard.model.Client;
+import com.example.admindashboard.repository.ClientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class DashboardController {
@@ -41,6 +47,9 @@ public class DashboardController {
 
     @Autowired
     private ServiceRequestRepository serviceRequestRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
 
     // --- 1. LOGIN PAGE MAPPINGS ---
 
@@ -499,6 +508,100 @@ public class DashboardController {
         // we just return the exact file name without the .html extension
         return "add-new-client";
     }
+
+    @PostMapping("/admin/save-client")
+    public String saveClient(@ModelAttribute Client client, RedirectAttributes redirectAttributes) {
+
+        // 1. Save the business profile to the 'clients' table
+        clientRepository.save(client);
+
+        // 2. Auto-generate the Login Account in the 'users' table
+        User clientUser = new User();
+        clientUser.setUsername(client.getClientId());
+        clientUser.setFullName(client.getContactPerson() + " (" + client.getCompanyName() + ")");
+        clientUser.setRole("CLIENT"); // Give them the strict Client role
+        clientUser.setPassword("{noop}welcome123");
+
+        userRepository.save(clientUser);
+
+        // Add a success message (letting the admin know the default password)
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Client " + client.getCompanyName() + " successfully onboarded! Login ID: " + client.getClientId() + " | Temp Password: Welcome@123");
+
+        return "redirect:/admin/dashboard";
+    }
+
+    // 1. Show the Manage Clients HTML Page
+    @GetMapping("/admin/manage-clients")
+    public String showManageClientsPage() {
+        return "admin-manage-clients";
+    }
+
+    // 2. API to fetch all clients for the table
+    @GetMapping("/api/admin/clients")
+    @ResponseBody
+    public ResponseEntity<List<Client>> getAllClients() {
+        return ResponseEntity.ok(clientRepository.findAll());
+    }
+
+    // 3. API to Delete a Client (AND their login account)
+    @DeleteMapping("/api/admin/clients/{id}")
+    @ResponseBody
+    public ResponseEntity<?> deleteClient(@PathVariable Long id) {
+        Optional<Client> clientOpt = clientRepository.findById(id);
+
+        if (clientOpt.isPresent()) {
+            Client client = clientOpt.get();
+            String loginId = client.getClientId();
+
+            // Delete the business profile
+            clientRepository.delete(client);
+
+            // THE FIX: Open the Optional safety box before deleting!
+            Optional<User> userOpt = userRepository.findByUsername(loginId);
+            if (userOpt.isPresent()) {
+                userRepository.delete(userOpt.get());
+            }
+
+            return ResponseEntity.ok("Client and login credentials deleted successfully.");
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // 4. API to Update an Existing Client
+    @PostMapping("/api/admin/clients/update")
+    @ResponseBody
+    public ResponseEntity<?> updateClient(@ModelAttribute Client updatedClient) {
+        Optional<Client> existingOpt = clientRepository.findById(updatedClient.getId());
+
+        if (existingOpt.isPresent()) {
+            Client existing = existingOpt.get();
+
+            // Note: We deliberately DO NOT update the clientId here,
+            // because it is tied to their login account in the users table!
+            existing.setCompanyName(updatedClient.getCompanyName());
+            existing.setDomain(updatedClient.getDomain());
+            existing.setAccountStatus(updatedClient.getAccountStatus());
+
+            existing.setContactPerson(updatedClient.getContactPerson());
+            existing.setOfficialEmail(updatedClient.getOfficialEmail());
+            existing.setPhoneNumber(updatedClient.getPhoneNumber());
+
+            existing.setAssignedTeam(updatedClient.getAssignedTeam());
+            existing.setProjectManager(updatedClient.getProjectManager());
+            existing.setAssignedEmployee(updatedClient.getAssignedEmployee());
+
+            existing.setBillingAddress(updatedClient.getBillingAddress());
+            existing.setCity(updatedClient.getCity());
+            existing.setCountry(updatedClient.getCountry());
+
+            clientRepository.save(existing);
+            return ResponseEntity.ok("Client updated successfully.");
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
 
     @GetMapping("/admin/staff")
     public String showStaffDirectory(Model model, @RequestParam(required = false) String keyword) {
