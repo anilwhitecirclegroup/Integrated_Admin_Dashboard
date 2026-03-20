@@ -67,6 +67,10 @@
             border-radius: 8px; font-weight: 600; border: none; transition: all 0.3s; font-size: 1rem;
         }
         .btn-submit:hover { background-color: var(--bs-primary-dark); transform: translateY(-2px); box-shadow: 0 8px 15px rgba(30, 58, 138, 0.2); }
+
+        /* Modal Customizations */
+        .modal-confirm-icon { font-size: 3.5rem; color: #f59e0b; margin-bottom: 15px; }
+        .modal-success-icon { font-size: 3.5rem; color: #10b981; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -88,7 +92,7 @@
     <div class="page-title">New Client Registration Form</div>
     <div class="page-subtitle">Please fill the data/details for the new client in the fields below. Ensure all mandatory fields (*) are correct.</div>
 
-    <form action="/admin/save-client" method="post">
+    <form id="clientForm" action="/admin/save-client" method="post">
 
         <div class="row g-4">
             <div class="col-md-6">
@@ -100,15 +104,15 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Client ID *</label>
-                                <input type="text" class="form-control" name="clientId" placeholder="e.g. CLI-2026-WCG" required>
+                                <input type="text" class="form-control" name="clientId" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Company Name *</label>
-                                <input type="text" class="form-control" name="companyName" placeholder="Global Tech Solutions" required>
+                                <input type="text" class="form-control" name="companyName" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Domain / Specialization</label>
-                                <input type="text" class="form-control" name="domain" placeholder="e.g. IT & Services, Finance">
+                                <input type="text" class="form-control" name="domain">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Account Status</label>
@@ -132,15 +136,15 @@
                         <div class="row g-3">
                             <div class="col-12">
                                 <label class="form-label">Contact Person Name *</label>
-                                <input type="text" class="form-control" name="contactPerson" placeholder="Full Name" required>
+                                <input type="text" class="form-control" name="contactPerson" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Official Email *</label>
-                                <input type="email" class="form-control" name="officialEmail" placeholder="admin@company.com" required>
+                                <input type="email" class="form-control" name="officialEmail" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Phone Number *</label>
-                                <input type="text" class="form-control" name="phoneNumber" placeholder="+91 98765 43210" required>
+                                <input type="text" class="form-control" name="phoneNumber" required>
                             </div>
                         </div>
                     </div>
@@ -166,11 +170,11 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Project Manager</label>
-                                <input type="text" class="form-control" name="projectManager" placeholder="Manager Name">
+                                <input type="text" class="form-control" name="projectManager">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Primary Assigned Employee</label>
-                                <input type="text" class="form-control" name="assignedEmployee" placeholder="Lead Dev / Agent">
+                                <input type="text" class="form-control" name="assignedEmployee">
                             </div>
                         </div>
                     </div>
@@ -186,15 +190,15 @@
                         <div class="row g-3">
                             <div class="col-12">
                                 <label class="form-label">Complete Billing Address</label>
-                                <textarea class="form-control" name="billingAddress" rows="2" placeholder="Building, Street, Area..."></textarea>
+                                <textarea class="form-control" name="billingAddress" rows="2"></textarea>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">City</label>
-                                <input type="text" class="form-control" name="city" placeholder="e.g. Pune">
+                                <input type="text" class="form-control" name="city">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Country / Region</label>
-                                <input type="text" class="form-control" name="country" placeholder="e.g. India">
+                                <input type="text" class="form-control" name="country">
                             </div>
                         </div>
                     </div>
@@ -204,7 +208,7 @@
 
         <div class="submit-container">
             <div class="text-muted small">
-                <i class="fas fa-info-circle me-1"></i> A confirmation email will be sent to the Primary Contact once the profile is created.
+                <i class="fas fa-info-circle me-1"></i> A confirmation prompt will appear before the profile is created.
             </div>
             <button type="submit" class="btn-submit">
                 <i class="fas fa-user-plus me-2"></i> Create Client Profile
@@ -214,6 +218,83 @@
     </form>
 </div>
 
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg text-center p-4">
+            <div class="modal-body">
+                <i class="fas fa-exclamation-circle modal-confirm-icon"></i>
+                <h4 class="fw-bold text-dark mb-3">Review Details</h4>
+                <p class="text-muted mb-4">Are you sure you want to onboard this new client? This will automatically generate their system login credentials.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <button type="button" class="btn btn-light px-4 fw-bold border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="btnConfirmSubmit" class="btn btn-primary px-4 fw-bold">Yes, Onboard Client</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg text-center p-4">
+            <div class="modal-body">
+                <i class="fas fa-check-circle modal-success-icon"></i>
+                <h4 class="fw-bold text-dark mb-3">Client Onboarded!</h4>
+                <p class="text-muted mb-4">The client profile and system login credentials have been successfully created and saved to the database.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <button type="button" class="btn btn-outline-primary px-4 fw-bold" onclick="resetForm()">Add Another Client</button>
+                    <a href="/admin/dashboard" class="btn btn-primary px-4 fw-bold">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const clientForm = document.getElementById('clientForm');
+    const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+
+    // Step 1: Intercept the form submission to show the Confirmation Modal
+    clientForm.addEventListener('submit', function(e) {
+        e.preventDefault(); // Stop the form from submitting normally
+        confirmModal.show();
+    });
+
+    // Step 2: Handle the actual submission when "Yes, Onboard Client" is clicked
+    document.getElementById('btnConfirmSubmit').addEventListener('click', function() {
+        // Hide confirmation modal
+        confirmModal.hide();
+
+        // Grab the form data
+        const formData = new FormData(clientForm);
+
+        // Send data to the Java backend via fetch
+        fetch(clientForm.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if(response.ok) {
+                // If the backend processed it successfully, show the Success Modal!
+                successModal.show();
+            } else {
+                alert("There was an error saving the client to the database.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Network error occurred while communicating with the server.");
+        });
+    });
+
+    // Step 3: Helper function to clear form if they want to add another client
+    function resetForm() {
+        successModal.hide();
+        clientForm.reset();
+        window.scrollTo(0, 0); // Scroll back to top
+    }
+</script>
 </body>
 </html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Clients | Admin Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #1e3a8a;
+            --bs-primary-dark: #172554;
+            --bg-color: #f8fafc;
+        }
+
+        body { background-color: var(--bg-color); font-family: 'Inter', sans-serif; color: #334155; padding-bottom: 40px; }
+
+        /* --- UPDATED PREMIUM NAVBAR (Full Width, Solid Color, Same as Employee Page) --- */
+        .navbar-custom {
+            background-color: var(--bs-primary); /* Solid solid navy blue */
+            padding: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            width: 100%; /* Wider/Full width */
+        }
+
+        /* Ensure the brand text and icon are full white */
+        .navbar-custom .navbar-brand {
+            color: white !important;
+        }
+        .navbar-custom .navbar-brand i {
+            color: white !important;
+        }
+
+        /* --- UPDATED BACK BUTTON (Transparent, White Border, Same as Employee Page) --- */
+        .btn-dashboard-back {
+            color: white !important; /* White text */
+            background-color: transparent; /* Full transparent background */
+            border: 1px solid white; /* Solid white border */
+            border-radius: 6px; padding: 6px 16px; font-size: 0.85rem; font-weight: 600;
+            text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
+        }
+        .btn-dashboard-back i {
+            color: white; /* White icon */
+        }
+        .btn-dashboard-back:hover {
+            background-color: white; /* Opaque white background on hover */
+            color: var(--bs-primary) !important; /* Navy text on hover */
+            transform: translateY(-1px);
+        }
+        .btn-dashboard-back:hover i {
+            color: var(--bs-primary); /* Navy icon on hover */
+        }
+
+        /* --- REST OF THE STYLING REMAINS THE SAME --- */
+        /* Card & Table */
+        .card-custom { border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .card-header-custom { background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; border-top-left-radius: 12px; border-top-right-radius: 12px; }
+
+        .table-custom th { background-color: #f8fafc; color: #64748b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 16px 20px; border-bottom: 2px solid #e2e8f0; }
+        .table-custom td { padding: 16px 20px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+        .table-custom tbody tr { transition: all 0.2s ease; }
+        .table-custom tbody tr:hover { background-color: #f8fafc; transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+
+        /* Avatars & Badges */
+        .company-avatar { width: 45px; height: 45px; border-radius: 10px; font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center; margin-right: 15px; background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); color: var(--bs-primary); border: 1px solid #a5b4fc; }
+        .status-badge { padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.3px; display: inline-block; }
+        .status-active { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .status-onboarding { background-color: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
+        .status-prospect { background-color: #e0f2fe; color: #075985; border: 1px solid #bae6fd; }
+        .info-pill { background-color: #f1f5f9; color: #475569; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; border: 1px solid #e2e8f0; }
+
+        /* Action Buttons */
+        .btn-action-group { display: flex; gap: 8px; justify-content: flex-end; }
+        .btn-icon { width: 34px; height: 34px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; border: none; transition: all 0.2s; font-size: 0.85rem; }
+        .btn-view { background-color: #eff6ff; color: #2563eb; }
+        .btn-view:hover { background-color: #3b82f6; color: white; }
+        .btn-edit { background-color: #fffbeb; color: #d97706; }
+        .btn-edit:hover { background-color: #d97706; color: white; }
+        .btn-delete { background-color: #fef2f2; color: #ef4444; }
+        .btn-delete:hover { background-color: #ef4444; color: white; }
+
+        /* View Modal */
+        .modal-header-custom { background: var(--bs-primary); color: white; border-top-left-radius: 8px; border-top-right-radius: 8px; border: none; }
+        .detail-label { font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 600; margin-bottom: 2px; }
+        .detail-value { font-size: 0.95rem; color: #1e293b; font-weight: 500; margin-bottom: 15px; }
+
+        /* Edit Form Design */
+        .form-section-header { background-color: var(--bs-primary); color: white; padding: 12px 20px; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; border-top-left-radius: 8px; border-top-right-radius: 8px;}
+        .form-section-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02); height: 100%;}
+        .form-label { font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 6px; }
+        .form-control, .form-select { border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 15px; font-size: 0.9rem; background-color: #f8fafc; }
+        .form-control:focus, .form-select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); background-color: white; }
+        .readonly-input { background-color: #e2e8f0 !important; color: #64748b; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-custom navbar-dark mb-5">
+    <div class="container d-flex justify-content-between align-items-center">
+        <span class="navbar-brand fw-bold fs-5 d-flex align-items-center m-0">
+            <i class="fas fa-users-cog me-3 fs-4 text-white"></i> Client Directory
+        </span>
+        <a href="/admin/dashboard" class="btn-dashboard-back"><i class="fas fa-arrow-left me-2"></i>Back to Dashboard</a>
+    </div>
+</nav>
+
+<div class="container" style="max-width: 1300px;">
+
+    <div id="listView">
+        <div class="card card-custom bg-white">
+            <div class="card-header-custom">
+                <div>
+                    <h5 class="fw-bold text-dark m-0">Active Portfolios</h5>
+                    <small class="text-muted">Manage company profiles, points of contact, and project allocations.</small>
+                </div>
+                <a href="/admin/add-client" class="btn btn-primary fw-bold px-4 py-2 rounded-3 shadow-sm" style="font-size: 0.9rem;">
+                    <i class="fas fa-plus me-2"></i>Onboard Client
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-custom mb-0">
+                    <thead>
+                    <tr>
+                        <th style="width: 30%;">Client & Industry</th>
+                        <th style="width: 25%;">Primary Contact</th>
+                        <th style="width: 25%;">Project Allocation</th>
+                        <th style="width: 10%;">Status</th>
+                        <th class="text-end" style="width: 10%;">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="clientTableBody">
+                    <tr><td colspan="5" class="text-center py-5"><div class="spinner-border text-primary"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="editView" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold text-dark m-0">Update Client Profile</h3>
+                <p class="text-muted m-0">Modify the details for this client below.</p>
+            </div>
+            <button class="btn btn-outline-secondary fw-bold px-4" onclick="closeEditPage()">
+                <i class="fas fa-times me-2"></i>Cancel & Go Back
+            </button>
+        </div>
+
+        <form id="editClientForm">
+            <input type="hidden" name="id" id="edit-id">
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="form-section-card">
+                        <div class="form-section-header"><i class="fas fa-building me-2 opacity-75"></i> Company Profile</div>
+                        <div class="p-4">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Client ID <small class="text-danger">(Locked)</small></label>
+                                    <input type="text" class="form-control readonly-input" name="clientId" id="edit-clientId" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Company Name *</label>
+                                    <input type="text" class="form-control" name="companyName" id="edit-companyName" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Domain / Specialization</label>
+                                    <input type="text" class="form-control" name="domain" id="edit-domain">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Account Status</label>
+                                    <select class="form-select" name="accountStatus" id="edit-accountStatus">
+                                        <option value="Active Contract">Active Contract</option>
+                                        <option value="Onboarding">Onboarding</option>
+                                        <option value="Prospect">Prospect</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-section-card">
+                        <div class="form-section-header"><i class="fas fa-address-book me-2 opacity-75"></i> Contact Details</div>
+                        <div class="p-4">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Contact Person Name *</label>
+                                    <input type="text" class="form-control" name="contactPerson" id="edit-contactPerson" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Official Email *</label>
+                                    <input type="email" class="form-control" name="officialEmail" id="edit-officialEmail" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Phone Number *</label>
+                                    <input type="text" class="form-control" name="phoneNumber" id="edit-phoneNumber" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-section-card">
+                        <div class="form-section-header"><i class="fas fa-sitemap me-2 opacity-75"></i> Internal Allocation</div>
+                        <div class="p-4">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Assigned Team / Department</label>
+                                    <select class="form-select" name="assignedTeam" id="edit-assignedTeam">
+                                        <option value="">Select internal team...</option>
+                                        <option value="Development Squad A">Development Squad A</option>
+                                        <option value="QA & Testing">QA & Testing</option>
+                                        <option value="Cloud Infrastructure">Cloud Infrastructure</option>
+                                        <option value="Marketing & Design">Marketing & Design</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Project Manager</label>
+                                    <input type="text" class="form-control" name="projectManager" id="edit-projectManager">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Lead Assigned Employee</label>
+                                    <input type="text" class="form-control" name="assignedEmployee" id="edit-assignedEmployee">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-section-card">
+                        <div class="form-section-header"><i class="fas fa-map-marker-alt me-2 opacity-75"></i> Billing & Location</div>
+                        <div class="p-4">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Complete Billing Address</label>
+                                    <textarea class="form-control" name="billingAddress" id="edit-billingAddress" rows="2"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">City</label>
+                                    <input type="text" class="form-control" name="city" id="edit-city">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Country / Region</label>
+                                    <input type="text" class="form-control" name="country" id="edit-country">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4 border-0 shadow-sm">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center bg-white rounded">
+                    <div class="text-muted small"><i class="fas fa-info-circle me-1"></i> Changes made will immediately reflect in the client's dashboard.</div>
+                    <button type="button" class="btn btn-warning text-dark px-5 py-2 fw-bold shadow-sm" onclick="submitEditForm()">
+                        <i class="fas fa-save me-2"></i>Save Changes
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<div class="modal fade" id="viewClientModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header modal-header-custom">
+                <h5 class="modal-title fw-bold"><i class="fas fa-building me-2"></i> Client Profile Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 bg-light" id="viewModalContent">
+            </div>
+            <div class="modal-footer border-0 bg-light d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-warning text-dark px-4 fw-bold" id="btnLaunchEditFromView">
+                    <i class="fas fa-edit me-2"></i>Edit Full Profile
+                </button>
+                <button type="button" class="btn btn-secondary px-4 fw-bold" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let globalClients = [];
+    let viewModal;
+
+    document.addEventListener("DOMContentLoaded", () => {
+        viewModal = new bootstrap.Modal(document.getElementById('viewClientModal'));
+        loadClients();
+    });
+
+    function loadClients() {
+        fetch('/api/admin/clients')
+            .then(res => res.json())
+            .then(data => {
+                globalClients = data;
+                const tbody = document.getElementById('clientTableBody');
+                tbody.innerHTML = '';
+
+                if(data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-5 text-muted"><i class="fas fa-folder-open fa-3x mb-3 opacity-25 d-block"></i><h6 class="fw-bold">No clients found in the directory.</h6></td></tr>';
+                    return;
+                }
+
+                data.forEach((client, index) => {
+                    const initials = client.companyName.substring(0, 2).toUpperCase();
+                    const domain = client.domain || 'General Industry';
+                    const location = client.city ? `${client.city}${client.country ? ', ' + client.country : ''}` : 'Location Not Provided';
+
+                    let badgeClass = 'status-active';
+                    if(client.accountStatus === 'Onboarding') badgeClass = 'status-onboarding';
+                    if(client.accountStatus === 'Prospect') badgeClass = 'status-prospect';
+
+                    const delay = index * 0.05;
+
+                    tbody.innerHTML += `
+                        <tr style="animation: fadeIn 0.4s ease forwards; animation-delay: ${delay}s; opacity: 0;">
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="company-avatar shadow-sm">${initials}</div>
+                                    <div>
+                                        <div class="fw-bold text-dark fs-6 d-flex align-items-center gap-2">${client.companyName} <span class="info-pill">${client.clientId}</span></div>
+                                        <div class="text-muted small mt-1"><i class="fas fa-briefcase me-1 opacity-50"></i> ${domain} <span class="mx-1">•</span> <i class="fas fa-map-marker-alt me-1 opacity-50 text-danger"></i> ${location}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-dark">${client.contactPerson}</div>
+                                <div class="text-muted small mt-1"><i class="fas fa-envelope me-1 opacity-50 text-primary"></i> ${client.officialEmail}</div>
+                                <div class="text-muted small"><i class="fas fa-phone-alt me-1 opacity-50 text-success"></i> ${client.phoneNumber}</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-dark"><i class="fas fa-users me-1 text-primary opacity-75"></i> ${client.assignedTeam || 'Team Not Assigned'}</div>
+                                <div class="text-muted small mt-1"><span class="fw-bold opacity-75">PM:</span> ${client.projectManager || 'N/A'}</div>
+                                <div class="text-muted small"><span class="fw-bold opacity-75">Lead:</span> ${client.assignedEmployee || 'N/A'}</div>
+                            </td>
+                            <td>
+                                <span class="status-badge ${badgeClass} shadow-sm"><i class="fas fa-circle me-1" style="font-size: 0.5rem; vertical-align: middle;"></i> ${client.accountStatus || 'Active'}</span>
+                            </td>
+                            <td>
+                                <div class="btn-action-group">
+                                    <button class="btn-icon btn-view shadow-sm" onclick="viewClientDetails(${client.id})" title="View Profile"><i class="fas fa-eye"></i></button>
+
+                                    <button class="btn-icon btn-edit shadow-sm" onclick="openEditPage(${client.id})" title="Edit Profile"><i class="fas fa-pen"></i></button>
+
+                                    <button class="btn-icon btn-delete shadow-sm" onclick="deleteClient(${client.id}, '${client.companyName}')" title="Delete Client"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            })
+            .catch(err => console.error(err));
+    }
+
+    function viewClientDetails(id) {
+        const client = globalClients.find(c => c.id === id);
+        if(!client) return;
+
+        // Ensure "Edit" from inside the view modal calls the new Page View function
+        document.getElementById('btnLaunchEditFromView').setAttribute('onclick', `openEditPage(${client.id})`);
+
+        document.getElementById('viewModalContent').innerHTML = `
+            <div class="row bg-white p-3 rounded-3 shadow-sm mb-4 border border-light">
+                <div class="col-12 d-flex align-items-center">
+                    <div class="company-avatar me-3 shadow-sm" style="width: 60px; height: 60px; font-size: 1.5rem;">${client.companyName.substring(0,2).toUpperCase()}</div>
+                    <div><h4 class="fw-bold text-dark m-0">${client.companyName}</h4><span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle mt-1">${client.clientId}</span></div>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="bg-white p-3 rounded-3 shadow-sm h-100 border border-light">
+                        <h6 class="fw-bold text-primary mb-3 border-bottom pb-2"><i class="fas fa-id-card me-2"></i>Contact Info</h6>
+                        <div class="detail-label">Primary Contact</div><div class="detail-value">${client.contactPerson}</div>
+                        <div class="detail-label">Email Address</div><div class="detail-value">${client.officialEmail}</div>
+                        <div class="detail-label">Phone Number</div><div class="detail-value mb-0">${client.phoneNumber}</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="bg-white p-3 rounded-3 shadow-sm h-100 border border-light">
+                        <h6 class="fw-bold text-primary mb-3 border-bottom pb-2"><i class="fas fa-sitemap me-2"></i>Allocation</h6>
+                        <div class="detail-label">Department</div><div class="detail-value">${client.assignedTeam || 'None'}</div>
+                        <div class="detail-label">Project Manager</div><div class="detail-value">${client.projectManager || 'None'}</div>
+                        <div class="detail-label">Lead Dev</div><div class="detail-value mb-0">${client.assignedEmployee || 'None'}</div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="bg-white p-3 rounded-3 shadow-sm border border-light">
+                        <h6 class="fw-bold text-primary mb-3 border-bottom pb-2"><i class="fas fa-map-marker-alt me-2"></i>Location</h6>
+                        <div class="detail-value mb-2">${client.billingAddress || 'No billing address.'}</div>
+                        <div class="text-muted"><i class="fas fa-city me-1"></i> ${client.city || '-'}, ${client.country || '-'}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+        viewModal.show();
+    }
+
+    // ==========================================
+    // SPA LOGIC: SWAPPING THE VIEWS
+    // ==========================================
+
+    function openEditPage(id) {
+        const client = globalClients.find(c => c.id === id);
+        if(!client) return;
+
+        // Hide the view modal if it was open
+        viewModal.hide();
+
+        // Auto-fill all inputs
+        document.getElementById('edit-id').value = client.id;
+        document.getElementById('edit-clientId').value = client.clientId;
+        document.getElementById('edit-companyName').value = client.companyName;
+        document.getElementById('edit-domain').value = client.domain || '';
+        document.getElementById('edit-accountStatus').value = client.accountStatus || 'Active Contract';
+
+        document.getElementById('edit-contactPerson').value = client.contactPerson;
+        document.getElementById('edit-officialEmail').value = client.officialEmail;
+        document.getElementById('edit-phoneNumber').value = client.phoneNumber;
+
+        document.getElementById('edit-assignedTeam').value = client.assignedTeam || '';
+        document.getElementById('edit-projectManager').value = client.projectManager || '';
+        document.getElementById('edit-assignedEmployee').value = client.assignedEmployee || '';
+
+        document.getElementById('edit-billingAddress').value = client.billingAddress || '';
+        document.getElementById('edit-city').value = client.city || '';
+        document.getElementById('edit-country').value = client.country || '';
+
+        // The Switch: Hide the List, Show the Edit Form
+        document.getElementById('listView').style.display = 'none';
+        document.getElementById('editView').style.display = 'block';
+        window.scrollTo(0, 0); // Scroll back to the top of the page
+    }
+
+    function closeEditPage() {
+        // The Switch: Hide the Edit Form, Show the List
+        document.getElementById('editView').style.display = 'none';
+        document.getElementById('listView').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+
+    function submitEditForm() {
+        const formElement = document.getElementById('editClientForm');
+
+        if(!formElement.checkValidity()) {
+            formElement.reportValidity();
+            return;
+        }
+
+        const formData = new FormData(formElement);
+
+        fetch('/api/admin/clients/update', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => {
+            if(res.ok) {
+                closeEditPage(); // Go back to the table view
+                loadClients();   // Refresh the table with updated data
+                setTimeout(() => alert("Client data updated successfully!"), 300);
+            } else {
+                alert("Failed to update client details.");
+            }
+        })
+        .catch(err => console.error("Error updating client:", err));
+    }
+
+    function deleteClient(id, companyName) {
+        if(confirm(`Delete ${companyName}? This permanently removes their profile and login credentials.`)) {
+            fetch(`/api/admin/clients/${id}`, { method: 'DELETE' }).then(res => { if(res.ok) loadClients(); });
+        }
+    }
+</script>
+
+<style>
+    @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+</style>
+</body>
+</html>
