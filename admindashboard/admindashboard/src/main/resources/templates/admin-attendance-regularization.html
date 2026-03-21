@@ -11,23 +11,33 @@
         :root {
             --primary-blue: #1e3a8a;
             --primary-light: #2563eb;
+            --bs-primary: #1e3a8a;
+            --bs-primary-dark: #172554;
             --bg-light: #f8fafc;
         }
 
         body { background-color: var(--bg-light); font-family: 'Inter', sans-serif; color: #334155; }
 
-        /* Navbar */
+        /* Premium Gradient Navbar */
         .navbar-custom {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, #172554 100%);
-            padding: 20px 0;
+            background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
+            height: 85px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 0; /* Overrides default bootstrap padding to allow exact height */
         }
+
         .btn-dashboard-back {
             color: white; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.4);
             border-radius: 8px; padding: 8px 18px; font-size: 0.9rem; font-weight: 600;
-            text-decoration: none; transition: all 0.3s ease;
+            text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
         }
-        .btn-dashboard-back:hover { background-color: white; color: var(--primary-blue); transform: translateY(-1px); }
+
+        .btn-dashboard-back:hover {
+            background-color: white; color: var(--bs-primary);
+            transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
 
         /* Tabs */
         .nav-pills { background: #ffffff; padding: 6px; border-radius: 50px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
@@ -83,15 +93,15 @@
 <body>
 
 <nav class="navbar navbar-custom navbar-dark mb-5">
-    <div class="container d-flex justify-content-between align-items-center">
-        <span class="navbar-brand fw-bold fs-4 d-flex align-items-center m-0">
-            <div class="bg-white bg-opacity-10 p-2 rounded me-3 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
-                <i class="fas fa-user-clock text-white"></i>
+    <div class="container-fluid px-5 d-flex justify-content-between align-items-center h-100">
+        <span class="navbar-brand fw-bold d-flex align-items-center m-0">
+            <div class="bg-white bg-opacity-10 p-2 rounded me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                <i class="fas fa-user-check fs-5 text-white"></i>
             </div>
-            Attendance Approvals
+            <span class="fs-4" style="letter-spacing: -0.5px;">Attendance Regulation Approvals</span>
         </span>
         <a href="/admin/dashboard" class="btn-dashboard-back">
-            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
         </a>
     </div>
 </nav>

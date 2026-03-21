@@ -12,6 +12,7 @@
     <style>
         :root {
             --bs-primary: #1e3a8a;
+            --bs-primary-dark: #172554; /* Required for the gradient */
             --bg-color: #f8fafc;
         }
 
@@ -21,41 +22,51 @@
             color: #334155;
         }
 
-        /* --- NEW TOP HEADER --- */
+        /* Premium Gradient Navbar */
         .top-header-bar {
-            background-color: var(--bs-primary);
-            /* Increased padding to 30px top/bottom to match the height of the Onboard page */
-            padding: 25px 25px;
-            color: white;
+            background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
+            height: 85px;
+            padding: 0 48px; /* Matched to the px-5 spacing of the standard container-fluid */
             display: flex;
             justify-content: space-between;
-            align-items: center; /* This ensures perfect vertical middle alignment */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 1.5rem; /* Matches the mb-4 of other pages */
         }
 
         .header-title {
-            font-size: 1.4rem;
+            color: white;
+            font-size: 1.5rem; /* Matched to fs-4 */
             font-weight: 700;
             display: flex;
             align-items: center;
+            letter-spacing: -0.5px;
+            margin: 0;
+        }
+
+        .header-icon-wrapper {
+            background: rgba(255,255,255,0.1);
+            padding: 8px;
+            border-radius: 6px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
         }
 
         .btn-back {
-            border: 1px solid white;
-            color: white;
-            padding: 8px 20px;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            text-decoration: none;
-            display: flex;
-            align-items: center; /* Keeps the back arrow perfectly aligned with the text */
-            transition: all 0.3s;
+            color: white; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 8px; padding: 8px 18px; font-size: 0.9rem; font-weight: 600;
+            text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
         }
 
         .btn-back:hover {
-            background-color: rgba(255,255,255,0.15);
-            color: white;
-            border-color: white;
+            background-color: white; color: var(--bs-primary);
+            transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         /* --- PAGE INTRO --- */
@@ -236,7 +247,10 @@
 
 <div class="top-header-bar">
     <div class="header-title">
-        <i class="fas fa-plane-departure me-3"></i> Leave Approvals
+        <div class="header-icon-wrapper">
+            <i class="fas fa-calendar-check fs-5 text-white"></i>
+        </div>
+        Approve Employee Leaves
     </div>
     <a href="/admin/dashboard" class="btn-back">
         <i class="fas fa-arrow-left me-2"></i> Back to Dashboard

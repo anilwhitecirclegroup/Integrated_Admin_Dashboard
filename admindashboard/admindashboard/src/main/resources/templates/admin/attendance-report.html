@@ -96,7 +96,7 @@
     <div class="container-fluid px-5 d-flex justify-content-between align-items-center">
         <span class="navbar-brand fw-bold d-flex align-items-center m-0">
             <div class="bg-white bg-opacity-10 p-2 rounded me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                <i class="fas fa-user-clock fs-5 text-white"></i>
+                <i class="fas fa-clipboard-list fs-5 text-white"></i>
             </div>
             <span class="fs-4" style="letter-spacing: -0.5px;">Attendance Regulation Report</span>
         </span>
@@ -130,11 +130,13 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label-sm">Week From</label>
-                        <input type="date" name="from" class="form-control shadow-sm" th:value="${fromDate}">
+                        <input type="date" name="from" class="form-control shadow-sm"
+                               th:value="${fromDate != null ? fromDate : ''}">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label-sm">Week To</label>
-                        <input type="date" name="to" class="form-control shadow-sm" th:value="${toDate}">
+                        <input type="date" name="to" class="form-control shadow-sm"
+                               th:value="${toDate != null ? toDate : ''}">
                     </div>
                     <div class="col-md-2">
                         <div class="d-flex gap-2 w-100">
@@ -290,25 +292,52 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    document.getElementById('clearSearch').addEventListener('click', function() {
+    document.addEventListener("DOMContentLoaded", function() {
+
+        // --- 1. SEARCH BAR CLEAR LOGIC ---
         const searchInput = document.getElementById('employeeSearch');
-        searchInput.value = '';
-        searchInput.closest('form').submit();
-    });
-
-    document.getElementById('employeeSearch').addEventListener('input', function() {
         const clearBtn = document.getElementById('clearSearch');
-        if (this.value.length > 0) {
-            clearBtn.style.display = 'flex';
-        } else {
-            clearBtn.style.display = 'none';
-        }
-    });
 
-    document.querySelectorAll('input[type="date"]').forEach(function(dateInput) {
-        if (!dateInput.getAttribute('max')) {
-            dateInput.setAttribute('max', '9999-12-31');
+        if (clearBtn && searchInput) {
+            clearBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                searchInput.closest('form').submit();
+            });
+
+            searchInput.addEventListener('input', function() {
+                clearBtn.style.display = this.value.length > 0 ? 'flex' : 'none';
+            });
         }
+
+        // --- 2. DATE INPUT LOGIC (4-Digit Year & Default Empty) ---
+        const dateInputs = document.querySelectorAll('input[type="date"]');
+
+        // Safely check if the user is actively filtering by looking at the URL
+        const isActivelyFiltering = window.location.search.includes('from=') ||
+                                    window.location.search.includes('to=') ||
+                                    window.location.search.includes('search=');
+
+        dateInputs.forEach(function(input) {
+            // Baseline HTML fallback
+            input.setAttribute('max', '9999-12-31');
+
+            // Prevent typing more than 4 digits in the year field
+            input.addEventListener('input', function() {
+                if (this.value) {
+                    let dateParts = this.value.split('-');
+                    // If the year string (the first part) exceeds 4 characters, slice it
+                    if (dateParts[0].length > 4) {
+                        dateParts[0] = dateParts[0].slice(0, 4);
+                        this.value = dateParts.join('-');
+                    }
+                }
+            });
+
+            // If it is a fresh page load (no filters in URL), force the input to be blank
+            if (!isActivelyFiltering) {
+                input.value = '';
+            }
+        });
     });
 </script>
 

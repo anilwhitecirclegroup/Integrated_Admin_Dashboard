@@ -5,15 +5,35 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-
-        .navbar-custom { background-color: #1e3a8a; height: 85px; }
-        .btn-dashboard-back {
-            color: white; background-color: transparent; border: 1px solid white;
-            border-radius: 4px; padding: 6px 15px; font-size: 0.85rem; font-weight: 500;
-            text-decoration: none; display: inline-flex; align-items: center; transition: all 0.2s ease;
+        :root {
+            --bs-primary: #1e3a8a;
+            --bs-primary-dark: #172554;
+            --bg-color: #f4f6f9;
         }
-        .btn-dashboard-back:hover { background-color: rgba(255, 255, 255, 0.1); color: white; }
+
+        body { background-color: var(--bg-color); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        /* Premium Gradient Navbar */
+        .navbar-custom {
+            background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
+            height: 85px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 0;
+            width: 100%;
+        }
+
+        .btn-dashboard-back {
+            color: white; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 8px; padding: 8px 18px; font-size: 0.9rem; font-weight: 600;
+            text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-dashboard-back:hover {
+            background-color: white; color: var(--bs-primary);
+            transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
 
         .content-card { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; }
         .table thead th { background-color: #f8f9fa; color: #495057; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; border-bottom: 2px solid #e9ecef; }
@@ -55,25 +75,27 @@
 </head>
 <body>
 
-<nav class="navbar navbar-custom navbar-dark sticky-top mb-3" style="background-color: #1e3c72; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-    <div class="container-fluid px-4">
-
-        <span class="navbar-brand mb-0 h1 fw-bold">
-            <i class="fas fa-users me-2"></i> Staff Directory
+<nav class="navbar navbar-custom navbar-dark mb-4">
+    <div class="container-fluid px-5 d-flex justify-content-between align-items-center h-100">
+        <span class="navbar-brand fw-bold d-flex align-items-center m-0">
+            <div class="bg-white bg-opacity-10 p-2 rounded me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                <i class="fas fa-users fs-5 text-white"></i>
+            </div>
+            <span class="fs-4" style="letter-spacing: -0.5px;">Staff Directory</span>
         </span>
-
-        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-            <i class="fas fa-check-circle me-2"></i>
-            <span th:text="${successMessage}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-
-        <a href="/admin/dashboard" class="btn btn-outline-light btn-sm">
-            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        <a href="/admin/dashboard" class="btn-dashboard-back">
+            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
         </a>
-
     </div>
 </nav>
+
+<div class="container-fluid px-4">
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
 
 <div class="container-fluid px-4">
 

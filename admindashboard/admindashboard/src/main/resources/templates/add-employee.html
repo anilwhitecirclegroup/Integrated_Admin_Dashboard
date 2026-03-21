@@ -8,7 +8,9 @@
 
     <style>
         :root {
-            --primary-blue: #1e3a8a;
+            --primary-blue: #1e3a8a; /* Kept for existing form buttons */
+            --bs-primary: #1e3a8a;
+            --bs-primary-dark: #172554;
             --bg-light: #f4f6f9;
             --text-dark: #333;
         }
@@ -18,13 +20,27 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Navbar Styling */
+        /* Premium Gradient Navbar */
         .navbar-custom {
-            background-color: var(--primary-blue);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            padding-top: 25px;
-            padding-bottom: 25px;
+            background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
+            height: 85px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
+
+        .btn-dashboard-back {
+            color: white; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 8px; padding: 8px 18px; font-size: 0.9rem; font-weight: 600;
+            text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-dashboard-back:hover {
+            background-color: white; color: var(--bs-primary);
+            transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* (Leave the rest of your Card Styling CSS untouched below this point) */
 
         .navbar-brand {
             font-size: 1.5rem;
@@ -147,13 +163,16 @@
 </head>
 <body>
 
-<nav class="navbar navbar-custom navbar-dark sticky-top mb-3">
-    <div class="container">
-            <span class="navbar-brand mb-0 h1 fw-bold">
-                <i class="fas fa-user-plus me-2"></i> Onboard New Employee
-            </span>
-        <a href="/admin/dashboard" class="btn btn-outline-light btn-sm">
-            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+<nav class="navbar navbar-custom navbar-dark mb-4">
+    <div class="container-fluid px-5 d-flex justify-content-between align-items-center">
+        <span class="navbar-brand fw-bold d-flex align-items-center m-0">
+            <div class="bg-white bg-opacity-10 p-2 rounded me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                <i class="fas fa-user-plus fs-5 text-white"></i>
+            </div>
+            <span class="fs-4" style="letter-spacing: -0.5px;">Onboard New Employee</span>
+        </span>
+        <a href="/admin/dashboard" class="btn-dashboard-back">
+            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
         </a>
     </div>
 </nav>

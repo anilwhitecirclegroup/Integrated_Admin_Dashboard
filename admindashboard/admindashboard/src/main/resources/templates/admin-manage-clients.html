@@ -18,43 +18,28 @@
 
         body { background-color: var(--bg-color); font-family: 'Inter', sans-serif; color: #334155; padding-bottom: 40px; }
 
-        /* --- UPDATED PREMIUM NAVBAR (Full Width, Solid Color, Same as Employee Page) --- */
+        /* Premium Gradient Navbar */
         .navbar-custom {
-            background-color: var(--bs-primary); /* Solid solid navy blue */
-            padding: 15px 0;
+            background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
+            height: 85px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            width: 100%; /* Wider/Full width */
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 0; /* Overrides default bootstrap padding to allow exact height */
+            width: 100%;
         }
 
-        /* Ensure the brand text and icon are full white */
-        .navbar-custom .navbar-brand {
-            color: white !important;
-        }
-        .navbar-custom .navbar-brand i {
-            color: white !important;
-        }
-
-        /* --- UPDATED BACK BUTTON (Transparent, White Border, Same as Employee Page) --- */
         .btn-dashboard-back {
-            color: white !important; /* White text */
-            background-color: transparent; /* Full transparent background */
-            border: 1px solid white; /* Solid white border */
-            border-radius: 6px; padding: 6px 16px; font-size: 0.85rem; font-weight: 600;
+            color: white; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 8px; padding: 8px 18px; font-size: 0.9rem; font-weight: 600;
             text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
-        }
-        .btn-dashboard-back i {
-            color: white; /* White icon */
-        }
-        .btn-dashboard-back:hover {
-            background-color: white; /* Opaque white background on hover */
-            color: var(--bs-primary) !important; /* Navy text on hover */
-            transform: translateY(-1px);
-        }
-        .btn-dashboard-back:hover i {
-            color: var(--bs-primary); /* Navy icon on hover */
+            backdrop-filter: blur(4px);
         }
 
-        /* --- REST OF THE STYLING REMAINS THE SAME --- */
+        .btn-dashboard-back:hover {
+            background-color: white; color: var(--bs-primary);
+            transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
         /* Card & Table */
         .card-custom { border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
         .card-header-custom { background-color: white; border-bottom: 1px solid #e2e8f0; padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; border-top-left-radius: 12px; border-top-right-radius: 12px; }
@@ -99,11 +84,16 @@
 <body>
 
 <nav class="navbar navbar-custom navbar-dark mb-5">
-    <div class="container d-flex justify-content-between align-items-center">
-        <span class="navbar-brand fw-bold fs-5 d-flex align-items-center m-0">
-            <i class="fas fa-users-cog me-3 fs-4 text-white"></i> Client Directory
+    <div class="container-fluid px-5 d-flex justify-content-between align-items-center h-100">
+        <span class="navbar-brand fw-bold d-flex align-items-center m-0">
+            <div class="bg-white bg-opacity-10 p-2 rounded me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                <i class="fas fa-building fs-5 text-white"></i>
+            </div>
+            <span class="fs-4" style="letter-spacing: -0.5px;">Client Directory</span>
         </span>
-        <a href="/admin/dashboard" class="btn-dashboard-back"><i class="fas fa-arrow-left me-2"></i>Back to Dashboard</a>
+        <a href="/admin/dashboard" class="btn-dashboard-back">
+            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+        </a>
     </div>
 </nav>
 
