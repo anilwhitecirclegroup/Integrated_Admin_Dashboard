@@ -28,9 +28,9 @@
         .top-header {
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
             border-bottom: 2px solid var(--bs-primary);
-            padding: 15px 40px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 16px 36px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.06);
         }
         .btn-back-home {
             background-color: var(--bs-primary); /* Navy Blue */
@@ -213,10 +213,11 @@
 
 <header class="top-header">
     <div class="d-flex align-items-center">
-        <img src="/images/wcg-logo.jpg" alt="Logo" style="height: 45px; border-radius: 6px;">
-        <div class="ms-3 border-start ps-3 border-2 border-primary border-opacity-25">
-            <span class="fw-bold text-dark fs-5 d-block" style="line-height: 1.2;">MY APPROVALS</span>
-            <small class="text-muted fw-bold">Request Tracking</small>
+        <i class="fas fa-check-double text-dark" style="font-size: 2.5rem;"></i>
+
+        <div style="border-left: 2px solid #cbd5e1; padding-left: 17px; margin-left: 15px;">
+            <span class="fw-bold text-dark d-block" style="font-size: 1.5rem; letter-spacing: 0.5px; line-height: 1.2;">MY APPROVALS</span>
+            <small class="text-muted fw-bold" style="letter-spacing: 0.3px;">Request Tracking</small>
         </div>
     </div>
     <a href="/employee/dashboard" class="btn-back-home">

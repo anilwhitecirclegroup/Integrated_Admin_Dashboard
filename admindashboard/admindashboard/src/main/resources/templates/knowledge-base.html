@@ -29,8 +29,8 @@
             position: fixed; top: 0; left: 0; right: 0; height: 80px;
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 40px; z-index: 1000; border-bottom: 2px solid var(--navy);
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+            padding: 0 45px; z-index: 1000; border-bottom: 2px solid var(--navy);
+            box-shadow: 0 8px 25px  rgba(0,0,0,0.06);
         }
         .btn-navy { background-color: var(--navy); color: white; border: none; transition: all 0.3s ease; }
         .btn-navy:hover { background-color: var(--navy-hover); color: white; transform: translateY(-1px); }
@@ -158,10 +158,11 @@
 
 <header class="master-nav">
     <div class="d-flex align-items-center">
-        <img src="/images/wcg-logo.jpg" alt="Logo" style="height: 60px; border-radius: 6px;">
-        <div class="ms-3 border-start ps-3 border-2 border-primary border-opacity-25">
-            <span class="fw-bold text-navy fs-5 d-block" style="line-height: 1.2;">KNOWLEDGE BASE</span>
-            <small class="text-muted fw-bold">IT Self-Service Portal</small>
+        <i class="fas fa-book-open-reader text-dark" style="font-size: 2.5rem;"></i>
+
+        <div style="border-left: 2px solid #cbd5e1; padding-left: 17px; margin-left: 15px;">
+            <span class="fw-bold text-dark d-block" style="font-size: 1.5rem; letter-spacing: 0.5px; line-height: 1.2;">KNOWLEDGE BASE</span>
+            <small class="text-muted fw-bold" style="letter-spacing: 0.3px;">IT Self-Service Portal</small>
         </div>
     </div>
     <a href="/tickets" class="btn-back">

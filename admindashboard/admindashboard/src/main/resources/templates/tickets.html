@@ -33,7 +33,7 @@
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 40px;
             border-bottom: 2px solid #e2e8f0;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
         }
 
         .brand-section {
@@ -43,7 +43,7 @@
 
         .btn-back {
             background: #1e3a8a; color: white;
-            padding: 12px 28px; border-radius: 12px; font-size: 1.0rem; text-decoration: none;
+            padding: 10px 24px; border-radius: 10px; font-size: 1.0rem; text-decoration: none;
             border: none; transition: all 0.2s; font-weight: 600;
             box-shadow: 0 2px 5px rgba(30, 58, 138, 0.2);
         }
@@ -153,9 +153,11 @@
 <body>
 
 <nav class="top-nav-bar">
-    <div class="brand-section">
-        <img src="/images/wcg-logo.jpg" alt="WhiteCircle Logo" height="55" class="me-3">
-        LOG TICKETS
+    <div class="brand-section d-flex align-items-center">
+        <i class="fas fa-ticket-alt text-dark" style="font-size: 2.5rem;"></i>
+        <span class="fw-bold text-dark" style="border-left: 2px solid #cbd5e1; padding-left: 17px; margin-left: 15px; font-size: 1.5rem; letter-spacing: 0.5px;">
+            LOG TICKETS
+        </span>
     </div>
     <a href="/employee/dashboard" class="btn-back">
         <i class="fas fa-arrow-left me-2"></i>Back to Home

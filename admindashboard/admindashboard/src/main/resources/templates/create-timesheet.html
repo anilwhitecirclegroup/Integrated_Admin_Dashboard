@@ -31,8 +31,8 @@
             background: white;
             height: 90px; /* INCREASED from 70px */
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 30px; border-bottom: 1px solid var(--border-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            padding: 0 40px; border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
         }
         .brand-section {
             display: flex; align-items: center; color: var(--bs-primary);
@@ -206,8 +206,10 @@
 
 <nav class="top-nav-bar">
     <div class="brand-section d-flex align-items-center">
-        <img src="/images/wcg-logo.jpg" alt="Logo" style="height: 55px; border-radius: 6px;" class="me-3">
-        <span class="fw-bold text-dark fs-4" style="letter-spacing: 0;">CREATE TIMESHEET</span>
+        <i class="fas fa-calendar-plus text-dark" style="font-size: 2.5rem;"></i>
+        <span class="fw-bold text-dark" style="border-left: 2px solid #cbd5e1; padding-left: 17px; margin-left: 15px; font-size: 1.5rem; letter-spacing: 0.5px;">
+            CREATE TIMESHEET
+        </span>
     </div>
     <a href="/employee/erp-timesheet" class="btn btn-navy px-4 py-2 fw-bold shadow-sm">
         <i class="fas fa-arrow-left me-2"></i>Back to ERP Hub
