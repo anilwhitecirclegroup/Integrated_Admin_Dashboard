@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Leave Request</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f6f9; color: #333; padding: 20px; }
+        .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .header { background-color: #1e3a8a; color: #ffffff; padding: 20px; text-align: center; }
+        .header h2 { margin: 0; font-size: 20px; letter-spacing: 0.5px; }
+        .content { padding: 30px; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th, .data-table td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        .data-table th { color: #64748b; font-size: 13px; text-transform: uppercase; width: 35%; }
+        .data-table td { font-weight: 600; color: #1e293b; }
+        .footer { background-color: #f8fafc; padding: 15px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; }
+        .btn { display: inline-block; background-color: #1e3a8a; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; margin-top: 25px; }
+    </style>
+</head>
+<body>
+
+<div class="email-container">
+    <div class="header">
+        <h2>WhiteCircle HRMS | Action Required</h2>
+    </div>
+
+    <div class="content">
+        <p>Hello Admin,</p>
+        <p>A new leave request has been submitted by <strong><span th:text="${empName}">Employee</span></strong> and requires your review.</p>
+
+        <table class="data-table">
+            <tr>
+                <th>Employee ID</th>
+                <td th:text="${empId}">EMP-000</td>
+            </tr>
+            <tr>
+                <th>Leave Type</th>
+                <td th:text="${leaveType}">Sick Leave</td>
+            </tr>
+            <tr>
+                <th>Duration</th>
+                <td><span th:text="${fromDate}">Date</span> to <span th:text="${toDate}">Date</span></td>
+            </tr>
+            <tr>
+                <th>Total Days</th>
+                <td th:text="${totalDays} + ' Day(s)'">0</td>
+            </tr>
+            <tr>
+                <th>Reason Provided</th>
+                <td th:text="${reason}" style="font-weight: normal; color: #475569;">Reason goes here...</td>
+            </tr>
+        </table>
+
+        <center>
+            <a href="http://localhost:8080/admin/leave-approvals"
+               style="display: inline-block; background-color: #2563eb; padding: 14px 30px; border-radius: 6px; text-decoration: none; border: 1px solid #1d4ed8; margin-top: 25px;">
+                <span style="color: #ffffff; font-family: 'Segoe UI', Arial, sans-serif; font-size: 15px; font-weight: bold;">Review Request in Portal</span>
+            </a>
+        </center>
+    </div>
+
+    <div class="footer">
+        This is an automated message from the WhiteCircle HRMS Portal. Please do not reply directly to this email unless contacting the employee.
+    </div>
+</div>
+
+</body>
+</html>
