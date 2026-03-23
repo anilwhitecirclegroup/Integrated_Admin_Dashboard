@@ -1,7 +1,7 @@
 package com.example.admindashboard.controller;
 
-import com.example.admindashboard.model.Timesheet;
-import com.example.admindashboard.repository.TimesheetRepository;
+import com.example.admindashboard.model.Attendance;
+import com.example.admindashboard.repository.AttendanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,33 +14,32 @@ import java.util.Optional;
 public class AdminRegularizationController {
 
     @Autowired
-    private TimesheetRepository timesheetRepository;
+    private AttendanceRepository attendanceRepository;
 
-    // 1. Get List of Requests (PENDING, APPROVED, DENIED)
+    // 1. Get List of Requests (Now searching the correct ApprovalStatus column!)
     @GetMapping("/list")
-    public ResponseEntity<List<Timesheet>> getRequests(@RequestParam String status) {
-        return ResponseEntity.ok(timesheetRepository.findByStatus(status));
+    public ResponseEntity<List<Attendance>> getRequests(@RequestParam String status) {
+        return ResponseEntity.ok(attendanceRepository.findByApprovalStatusIgnoreCase(status));
     }
 
     // 2. Approve or Reject Request
     @PostMapping("/{id}/{status}")
     public ResponseEntity<?> updateStatus(
             @PathVariable Long id,
-            @PathVariable String status,
-            @RequestParam(required = false) String comments) {
+            @PathVariable String status) {
 
-        Optional<Timesheet> requestOpt = timesheetRepository.findById(id);
+        Optional<Attendance> requestOpt = attendanceRepository.findById(id);
 
         if (requestOpt.isPresent()) {
-            Timesheet req = requestOpt.get();
-            req.setStatus(status);
+            Attendance req = requestOpt.get();
 
-            // Using the 'comments' field from your Timesheet model
-            if (comments != null && !comments.isEmpty()) {
-                req.setComments(comments);
-            }
+            // Format cleanly to "Approved" or "Denied"
+            String formattedStatus = status.substring(0, 1).toUpperCase() + status.substring(1).toLowerCase();
 
-            timesheetRepository.save(req);
+            // Save it back to the correct ApprovalStatus column
+            req.setApprovalStatus(formattedStatus);
+
+            attendanceRepository.save(req);
             return ResponseEntity.ok("Request updated successfully");
         } else {
             return ResponseEntity.notFound().build();

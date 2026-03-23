@@ -98,7 +98,7 @@
             <div class="bg-white bg-opacity-10 p-2 rounded me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                 <i class="fas fa-user-check fs-5 text-white"></i>
             </div>
-            <span class="fs-4" style="letter-spacing: -0.5px;">Attendance Regulation Approvals</span>
+            <span class="fs-4" style="letter-spacing: -0.5px;">Attendance Regularization Approvals</span>
         </span>
         <a href="/admin/dashboard" class="btn-dashboard-back">
             <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
@@ -239,12 +239,31 @@
 
         const empName = ts.user && ts.user.fullName ? ts.user.fullName : 'Unknown Employee';
 
+        // NEW: Helper function to beautifully format the Status, Mode, and Reason!
+        const formatDetails = (status, mode, reason) => {
+            if (!status && !mode && !reason) return "No details provided";
+
+            let parts = [];
+            if (status) {
+                let colorClass = status.includes('Present') ? 'success' : (status.includes('Absent') ? 'danger' : 'secondary');
+                parts.push(`<span class="badge bg-${colorClass} bg-opacity-10 text-${colorClass} border border-${colorClass}-subtle me-1">${status}</span>`);
+            }
+            if (mode) {
+                parts.push(`<span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle me-1">${mode}</span>`);
+            }
+            if (reason) {
+                parts.push(`<span class="text-muted fst-italic small ms-1">- ${reason}</span>`);
+            }
+            return parts.join('');
+        };
+
+        // NEW: Pulling the correct Attendance variables instead of the old Timesheet tasks
         const days = [
-            { name: "Monday", hours: ts.mondayHours || 0, details: ts.mondayTask || "No details provided" },
-            { name: "Tuesday", hours: ts.tuesdayHours || 0, details: ts.tuesdayTask || "No details provided" },
-            { name: "Wednesday", hours: ts.wednesdayHours || 0, details: ts.wednesdayTask || "No details provided" },
-            { name: "Thursday", hours: ts.thursdayHours || 0, details: ts.thursdayTask || "No details provided" },
-            { name: "Friday", hours: ts.fridayHours || 0, details: ts.fridayTask || "No details provided" }
+            { name: "Monday", hours: ts.mondayHours || 0, details: formatDetails(ts.mondayStatus, ts.mondayMode, ts.mondayReason) },
+            { name: "Tuesday", hours: ts.tuesdayHours || 0, details: formatDetails(ts.tuesdayStatus, ts.tuesdayMode, ts.tuesdayReason) },
+            { name: "Wednesday", hours: ts.wednesdayHours || 0, details: formatDetails(ts.wednesdayStatus, ts.wednesdayMode, ts.wednesdayReason) },
+            { name: "Thursday", hours: ts.thursdayHours || 0, details: formatDetails(ts.thursdayStatus, ts.thursdayMode, ts.thursdayReason) },
+            { name: "Friday", hours: ts.fridayHours || 0, details: formatDetails(ts.fridayStatus, ts.fridayMode, ts.fridayReason) }
         ];
 
         let rows = '';
@@ -287,10 +306,10 @@
                 <tbody>${rows}</tbody>
             </table>
 
-            ${ts.comments ? `
+            ${ts.reason ? `
                 <div class="mt-3 p-3 bg-light rounded border border-warning-subtle">
-                    <small class="fw-bold text-warning-emphasis d-block mb-1">Employee Comments</small>
-                    <span class="small text-dark">${ts.comments}</span>
+                    <small class="fw-bold text-warning-emphasis d-block mb-1">General Weekly Notes</small>
+                    <span class="small text-dark">${ts.reason}</span>
                 </div>` : ''}
         `;
 

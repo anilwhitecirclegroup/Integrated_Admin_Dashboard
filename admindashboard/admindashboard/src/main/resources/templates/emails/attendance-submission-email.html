@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance Regularization Submitted</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f6f9; color: #333; padding: 20px; }
+        .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .header { background-color: #1e3a8a; color: #ffffff; padding: 20px; text-align: center; }
+        .header h2 { margin: 0; font-size: 20px; letter-spacing: 0.5px; }
+        .content { padding: 30px; }
+
+        /* Highlight boxes for attendance stats */
+        .info-bar { display: flex; justify-content: space-between; background-color: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
+        .info-block { text-align: center; width: 33%; }
+        .info-label { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; display: block; }
+        .info-value { font-size: 16px; font-weight: bold; }
+        .text-success { color: #16a34a; }
+        .text-danger { color: #dc2626; }
+        .text-primary { color: #1e3a8a; }
+
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .data-table th, .data-table td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        .data-table th { color: #64748b; font-size: 13px; text-transform: uppercase; width: 35%; }
+        .data-table td { font-weight: 600; color: #1e293b; }
+        .footer { background-color: #f8fafc; padding: 15px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; }
+    </style>
+</head>
+<body>
+
+<div class="email-container">
+    <div class="header">
+        <h2>WhiteCircle HRMS | Attendance Report</h2>
+    </div>
+
+    <div class="content">
+        <p>Hello Admin,</p>
+        <p>A weekly attendance regularization sheet has been submitted by <strong><span th:text="${empName}">Employee</span></strong>.</p>
+
+        <div class="info-bar">
+            <div class="info-block" style="border-right: 1px solid #e2e8f0;">
+                <span class="info-label">Present Days</span>
+                <span class="info-value text-success" th:text="${presentDays}">0</span>
+            </div>
+            <div class="info-block" style="border-right: 1px solid #e2e8f0;">
+                <span class="info-label">Absent Days</span>
+                <span class="info-value text-danger" th:text="${absentDays}">0</span>
+            </div>
+            <div class="info-block">
+                <span class="info-label">Total Hours</span>
+                <span class="info-value text-primary" th:text="${totalHours} + ' Hrs'">0 Hrs</span>
+            </div>
+        </div>
+
+        <table class="data-table">
+            <tr>
+                <th>Employee ID</th>
+                <td th:text="${empId}">EMP-000</td>
+            </tr>
+            <tr>
+                <th>Week Range</th>
+                <td><span th:text="${weekStartDate}">Start</span> to <span th:text="${weekEndDate}">End</span></td>
+            </tr>
+            <tr th:if="${comments != null and !comments.isEmpty()}">
+                <th>Employee Notes</th>
+                <td th:text="${comments}" style="font-weight: normal; color: #475569;">Notes...</td>
+            </tr>
+        </table>
+
+        <center>
+            <a href="http://localhost:8080/admin/attendance-approvals"
+               style="display: inline-block; background-color: #2563eb; padding: 14px 30px; border-radius: 6px; text-decoration: none; border: 1px solid #1d4ed8; margin-top: 25px;">
+                <span style="color: #ffffff; font-family: 'Segoe UI', Arial, sans-serif; font-size: 15px; font-weight: bold;">Review Attendance in Portal</span>
+            </a>
+        </center>
+    </div>
+
+    <div class="footer">
+        This is an automated message from the WhiteCircle HRMS Portal. Please do not reply directly to this email unless contacting the employee.
+    </div>
+</div>
+
+</body>
+</html>

@@ -17,8 +17,11 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     // Find today's attendance for a specific user (to prevent double check-in)
     Optional<Attendance> findByUserAndDate(User user, LocalDate date);
 
-    // Find all attendance for a user (for history)
-    List<Attendance> findByUserOrderByDateDesc(User user);
+    // The "IgnoreCase" automatically fixes the Pending vs PENDING bug!
+    List<Attendance> findByStatusIgnoreCase(String status);
+
+    // Notice we changed this to "ApprovalStatus" to match your Service file!
+    List<Attendance> findByApprovalStatusIgnoreCase(String approvalStatus);
 
     long countByDate(LocalDate date);
 
@@ -29,10 +32,10 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     // Fetch all attendance records for a user, newest first
     List<Attendance> findByUserOrderByIdDesc(User user);
 
-    // =========================================================================
-    // --- NEW: ADVANCED SEARCH & FILTERING FOR ATTENDANCE REPORT PAGE ---
-    // =========================================================================
+    List<Attendance> findByStatus(String status);
 
+
+    // --- NEW: ADVANCED SEARCH & FILTERING FOR ATTENDANCE REPORT PAGE ---
     // 1. For the UI Table (Returns Paginated Data)
     @Query("SELECT a FROM Attendance a WHERE " +
             "(:fromDate IS NULL OR a.weekStartDate >= :fromDate) AND " +

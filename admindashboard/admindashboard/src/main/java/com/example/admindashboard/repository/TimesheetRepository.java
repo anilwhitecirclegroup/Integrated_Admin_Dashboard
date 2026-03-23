@@ -23,6 +23,9 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
     // Used by Admin to see lists of Pending/Approved/Rejected
     List<Timesheet> findByStatus(String status);
 
+    // Add this inside your TimesheetRepository interface
+    List<Timesheet> findByStatusIgnoreCase(String status);
+
     // Add inside TimesheetRepository interface
     List<Timesheet> findByUserAndWeekStartDate(User user, LocalDate weekStartDate);
 
