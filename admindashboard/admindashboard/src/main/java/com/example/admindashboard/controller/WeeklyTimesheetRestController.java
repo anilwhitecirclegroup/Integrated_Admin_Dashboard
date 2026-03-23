@@ -5,6 +5,7 @@ import com.example.admindashboard.model.WeeklyTimesheet;
 import com.example.admindashboard.model.User;
 import com.example.admindashboard.repository.UserRepository;
 import com.example.admindashboard.service.WeeklyTimesheetService;
+import com.example.admindashboard.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -37,14 +38,53 @@ public class WeeklyTimesheetRestController {
     @Autowired
     private WeeklyTimesheetRepository weeklyTimesheetRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @PostMapping("/submit")
     public ResponseEntity<Map<String, String>> submitTimesheet(@RequestBody TimesheetSubmissionDTO payload) {
         Map<String, String> response = new HashMap<>();
         try {
+            // 1. Save the timesheet to the database
             timesheetService.saveWeeklyTimesheet(payload);
+
+            // 2. NEW: ASYNC EMAIL TRIGGER FOR TIMESHEET
+            try {
+                // Find out who is currently logged in
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
+
+                    String currentUsername = authentication.getName();
+                    Optional<User> currentUserOpt = userRepository.findByUsername(currentUsername);
+
+                    if (currentUserOpt.isPresent()) {
+                        User currentUser = currentUserOpt.get();
+
+                        // Package the data for our Thymeleaf HTML template
+                        Map<String, Object> emailData = new HashMap<>();
+                        emailData.put("empName", currentUser.getFullName());
+                        emailData.put("empId", currentUser.getUsername());
+                        emailData.put("weekStartDate", payload.getWeekStartDate());
+                        emailData.put("weekEndDate", payload.getWeekEndDate());
+                        emailData.put("totalHours", payload.getTotalWeekHours());
+                        emailData.put("comments", payload.getOverallComments());
+
+                        // TODO: Change to your actual testing email address!
+                        String adminEmail = "arcthunder07@gmail.com";
+
+                        // Trigger the background email
+                        emailService.sendTimesheetSubmissionToAdmin(adminEmail, currentUser.getFullName(), currentUser.getEmail(), emailData);
+                    }
+                }
+            } catch (Exception e) {
+                // Catch any email errors silently so the user still sees "Timesheet saved successfully!"
+                System.err.println("Non-fatal error: Failed to trigger timesheet email - " + e.getMessage());
+            }
+
             response.put("status", "success");
             response.put("message", "Timesheet saved successfully!");
             return ResponseEntity.ok(response);
+
         } catch (Exception e) {
             response.put("status", "error");
             response.put("message", e.getMessage());
