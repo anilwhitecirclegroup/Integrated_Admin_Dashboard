@@ -200,6 +200,33 @@
             background-color: var(--bs-primary) !important;
             color: #ffffff !important; /* Forces text to pure white */
         }
+
+        /* --- PREMIUM SWEETALERT2 STYLING --- */
+        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
+        .swal2-popup {
+            border-radius: 20px !important;
+            box-shadow: 0 25px 50px -12px rgba(30, 58, 138, 0.25) !important;
+            padding: 2em !important; border: 1px solid #e2e8f0;
+        }
+        .swal2-title { color: #1e3a8a !important; font-weight: 800 !important; font-size: 1.5rem !important; }
+        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; }
+        .swal2-confirm {
+            border-radius: 10px !important; padding: 12px 30px !important;
+            font-weight: 700 !important; letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2) !important;
+        }
+        .swal2-cancel { border-radius: 10px !important; padding: 12px 30px !important; font-weight: 600 !important; }
+
+        /* --- SLIM & DISCREET TOAST STYLING (For Drafts) --- */
+        .slim-toast-popup {
+            width: auto !important; min-width: 250px !important;
+            padding: 0.7rem 1.2rem !important; border-radius: 12px !important;
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.15) !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+        .slim-toast-title { font-size: 0.9rem !important; font-weight: 600 !important; margin: 0 0 0 10px !important; color: #334155 !important; }
+        .slim-toast-icon { transform: scale(0.7) !important; margin: 0 !important; }
+
     </style>
 </head>
 <body>
@@ -409,6 +436,8 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // --- MASTER TIMESHEET JAVASCRIPT ENGINE ---
 
@@ -644,17 +673,39 @@
         calculateTotals();
     }
 
+    // --- 1. DEFINE THE ULTRA-SLIM TOAST FOR DRAFTS ---
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+        background: '#ffffff',
+        customClass: {
+            popup: 'slim-toast-popup',
+            title: 'slim-toast-title',
+            icon: 'slim-toast-icon'
+        }
+    });
+
+    // --- 2. UPGRADED DELETE ROW ---
     function deleteRow(event) {
         const tbody = document.querySelector('.timecard-table tbody');
         if (tbody.querySelectorAll('tr').length > 1) {
             event.target.closest('tr').remove();
             calculateTotals();
         } else {
-            alert("You must have at least one row in your timesheet.");
+            Swal.fire({
+                icon: 'info',
+                title: 'Cannot Delete',
+                text: 'Your timesheet must have at least one row.',
+                confirmButtonColor: '#1e3a8a'
+            });
         }
     }
 
-    function submitTimesheet(status) {
+    // --- 3. UPGRADED SUBMIT/SAVE LOGIC ---
+    async function submitTimesheet(status) {
         const startDate = document.getElementById('startDate').value;
         const endDate = document.getElementById('endDate').value;
         const overallComments = document.getElementById('overallComments')?.value || '';
@@ -685,9 +736,40 @@
             }
         });
 
+        // Validation for empty submissions
         if (rowData.length === 0 && status === 'SUBMITTED') {
-            alert("You cannot submit an empty timesheet. Please select a project and enter hours.");
+            Swal.fire({
+                icon: 'warning',
+                title: 'Empty Timesheet',
+                text: 'You cannot submit an empty timesheet. Please select a project and enter hours.',
+                confirmButtonColor: '#1e3a8a'
+            });
             return;
+        }
+
+        // --- NEW: Confirmation Modal for final submission ---
+        if (status === 'SUBMITTED') {
+            const confirmResult = await Swal.fire({
+                title: 'Submit to Admin?',
+                text: "Once submitted, you won't be able to edit this week's hours.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#1e3a8a',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Yes, submit it!',
+                cancelButtonText: 'Wait, go back'
+            });
+            if (!confirmResult.isConfirmed) return;
+        }
+
+        // Show Loading Spinner for submission (DRAFTS will skip this for a snappier feel)
+        if (status === 'SUBMITTED') {
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we sync your timesheet.',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
         }
 
         const payload = { weekStartDate: startDate, weekEndDate: endDate, status: status, overallComments: overallComments, totalWeekHours: grandTotal, rows: rowData };
@@ -698,20 +780,31 @@
             body: JSON.stringify(payload)
         })
         .then(response => response.json())
-        .then(data => {
+        .then(async data => {
             if(data.status === 'success') {
-                alert(data.message);
-                if(status === 'SUBMITTED') {
-                    resetTimesheetBoard();
+                if(status === 'DRAFT') {
+                    // Slim Toast for Draft success
+                    Toast.fire({ icon: 'success', title: 'Draft saved successfully!' });
+                } else {
+                    // Big Modal for final submission success
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Timesheet Submitted!',
+                        text: 'Your timesheet has been sent to the admin for review.',
+                        confirmButtonColor: '#1e3a8a',
+                        timer: 2500,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    });
                     window.location.href = '/employee/erp-timesheet';
                 }
             } else {
-                alert("Error saving timesheet: " + data.message);
+                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Error saving: ' + data.message, confirmButtonColor: '#1e3a8a' });
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert("A network error occurred while submitting the timesheet.");
+            Swal.fire({ icon: 'error', title: 'Network Error', text: 'A connection error occurred.', confirmButtonColor: '#1e3a8a' });
         });
     }
 

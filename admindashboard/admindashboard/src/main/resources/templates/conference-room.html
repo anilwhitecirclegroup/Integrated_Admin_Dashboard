@@ -176,6 +176,25 @@
         .btn-copy { background: none; border: none; color: var(--bs-primary); cursor: pointer; padding: 0; font-size: 0.9rem; }
         .meeting-link-box:hover .btn-copy { color: var(--bs-primary); }
 
+        /* --- PREMIUM SWEETALERT2 STYLING --- */
+        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
+        .swal2-popup {
+            border-radius: 20px !important;
+            box-shadow: 0 25px 50px -12px rgba(30, 58, 138, 0.25) !important;
+            padding: 2em !important; border: 1px solid #e2e8f0;
+        }
+        .swal2-title { color: #1e3a8a !important; font-weight: 800 !important; font-size: 1.5rem !important; }
+        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; }
+        .swal2-confirm {
+            border-radius: 10px !important; padding: 12px 30px !important;
+            font-weight: 700 !important; letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2) !important;
+        }
+        .swal2-cancel {
+            border-radius: 10px !important; padding: 12px 30px !important;
+            font-weight: 600 !important;
+        }
+
     </style>
 </head>
 <body>
@@ -363,6 +382,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function toggleLocation() {
         // Fixed: Grab the value from the exact correct ID
@@ -449,20 +469,15 @@
     }
 
     async function submitMeeting() {
-        // Determine whether to save the Platform (Online) or the Room (Offline)
         const currentMode = document.getElementById("meetingMode").value;
-        let platformOrRoomValue = "";
-
-        if (currentMode === 'Online') {
-            platformOrRoomValue = document.getElementById("platform").value;
-        } else {
-            platformOrRoomValue = document.getElementById("roomName").value;
-        }
+        let platformOrRoomValue = currentMode === 'Online' ?
+            document.getElementById("platform").value :
+            document.getElementById("roomName").value;
 
         const payload = {
             meetingTitle: document.getElementById("meetingTitle").value,
             meetingMode: currentMode,
-            platform: platformOrRoomValue, // Saves the room name perfectly if offline!
+            platform: platformOrRoomValue,
             participantType: document.getElementById("participantType").value,
             specificEmployeeIds: document.getElementById("specificEmployeeIds").value,
             startTime: document.getElementById("startTime").value,
@@ -470,17 +485,42 @@
             meetingDate: document.getElementById("meetingDate").value
         };
 
+        // 1. Sleek Warning if fields are missing
         if (!payload.meetingTitle || !payload.meetingDate || !payload.startTime || !payload.endTime || !payload.participantType) {
-            alert("Please fill out all required fields before confirming.");
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Details',
+                text: 'Please fill out all required fields before confirming.',
+                confirmButtonColor: '#1e3a8a'
+            });
             return;
         }
 
-        // NEW: Confirmation popup before sending to backend
-        const isConfirmed = confirm("Are you sure you want to confirm this meeting booking?\nAn alert will be placed on the agenda of the invited participants.");
+        // 2. Beautiful Center Confirmation Modal
+        const confirmResult = await Swal.fire({
+            title: 'Confirm Booking?',
+            text: "An alert will be placed on the agenda of the invited participants.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#1e3a8a',
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: 'Yes, book it!',
+            cancelButtonText: 'Cancel'
+        });
 
-        if (!isConfirmed) {
+        if (!confirmResult.isConfirmed) {
             return; // Stops submission if they click cancel
         }
+
+        // 3. Show Loading State while fetching
+        Swal.fire({
+            title: 'Booking Room...',
+            text: 'Please wait while we notify participants.',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
 
         try {
             const response = await fetch('/api/meetings/book', {
@@ -490,15 +530,34 @@
             });
 
             if (response.ok) {
-                alert("Meeting Details are successfully sent to participants.");
+                // 4. Ultimate Success Modal with Auto-Refresh!
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Meeting Confirmed!',
+                    text: 'Details have been successfully sent to all participants.',
+                    confirmButtonColor: '#1e3a8a',
+                    timer: 2500,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
                 window.location.reload();
             } else {
                 const errorText = await response.text();
-                alert("Booking Failed: " + errorText);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Booking Failed',
+                    text: errorText,
+                    confirmButtonColor: '#1e3a8a'
+                });
             }
         } catch (error) {
             console.error("Error:", error);
-            alert("A connection error occurred.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Network Error',
+                text: 'A connection error occurred. Please try again.',
+                confirmButtonColor: '#1e3a8a'
+            });
         }
     }
 

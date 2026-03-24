@@ -140,6 +140,31 @@
         }
         .btn-cancel:hover { background: #f1f5f9; color: #0f172a; }
 
+        /* --- ELITE IT-PORTAL SWEETALERT STYLING --- */
+        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
+        .swal2-popup {
+            border-radius: 24px !important;
+            padding: 2.5em !important;
+            border: 1px solid rgba(30, 58, 138, 0.2) !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2) !important;
+        }
+        .swal2-title { color: #1e3a8a !important; font-weight: 800 !important; font-size: 1.6rem !important; }
+        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; line-height: 1.6; }
+        .swal2-confirm {
+            border-radius: 12px !important; padding: 14px 35px !important;
+            font-weight: 700 !important; letter-spacing: 0.5px;
+            background-color: #1e3a8a !important;
+            box-shadow: 0 8px 15px rgba(30, 58, 138, 0.25) !important;
+        }
+        .swal2-cancel {
+            border-radius: 12px !important; padding: 14px 35px !important;
+            font-weight: 600 !important; background-color: #f1f5f9 !important; color: #64748b !important;
+        }
+
+        /* Emerald Green Success Ring */
+        .swal2-icon.swal2-success [class^=swal2-success-line] { background-color: #10b981 !important; }
+        .swal2-icon.swal2-success .swal2-success-ring { border-color: rgba(16, 185, 129, 0.3) !important; }
+
     </style>
 </head>
 <body>
@@ -531,6 +556,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script th:inline="javascript">
 
     // 1. Safe Thymeleaf extraction (Declared ONLY ONCE)
@@ -579,36 +606,31 @@
         });
     }
 
-    // 4. Generic function to handle Hardware submissions
+    // === UPGRADED HARDWARE-PORTAL SUBMISSION ENGINE (WITH VISIBILITY FIX) ===
     async function handleSubmission(formId, category) {
         const form = document.getElementById(formId);
         const selects = form.querySelectorAll('select');
         const inputs = form.querySelectorAll('input[type="text"]:not([readonly])');
+        const textarea = form.querySelector('textarea');
 
-        // Dynamic Priority Finder
         let priorityValue = "Medium";
         const priorityDropdown = Array.from(selects).find(sel =>
             Array.from(sel.options).some(opt => opt.value === 'Medium')
         );
-        if (priorityDropdown) {
-            priorityValue = priorityDropdown.value;
-        }
+        if (priorityDropdown) priorityValue = priorityDropdown.value;
 
-        // --- Custom Mapping for Hardware Modals ---
         let detailValue = "";
         let durationLevel = "";
         let assetTagVal = "";
         let locVal = "";
 
         if (category === 'Accessory Request') {
-            // Accessory form has dropdowns for detail (Type) and location
             detailValue = selects[0].value;
             locVal = selects[1].value;
         } else if (category === 'Hardware Upgrade') {
-            // Upgrade form uses inputs for Asset Tag and Specs, and a select for Upgrade Type
             assetTagVal = inputs[0].value;
-            detailValue = selects[0].value; // "RAM Upgrade" etc.
-            durationLevel = "From " + inputs[1].value + " to " + inputs[2].value; // e.g., "From 16GB to 32GB"
+            detailValue = selects[0].value;
+            durationLevel = "From " + inputs[1].value + " to " + inputs[2].value;
         }
 
         const formData = {
@@ -616,36 +638,80 @@
             employeeName: sessionUser.name,
             department: sessionUser.dept,
             managerName: sessionUser.manager,
-
-            type: "HARDWARE", // Sent to DB so it generates an HW- ticket ID
+            type: "HARDWARE",
             category: category,
-
             detailItem: detailValue,
             durationOrLevel: durationLevel,
             assetTag: assetTagVal,
             location: locVal,
             priority: priorityValue,
-            justification: form.querySelector('textarea').value,
+            justification: textarea.value,
             status: "Pending Approval"
         };
 
-        const confirmMsg = `Submit ${category} request?\n\nRequester: ${formData.employeeName}\nPriority: ${priorityValue}`;
+        // 1. CONFIRMATION
+        const confirmResult = await Swal.fire({
+            title: `Submit Hardware Request?`,
+            html: `You are requesting a <b>${category}</b> for <b>${formData.detailItem}</b>.<br><br>Priority: <b>${priorityValue}</b>`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Confirm & Submit',
+            cancelButtonText: 'Edit Request',
+            reverseButtons: true
+        });
 
-        if (confirm(confirmMsg)) {
-            try {
-                const response = await fetch('/api/requests/submit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
+        if (!confirmResult.isConfirmed) return;
 
-                if (response.ok) {
-                    alert("✅ Success! Your hardware request has been sent to IT Procurement for review.");
-                    location.reload();
-                }
-            } catch (error) {
-                alert("Network error. Please try again.");
+        // 2. LOADING STATE (Now with guaranteed visibility)
+        Swal.fire({
+            title: 'Processing Request...',
+            text: 'Allocating ticket and notifying IT Procurement...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
             }
+        });
+
+        // Record the start time so we can calculate the delay
+        const startTime = Date.now();
+
+        try {
+            const response = await fetch('/api/requests/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            // --- THE VISIBILITY TRICK ---
+            // Calculate how much time has passed. If it's less than 1.5 seconds,
+            // we wait for the remainder so the user can actually see the "Processing" modal.
+            const elapsedTime = Date.now() - startTime;
+            const minimumDisplayTime = 1500; // 1.5 seconds
+            if (elapsedTime < minimumDisplayTime) {
+                await new Promise(resolve => setTimeout(resolve, minimumDisplayTime - elapsedTime));
+            }
+
+            if (response.ok) {
+                // 3. SUCCESS MODAL
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Request Logged!',
+                    html: `Your <b>${category}</b> has been successfully queued. IT will review your justification shortly.`,
+                    confirmButtonText: 'Understood',
+                    timer: 4000,
+                    timerProgressBar: true
+                });
+                location.reload();
+            } else {
+                throw new Error("Server Error");
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Submission Failed',
+                text: 'The Inventory Portal could not connect. Please check your connection.',
+                confirmButtonColor: '#1e3a8a'
+            });
         }
     }
 

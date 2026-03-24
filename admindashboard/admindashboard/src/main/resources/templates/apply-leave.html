@@ -117,6 +117,25 @@
         .status-approved { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
         .status-rejected { background: #fef2f2; color: #b91c1c; border: 1px solid #fee2e2; }
 
+        /* --- PREMIUM SWEETALERT2 STYLING --- */
+        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
+        .swal2-popup {
+            border-radius: 20px !important;
+            box-shadow: 0 25px 50px -12px rgba(30, 58, 138, 0.25) !important;
+            padding: 2em !important; border: 1px solid #e2e8f0;
+        }
+        .swal2-title { color: #1e3a8a !important; font-weight: 800 !important; font-size: 1.5rem !important; }
+        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; }
+        .swal2-confirm {
+            border-radius: 10px !important; padding: 12px 30px !important;
+            font-weight: 700 !important; letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2) !important;
+        }
+        .swal2-cancel {
+            border-radius: 10px !important; padding: 12px 30px !important;
+            font-weight: 600 !important;
+        }
+
     </style>
 </head>
 <body>
@@ -373,6 +392,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // 1. Toggle Fields based on Leave Mode
     function toggleModeFields() {
@@ -407,9 +427,8 @@
         }
     }
 
-    // 3. Submit Request Logic
+    // 3. Submit Request Logic (Upgraded with SweetAlert2)
     async function submitLeaveRequest() {
-        // Grab values from the DOM
         const leaveType = document.getElementById("leaveType").value;
         const leaveMode = document.getElementById("leaveMode").value;
         const fromDate = document.getElementById("fromDate").value;
@@ -417,21 +436,33 @@
         const totalDays = document.getElementById("totalDays").value;
         const reason = document.getElementById("leaveReason").value;
 
-        // Basic validation before asking for confirmation
-        if (!leaveType || !leaveMode || !fromDate || !toDate || !reason) {
-            alert("Please fill in all required fields before submitting.");
+        // Validation Warning
+        if (!leaveType || leaveType === "Select Type..." || !leaveMode || leaveMode === "Select Mode..." || !fromDate || !toDate || !reason) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Details',
+                text: 'Please fill in all required fields before submitting.',
+                confirmButtonColor: '#1e3a8a'
+            });
             return;
         }
 
-        // NEW: Step 1 - Ask for confirmation
-        // If they click "Cancel" on the popup, the function stops and lets them edit the form
-        const isConfirmed = confirm("Are you sure you want to Submit this Leave Request?\n\nClick 'Cancel' if you need to edit your request details.");
+        // Beautiful Confirmation Modal
+        const confirmResult = await Swal.fire({
+            title: 'Submit Leave Request?',
+            text: "Your request will be sent to your manager for approval.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#1e3a8a',
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: 'Yes, submit it!',
+            cancelButtonText: 'Cancel'
+        });
 
-        if (!isConfirmed) {
-            return; // Stops the submission process, leaving the form exactly as it is
+        if (!confirmResult.isConfirmed) {
+            return; // Stops submission if they click cancel
         }
 
-        // Build the JSON payload
         const payload = {
             leaveType: leaveType,
             leaveMode: leaveMode,
@@ -441,6 +472,16 @@
             reason: reason
         };
 
+        // Sleek Loading State
+        Swal.fire({
+            title: 'Submitting...',
+            text: 'Please wait while we process your request.',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
         try {
             const response = await fetch('/api/leave/submit', {
                 method: 'POST',
@@ -449,32 +490,54 @@
             });
 
             if (response.ok) {
-                // NEW: Step 2 - Success message exactly as requested
-                alert("Leave Request Submitted successfully for approval");
-                window.location.reload(); // Reload to clear form and update 'Recent Status'
+                // Ultimate Success Modal with Auto-Refresh
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Request Submitted!',
+                    text: 'Your leave request has been sent successfully.',
+                    confirmButtonColor: '#1e3a8a',
+                    timer: 2500,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+                window.location.reload();
             } else {
                 const errorText = await response.text();
-                alert("Failed to submit request: " + errorText);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Submission Failed',
+                    text: errorText,
+                    confirmButtonColor: '#1e3a8a'
+                });
             }
         } catch (error) {
             console.error("Error:", error);
-            alert("An error occurred while submitting.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Network Error',
+                text: 'An error occurred while submitting. Please try again.',
+                confirmButtonColor: '#1e3a8a'
+            });
         }
     }
 
-    // 4. Cancel Logic (With Confirmation)
-    function cancelLeaveRequest() {
-        const isConfirmed = confirm("Are you sure you want to cancel this request? All entered details will be cleared.");
+    // 4. Cancel Logic (Upgraded with SweetAlert2)
+    async function cancelLeaveRequest() {
+        const confirmResult = await Swal.fire({
+            title: 'Cancel Request?',
+            text: "All entered details will be cleared. Are you sure?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545', // Red color for destructive action
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: 'Yes, clear form',
+            cancelButtonText: 'No, keep editing'
+        });
 
-        if (isConfirmed) {
-            // Option 1: If your inputs are inside a <form> tag, this single line clears EVERYTHING instantly.
+        if (confirmResult.isConfirmed) {
             const form = document.querySelector('form');
-            if (form) {
-                form.reset();
-            }
+            if (form) form.reset();
 
-            // Option 2: Bulletproof manual clearing just in case there is no <form> tag.
-            // The "?" ensures that if your HTML ID is slightly different, the page won't crash!
             const typeDropdown = document.getElementById("leaveType");
             if (typeDropdown) typeDropdown.selectedIndex = 0;
 
@@ -490,9 +553,12 @@
             const totalDays = document.getElementById("totalDays");
             if (totalDays) totalDays.value = "0";
 
-            // Make sure the ID on your textarea is exactly id="leaveReason"
             const leaveReason = document.getElementById("leaveReason");
             if (leaveReason) leaveReason.value = "";
+
+            // Re-hide dynamic sections
+            document.getElementById('onlineSection').classList.add('d-none');
+            document.getElementById('offlineSection').classList.add('d-none');
         }
     }
 

@@ -139,6 +139,30 @@
         }
         .btn-back:hover { background: #172554; color: white; transform: translateY(-1px); }
 
+        /* --- ELITE INCIDENT-PORTAL SWEETALERT STYLING --- */
+        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
+        .swal2-popup {
+            border-radius: 24px !important;
+            padding: 2.5em !important;
+            border: 1px solid rgba(30, 58, 138, 0.2) !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2) !important;
+        }
+        .swal2-title { color: #1e3a8a !important; font-weight: 800 !important; font-size: 1.6rem !important; }
+        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; line-height: 1.6; }
+        .swal2-confirm {
+            border-radius: 12px !important; padding: 14px 35px !important;
+            font-weight: 700 !important; letter-spacing: 0.5px;
+            background-color: #1e3a8a !important;
+            box-shadow: 0 8px 15px rgba(30, 58, 138, 0.25) !important;
+        }
+        .swal2-cancel {
+            border-radius: 12px !important; padding: 14px 35px !important;
+            font-weight: 600 !important; background-color: #f1f5f9 !important; color: #64748b !important;
+        }
+
+        /* Custom Warning/Incident Icon color */
+        .swal2-icon.swal2-warning { border-color: #f59e0b !important; color: #f59e0b !important; }
+
     </style>
 </head>
 <body>
@@ -304,6 +328,7 @@
     </div>
 </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script th:inline="javascript">
 
@@ -342,19 +367,22 @@
         }
     }
 
-    // 3. The Backend Submission Engine
+    // === UPGRADED INCIDENT-SUBMISSION ENGINE (WITH VISIBILITY FIX) ===
     async function submitIncident() {
         const form = document.getElementById('incidentForm');
         const btn = document.querySelector('.btn-navy.w-100');
-
-        // Grab values directly from the DOM structure of this specific page
         const selects = form.querySelectorAll('select');
         const inputs = form.querySelectorAll('input[type="text"]');
         const textarea = form.querySelector('textarea');
 
-        // Validation Check
+        // 1. Sleek Validation Check
         if (!selects[0].value || !selects[1].value || !inputs[0].value || !textarea.value) {
-            alert("Please fill in all required fields (Category, Sub-Category, Title, and Description).");
+            Swal.fire({
+                icon: 'info',
+                title: 'Missing Info',
+                text: 'Please fill in Category, Item, Title, and Description.',
+                confirmButtonColor: '#1e3a8a'
+            });
             return;
         }
 
@@ -363,50 +391,76 @@
             employeeName: sessionUser.name,
             department: sessionUser.dept,
             managerName: sessionUser.manager,
-
-            type: "INCIDENT", // Sent to DB so it generates an INC- ticket ID
-            category: selects[0].value, // Main Category (Hardware, Software, Network)
-
-            // For Incidents, we map the short title to detailItem, and sub-category to durationOrLevel
-            detailItem: inputs[0].value, // Short Title / Subject
-            durationOrLevel: selects[1].value, // Specific Item
-
-            priority: selects[2].value, // Severity Level
-            justification: textarea.value, // Detailed Description
-            status: "Open" // Incidents start as Open, not Pending Approval
+            type: "INCIDENT",
+            category: selects[0].value,
+            detailItem: inputs[0].value,
+            durationOrLevel: selects[1].value,
+            priority: selects[2].value,
+            justification: textarea.value,
+            status: "Open"
         };
 
-        const confirmMsg = `Submit Incident Ticket?\n\nRequester: ${formData.employeeName}\nSubject: ${formData.detailItem}`;
+        // 2. DASHING CONFIRMATION MODAL
+        const confirmResult = await Swal.fire({
+            title: 'Report Incident?',
+            html: `Logging a <b>${formData.priority} Priority</b> ticket for:<br><br><i class="fas fa-bolt text-warning me-2"></i><b>${formData.detailItem}</b>`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Submit Ticket',
+            cancelButtonText: 'Review Form',
+            reverseButtons: true
+        });
 
-        if (confirm(confirmMsg)) {
-            // UI Loading State
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Submitting...';
-            btn.disabled = true;
+        if (!confirmResult.isConfirmed) return;
 
-            try {
-                const response = await fetch('/api/requests/submit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-
-                if (response.ok) {
-                    btn.innerHTML = '<i class="fas fa-check-circle me-2"></i> Ticket Submitted!';
-                    btn.classList.replace('btn-navy', 'btn-success');
-
-                    setTimeout(() => {
-                        alert("✅ Incident Reported Successfully! IT is investigating.");
-                        location.reload();
-                    }, 500);
-                } else {
-                    throw new Error("Server rejected request");
-                }
-            } catch (error) {
-                alert("Network error. Please try again.");
-                btn.innerHTML = originalText;
-                btn.disabled = false;
+        // 3. THE "SYSTEM SCAN" LOADING STATE (Middle Pop-up)
+        Swal.fire({
+            title: 'Logging Incident...',
+            text: 'Analyzing priority and alerting IT Response Team...',
+            allowOutsideClick: false,k
+            didOpen: () => {
+                Swal.showLoading();
             }
+        });
+
+        // Track time to prevent the "Flicker" issue
+        const startTime = Date.now();
+
+        try {
+            const response = await fetch('/api/requests/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            // --- THE UX DELAY TRICK ---
+            const elapsedTime = Date.now() - startTime;
+            const minDisplayTime = 1600; // 1.6 seconds for extra "dashing" effect
+            if (elapsedTime < minDisplayTime) {
+                await new Promise(resolve => setTimeout(resolve, minDisplayTime - elapsedTime));
+            }
+
+            if (response.ok) {
+                // 4. ULTIMATE SUCCESS MODAL
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Incident Logged',
+                    html: `Ticket ID generated. <b>IT Support</b> has been notified and will investigate shortly.`,
+                    confirmButtonText: 'Back to Dashboard',
+                    timer: 4000,
+                    timerProgressBar: true
+                });
+                location.reload();
+            } else {
+                throw new Error("Log failed");
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Helpdesk Offline',
+                text: 'Could not reach the IT portal. Please check your network connection.',
+                confirmButtonColor: '#1e3a8a'
+            });
         }
     }
 

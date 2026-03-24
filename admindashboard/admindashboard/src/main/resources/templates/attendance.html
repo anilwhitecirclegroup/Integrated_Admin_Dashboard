@@ -102,6 +102,49 @@
         align-items: center;
         justify-content: center;
     }
+
+        /* --- PREMIUM SWEETALERT2 STYLING --- */
+        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
+        .swal2-popup {
+            border-radius: 20px !important;
+            box-shadow: 0 25px 50px -12px rgba(30, 58, 138, 0.25) !important;
+            padding: 2em !important; border: 1px solid #e2e8f0;
+        }
+        .swal2-title { color: #1e3a8a !important; font-weight: 800 !important; font-size: 1.5rem !important; }
+        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; }
+        .swal2-confirm {
+            border-radius: 10px !important; padding: 12px 30px !important;
+            font-weight: 700 !important; letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2) !important;
+        }
+        .swal2-cancel {
+            border-radius: 10px !important; padding: 12px 30px !important;
+            font-weight: 600 !important;
+        }
+
+        /* --- SLIM & DISCREET TOAST STYLING --- */
+        .slim-toast-popup {
+            width: auto !important;
+            min-width: 300px !important;
+            padding: 0.8rem 1rem !important;
+            border-radius: 12px !important;
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.15) !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+
+        .slim-toast-title {
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
+            margin: 0 0 0 10px !important; /* Spacing between icon and text */
+            color: #334155 !important;
+        }
+
+        /* Shinks the success checkmark icon */
+        .slim-toast-icon {
+            transform: scale(0.8) !important;
+            margin: 0 !important;
+        }
+
     </style>
 </head>
 <body>
@@ -186,6 +229,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     const holidays = { "26-01": "Republic Day", "15-08": "Independence Day", "02-10": "Gandhi Jayanti" };
 
@@ -356,17 +401,34 @@
         };
     }
 
-    // Update the URL from /api/timesheet/save to /api/attendance/save
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000, // Reduced to 2 seconds for a snappier feel
+        timerProgressBar: true,
+        background: '#ffffff',
+        customClass: {
+            popup: 'slim-toast-popup',
+            title: 'slim-toast-title',
+            icon: 'slim-toast-icon'
+        },
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    // --- UPGRADED SAVE DRAFT ---
     async function saveDraft(showAlert = true) {
         const data = gatherTimesheetData();
 
         if (!data.weekStartDate) {
-            if (showAlert) alert("Please select a week first!");
+            if (showAlert) Swal.fire({ icon: 'warning', title: 'Missing Week', text: 'Please select a week first!', confirmButtonColor: '#1e3a8a' });
             return null;
         }
 
         try {
-            // FIXED: Point to the Attendance endpoint
             const response = await fetch('/api/attendance/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -377,19 +439,19 @@
 
             const savedAttendance = await response.json();
 
-            if (showAlert) alert("Draft Saved Successfully!");
+            // Uses the non-intrusive Toast so they aren't interrupted!
+            if (showAlert) Toast.fire({ icon: 'success', title: 'Draft Saved Successfully!' });
             return savedAttendance;
 
         } catch (error) {
             console.error("Error:", error);
-            if (showAlert) alert("Error saving draft: " + error.message);
+            if (showAlert) Swal.fire({ icon: 'error', title: 'Save Error', text: error.message, confirmButtonColor: '#1e3a8a' });
             return null;
         }
     }
 
-    // 5. Submit Week (With Absent Validation)
+    // --- UPGRADED SUBMIT WEEK ---
     async function submitWeek() {
-
         const rows = document.querySelectorAll('#timesheetBody tr');
         let isValid = true;
         let missingReasonDay = "";
@@ -400,44 +462,78 @@
             const reasonInput = row.querySelector('.reason-input');
             if (!statusSelect || !reasonInput) continue;
 
-            // Check if status is Absent AND the reason box is completely empty
             if (statusSelect.value === 'Absent' && reasonInput.value.trim() === '') {
                 isValid = false;
-                // Grab the day name (e.g., "Tuesday") from the first column to show in the error
                 missingReasonDay = row.querySelector('td.fw-bold').innerText.split('\n')[0].trim();
-                break; // Stop checking after the first error is found
+                break;
             }
         }
 
+        // Sleek Validation Warning
         if (!isValid) {
-            alert(`Missing Information: Please provide a reason for being Absent on ${missingReasonDay} before submitting.`);
-            return; // Stop the submission process entirely
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Reason',
+                text: `Please provide a reason for being Absent on ${missingReasonDay} before submitting.`,
+                confirmButtonColor: '#1e3a8a'
+            });
+            return;
         }
 
-        const userConfirmed = confirm("Are you sure you want to submit this timesheet? Once submitted, it cannot be edited.");
+        // Beautiful Confirmation Modal
+        const confirmResult = await Swal.fire({
+            title: 'Submit Timesheet?',
+            text: "Once submitted, it cannot be edited. Are you sure?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#1e3a8a',
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: 'Yes, submit it!',
+            cancelButtonText: 'Cancel'
+        });
 
-        if (!userConfirmed) {
-            return; // Stop the process if they click Cancel
+        if (!confirmResult.isConfirmed) {
+            return;
         }
 
-        // THE FIX IS HERE: Completed the 'false);' syntax
+        // Loading State while saving and submitting
+        Swal.fire({
+            title: 'Submitting...',
+            text: 'Please wait while your attendance is recorded.',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
         const savedSheet = await saveDraft(false);
 
         if (savedSheet && savedSheet.id) {
             try {
-                // Point to the Attendance submit endpoint
                 const response = await fetch(`/api/attendance/submit/${savedSheet.id}`, {
                     method: 'POST'
                 });
                 if (response.ok) {
-                    alert("Attendance Record Submitted successfully for approval");
+                    // Ultimate Success Modal with Auto-Refresh
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Submitted!',
+                        text: 'Attendance Record submitted successfully for approval.',
+                        confirmButtonColor: '#1e3a8a',
+                        timer: 2500,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    });
                     window.location.reload();
                 } else {
-                    alert("Submission failed: " + await response.text());
+                    Swal.fire({ icon: 'error', title: 'Submission Failed', text: await response.text(), confirmButtonColor: '#1e3a8a' });
                 }
             } catch (error) {
                 console.error("Error:", error);
+                Swal.fire({ icon: 'error', title: 'Network Error', text: 'A connection error occurred. Please try again.', confirmButtonColor: '#1e3a8a' });
             }
+        } else {
+            Swal.fire({ icon: 'error', title: 'Save Failed', text: 'Failed to save draft before submission.', confirmButtonColor: '#1e3a8a' });
         }
     }
 
