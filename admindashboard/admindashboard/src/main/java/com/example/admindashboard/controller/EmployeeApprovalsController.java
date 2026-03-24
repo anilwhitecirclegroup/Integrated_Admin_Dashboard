@@ -8,12 +8,10 @@ import com.example.admindashboard.repository.LeaveRequestRepository;
 import com.example.admindashboard.repository.AttendanceRepository;
 import com.example.admindashboard.repository.WeeklyTimesheetRepository;
 import com.example.admindashboard.repository.UserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import java.security.Principal;
 import java.util.List;
 
@@ -41,7 +39,6 @@ public class EmployeeApprovalsController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // 2. FETCH PENDING REQUESTS
-        // ==========================================
         List<LeaveRequest> pendingLeaves = leaveRepo.findByUserAndStatusIgnoreCaseOrderByIdDesc(currentUser, "Pending");
         List<Attendance> pendingAttendances = attendanceRepo.findByUserAndApprovalStatusIgnoreCaseOrderByIdDesc(currentUser, "Pending");
 
@@ -57,11 +54,9 @@ public class EmployeeApprovalsController {
         model.addAttribute("totalPending", totalPending);
 
         // 3. FETCH APPROVED REQUESTS
-        // ==========================================
         List<LeaveRequest> approvedLeaves = leaveRepo.findByUserAndStatusIgnoreCaseOrderByIdDesc(currentUser, "Approved");
         List<Attendance> approvedAttendances = attendanceRepo.findByUserAndApprovalStatusIgnoreCaseOrderByIdDesc(currentUser, "Approved");
 
-        // FIX: Using currentUser instead of employeeId
         List<WeeklyTimesheet> approvedTimesheets = timesheetRepo.findByUserAndStatusIgnoreCaseOrderByIdDesc(currentUser, "Approved");
 
         model.addAttribute("approvedLeaves", approvedLeaves);
@@ -72,11 +67,9 @@ public class EmployeeApprovalsController {
         model.addAttribute("totalApproved", totalApproved);
 
         // 4. FETCH REJECTED REQUESTS
-        // ==========================================
         List<LeaveRequest> deniedLeaves = leaveRepo.findByUserAndStatusIgnoreCaseOrderByIdDesc(currentUser, "Rejected");
         List<Attendance> deniedAttendances = attendanceRepo.findByUserAndApprovalStatusIgnoreCaseOrderByIdDesc(currentUser, "Rejected");
 
-        // FIX: Using currentUser instead of employeeId
         List<WeeklyTimesheet> deniedTimesheets = timesheetRepo.findByUserAndStatusIgnoreCaseOrderByIdDesc(currentUser, "Rejected");
 
         model.addAttribute("deniedLeaves", deniedLeaves);

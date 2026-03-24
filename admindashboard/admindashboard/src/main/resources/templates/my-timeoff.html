@@ -24,7 +24,6 @@
             padding-top: 100px;
         }
 
-        /* --- HEADER --- */
         .master-nav {
             position: fixed; top: 0; left: 0; right: 0; height: 80px;
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
@@ -40,7 +39,6 @@
         }
         .btn-apply:hover { background-color: var(--bs-primary-hover); color: white; transform: translateY(-2px); }
 
-       /* --- UPGRADED BALANCE CARDS --- */
         .balance-card {
             background: white; border-radius: 10px; padding: 15px; /* Reduced padding & radius */
             border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.02);
@@ -65,7 +63,6 @@
         .balance-value { font-size: 2rem; font-weight: 800; color: #0f172a; line-height: 1; margin: 12px 0 2px; } /* Scaled down */
         .balance-label { font-size: 0.8rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* --- UPGRADED DATA TABLE & NAVY HEADER --- */
         .history-section {
             background: white; border-radius: 12px; border: 1px solid #cbd5e1;
             box-shadow: 0 8px 25px rgba(0,0,0,0.04); overflow: hidden; margin-top: 25px;
@@ -277,7 +274,7 @@
         fetchLeaveHistory();
     });
 
-    // --- FETCH AND POPULATE BALANCE CARDS ---
+    //  FETCH AND POPULATE BALANCE CARDS
     async function fetchLeaveBalance() {
         try {
             const response = await fetch('/api/leave/balance');
@@ -316,7 +313,7 @@
         }
     }
 
-    // --- FETCH AND POPULATE HISTORY TABLE ---
+    //  FETCH AND POPULATE HISTORY TABLE
     async function fetchLeaveHistory() {
         const tbody = document.getElementById('historyTableBody');
         try {
@@ -379,7 +376,7 @@
         });
     }
 
-    // --- MODAL LOGIC ---
+    //  MODAL LOGIC
     function openDetailsModal(index) {
         const leave = globalLeavesData[index];
         if (!leave) return;

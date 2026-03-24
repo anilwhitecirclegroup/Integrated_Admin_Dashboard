@@ -25,7 +25,6 @@
             padding-top: 140px;
         }
 
-        /* --- NAV BAR --- */
         .master-nav {
             position: fixed; top: 0; left: 0; right: 0;
             height: 90px;
@@ -41,14 +40,12 @@
 
         .main-container { max-width: 1600px; width: 96%; margin: 0 auto; padding: 0 20px; }
 
-        /* --- TOP CONTROL PANEL --- */
         .top-control-card {
             background: white; border-radius: 10px; padding: 20px 25px;
             border: 1px solid #e2e8f0; border-left: 6px solid var(--navy);
             box-shadow: var(--card-shadow);
         }
 
-        /* --- ENHANCED MONTH SWITCHER --- */
         .custom-month-switcher {
             display: inline-flex; align-items: center; border: 1.5px solid #cbd5e1;
             border-radius: 10px; overflow: hidden; background-color: white;
@@ -76,7 +73,7 @@
         .filter-dropdown:hover { background: #f8fafc; border-color: #e2e8f0; }
         .filter-dropdown:focus { border-color: var(--navy); outline: none; background: white; }
 
-        /* --- METRIC CARDS --- */
+        /* METRIC CARDS  */
         .stat-card {
             background: white; border-radius: 10px; padding: 15px 20px;
             border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 15px;
@@ -90,7 +87,7 @@
         .icon-warning { background: #fffbeb; color: #d97706; }
         .fw-black { font-weight: 900; }
 
-        /* --- NAVY INBOX LIST LAYOUT --- */
+        /*  NAVY INBOX LIST LAYOUT  */
         .inbox-container {
             background: white; border-radius: 12px; border: 1px solid #e2e8f0;
             overflow: hidden; box-shadow: var(--card-shadow);
@@ -130,7 +127,7 @@
         .bg-approved { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
         .bg-draft { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
 
-        /* --- MODAL TABLE STYLING --- */
+        /*  MODAL TABLE STYLING */
         .nested-table { margin-bottom: 0; font-size: 0.9rem; }
         .nested-table thead { background-color: #f8fafc; color: #64748b; font-size: 0.8rem; text-transform: uppercase; border-bottom: 2px solid var(--navy); }
         .nested-table th, .nested-table td { padding: 12px 15px; vertical-align: middle; }
@@ -328,7 +325,7 @@
         document.getElementById('draftCount').textContent = drafts;
     }
 
-    // --- ENHANCED INBOX LIST (with Week No, Breakdown, Projects Count) ---
+    //  ENHANCED INBOX LIST (with Week No, Breakdown, Projects Count)
     function renderInboxList(data) {
         const container = document.getElementById('reportMasterContainer');
         container.innerHTML = '';

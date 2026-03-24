@@ -27,8 +27,6 @@ import com.example.admindashboard.model.EmployeeProfile;
 import com.whitecircle.hrms.repository.ServiceRequestRepository;
 import com.example.admindashboard.model.Client;
 import com.example.admindashboard.repository.ClientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class DashboardController {
@@ -80,7 +78,7 @@ public class DashboardController {
         return "redirect:/login?error=true";
     }
 
-    // --- PROTECTED ROUTES (No changes made below this line) ---
+    // --- PROTECTED ROUTES
 
     // Shows Admin Dashboard and Updated count for Employees and Clients
     @GetMapping("/admin/dashboard")
@@ -193,7 +191,7 @@ public class DashboardController {
         User currentEmployee = userService.findByUsername(principal.getName());
         model.addAttribute("employee", currentEmployee);
 
-        return "edit-my-profile"; // Points to the new HTML file
+        return "edit-my-profile";
     }
 
     @PostMapping("/employee/profile/edit")
@@ -298,7 +296,6 @@ public class DashboardController {
         String username = principal.getName();
 
         // 2. Fetch their full profile from the database
-        // Using .orElse(new User()) as a safeguard to prevent crashes if data is missing
         User currentUser = userRepository.findByUsername(username).orElse(new User());
 
         // 3. Add the user object to the model so Thymeleaf can use it
@@ -322,13 +319,11 @@ public class DashboardController {
 
     @GetMapping("/employee/create-timesheet")
     public String showCreateTimesheet() {
-        // This tells Spring Boot to look for 'create-timesheet.html' in your templates folder
         return "create-timesheet";
     }
 
     @GetMapping("/employee/timesheet-report")
     public String showTimesheetReport() {
-        // This must return timesheet-report.html file
         return "timesheet-report";
     }
 
@@ -405,7 +400,7 @@ public class DashboardController {
 
     @GetMapping("/holiday-list")
     public String showHolidayList() {
-        return "holiday-list"; // This matches the name of your new HTML file
+        return "holiday-list"; // This matches the name of your our HTML file
     }
 
 
@@ -470,7 +465,6 @@ public class DashboardController {
     // Timesheet Approval Page
     @GetMapping("/admin/timesheet-approval")
     public String showTimesheetApprovalPage() {
-        // FIXED: Added dashes to match admin-timesheet-approval.html
         return "admin-timesheet-approval";
     }
 
@@ -491,7 +485,6 @@ public class DashboardController {
 
         // 3. CAPTURE ADMIN NAME (Fixes the blank "Approved By" column)
         if (principal != null) {
-            // This saves "ADM001" or whatever username you logged in with
             timesheet.setApprovedBy(principal.getName());
         } else {
             timesheet.setApprovedBy("Admin");
@@ -504,8 +497,6 @@ public class DashboardController {
 
     @GetMapping("/admin/add-client")
     public String showAddClientPage() {
-        // Since the file is directly in the templates folder,
-        // we just return the exact file name without the .html extension
         return "add-new-client";
     }
 
@@ -557,7 +548,6 @@ public class DashboardController {
             // Delete the business profile
             clientRepository.delete(client);
 
-            // THE FIX: Open the Optional safety box before deleting!
             Optional<User> userOpt = userRepository.findByUsername(loginId);
             if (userOpt.isPresent()) {
                 userRepository.delete(userOpt.get());
@@ -616,7 +606,7 @@ public class DashboardController {
         }
 
         model.addAttribute("staffList", staffList);
-        model.addAttribute("keyword", keyword); // Keep search term in box
+        model.addAttribute("keyword", keyword);
         return "admin-staff";
     }
 

@@ -18,7 +18,6 @@
 
         body { background-color: var(--bg-light); font-family: 'Inter', sans-serif; color: #334155; }
 
-        /* Premium Gradient Navbar */
         .navbar-custom {
             background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
             height: 85px;
@@ -33,7 +32,6 @@
             text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
             backdrop-filter: blur(4px);
         }
-
         .btn-dashboard-back:hover {
             background-color: white; color: var(--bs-primary);
             transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -89,7 +87,7 @@
         .table-custom th { background-color: #f8fafc; color: #475569; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; padding: 12px; border-bottom: 2px solid #e2e8f0; }
         .table-custom td { padding: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
 
-        /* --- ELITE HR-APPROVAL SWEETALERT STYLING --- */
+        /*  HR-APPROVAL SWEETALERT STYLING  */
         div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
         .swal2-popup {
             border-radius: 16px !important;
@@ -354,9 +352,7 @@
     // === UPGRADED ADMINISTRATIVE APPROVAL ENGINE ===
     async function updateStatus(id, newStatus) {
 
-        // ----------------------------------------------------
         // FLOW 1: APPROVE ATTENDANCE
-        // ----------------------------------------------------
         if (newStatus === 'Approved') {
             const confirmResult = await Swal.fire({
                 title: 'Approve Attendance?',
@@ -403,9 +399,7 @@
             }
         }
 
-        // ----------------------------------------------------
         // FLOW 2: DENY ATTENDANCE (With Interactive Input)
-        // ----------------------------------------------------
         else if (newStatus === 'Denied') {
             const { value: adminNote, isConfirmed } = await Swal.fire({
                 title: 'Deny Attendance',

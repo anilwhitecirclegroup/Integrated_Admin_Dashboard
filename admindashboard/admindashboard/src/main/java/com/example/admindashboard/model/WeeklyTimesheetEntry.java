@@ -16,16 +16,14 @@ public class WeeklyTimesheetEntry {
     @JsonIgnore
     private WeeklyTimesheet weeklyTimesheet;
 
-    // FIX: Changed from Project entity to a simple Long ID
     @Column(name = "project_id")
     private Long projectId;
 
-    // FIX: Changed from Task entity to a simple Long ID
     @Column(name = "task_id")
     private Long taskId;
 
     @Column(name = "entry_type")
-    private String type; // Billable, Non-Billable, Leave
+    private String type;
 
     // The 7 days of hours
     private Double sunHours = 0.0;
@@ -42,9 +40,7 @@ public class WeeklyTimesheetEntry {
     @Column(columnDefinition = "TEXT")
     private String comments;
 
-    // ==========================================
-    //          GETTERS AND SETTERS
-    // ==========================================
+    // GETTERS AND SETTERS
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -87,4 +83,5 @@ public class WeeklyTimesheetEntry {
 
     public String getComments() { return comments; }
     public void setComments(String comments) { this.comments = comments; }
+
 }

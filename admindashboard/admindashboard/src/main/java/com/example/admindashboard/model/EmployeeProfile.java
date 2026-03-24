@@ -12,7 +12,7 @@ public class EmployeeProfile {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    private User user; // Links back to your existing User entity
+    private User user;
 
     private LocalDate dob;
     private String gender;
@@ -22,7 +22,6 @@ public class EmployeeProfile {
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -30,7 +29,6 @@ public class EmployeeProfile {
     public User getUser() {
         return user;
     }
-
     public void setUser(User user) {
         this.user = user;
     }
@@ -38,7 +36,6 @@ public class EmployeeProfile {
     public LocalDate getDob() {
         return dob;
     }
-
     public void setDob(LocalDate dob) {
         this.dob = dob;
     }
@@ -46,7 +43,6 @@ public class EmployeeProfile {
     public String getPersonalEmail() {
         return personalEmail;
     }
-
     public void setPersonalEmail(String personalEmail) {
         this.personalEmail = personalEmail;
     }
@@ -54,7 +50,6 @@ public class EmployeeProfile {
     public String getGender() {
         return gender;
     }
-
     public void setGender(String gender) {
         this.gender = gender;
     }
@@ -62,7 +57,6 @@ public class EmployeeProfile {
     public String getAadharNo() {
         return aadharNo;
     }
-
     public void setAadharNo(String aadharNo) {
         this.aadharNo = aadharNo;
     }
@@ -70,7 +64,6 @@ public class EmployeeProfile {
     public String getPanNo() {
         return panNo;
     }
-
     public void setPanNo(String panNo) {
         this.panNo = panNo;
     }
@@ -78,7 +71,6 @@ public class EmployeeProfile {
     public String getPermanentAddress() {
         return permanentAddress;
     }
-
     public void setPermanentAddress(String permanentAddress) {
         this.permanentAddress = permanentAddress;
     }
@@ -86,7 +78,6 @@ public class EmployeeProfile {
     public String getWorkingAddress() {
         return workingAddress;
     }
-
     public void setWorkingAddress(String workingAddress) {
         this.workingAddress = workingAddress;
     }
@@ -94,7 +85,6 @@ public class EmployeeProfile {
     public String getQual1Title() {
         return qual1Title;
     }
-
     public void setQual1Title(String qual1Title) {
         this.qual1Title = qual1Title;
     }
@@ -102,7 +92,6 @@ public class EmployeeProfile {
     public String getQual1Inst() {
         return qual1Inst;
     }
-
     public void setQual1Inst(String qual1Inst) {
         this.qual1Inst = qual1Inst;
     }
@@ -110,7 +99,6 @@ public class EmployeeProfile {
     public String getQual1Year() {
         return qual1Year;
     }
-
     public void setQual1Year(String qual1Year) {
         this.qual1Year = qual1Year;
     }
@@ -118,7 +106,6 @@ public class EmployeeProfile {
     public String getQual2Title() {
         return qual2Title;
     }
-
     public void setQual2Title(String qual2Title) {
         this.qual2Title = qual2Title;
     }
@@ -126,7 +113,6 @@ public class EmployeeProfile {
     public String getQual2Inst() {
         return qual2Inst;
     }
-
     public void setQual2Inst(String qual2Inst) {
         this.qual2Inst = qual2Inst;
     }
@@ -134,7 +120,6 @@ public class EmployeeProfile {
     public String getQual2Year() {
         return qual2Year;
     }
-
     public void setQual2Year(String qual2Year) {
         this.qual2Year = qual2Year;
     }
@@ -142,7 +127,6 @@ public class EmployeeProfile {
     public String getAltMobile() {
         return altMobile;
     }
-
     public void setAltMobile(String altMobile) {
         this.altMobile = altMobile;
     }
@@ -150,7 +134,6 @@ public class EmployeeProfile {
     public String getEmergencyContactName() {
         return emergencyContactName;
     }
-
     public void setEmergencyContactName(String emergencyContactName) {
         this.emergencyContactName = emergencyContactName;
     }
@@ -158,7 +141,6 @@ public class EmployeeProfile {
     public String getRelationWithEmployee() {
         return relationWithEmployee;
     }
-
     public void setRelationWithEmployee(String relationWithEmployee) {
         this.relationWithEmployee = relationWithEmployee;
     }
@@ -166,7 +148,6 @@ public class EmployeeProfile {
     public String getEmergencyPhone() {
         return emergencyPhone;
     }
-
     public void setEmergencyPhone(String emergencyPhone) {
         this.emergencyPhone = emergencyPhone;
     }

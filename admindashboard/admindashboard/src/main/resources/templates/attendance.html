@@ -13,7 +13,6 @@
         :root { --bs-primary: #1e3a8a; --bg-color: #f3f4f6; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: #334155; padding-top: 80px; }
 
-        /* --- HEADER DESIGN --- */
         .top-nav-bar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: white; height: 80px;
             display: flex; align-items: center; justify-content: space-between; padding: 0 30px;
@@ -36,12 +35,12 @@
             background-color: #172554; transform: translateY(-2px); color: white;
         }
 
-        /* --- MAIN CONTAINER & CARDS --- */
+        /* MAIN CONTAINER & CARDS */
         .main-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
         .feature-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
         .border-navy { border: 2px solid #1e3a8a !important; }
 
-        /* --- TABLE STYLES (Navy Header & Custom Inputs) --- */
+        /* TABLE STYLES (Navy Header & Custom Inputs) */
         .attendance-table { width: 100%; border-collapse: collapse; }
         .bg-navy-header th {
             background-color: #1e3a8a !important; color: white !important;
@@ -60,14 +59,14 @@
         .row-holiday { background-color: #f0fdf4 !important; }
         .row-weekend { background-color: #f8fafc !important; }
 
-        /* --- SUMMARY BOX --- */
+        /* SUMMARY BOX  */
         .summary-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; margin-top: 20px; }
         .sum-item { flex: 1; padding: 15px; text-align: center; border-right: 1px solid #e2e8f0; }
         .sum-item:last-child { border-right: none; }
         .sum-val { font-size: 1.25rem; font-weight: 800; color: #1e3a8a; }
         .sum-lbl { font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 600; }
 
-        /* --- SHINING BUTTON ANIMATION --- */
+        /*  SHINING BUTTON ANIMATION */
         .btn-navy-shine {
             background-color: var(--bs-primary);
             color: white;
@@ -103,7 +102,7 @@
         justify-content: center;
     }
 
-        /* --- PREMIUM SWEETALERT2 STYLING --- */
+        /* PREMIUM SWEETALERT2 STYLING  */
         div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
         .swal2-popup {
             border-radius: 20px !important;
@@ -122,7 +121,7 @@
             font-weight: 600 !important;
         }
 
-        /* --- SLIM & DISCREET TOAST STYLING --- */
+        /*  SLIM & DISCREET TOAST STYLING */
         .slim-toast-popup {
             width: auto !important;
             min-width: 300px !important;
@@ -319,8 +318,7 @@
     }
     document.addEventListener('DOMContentLoaded', updateTableDates);
 
-
-    // --- NEW HELPER: Extracts ALL data (Hours, Status, Mode, Reason) from a row ---
+    // Extracts ALL data (Hours, Status, Mode, Reason) from a row
     const getRowData = (rowId) => {
         const row = document.getElementById(rowId);
         let hours = 0;
@@ -361,7 +359,7 @@
         return ISOweekStart.toISOString().split('T')[0];
     }
 
-    // --- UPDATED GATHER FUNCTION: Packages ALL data for the backend ---
+    //  UPDATED GATHER FUNCTION: Packages ALL data for the backend
     function gatherTimesheetData() {
         const rawWeek = document.getElementById("weekInput").value;
 
@@ -419,7 +417,7 @@
         }
     });
 
-    // --- UPGRADED SAVE DRAFT ---
+    // UPGRADED SAVE DRAFT
     async function saveDraft(showAlert = true) {
         const data = gatherTimesheetData();
 
@@ -450,7 +448,7 @@
         }
     }
 
-    // --- UPGRADED SUBMIT WEEK ---
+    //  UPGRADED SUBMIT WEEK
     async function submitWeek() {
         const rows = document.querySelectorAll('#timesheetBody tr');
         let isValid = true;

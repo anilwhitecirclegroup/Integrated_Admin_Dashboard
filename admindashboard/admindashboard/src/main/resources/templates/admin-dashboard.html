@@ -34,7 +34,6 @@
             padding-top: var(--header-height);
         }
 
-        /* --- 1. TOP NAVBAR --- */
         .top-navbar {
             position: fixed; top: 0; left: 0; right: 0;
             height: var(--header-height);
@@ -62,7 +61,7 @@
         .nav-search i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
         .nav-actions { display: flex; align-items: center; gap: 20px; }
 
-        /* --- 2. SIDEBAR --- */
+        /*  2. SIDEBAR  */
         .sidebar {
             width: var(--sidebar-width);
             position: fixed;
@@ -126,7 +125,7 @@
         .nav-item:hover i { transform: scale(1.1); }
         .sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); }
 
-        /* --- SIDEBAR FOOTER STYLES --- */
+        /* SIDEBAR FOOTER STYLES  */
 
         /* 1. My Profile Button (Replaces Text) */
         .profile-btn {
@@ -145,7 +144,7 @@
         }
         .profile-btn:hover .profile-text { color: var(--primary); }
 
-       /* --- SIDEBAR FOOTER ICONS --- */
+       /* SIDEBAR FOOTER ICONS */
         .sidebar-footer-icons {
             display: flex;
             justify-content: center;
@@ -187,7 +186,7 @@
             100% { transform: rotate(0deg) translateY(-3px); }
         }
 
-        /* --- SIDEBAR TOGGLE HEADER --- */
+        /*  SIDEBAR TOGGLE HEADER  */
         /* 1. Default State: Spaced out */
         .toggle-header {
             min-height: 30px;
@@ -211,7 +210,7 @@
             transform: scale(1.1); /* Slight pop effect */
         }
 
-        /* --- COLLAPSIBLE SIDEBAR LOGIC --- */
+        /*  COLLAPSIBLE SIDEBAR LOGIC  */
         /* 1. The default state is already defined in :root as 280px */
 
         /* 2. When body has 'sidebar-collapsed' class, override the variable */
@@ -226,7 +225,6 @@
             pointer-events: none;
             display: none; /* Removes text from flow */
         }
-        /* Ensure Navbar Brand stays visible */
         body.sidebar-collapsed .nav-brand span {
             display: block !important;
             opacity: 1 !important;
@@ -263,7 +261,7 @@
         .logout-btn { width: 100%; text-align: left; color: #ef4444; background: #fef2f2; justify-content: center; }
         .logout-btn:hover { background: #fee2e2; color: #dc2626; }
 
-        /* --- 3. MAIN LAYOUT (Fixed Structure) --- */
+        /* 3. MAIN LAYOUT (Fixed Structure)  */
         .main-wrapper {
             margin-left: calc(var(--sidebar-width) + (var(--gap) * 2));
             padding: var(--gap); padding-right: var(--gap);
@@ -277,7 +275,7 @@
             min-height: 0; /* Prevent Overflow */
         }
 
-        /* --- COLUMN WIDTHS (Calculated) --- */
+        /*  COLUMN WIDTHS (Calculated)  */
         /* Used for Top Row (Left 40, Right 60) */
         .col-40 { flex: 0 0 calc(40% - (var(--gap) / 2)); width: calc(40% - (var(--gap) / 2)); }
         .col-60 { flex: 0 0 calc(60% - (var(--gap) / 2)); width: calc(60% - (var(--gap) / 2)); }
@@ -291,7 +289,7 @@
         .h-33 { height: 33.33%; }
         .h-37 { height: 36.66%; }
 
-        /* --- CARD STYLES --- */
+        /* CARD STYLES  */
         .dashboard-card {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -311,7 +309,7 @@
         .card-header-navy i { color: #bfdbfe; }
         .card-body-flex { padding: 15px; flex-grow: 1; overflow-y: auto; }
 
-        /* --- DYNAMIC CARD HOVER EFFECTS --- */
+        /* DYNAMIC CARD HOVER EFFECTS  */
         .dynamic-card-hover {
             transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth spring-like motion */
         }
@@ -323,7 +321,7 @@
             z-index: 10; /* Ensures it floats above everything else */
         }
 
-        /* --- WIDGETS --- */
+        /* WIDGETS  */
         .stat-box {
             background: var(--surface); border: 1px solid var(--border);
             border-radius: var(--card-radius); padding: 15px;
@@ -725,10 +723,7 @@ attendanceChart = new Chart(ctx1, {
     }
 });
 
-    // NOTE: Removed Revenue Chart script because the HTML element was removed.
-    // This was causing the Sidebar script to crash.
-
-    // --- SIDEBAR TOGGLE LOGIC ---
+    // SIDEBAR TOGGLE LOGIC
     const toggleBtn = document.getElementById('sidebarToggle');
     const body = document.body;
 

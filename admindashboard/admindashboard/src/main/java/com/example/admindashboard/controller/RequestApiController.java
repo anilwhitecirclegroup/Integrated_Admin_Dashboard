@@ -2,16 +2,14 @@ package com.example.admindashboard.controller;
 
 import com.whitecircle.hrms.model.ServiceRequest;
 import com.whitecircle.hrms.repository.ServiceRequestRepository;
-import com.example.admindashboard.service.EmailService; // <-- NEW: Import EmailService
-import com.example.admindashboard.model.User; // <-- NEW: Import User
-import com.example.admindashboard.repository.UserRepository; // <-- NEW: Import UserRepository
-
+import com.example.admindashboard.service.EmailService;
+import com.example.admindashboard.model.User;
+import com.example.admindashboard.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;

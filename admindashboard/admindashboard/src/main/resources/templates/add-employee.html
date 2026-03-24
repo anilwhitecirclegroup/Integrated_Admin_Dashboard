@@ -20,7 +20,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Premium Gradient Navbar */
         .navbar-custom {
             background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
             height: 85px;
@@ -34,13 +33,10 @@
             text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
             backdrop-filter: blur(4px);
         }
-
         .btn-dashboard-back:hover {
             background-color: white; color: var(--bs-primary);
             transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-
-        /* (Leave the rest of your Card Styling CSS untouched below this point) */
 
         .navbar-brand {
             font-size: 1.5rem;
@@ -97,7 +93,7 @@
             box-shadow: 0 0 0 0.2rem rgba(30, 58, 138, 0.15);
         }
 
-        /* --- BOTTOM ACTION AREA --- */
+        /* BOTTOM ACTION AREA */
         .action-area {
             margin-top: 30px;
             padding-top: 20px;
@@ -160,7 +156,7 @@
             box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
         }
 
-        /* --- PREMIUM SWEETALERT2 STYLING --- */
+        /*  PREMIUM SWEETALERT2 STYLING  */
         div:where(.swal2-container) { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
         .swal2-popup {
             border-radius: 20px !important;
@@ -457,7 +453,7 @@
         }
     });
 
-    // === SMART VALIDATION & SUBMISSION ENGINE ===
+    // SMART VALIDATION & SUBMISSION ENGINE
     function confirmEmployeeCreation() {
         const form = document.getElementById('addEmployeeForm');
 

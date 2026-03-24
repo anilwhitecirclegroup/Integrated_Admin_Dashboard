@@ -9,12 +9,11 @@
         :root {
             --bs-primary: #1e3a8a;
             --bs-primary-hover: #172a6b;
-            --bs-primary-dark: #172554; /* This was missing! It fixes the navbar gradient */
+            --bs-primary-dark: #172554;
             --bg-color: #f8fafc;
         }
         body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
-        /* Premium Gradient Navbar */
         .navbar-custom {
             background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
             height: 85px;
@@ -29,11 +28,9 @@
         }
         .btn-dashboard-back:hover { background-color: white; color: var(--bs-primary); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);}
 
-        /* Filter Card */
         .filter-card { border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-radius: 8px; }
         .form-label-sm { font-size: 0.8rem; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Table Styling */
         .table-hover tbody tr:hover { background-color: #f8f9fa; }
 
         /* Modal Profile Styling */
@@ -41,7 +38,7 @@
         .profile-value { font-size: 1rem; font-weight: 500; color: #32325d; }
         .modal-header-custom { background: linear-gradient(87deg, #1e3a8a 0, #1e3a8a 100%) !important; }
 
-        /* New: Highlight search box when results are filtered */
+        /* Highlight search box when results are filtered */
         .search-input-active {
             border-color: #1e3a8a !important;
             background-color: #f0f7ff !important; /* Soft blue highlight */

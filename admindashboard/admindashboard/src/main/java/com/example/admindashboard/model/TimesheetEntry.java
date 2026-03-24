@@ -25,14 +25,20 @@ public class TimesheetEntry {
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
     public Timesheet getTimesheet() { return timesheet; }
     public void setTimesheet(Timesheet timesheet) { this.timesheet = timesheet; }
+
     public LocalDate getDate() { return date; }
     public void setDate(LocalDate date) { this.date = date; }
+
     public String getProject() { return project; }
     public void setProject(String project) { this.project = project; }
+
     public String getTaskDescription() { return taskDescription; }
     public void setTaskDescription(String taskDescription) { this.taskDescription = taskDescription; }
+
     public Double getHours() { return hours; }
     public void setHours(Double hours) { this.hours = hours; }
+
 }

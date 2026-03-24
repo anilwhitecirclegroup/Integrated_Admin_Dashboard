@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,9 +36,7 @@ public class ChatController {
     @Autowired
     private UserRepository userRepository;
 
-
     // 1. LOAD THE CHAT PAGE & CONTACTS
-    // ==========================================
     @GetMapping("/chat")
     public String viewChatPage(Principal principal, Model model) {
         String username = principal.getName();
@@ -76,10 +73,8 @@ public class ChatController {
                         lastMsg.getContent();
             }
 
-            // Apply our new smart formatting
             String formattedTime = formatLastMessageTime(rawTime);
 
-            // Note sorting data
             lastTimestamps.put(u.getId(), rawTime);
 
             colleagues.add(new ContactInfo(u.getId(), u.getUsername(), u.getFullName(), unread, snippet, formattedTime));
@@ -101,11 +96,10 @@ public class ChatController {
     }
 
     // 2. HANDLE LIVE INCOMING MESSAGES
-    // ==========================================
     @MessageMapping("/chat.send")
     public void processMessage(@Payload Map<String, Object> payload) {
 
-        // 1. Extract raw data manually to prevent strict Jackson parsing crashes
+        // 1. Extract raw data manually to prevent strict parsing crashes
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setSenderId(Long.valueOf(payload.get("senderId").toString()));
         chatMessage.setRecipientId(Long.valueOf(payload.get("recipientId").toString()));
@@ -119,7 +113,6 @@ public class ChatController {
         ChatMessage savedMsg = chatMessageRepository.save(chatMessage);
 
         // 4. Forward the message directly to the exact queue the frontend is subscribed to!
-        // Using 'convertAndSend' with the exact string path bypasses Principal mapping issues
         messagingTemplate.convertAndSend(
                 "/user/" + chatMessage.getRecipientId() + "/queue/messages",
                 savedMsg
@@ -127,7 +120,6 @@ public class ChatController {
     }
 
     // 3. FETCH CHAT HISTORY & MARK AS READ
-    // ==========================================
     @GetMapping("/messages/{currentUserId}/{contactId}")
     @ResponseBody
     public ResponseEntity<List<ChatMessage>> getChatHistory(@PathVariable Long currentUserId, @PathVariable Long contactId) {
@@ -148,7 +140,6 @@ public class ChatController {
     }
 
     // 4. SEARCH FOR COLLEAGUES (EMP ONLY)
-    // ==========================================
     @GetMapping("/chat/search")
     @ResponseBody
     public ResponseEntity<List<User>> searchColleagues(@RequestParam String query, Principal principal) {
@@ -166,14 +157,13 @@ public class ChatController {
     }
 
     // HELPER CLASS FOR THE SIDEBAR
-    // ==========================================
     public static class ContactInfo {
         private Long id;
         private String username;
         private String fullName;
         private int unreadCount;
-        private String lastMessageSnippet; // NEW
-        private String formattedLastTime;   // NEW (formatted as 10:30 AM, Yesterday, etc.)
+        private String lastMessageSnippet;
+        private String formattedLastTime;
 
         public ContactInfo(Long id, String username, String fullName, int unreadCount, String lastMessageSnippet, String formattedLastTime) {
             this.id = id;

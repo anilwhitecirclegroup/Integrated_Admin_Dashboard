@@ -42,9 +42,7 @@ public class Client {
     private String city;
     private String country;
 
-    // ==========================================
-    //          GETTERS AND SETTERS
-    // ==========================================
+    // GETTERS AND SETTERS
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

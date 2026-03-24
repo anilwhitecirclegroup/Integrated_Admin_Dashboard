@@ -33,7 +33,6 @@ public class ReportController {
     @Autowired
     private com.example.admindashboard.repository.WeeklyTimesheetRepository weeklyTimesheetRepository;
 
-    // UNCOMMENTED AND ACTIVE NOW!
     @Autowired
     private AttendanceRepository attendanceRepository;
 
@@ -97,7 +96,6 @@ public class ReportController {
                 Pageable timePageable = PageRequest.of(page, size, Sort.by("weekStartDate").descending());
                 keyword = (search != null) ? search : "";
 
-                // Uses your new WeeklyTimesheet model and repository!
                 Page<com.example.admindashboard.model.WeeklyTimesheet> timesheetPage =
                         weeklyTimesheetRepository.searchTimesheets(from, to, keyword, timePageable);
 
@@ -108,7 +106,7 @@ public class ReportController {
                 Pageable attPageable = PageRequest.of(page, size, Sort.by("weekStartDate").descending());
                 keyword = (search != null) ? search : "";
 
-                // NEW: Convert LocalDate to String for the DB comparison
+                // Convert LocalDate to String for the DB comparison
                 String fromStr = (from != null) ? from.toString() : null;
                 String toStr = (to != null) ? to.toString() : null;
 
@@ -163,7 +161,7 @@ public class ReportController {
             List<Attendance> exportList;
             String keyword = (search != null) ? search : "";
 
-            // NEW: Convert LocalDate to String for the DB comparison
+            // Convert LocalDate to String for the DB comparison
             String fromStr = (from != null) ? from.toString() : null;
             String toStr = (to != null) ? to.toString() : null;
 

@@ -30,7 +30,6 @@
 
         .main-container { max-width: 1500px; width: 98%; margin: 0 auto; }
 
-        /* Premium Gradient Navbar */
         .admin-nav {
             position: fixed; top: 0; left: 0; right: 0;
             background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
@@ -55,13 +54,12 @@
             text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
             backdrop-filter: blur(4px);
         }
-
         .nav-exit-btn:hover {
             background-color: white; color: var(--bs-primary);
             transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        /* --- MASTER STATUS BOXES --- */
+        /*  MASTER STATUS BOXES  */
         .status-box {
             background: white; border: 2px solid #e2e8f0; border-radius: 10px; padding: 10px 20px;
             display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s;
@@ -82,7 +80,7 @@
         .status-box.denied.active { border-color: #dc2626; background: #fef2f2; box-shadow: 0 4px 10px rgba(220,38,38,0.1); }
         .status-box.denied.active .count, .status-box.denied.active .label { color: #dc2626; }
 
-        /* --- TICKET TABLES (UPGRADED HEADERS) --- */
+        /*  TICKET TABLES (UPGRADED HEADERS)  */
         .table-card {
             background: white; border-radius: 12px; border: 1px solid var(--border-color);
             box-shadow: var(--card-shadow); overflow: hidden;
@@ -107,14 +105,14 @@
         .table-custom tbody tr { transition: all 0.2s ease; cursor: pointer; }
         .table-custom tbody tr:hover { background-color: #eff6ff; box-shadow: inset 4px 0 0 var(--navy); }
 
-        /* --- EMPTY STATE STYLING --- */
+        /*  EMPTY STATE STYLING */
         .empty-state-box {
             text-align: center;
             padding: 60px 20px;
             background-color: white;
         }
 
-        /* --- FILTER CONTROL BAR --- */
+        /*  FILTER CONTROL BAR  */
         .filter-bar {
             background: white; border-radius: 12px; padding: 20px 25px;
             box-shadow: var(--card-shadow); border: 1px solid var(--border-color);
@@ -127,7 +125,7 @@
         .btn-filter { background: var(--navy); color: white; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 600; height: 45px; transition: 0.2s;}
         .btn-filter:hover { background: var(--navy-hover); transform: translateY(-1px); }
 
-        /* --- BADGES & BUTTONS --- */
+        /*  BADGES & BUTTONS  */
         .ticket-id { font-family: monospace; font-weight: 700; color: var(--navy); background: #eff6ff; padding: 5px 10px; border-radius: 6px; }
         .emp-name { font-weight: 700; color: #1e293b; display: block; }
         .emp-id { font-size: 0.75rem; color: #94a3b8; font-weight: 600; }
@@ -146,7 +144,7 @@
         .btn-view { background: #f1f5f9; color: #475569; }
         .btn-view:hover { background: var(--navy); color: white; transform: translateY(-2px); }
 
-        /* --- CUSTOM ADMIN CATEGORY TABS --- */
+        /*  CUSTOM ADMIN CATEGORY TABS  */
         .custom-admin-tabs { gap: 15px; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 25px; }
         .custom-admin-tabs .nav-link {
             color: #475569; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 12px 24px; font-weight: 700; transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;
@@ -155,7 +153,7 @@
         .custom-admin-tabs .nav-link.active { background: #1e3a8a; color: white; border-color: #1e3a8a; box-shadow: 0 8px 15px rgba(30, 58, 138, 0.2); }
         .custom-admin-tabs .nav-link.active .badge { background-color: white !important; color: #1e3a8a !important; }
 
-        /* --- ELITE HR-APPROVAL SWEETALERT STYLING --- */
+        /*  ELITE HR-APPROVAL SWEETALERT STYLING  */
         div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
         .swal2-popup {
             border-radius: 16px !important;
@@ -514,7 +512,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    // --- MASTER STATUS CONTROL ---
+    //  MASTER STATUS CONTROL
     let currentStatusFilter = 'pending'; // Default View
 
     // Run filters immediately when the page finishes loading
@@ -603,12 +601,10 @@
         applyFilters();
     }
 
-    // === UPGRADED HELPDESK MULTI-ACTION ENGINE ===
+    // UPGRADED HELPDESK MULTI-ACTION ENGINE
     async function updateStatus(ticketId, newStatus) {
 
-        // ----------------------------------------------------
         // FLOW 1: APPROVE OR RESOLVE TICKET (Positive Actions)
-        // ----------------------------------------------------
         if (newStatus === 'Approved' || newStatus === 'Resolved') {
             const actionWord = newStatus === 'Resolved' ? 'Resolve Incident' : 'Approve Request';
 
@@ -658,9 +654,7 @@
             }
         }
 
-        // ----------------------------------------------------
         // FLOW 2: DENY TICKET (With Interactive Input)
-        // ----------------------------------------------------
         else if (newStatus === 'Denied') {
             const { value: adminNote, isConfirmed } = await Swal.fire({
                 title: 'Deny Request',

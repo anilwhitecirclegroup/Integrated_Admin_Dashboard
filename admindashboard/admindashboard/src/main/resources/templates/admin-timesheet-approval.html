@@ -18,7 +18,6 @@
 
         body { background-color: var(--bg-light); font-family: 'Inter', sans-serif; color: #334155; }
 
-        /* Premium Gradient Navbar */
         .navbar-custom {
             background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
             height: 85px;
@@ -33,7 +32,6 @@
             text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
             backdrop-filter: blur(4px);
         }
-
         .btn-dashboard-back:hover {
             background-color: white; color: var(--bs-primary);
             transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -95,7 +93,7 @@
         .table-custom tbody tr:hover { background-color: #f8fafc; }
         .table-custom tbody tr:last-child td { border-bottom: none; }
 
-        /* --- ELITE HR-APPROVAL SWEETALERT STYLING --- */
+        /* ELITE HR-APPROVAL SWEETALERT STYLING  */
         div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
         .swal2-popup {
             border-radius: 16px !important;
@@ -125,6 +123,7 @@
             border-radius: 8px !important; padding: 12px 25px !important;
             font-weight: 600 !important; background-color: #f1f5f9 !important; color: #64748b !important;
         }
+
     </style>
 </head>
 <body>
@@ -365,9 +364,7 @@
     // === UPGRADED ADMINISTRATIVE APPROVAL ENGINE ===
     async function updateStatus(id, newStatus) {
 
-        // ----------------------------------------------------
         // FLOW 1: APPROVE TIMESHEET
-        // ----------------------------------------------------
         if (newStatus === 'APPROVED') {
             const confirmResult = await Swal.fire({
                 title: 'Approve Timesheet?',
@@ -414,9 +411,7 @@
             }
         }
 
-        // ----------------------------------------------------
         // FLOW 2: REJECT TIMESHEET (With Interactive Input)
-        // ----------------------------------------------------
         else if (newStatus === 'REJECTED') {
             const { value: adminNote, isConfirmed } = await Swal.fire({
                 title: 'Reject Timesheet',

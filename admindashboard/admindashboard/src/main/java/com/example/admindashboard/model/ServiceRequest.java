@@ -24,13 +24,13 @@ public class ServiceRequest {
 
     private String type; // SOFTWARE, HARDWARE, INCIDENT, ACCESS, PERMISSION
     private String category; // e.g., Software License, RAM Upgrade, VPN Issue
-    private String priority; // Low, Medium, High
+    private String priority;
     private LocalDate submissionDate;
     private String status = "Pending Approval";
 
     // Dynamic fields from modals
-    private String detailItem; // Software name or System name
-    private String durationOrLevel; // License duration or Access level
+    private String detailItem;
+    private String durationOrLevel;
     private String assetTag;
     private String operatingSystem;
     private String location;

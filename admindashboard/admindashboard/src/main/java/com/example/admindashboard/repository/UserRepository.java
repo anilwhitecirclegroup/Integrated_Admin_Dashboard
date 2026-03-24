@@ -10,19 +10,17 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUsername(String username);
 
-    // --- 1. AUTHENTICATION ---
+    // 1. AUTHENTICATION
     Optional<User> findByUsername(String username);
 
-    // --- 2. DASHBOARD WIDGETS (This was missing!) ---
-    // This is used by DashboardController to count Total Employees/Clients
+    // 2.This is used by DashboardController to count Total Employees/Clients
     long countByRole(String role);
 
-    // --- 3. EXISTING LIST METHODS (For Dropdowns & Old Reports) ---
+    // 3. EXISTING LIST METHODS (For Dropdowns & Old Reports)
     List<User> findByRole(String role);
 
     List<User> findByRoleOrderByUsernameAsc(String role);
@@ -32,7 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByFullNameContainingIgnoreCaseOrUsernameContainingIgnoreCase(String fullName, String username);
 
-    // --- 4. NEW PAGINATION METHODS (For the New Report Dashboard) ---
+    //  4. NEW PAGINATION METHODS (For the New Report Dashboard)
 
     // Fetch page of employees (for the default view)
     Page<User> findByRole(String role, Pageable pageable);
@@ -49,12 +47,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "LOWER(u.businessUnit) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<User> searchByKeyword(@Param("keyword") String keyword);
 
-    // --- 5. BIRTHDAY WIDGET ---
+    //  5. BIRTHDAY WIDGET
     // This method joins the User table with the EmployeeProfile table to find today's birthdays
     @Query("SELECT u FROM User u JOIN u.employeeProfile ep WHERE " +
             "EXTRACT(MONTH FROM ep.dob) = EXTRACT(MONTH FROM CURRENT_DATE) AND " +
             "EXTRACT(DAY FROM ep.dob) = EXTRACT(DAY FROM CURRENT_DATE)")
     List<User> findByBirthdayToday();
-
 
 }

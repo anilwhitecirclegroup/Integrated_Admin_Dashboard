@@ -24,7 +24,6 @@
             padding-top: 120px;
         }
 
-        /* --- NAV BAR --- */
         .master-nav {
             position: fixed; top: 0; left: 0; right: 0; height: 80px;
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
@@ -47,7 +46,7 @@
 
         .main-container { max-width: 1400px; width: 96%; margin: 0 auto; padding: 0 20px; }
 
-        /* --- QUICK ACTION CARDS --- */
+        /*  QUICK ACTION CARDS  */
         .catalog-card {
             background: white; border-radius: 12px; padding: 25px;
             border: 1px solid #e2e8f0; border-top: 4px solid var(--navy);
@@ -63,7 +62,6 @@
             font-size: 1.5rem; margin-bottom: 15px;
         }
 
-        /* --- TICKET TABLE --- */
         .ticket-container {
             background: white; border-radius: 12px; border: 1px solid #e2e8f0;
             overflow: hidden; box-shadow: var(--card-shadow);
@@ -85,7 +83,7 @@
 
         .ticket-id { font-family: monospace; font-weight: 700; color: #64748b; background: #f1f5f9; padding: 4px 8px; border-radius: 4px; }
 
-        /* --- RICH MODAL STYLING --- */
+        /*  RICH MODAL STYLING */
         .modal-content {
             border: none;
             border-radius: 16px;
@@ -156,7 +154,7 @@
         }
         .btn-cancel:hover { background: #f1f5f9; color: #0f172a; }
 
-        /* --- ELITE IT-PORTAL SWEETALERT STYLING --- */
+        /*  ELITE IT-PORTAL SWEETALERT STYLING  */
         div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
         .swal2-popup {
             border-radius: 24px !important;
@@ -652,7 +650,7 @@
         });
     }
 
-    // === UPGRADED HARDWARE-PORTAL SUBMISSION ENGINE (WITH VISIBILITY FIX) ===
+    //  UPGRADED HARDWARE-PORTAL SUBMISSION ENGINE
     async function handleSubmission(formId, category) {
         const form = document.getElementById(formId);
         const selects = form.querySelectorAll('select');

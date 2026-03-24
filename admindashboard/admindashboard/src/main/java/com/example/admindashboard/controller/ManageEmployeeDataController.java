@@ -4,7 +4,7 @@ import com.example.admindashboard.model.EmployeeProfile;
 import com.example.admindashboard.model.User;
 import com.example.admindashboard.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat; // <-- NEW CLEAN IMPORT
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -26,7 +25,7 @@ public class ManageEmployeeDataController {
     @Autowired
     private UserRepository userRepository;
 
-    // --- 1. THE LIST VIEW (With Search & Sort) ---
+    //  1. THE LIST VIEW (With Search & Sort)
     @GetMapping("/admin/manage-employees")
     public String showManageEmployeesPage(
             @RequestParam(required = false) String search,
@@ -60,7 +59,7 @@ public class ManageEmployeeDataController {
         return "admin/manage-employee-data";
     }
 
-    // --- 2. THE EDIT VIEW (Full Page Form) ---
+    //  2. THE EDIT VIEW (Full Page Form)
     @GetMapping("/admin/manage-employees/edit/{id}")
     public String showEditEmployeePage(@PathVariable Long id, Model model) {
 
@@ -78,7 +77,7 @@ public class ManageEmployeeDataController {
         return "admin/manage-employee-data";
     }
 
-    // --- 3. THE SAVE LOGIC (Handles the Form Submission) ---
+    //  3. THE SAVE LOGIC (Handles the Form Submission)
     @PostMapping("/admin/update-employee")
     public String updateEmployee(
             @ModelAttribute User userUpdates,

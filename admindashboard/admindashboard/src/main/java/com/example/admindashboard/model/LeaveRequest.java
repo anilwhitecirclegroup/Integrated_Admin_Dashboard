@@ -14,11 +14,11 @@ public class LeaveRequest {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference // Prevents the infinite JSON loop we fixed earlier!
+    @JsonBackReference // Prevents the infinite JSON loop error
     private User user;
 
-    private String leaveType;  // e.g., Sick Leave, Casual Leave
-    private String leaveMode;  // e.g., Full Day, Half Day
+    private String leaveType;
+    private String leaveMode;
     private LocalDate fromDate;
     private LocalDate toDate;
     private Double totalDays;
@@ -26,12 +26,12 @@ public class LeaveRequest {
     @Column(length = 500)
     private String reason;
     private String managerComments;
-    private String status; // Pending, Approved, Rejected
+    private String status;
     private String adminComments; // For HR notes when denying
-
     private LocalDate createdAt;
 
-    // Add the getter and setter
+    // GETTERS AND SETTERS
+
     public LocalDate getCreatedAt() {
         return createdAt;
     }
@@ -39,7 +39,6 @@ public class LeaveRequest {
         this.createdAt = createdAt;
     }
 
-    // --- GETTERS AND SETTERS ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

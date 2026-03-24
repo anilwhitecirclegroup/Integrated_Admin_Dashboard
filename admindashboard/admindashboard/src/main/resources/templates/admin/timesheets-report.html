@@ -18,7 +18,6 @@
 
         body { background-color: var(--bg-color); font-family: 'Inter', sans-serif; color: #334155; }
 
-        /* Premium Gradient Navbar */
         .navbar-custom {
             background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
             height: 85px;
@@ -33,7 +32,6 @@
         }
         .btn-dashboard-back:hover { background-color: white; color: var(--bs-primary); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);}
 
-        /* Soft Shadow Cards */
         .filter-card, .table-card {
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -43,7 +41,6 @@
 
         .form-label-sm { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;}
 
-        /* Modern Search Input */
         .search-container input { background: #f8fafc; border-color: #e2e8f0; }
         .search-container span { background: #f8fafc; border-color: #e2e8f0; }
         .search-input-active {
@@ -305,7 +302,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        // --- 1. SEARCH BAR CLEAR LOGIC ---
+        // 1. SEARCH BAR CLEAR LOGIC
         const searchInput = document.getElementById('employeeSearch');
         const clearBtn = document.getElementById('clearSearch');
 
@@ -320,7 +317,7 @@
             });
         }
 
-        // --- 2. DATE INPUT LOGIC (4-Digit Year & Default Empty) ---
+        // 2. DATE INPUT LOGIC (4-Digit Year & Default Empty)
         const dateInputs = document.querySelectorAll('input[type="date"]');
 
         // Safely check if the user is actively filtering by looking at the URL

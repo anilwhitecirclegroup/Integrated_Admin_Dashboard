@@ -18,7 +18,7 @@ public class WeeklyTimesheet {
     // Re-linking the User entity so Thymeleaf and Search can access the employee's name!
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // <--- ADD THIS LINE
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
     @Column(name = "week_start_date", nullable = false)
@@ -28,7 +28,7 @@ public class WeeklyTimesheet {
     private LocalDate weekEndDate;
 
     @Column(nullable = false)
-    private String status; // "DRAFT", "SUBMITTED", "APPROVED", "REJECTED"
+    private String status;
 
     @Column(columnDefinition = "TEXT")
     private String overallComments;
@@ -43,8 +43,7 @@ public class WeeklyTimesheet {
     @OneToMany(mappedBy = "weeklyTimesheet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WeeklyTimesheetEntry> entries = new ArrayList<>();
 
-    // ==========================================
-    //          GETTERS AND SETTERS
+    // GETTERS AND SETTERS
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -75,4 +74,5 @@ public class WeeklyTimesheet {
 
     public List<WeeklyTimesheetEntry> getEntries() { return entries; }
     public void setEntries(List<WeeklyTimesheetEntry> entries) { this.entries = entries; }
+
 }

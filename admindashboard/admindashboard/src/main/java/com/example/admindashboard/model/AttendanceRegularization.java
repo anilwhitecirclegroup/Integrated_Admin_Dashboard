@@ -35,7 +35,7 @@ public class AttendanceRegularization {
     @Column(name = "hr_comments", columnDefinition = "TEXT")
     private String hrComments;
 
-    // --- GETTERS AND SETTERS ---
+    // GETTERS AND SETTERS
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -58,9 +58,7 @@ public class AttendanceRegularization {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    // --- ADD THESE TWO METHODS ---
     public String getHrComments() { return hrComments; }
-
     public void setHrComments(String hrComments) {
         this.hrComments = hrComments;
     }

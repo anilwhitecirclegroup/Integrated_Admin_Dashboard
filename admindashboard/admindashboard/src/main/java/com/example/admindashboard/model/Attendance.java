@@ -14,24 +14,24 @@ public class Attendance {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // Links to your existing User table
+    private User user; // Links to our existing User table
 
     private LocalDate date;
     private LocalTime checkInTime;
     private LocalTime checkOutTime;
     private String status; // Present, Absent, Half-Day
-    private String totalHours; // Stored as "08:30" string or calculation
+    private String totalHours;
 
-    // --- WEEKLY ATTENDANCE REGULATION FIELDS ---
+    //  WEEKLY ATTENDANCE REGULATION FIELDS
     private String weekStartDate;
     private String weekEndDate;
     private Integer presentDays;
     private Integer absentDays;
     private String reason;
     private String approvalStatus;
-    private LocalDate submittedOn; // Kept as LocalDate to fix your Line 164 error
+    private LocalDate submittedOn;
 
-    // --- DAILY BREAKDOWN FIELDS ---
+    // DAILY BREAKDOWN FIELDS
     private Double mondayHours;
     private String mondayStatus;
     private String mondayMode;

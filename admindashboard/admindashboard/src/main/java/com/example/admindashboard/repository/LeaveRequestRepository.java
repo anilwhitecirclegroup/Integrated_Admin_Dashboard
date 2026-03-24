@@ -19,7 +19,6 @@ public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long
     // Finds requests by the User object AND the status (ignoring case), newest first!
     List<LeaveRequest> findByUserAndStatusIgnoreCaseOrderByIdDesc(User user, String status);
 
-    // --- NEW: FOR MONTHLY LEAVE REPORTS ---
     // Finds all leaves where the start date falls within the selected month
     List<LeaveRequest> findByFromDateBetweenOrderByFromDateDesc(LocalDate startDate, LocalDate endDate);
 }

@@ -21,37 +21,31 @@ public class Timesheet {
     @JsonIgnoreProperties({"password", "timesheets", "roles", "attendance", "hibernateLazyInitializer", "handler"})
     private User user;
 
-    private String weekRange; // e.g., "Feb Week 3"
-    private String status;    // PENDING, APPROVED, DENIED
+    private String weekRange;
+    private String status;
 
     @Column(name = "submission_date")
     private LocalDate submissionDate;
 
-    private String rejectionReason; // For the "Denied" tab
-    private String comments;        // General notes
-
+    private String rejectionReason;
+    private String comments;
     private LocalDate weekStartDate;
     private LocalDate weekEndDate;
 
     @Column(name = "approved_by")
     private String approvedBy;
-
     @Column(name = "total_hours")
     private Double totalHours;
 
     // Daily Hour tracking
     private Double mondayHours;
     private String mondayTask;
-
     private Double tuesdayHours;
     private String tuesdayTask;
-
     private Double wednesdayHours;
     private String wednesdayTask;
-
     private Double thursdayHours;
     private String thursdayTask;
-
     private Double fridayHours;
     private String fridayTask;
 
@@ -76,7 +70,7 @@ public class Timesheet {
     @OneToMany(mappedBy = "timesheet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TimesheetEntry> entries = new ArrayList<>();
 
-    // --- GETTERS AND SETTERS ---
+    // GETTERS AND SETTERS
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

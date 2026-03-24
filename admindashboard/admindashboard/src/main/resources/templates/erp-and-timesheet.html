@@ -21,7 +21,6 @@
             color: #334155;
         }
 
-        /* --- HEADER --- */
         .top-header {
             background: white; border-bottom: 1px solid #e2e8f0;
             padding: 22px 40px;
@@ -38,12 +37,12 @@
         }
         .btn-back-home:hover { background-color: #172554; transform: translateY(-2px); color: white; }
 
-        /* --- CONTAINER --- */
+        /*  CONTAINER  */
         .main-container {
             max-width: 1200px; margin: 100px auto 40px; padding: 0 20px;
         }
 
-        /* --- GLOBAL CARD STYLES (Hover & Shadow) --- */
+        /*  GLOBAL CARD STYLES (Hover & Shadow)  */
         .hover-card {
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
@@ -55,7 +54,7 @@
             z-index: 10;
         }
 
-        /* --- 1. ACTION CARDS (Top Row) --- */
+        /*  1. ACTION CARDS (Top Row)  */
         .action-card {
             background: white;
             border: 3px solid var(--bs-primary);
@@ -76,17 +75,17 @@
             transition: all 0.3s ease;
         }
 
-        /* --- Default State (Light Backgrounds) --- */
+        /*  Default State (Light Backgrounds)  */
         .ac-create .ac-icon { background: #eff6ff; color: var(--bs-primary); }
         .ac-template .ac-icon { background: #fdf2f8; color: #db2777; }
         .ac-report .ac-icon { background: #f0fdf4; color: #15803d; }
 
-        /* --- Hover State (Dark Backgrounds) --- */
+        /*  Hover State (Dark Backgrounds)  */
         .ac-create:hover .ac-icon { background: var(--bs-primary); color: white; }
         .ac-template:hover .ac-icon { background: #db2777; color: white; }
         .ac-report:hover .ac-icon { background: #15803d; color: white; }
 
-        /* --- 2. CALENDAR VIEW --- */
+        /*  2. CALENDAR VIEW  */
         .calendar-card {
             background: white; border: 1px solid #e2e8f0; border-radius: 16px;
             overflow: hidden; height: 100%;
@@ -109,7 +108,7 @@
             text-align: center; padding: 8px; font-weight: 600; color: #64748b; font-size: 0.8rem;
         }
 
-        /* --- CLASSY MINIMALIST CALENDAR DAYS --- */
+        /* CLASSY MINIMALIST CALENDAR DAYS  */
         .cal-day {
             min-height: 90px; /* Good height for breathing room */
             padding: 12px;
@@ -162,7 +161,7 @@
         }
         .current-day .day-num { color: var(--bs-primary); }
 
-        /* --- RESTORED: RECENT TIMECARDS CSS --- */
+        /* RESTORED: RECENT TIMECARDS CSS  */
         .recent-card {
             background: white; border: 1.5px solid var(--bs-primary);
             border-radius: 16px; overflow: hidden; height: 100%;
@@ -193,7 +192,7 @@
         .st-submitted { background: #e0e7ff; color: #3730a3; }
         .st-draft { background: #fff7ed; color: #c2410c; }
 
-        /* --- CLICK EFFECT FOR TOP CARDS --- */
+        /*  CLICK EFFECT FOR TOP CARDS  */
         .action-card:active {
             transform: scale(0.98); /* Slight shrink on click */
             background-color: #f1f5f9; /* Flash color */

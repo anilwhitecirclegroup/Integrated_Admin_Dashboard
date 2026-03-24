@@ -1,7 +1,7 @@
 package com.example.admindashboard.model;
+
 import com.example.admindashboard.model.EmployeeProfile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.time.LocalDate;
 import jakarta.persistence.*;
 
@@ -25,21 +25,21 @@ public class User {
         this.employeeProfile = employeeProfile;
     }
 
-    // --- LOGIN CREDENTIALS ---
+    // LOGIN CREDENTIALS
     @Column(unique = true, nullable = false)
-    private String username; // This will be the "Employee ID" (e.g., WCG-1001)
+    private String username;
     private String password;
-    private String role;     // Will always be "ROLE_USER" for employees
+    private String role;
 
-    // --- SECTION 1: IDENTITY & JOB ---
+    // SECTION 1: IDENTITY & JOB
     private String fullName;
     private String email;
     private String designation;
-    private String experience;    // e.g. "5 Years"
+    private String experience;
     @Column(name = "joining_date") // Maps to SQL column
-    private LocalDate joiningDate; // e.g. "2026-01-15"
+    private LocalDate joiningDate;
 
-    // --- SECTION 2: PROJECT & ALLOCATION ---
+    // SECTION 2: PROJECT & ALLOCATION
     private String businessUnit;
     private String accountName;
     private String projectName;
@@ -49,18 +49,18 @@ public class User {
     private String verticalName;
     private String domainIndustry;
 
-    // --- SECTION 3: CONTACT DETAILS ---
+    // SECTION 3: CONTACT DETAILS
     private String mobileNumber;
     private String workLocation;
     private String city;
     private String country;
 
-    // --- SECTION 4: REPORTING LINES ---
+    // SECTION 4: REPORTING LINES
     private String reportingManager;
     private String projectManager;
     private String buHrContact;
 
-    // --- GETTERS AND SETTERS ---
+    // GETTERS AND SETTERS
 
     public LocalDate getJoiningDate() { return joiningDate; }
     public void setJoiningDate(LocalDate joiningDate) { this.joiningDate = joiningDate; }
@@ -177,18 +177,23 @@ public class User {
     }
 
 
-    // --- MANUAL GETTERS/SETTERS FOR KEY FIELDS (Ensure these exist) ---
+    // GETTERS/SETTERS FOR KEY FIELDS
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
+
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
+
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-    // ... Generate the rest in IntelliJ!
+
 }

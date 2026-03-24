@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +71,6 @@ public class WeeklyTimesheetRestController {
                         // TODO: Change to your actual testing email address!
                         String adminEmail = "arcthunder07@gmail.com";
 
-                        // Trigger the background email
                         emailService.sendTimesheetSubmissionToAdmin(adminEmail, currentUser.getFullName(), currentUser.getEmail(), emailData);
                     }
                 }
@@ -101,7 +99,7 @@ public class WeeklyTimesheetRestController {
             return ResponseEntity.status(401).build(); // 401 Unauthorized shortcut
         }
 
-        String currentUsername = authentication.getName(); // This gets "EMP001"
+        String currentUsername = authentication.getName();
 
         // UPDATED: Look them up in the User database
         Optional<User> currentUserOpt = userRepository.findByUsername(currentUsername);

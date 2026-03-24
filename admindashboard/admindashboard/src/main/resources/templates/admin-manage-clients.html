@@ -18,7 +18,6 @@
 
         body { background-color: var(--bg-color); font-family: 'Inter', sans-serif; color: #334155; padding-bottom: 40px; }
 
-        /* Premium Gradient Navbar */
         .navbar-custom {
             background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
             height: 85px;
@@ -34,7 +33,6 @@
             text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
             backdrop-filter: blur(4px);
         }
-
         .btn-dashboard-back:hover {
             background-color: white; color: var(--bs-primary);
             transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -80,7 +78,7 @@
         .form-control:focus, .form-select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); background-color: white; }
         .readonly-input { background-color: #e2e8f0 !important; color: #64748b; cursor: not-allowed; }
 
-        /* --- PREMIUM SWEETALERT2 STYLING --- */
+        /*  PREMIUM SWEETALERT2 STYLING */
         div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
         .swal2-popup {
             border-radius: 20px !important;
@@ -106,6 +104,7 @@
         }
 
     @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
     </style>
 </head>
 <body>
@@ -425,10 +424,7 @@
         viewModal.show();
     }
 
-    // ==========================================
-    // SPA LOGIC: SWAPPING THE VIEWS
-    // ==========================================
-
+    // SWAPPING THE VIEWS
     function openEditPage(id) {
         const client = globalClients.find(c => c.id === id);
         if(!client) return;
@@ -468,7 +464,7 @@
         window.scrollTo(0, 0);
     }
 
-    // === UPGRADED EDIT SUBMISSION ===
+    //  UPGRADED EDIT SUBMISSION
     async function submitEditForm() {
         const formElement = document.getElementById('editClientForm');
 
@@ -526,7 +522,7 @@
         }
     }
 
-    // === UPGRADED DELETE LOGIC ===
+    //  UPGRADED DELETE LOGIC
     async function deleteClient(id, companyName) {
         // 1. High-Stakes Warning Modal
         const result = await Swal.fire({

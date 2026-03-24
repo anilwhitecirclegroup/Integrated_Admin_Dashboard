@@ -14,7 +14,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
 
     @Autowired
-    private CustomUserDetailsService customUserDetailsService; // 1. Inject your new DB Service
+    private CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -23,12 +23,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/css/**", "/js/**", "/images/**").permitAll()
 
-                        // --- ROLE BASED ROUTING ---
+                        // ROLE BASED ROUTING
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/employee/**").hasRole("EMPLOYEE")
                         .requestMatchers("/client/**").hasRole("CLIENT")
 
-                        // --- NEW: EXPLICITLY ALLOW API ACCESS ---
+                        // EXPLICITLY ALLOW API ACCESS
                         .requestMatchers("/api/**").authenticated()
 
                         .anyRequest().authenticated()
@@ -36,7 +36,8 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/perform_login")
-                        // --- FIX 2: Use a Smart Success Handler instead of a default URL ---
+
+                        // Using a Smart Success Handler instead of a default URL
                         .successHandler((request, response, authentication) -> {
                             var roles = authentication.getAuthorities().toString();
                             if (roles.contains("ROLE_ADMIN")) {

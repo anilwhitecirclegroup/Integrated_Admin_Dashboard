@@ -22,7 +22,6 @@
             color: #334155;
         }
 
-        /* --- HEADER --- */
         .top-header {
             background: white; border-bottom: 1px solid #e2e8f0;
             padding: 22px 40px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
@@ -43,13 +42,11 @@
             background-color: #172554; transform: translateY(-2px); color: white;
         }
 
-        /* --- CONTAINER --- */
         .profile-container {
             max-width: 1300px; /* Increased width slightly for better fit */
             margin: 120px auto 40px; padding: 0 20px;
         }
 
-        /* --- CARDS --- */
         .pro-card {
             background: white; border: 1px solid #e2e8f0;
             border-radius: 16px; overflow: hidden; margin-bottom: 24px;
@@ -71,7 +68,7 @@
             border-color: #c7d2fe;
         }
 
-        /* --- FLOATING LABELS FIX --- */
+        /* FLOATING LABELS FIX */
         /* Note: Bootstrap requires 'placeholder' on input for this to work */
         .form-floating > .form-control {
             border: 1px solid #cbd5e1; border-radius: 8px; background-color: #fff;
@@ -85,7 +82,7 @@
         }
         .form-control:read-only { background-color: #f1f5f9; color: #475569; }
 
-        /* --- PHOTO & RESUME --- */
+        /*  PHOTO & RESUME  */
         .profile-photo-wrapper {
             position: relative; width: 120px; height: 120px; margin: 0 auto 20px;
         }
@@ -105,7 +102,7 @@
         }
         .resume-box:hover { border-color: var(--bs-primary); background: #eff6ff; }
 
-        /* --- 1. CARD HOVER EFFECTS --- */
+        /* 1. CARD HOVER EFFECTS  */
         .pro-card {
             background: white;
             border: 1px solid #e2e8f0;
@@ -129,7 +126,7 @@
             z-index: 10; /* Brings it on top of other elements */
         }
 
-        /* --- 2. INPUT FIELD FOCUS EFFECT --- */
+        /* 2. INPUT FIELD FOCUS EFFECT */
         /* Makes inputs feel alive when clicked */
         .form-floating > .form-control {
             transition: all 0.2s ease;
@@ -141,7 +138,7 @@
             box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08);
         }
 
-        /* --- 3. RESUME BOX HOVER --- */
+        /*  3. RESUME BOX HOVER  */
         .resume-box {
             border: 2px dashed #cbd5e1;
             padding: 30px; text-align: center;
@@ -159,14 +156,14 @@
             box-shadow: 0 8px 15px rgba(30, 58, 138, 0.15);
         }
 
-        /* --- UPDATE: IDENTITY CARD BORDER --- */
+        /*  UPDATE: IDENTITY CARD BORDER  */
         .identity-card-bg {
             background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%);
             /* CHANGED: Navy Blue Border (2px for visibility) */
             border: 2px solid var(--bs-primary) !important;
         }
 
-        /* --- NEW: RESUME ACTION BUTTONS --- */
+        /*  RESUME ACTION BUTTONS */
         .action-icon-btn {
             width: 32px; height: 32px;
             border-radius: 6px;

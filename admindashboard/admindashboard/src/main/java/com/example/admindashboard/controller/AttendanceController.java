@@ -4,15 +4,11 @@ import com.example.admindashboard.service.AttendanceService;
 import com.example.admindashboard.service.EmailService;
 import com.example.admindashboard.model.User;
 import com.example.admindashboard.repository.UserRepository;
-
-// IMPORTANT: Update these two imports to match your exact Attendance model name if it differs!
 import com.example.admindashboard.model.Attendance;
 import com.example.admindashboard.repository.AttendanceRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +65,6 @@ public class AttendanceController {
                     emailData.put("empName", currentUser.getFullName());
                     emailData.put("empId", currentUser.getUsername());
 
-                    // Note: Ensure these getter names match your actual Attendance model!
                     emailData.put("weekStartDate", attendance.getWeekStartDate());
                     emailData.put("weekEndDate", attendance.getWeekEndDate());
                     emailData.put("presentDays", attendance.getPresentDays());

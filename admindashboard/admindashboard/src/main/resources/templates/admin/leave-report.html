@@ -13,7 +13,7 @@
         :root {
             --bs-primary: #1e3a8a;
             --bs-primary-hover: #172a6b;
-            --bs-primary-dark: #172554; /* This was missing! It fixes the navbar gradient */
+            --bs-primary-dark: #172554;
             --bg-color: #f8fafc;
         }
 
@@ -24,7 +24,6 @@
             padding-bottom: 50px;
         }
 
-        /* Premium Gradient Navbar */
         .navbar-custom {
             background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
             height: 85px;
@@ -39,7 +38,7 @@
         }
         .btn-dashboard-back:hover { background-color: white; color: var(--bs-primary); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);}
 
-        /* --- CONTROLS SECTION --- */
+        /*  CONTROLS SECTION */
         .controls-card {
             background: white;
             border: 1px solid #e2e8f0;
@@ -53,7 +52,6 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
 
-        /* Month Switcher */
         .month-switcher {
             display: inline-flex;
             align-items: center;
@@ -84,7 +82,7 @@
         .btn-export-pdf { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
         .btn-export-pdf:hover { background: #dc2626; color: white; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(220, 38, 38, 0.2); }
 
-        /* --- TABLE STYLING --- */
+        /*  TABLE STYLING  */
         .table-card {
             background: white; border: 1px solid #e2e8f0;
             border-radius: 12px; overflow: hidden;
@@ -114,7 +112,7 @@
         .empty-state { text-align: center; padding: 60px 20px; }
         .empty-icon { font-size: 3.5rem; color: #cbd5e1; margin-bottom: 15px; }
 
-        /* --- ACTION BUTTON --- */
+        /* ACTION BUTTON */
         .btn-action-view {
             background: #f8fafc;
             color: var(--bs-primary);
@@ -244,8 +242,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    let currentDate = new Date(); // Start with current month
-    let currentMonthLeaves = []; // NEW: Store data globally for the modal to use
+    let currentDate = new Date();
+    let currentMonthLeaves = [];
 
     document.addEventListener("DOMContentLoaded", () => {
         updateMonthDisplay();
@@ -333,9 +331,9 @@
         }
     }
 
-    // NEW: Open Modal and Fill Data
+    // Open Modal and Fill Data
     function showLeaveDetails(index) {
-        const leave = currentMonthLeaves[index]; // Get the exact leave data using the index
+        const leave = currentMonthLeaves[index];
 
         document.getElementById('modalEmpName').innerText = leave.userFullName;
         document.getElementById('modalEmpId').innerText = leave.username;

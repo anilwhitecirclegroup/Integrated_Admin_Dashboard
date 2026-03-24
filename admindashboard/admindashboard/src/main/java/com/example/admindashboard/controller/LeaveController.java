@@ -10,18 +10,15 @@ import com.example.admindashboard.repository.LeaveRequestRepository;
 import com.example.admindashboard.repository.UserRepository;
 import com.example.admindashboard.service.LeaveRequestService;
 import com.example.admindashboard.service.EmailService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/leave")
 public class LeaveController {
 
-    // --- ALL DEPENDENCIES AT THE TOP ---
     @Autowired
     private LeaveRequestRepository leaveRequestRepository;
 
@@ -55,7 +52,6 @@ public class LeaveController {
 
             // 5. NEW: ASYNC EMAIL TRIGGER
             try {
-                // Map the data exactly as it appears in your HTML template variables
                 Map<String, Object> emailData = new HashMap<>();
                 emailData.put("empName", currentUser.getFullName());
                 emailData.put("empId", currentUser.getUsername());
@@ -74,7 +70,6 @@ public class LeaveController {
                 // We catch exceptions here so an email failure doesn't break the actual leave submission!
                 System.err.println("Non-fatal error: Failed to trigger admin email - " + e.getMessage());
             }
-
 
             return ResponseEntity.ok(savedRequest);
 

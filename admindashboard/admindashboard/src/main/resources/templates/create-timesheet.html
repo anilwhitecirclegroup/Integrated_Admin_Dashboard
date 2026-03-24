@@ -25,7 +25,6 @@
             padding-bottom: 40px;
         }
 
-        /* --- HEADER --- */
         .top-nav-bar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
             background: white;
@@ -45,13 +44,12 @@
         }
         .btn-back:hover { background: var(--bs-primary); color: white; }
 
-        /* --- CARDS & PANELS --- */
         .content-panel {
             background: white; border-radius: 10px; border: 1px solid var(--border-color);
             padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.01);
         }
 
-        /* --- TOP INFO SECTION --- */
+        /*  TOP INFO SECTION  */
         .info-label { font-size: 0.95rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: block; }
         .info-value { font-size: 1.05rem; font-weight: 700; color: #0f172a; }
 
@@ -62,7 +60,7 @@
         }
         .form-control-date:focus { outline: none; background: white; box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.2); }
 
-        /* --- STRICT ENTERPRISE GRID (Navy Borders) --- */
+        /*  STRICT ENTERPRISE GRID */
         .table-wrapper {
             /* Outer border of the table */
             border: 2px solid var(--bs-primary);
@@ -117,7 +115,7 @@
             padding: 14px 10px; border-top: 2px solid var(--bs-primary) !important; vertical-align: middle;
         }
 
-        /* --- BUTTONS --- */
+        /*  BUTTONS  */
         .btn-navy { background-color: var(--bs-primary); color: white; font-weight: 600; border: none; }
         .btn-navy:hover { background-color: var(--bs-primary-hover); color: white; transform: translateY(-1px); }
         .btn-outline-navy { border: 1.5px solid var(--bs-primary); color: var(--bs-primary); font-weight: 600; background: transparent; }
@@ -132,23 +130,25 @@
         }
         .btn-delete-row:hover { color: white; background: #dc2626; border-color: #dc2626; }
 
-        /* --- TABLE READABILITY ENHANCEMENTS --- */
-        /* 1. Make all rows vertically wider (Breathing room) */
+        /* 1. Make all rows vertically wider */
         .timecard-table th,
         .timecard-table td {
             padding: 18px 12px !important;
             vertical-align: middle;
         }
+
         /* 2. Visually separate the Header */
         .timecard-table thead tr {
-            background-color: #f1f5f9 !important; /* Light slate background */
-            border-bottom: 2px solid #cbd5e1 !important; /* Thicker separation line */
+            background-color: #f1f5f9 !important;
+            border-bottom: 2px solid #cbd5e1 !important;
+
         }
         /* 3. Visually separate the Footer (Daily Totals) */
         .timecard-table tfoot tr {
-            background-color: #f8fafc !important; /* Very subtle slate background */
-            border-top: 2px solid #cbd5e1 !important; /* Thicker separation line */
+            background-color: #f8fafc !important;
+            border-top: 2px solid #cbd5e1 !important;
         }
+
         /* 4. Optional: Subtle hover effect for the main data rows */
         .timecard-table tbody tr:hover {
             background-color: #fdfdfd;
@@ -161,17 +161,17 @@
         }
         /*  Increase the smaller date text (22 Feb, 23 Feb, etc.) */
         .timecard-table thead th small {
-            font-size: 0.8rem !important; /* Overrides Bootstrap's default <small> size */
+            font-size: 0.8rem !important;
         }
 
-        /* --- INTERACTIVE UI EFFECTS --- */
+        /*  INTERACTIVE UI EFFECTS  */
 
         /* 1. Button Click Animations */
         .btn, .btn-grid-action {
             transition: all 0.15s ease-in-out;
         }
         .btn:active, .btn-grid-action:active {
-            transform: scale(0.95); /* Makes the button physically "press" down */
+            transform: scale(0.95);
         }
 
         /* 2. Input Hover & Focus Effects */
@@ -179,18 +179,18 @@
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
         .form-control:hover, .form-select:hover {
-            border-color: var(--bs-primary) !important; /* Highlights blue on hover */
+            border-color: var(--bs-primary) !important;
         }
         .form-control:focus, .form-select:focus {
             border-color: var(--bs-primary) !important;
-            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15) !important; /* Adds a soft blue glow when typing */
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15) !important;
             background-color: #fff !important;
         }
 
         /* 3. Outline Button Hover Fixes */
         .btn-outline-secondary:hover {
             background-color: #6c757d !important;
-            color: #ffffff !important; /* Forces text to pure white */
+            color: #ffffff !important;
         }
         .btn-outline-navy {
             border-color: var(--bs-primary);
@@ -198,10 +198,10 @@
         }
         .btn-outline-navy:hover {
             background-color: var(--bs-primary) !important;
-            color: #ffffff !important; /* Forces text to pure white */
+            color: #ffffff !important;
         }
 
-        /* --- PREMIUM SWEETALERT2 STYLING --- */
+        /* PREMIUM SWEETALERT2 STYLING  */
         div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
         .swal2-popup {
             border-radius: 20px !important;
@@ -217,7 +217,7 @@
         }
         .swal2-cancel { border-radius: 10px !important; padding: 12px 30px !important; font-weight: 600 !important; }
 
-        /* --- SLIM & DISCREET TOAST STYLING (For Drafts) --- */
+        /*  SLIM & DISCREET TOAST STYLING (For Drafts) */
         .slim-toast-popup {
             width: auto !important; min-width: 250px !important;
             padding: 0.7rem 1.2rem !important; border-radius: 12px !important;
@@ -439,7 +439,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // --- MASTER TIMESHEET JAVASCRIPT ENGINE ---
+    //  MASTER TIMESHEET JAVASCRIPT ENGINE
 
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -479,7 +479,7 @@
         }
     });
 
-    // --- FETCH LOGGED IN USER DETAILS ---
+    //  FETCH LOGGED IN USER DETAILS
     function fetchCurrentUserDetails() {
         fetch('/api/weekly-timesheet/current-user')
             .then(response => {
@@ -501,7 +501,7 @@
             });
     }
 
-    // --- FETCH AND POPULATE LOGIC ---
+    // FETCH AND POPULATE LOGIC
     function loadTimesheetForWeek(startDateStr) {
         fetch(`/api/weekly-timesheet/week?startDate=${startDateStr}`)
         .then(response => {
@@ -683,7 +683,7 @@
         calculateTotals();
     }
 
-    // --- 1. DEFINE THE ULTRA-SLIM TOAST FOR DRAFTS ---
+    //  1. DEFINE THE ULTRA-SLIM TOAST FOR DRAFTS
     const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
@@ -698,7 +698,7 @@
         }
     });
 
-    // --- 2. UPGRADED DELETE ROW ---
+    //  2. UPGRADED DELETE ROW
     function deleteRow(event) {
         const tbody = document.querySelector('.timecard-table tbody');
         if (tbody.querySelectorAll('tr').length > 1) {
@@ -714,7 +714,7 @@
         }
     }
 
-    // --- 3. UPGRADED SUBMIT/SAVE LOGIC ---
+    //  3. UPGRADED SUBMIT/SAVE LOGIC
     async function submitTimesheet(status) {
         const startDate = document.getElementById('startDate').value;
         const endDate = document.getElementById('endDate').value;

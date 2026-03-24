@@ -30,7 +30,6 @@
             flex-direction: column;
         }
 
-        /* --- THEMED HEADER (CONFERENCE ROOM STYLE) --- */
         .top-header {
             background: #ffffff; /* White background */
             border-bottom: 2px solid var(--border-color);
@@ -40,7 +39,6 @@
             z-index: 10;
         }
 
-        /* New Logo Image Styling */
         .header-logo-img {
             height: 60px;
             width: auto;
@@ -48,7 +46,6 @@
             object-fit: contain;
         }
 
-        /* Vertical Divider */
         .header-separator {
             height: 50px;
             width: 2px;
@@ -56,7 +53,6 @@
             margin: 0 15px;
         }
 
-        /* Dark, Uppercase Title */
         .header-title {
             color: #1e293b;
             font-weight: 800;
@@ -66,12 +62,11 @@
             text-transform: uppercase;
         }
 
-        /* Solid Blue Back Button */
         .btn-back-home {
             background-color: var(--bs-primary);
             color: white;
             border: none;
-            border-radius: 6px; /* Matched the slight curve of the conference button */
+            border-radius: 6px;
             padding: 9px 20px;
             font-weight: 600;
             font-size: 0.9rem;
@@ -85,7 +80,7 @@
             transform: translateY(-1px);
         }
 
-        /* --- 1. OVERALL CHAT LAYOUT (FLOATING PANELS) --- */
+        /* 1. OVERALL CHAT LAYOUT (FLOATING PANELS)  */
         .chat-container {
             display: flex; flex: 1; overflow: hidden; max-width: 1500px; /* Slightly wider */
             margin: 0 auto; width: 100%;
@@ -95,7 +90,7 @@
             border: none;
         }
 
-        /* --- 2. SIDEBAR PANEL --- */
+        /*  2. SIDEBAR PANEL*/
         .chat-sidebar {
             width: var(--sidebar-width);
             display: flex; flex-direction: column;
@@ -127,7 +122,7 @@
             box-shadow: 0 2px 8px rgba(30, 58, 138, 0.05);
         }
 
-        /* --- 3. MAIN CHAT AREA (SEPARATED BLOCKS) --- */
+        /*  3. MAIN CHAT AREA (SEPARATED BLOCKS) */
         .chat-main {
             flex: 1; display: flex; flex-direction: column;
             background: transparent;
@@ -170,7 +165,7 @@
         .sidebar-tab:hover { color: var(--bs-primary); background: white; }
         .sidebar-tab.active { color: var(--bs-primary); border-bottom-color: var(--bs-primary); background: white; }
 
-        /* --- UPGRADED INTERACTIVE SEARCH BAR --- */
+        /*  UPGRADED INTERACTIVE SEARCH BAR  */
         .search-container { padding: 15px 20px; border-bottom: 1px solid var(--border-color); }
         .search-wrapper {
             display: flex; align-items: center; background: #f1f5f9;
@@ -192,7 +187,7 @@
 
         .tab-content-area { flex: 1; overflow-y: auto; }
 
-        /* --- RICH CONTACT LIST (WhatsApp Style) --- */
+        /*  RICH CONTACT LIST (WhatsApp Style)  */
         .contact-list {
             padding: 5px;
         }
@@ -273,7 +268,7 @@
         }
         .btn-send:hover { background: var(--bs-primary-hover); transform: scale(1.05) rotate(-15deg); }
 
-        /* --- MESSAGE HOVER ACTIONS (EDIT/REPLY/REACT) --- */
+        /*  MESSAGE HOVER ACTIONS (EDIT/REPLY/REACT)  */
         .msg-actions {
             display: flex; gap: 8px; align-items: center;
             opacity: 0; transition: opacity 0.2s ease;
@@ -290,7 +285,6 @@
         .action-btn:hover { color: var(--bs-primary); border-color: var(--bs-primary); transform: translateY(-2px); }
 
     </style>
-
 </head>
 <body>
 
@@ -495,7 +489,6 @@
     let activeContactFullName = "";
 
     // 2. EMOJI PICKER SETUP
-
     const emojiButton = document.querySelector('#emojiBtn');
     const picker = new EmojiButton({ position: 'top-start' });
     picker.on('emoji', emoji => {
@@ -504,7 +497,6 @@
     emojiButton.addEventListener('click', () => picker.togglePicker(emojiButton));
 
     // 3. WEBSOCKET CONNECTION
-
     function connect() {
         const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
@@ -531,7 +523,6 @@
     }
 
     // 4. CHAT FUNCTIONS
-
     function loadChat(contactId, username, fullname) {
         activeContactId = contactId;
         activeContactName = username;
@@ -670,7 +661,7 @@
         chatHistoryBox.insertAdjacentHTML('beforeend', html);
     }
 
-    // --- NEW INTERACTIVE ACTION FUNCTIONS ---
+    //  NEW INTERACTIVE ACTION FUNCTIONS
     function triggerEdit(buttonElement) {
         // Find the text of the message next to this button
         const bubble = buttonElement.closest('.msg-row').querySelector('.msg-content');

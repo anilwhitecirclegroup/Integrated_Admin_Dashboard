@@ -18,7 +18,6 @@
 
         body { background-color: var(--bg-color); font-family: 'Inter', sans-serif; color: #334155; padding-bottom: 40px; }
 
-        /* Premium Gradient Navbar */
         .navbar-custom {
             background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
             height: 85px;
@@ -33,7 +32,6 @@
             text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;
             backdrop-filter: blur(4px);
         }
-
         .btn-dashboard-back:hover {
             background-color: white; color: var(--bs-primary);
             transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -79,7 +77,7 @@
         .modal-confirm-icon { font-size: 3.5rem; color: #f59e0b; margin-bottom: 15px; }
         .modal-success-icon { font-size: 3.5rem; color: #10b981; margin-bottom: 15px; }
 
-        /* --- PREMIUM SWEETALERT2 STYLING --- */
+        /* PREMIUM SWEETALERT2 STYLING */
         div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
         .swal2-popup {
             border-radius: 20px !important;
@@ -98,6 +96,7 @@
             border-radius: 10px !important; padding: 12px 30px !important;
             font-weight: 600 !important;
         }
+
     </style>
 </head>
 <body>
@@ -251,12 +250,11 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    // === SMART VALIDATION & SUBMISSION ENGINE ===
+    //  SMART VALIDATION & SUBMISSION ENGINE
     async function confirmClientCreation() {
         const form = document.getElementById('clientForm');
 
         // 1. NATIVE BROWSER VALIDATION
-        // If a required field is empty, the browser will highlight it automatically!
         if (!form.checkValidity()) {
             form.reportValidity();
             return;

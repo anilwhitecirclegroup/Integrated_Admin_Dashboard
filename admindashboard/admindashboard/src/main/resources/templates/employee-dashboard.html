@@ -14,7 +14,6 @@
             position: relative;
         }
 
-        /* --- SIDEBAR --- */
         .sidebar {
             width: 105px;
             position: absolute !important;
@@ -43,7 +42,6 @@
         .profile-btn { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .profile-btn:hover { transform: scale(1.15); box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4); border-radius: 50%; }
 
-        /* --- MAIN LAYOUT --- */
         .main-content {
             margin-left: 105px;
             padding: 20px;
@@ -62,7 +60,6 @@
             margin-bottom: 23px !important;
         }
 
-        /* --- WIDGETS --- */
         .widget-card {
             background: white;
             border-radius: 12px;
@@ -129,7 +126,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* --- HOLIDAY LIST LINK FIX --- */
+        /* HOLIDAY LIST LINK FIX  */
         .cal-header-navy .holiday-link {
             color: rgba(255, 255, 255, 0.75) !important; /* Soft white by default */
             transition: all 0.2s ease;
@@ -143,7 +140,7 @@
             text-underline-offset: 4px; /* Drops the underline down slightly so it looks modern */
         }
 
-        /* --- DYNAMIC CALENDAR STYLES --- */
+        /*  DYNAMIC CALENDAR STYLES  */
         .dash-calendar-card {
             background: #ffffff;
             border-radius: 10px;
@@ -191,7 +188,7 @@
             margin-bottom: 10px;
         }
 
-        /* --- CALENDAR LAYOUT FIX --- */
+        /*  CALENDAR LAYOUT FIX  */
         .cal-navigation-wrapper {
             padding-top: 2px; /* Reduced slightly to prevent bottom cut-off */
             margin-bottom: 10px;
@@ -342,8 +339,7 @@
             border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
-        /* 5. WATERFALL CARD ENTRY */
-        /* First, hide the columns initially */
+        /* 4. WATERFALL CARD ENTRY */
         .main-content .col-lg-6, .main-content .col-lg-4 {
             opacity: 0;
             animation: slideUpCard 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
@@ -362,7 +358,7 @@
         .main-content .row:nth-of-type(3) .col-lg-4:nth-child(2) { animation-delay: 0.4s; } /* Middle */
         .main-content .row:nth-of-type(3) .col-lg-4:nth-child(3) { animation-delay: 0.5s; } /* Right */
 
-        /* 6. ALIVE SEARCH BAR */
+        /* 5. ALIVE SEARCH BAR */
         .form-control:focus {
             box-shadow: none; /* Remove default blue glow */
             border-color: transparent;
@@ -382,7 +378,7 @@
             transition: color 0.2s;
         }
 
-        /* 7. SWINGING ICONS */
+        /* 6. SWINGING ICONS */
         @keyframes swing {
             20% { transform: rotate(15deg); }
             40% { transform: rotate(-10deg); }
@@ -396,7 +392,7 @@
             display: inline-block; /* Required for rotation to work */
         }
 
-        /* 8. SHEEN / GLARE EFFECT */
+        /* 7. SHEEN EFFECT */
         .app-btn {
             overflow: hidden; /* Keeps the shine inside the button */
             position: relative; /* Needed for the shine positioning */
@@ -425,7 +421,7 @@
             transition: left 0.6s ease-in-out; /* Smooth sweep speed */
         }
 
-        /* 9. GROWING LINK UNDERLINES */
+        /* 8. GROWING LINK UNDERLINES */
         .widget-header a {
             position: relative;
             text-decoration: none !important; /* Remove default underline */
@@ -445,7 +441,7 @@
             width: 100%; /* Expand to full width on hover */
         }
 
-        /* --- Special Navy Header (For APPS & SELF SERVICE) --- */
+        /*  Special Navy Header (For APPS & SELF SERVICE)  */
         .navy-header {
             background-color: var(--bs-primary); /* Navy Blue Background */
             color: white !important; /* Main Text White */
@@ -473,7 +469,7 @@
             text-decoration: none;
         }
 
-        /* --- SEARCH BOX ACTIVE ANIMATION --- */
+        /* SEARCH BOX ACTIVE ANIMATION  */
         .search-box-wrapper {
             border-color: #cbd5e1 !important;
             border-radius: 50px; /* Pill shape */
@@ -487,7 +483,7 @@
             transform: translateY(-2px); /* Lifts it up smoothly */
         }
 
-        /* --- MODERN DROPDOWN CARD --- */
+        /*  MODERN DROPDOWN CARD  */
         .search-dropdown-card {
             position: absolute;
             top: 100%;
@@ -502,7 +498,7 @@
             z-index: 1050;
         }
 
-        /* --- RESULT ITEM LAYOUT --- */
+        /*  RESULT ITEM LAYOUT  */
         .search-result-item {
             display: flex;
             align-items: center;
@@ -530,7 +526,7 @@
             font-size: 1.1rem;
         }
 
-        /* --- FESTIVE BIRTHDAY WIDGET STYLES --- */
+        /*  FESTIVE BIRTHDAY WIDGET STYLES */
         .birthday-card-active {
             background: linear-gradient(135deg, #ffffff 0%, #fdf4ff 100%);
             border: 1px solid #f5d0fe !important;
@@ -560,7 +556,6 @@
             color: white;
             transform: scale(1.05);
         }
-
 
 
         /* ==========================================================================
@@ -1075,10 +1070,7 @@
         "2026-08-15": "Independence Day"
     };
 
-    // ==========================================
     // DYNAMIC EXPLORABLE CALENDAR LOGIC
-    // ==========================================
-
     let currentDisplayDate = new Date();
 
     // Updated Holiday Data with Type Mapping
@@ -1325,9 +1317,7 @@
         updateBirthdayWidget();
     });
 
-    // ==========================================
     // DARK MODE TOGGLE LOGIC
-    // ==========================================
     const darkModeSwitch = document.getElementById('darkModeSwitch');
     const bodyElement = document.body;
 
@@ -1348,7 +1338,7 @@
         }
     });
 
-    // --- DYNAMIC BIRTHDAY WIDGET LOGIC ---
+    //  DYNAMIC BIRTHDAY WIDGET LOGIC
     async function updateBirthdayWidget() {
     const container = document.getElementById('birthdayListContainer');
     const dateLabel = document.getElementById('todayDateLabel');

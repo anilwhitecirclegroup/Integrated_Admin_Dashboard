@@ -21,7 +21,7 @@
             color: #334155;
         }
 
-        /* --- HEADER --- */
+        /*  HEADER  */
         .top-header {
             background: white; border-bottom: 1px solid #e2e8f0;
             padding: 22px 40px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
@@ -41,14 +41,14 @@
             background-color: #172554; transform: translateY(-2px); color: white;
         }
 
-        /* --- CONTAINER --- */
+        /*  CONTAINER */
         .main-container {
             max-width: 1300px;
             margin: 125px auto 40px;
             padding: 0 20px;
         }
 
-        /* --- CARDS --- */
+        /*  CARDS  */
         .app-card {
             background: white; border: 1px solid #e2e8f0;
             border-radius: 16px; overflow: hidden; margin-bottom: 24px;
@@ -68,7 +68,7 @@
         .app-card-header i { color: #bfdbfe; margin-right: 10px; font-size: 1.1rem; }
         .app-card-body { padding: 25px; }
 
-        /* --- VIEW ALL LINK INTERACTIVITY --- */
+        /*  VIEW ALL LINK INTERACTIVITY  */
         .view-all-link {
             color: white;
             text-decoration: none;
@@ -98,7 +98,7 @@
         }
         .view-all-link:hover::after { width: 100%; /* Expands to full width on hover */}
 
-        /* --- FORMS --- */
+        /*  FORMS  */
         .form-label {
             font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 6px;
         }
@@ -111,13 +111,13 @@
         }
         .form-control:read-only { background-color: #f1f5f9; color: #475569; }
 
-        /* --- STATUS BADGES --- */
+        /*  STATUS BADGES  */
         .badge-status { padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
         .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
         .status-approved { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
         .status-rejected { background: #fef2f2; color: #b91c1c; border: 1px solid #fee2e2; }
 
-        /* --- PREMIUM SWEETALERT2 STYLING --- */
+        /* PREMIUM SWEETALERT2 STYLING  */
         div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
         .swal2-popup {
             border-radius: 20px !important;
@@ -681,12 +681,10 @@
 
             const data = await response.json();
 
-            // --- SICK LEAVE OVERRIDE: Force Total to 20 and recalculate ---
             if (data.Sick) {
                 data.Sick.total = 20;
                 data.Sick.left = data.Sick.total - (data.Sick.used || 0);
             }
-            // --------------------------------------------------------------
 
             const clPercent = (data.Casual.used / data.Casual.total) * 100;
             const slPercent = (data.Sick.used / data.Sick.total) * 100;
