@@ -155,6 +155,36 @@
         .custom-admin-tabs .nav-link.active { background: #1e3a8a; color: white; border-color: #1e3a8a; box-shadow: 0 8px 15px rgba(30, 58, 138, 0.2); }
         .custom-admin-tabs .nav-link.active .badge { background-color: white !important; color: #1e3a8a !important; }
 
+        /* --- ELITE HR-APPROVAL SWEETALERT STYLING --- */
+        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
+        .swal2-popup {
+            border-radius: 16px !important;
+            padding: 2.5em 2em !important;
+            border-top: 6px solid #1e3a8a !important; /* Official Navy Top Border */
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2) !important;
+        }
+        .swal2-title { color: #1e293b !important; font-weight: 800 !important; font-size: 1.5rem !important; }
+        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; }
+
+        /* Interactive Textarea Styling for Rejections */
+        .swal2-textarea {
+            border: 1px solid #cbd5e1 !important; border-radius: 8px !important;
+            padding: 15px !important; font-size: 0.95rem !important; color: #334155 !important;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important; transition: all 0.2s;
+        }
+        .swal2-textarea:focus {
+            border-color: #1e3a8a !important; box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1) !important;
+        }
+
+        /* Action Buttons */
+        .swal2-confirm {
+            border-radius: 8px !important; padding: 12px 25px !important;
+            font-weight: 700 !important; letter-spacing: 0.5px;
+        }
+        .swal2-cancel {
+            border-radius: 8px !important; padding: 12px 25px !important;
+            font-weight: 600 !important; background-color: #f1f5f9 !important; color: #64748b !important;
+        }
     </style>
 </head>
 <body>
@@ -481,6 +511,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     // --- MASTER STATUS CONTROL ---
     let currentStatusFilter = 'pending'; // Default View
@@ -571,20 +603,114 @@
         applyFilters();
     }
 
+    // === UPGRADED HELPDESK MULTI-ACTION ENGINE ===
     async function updateStatus(ticketId, newStatus) {
-        if (confirm(`Are you sure you want to mark Ticket ID: ${ticketId} as ${newStatus}?`)) {
+
+        // ----------------------------------------------------
+        // FLOW 1: APPROVE OR RESOLVE TICKET (Positive Actions)
+        // ----------------------------------------------------
+        if (newStatus === 'Approved' || newStatus === 'Resolved') {
+            const actionWord = newStatus === 'Resolved' ? 'Resolve Incident' : 'Approve Request';
+
+            const confirmResult = await Swal.fire({
+                title: actionWord + '?',
+                html: `This will officially mark Ticket ID: <b>${ticketId}</b> as ${newStatus}.`,
+                icon: 'question',
+                iconColor: '#16a34a', // Reassuring Green
+                showCancelButton: true,
+                confirmButtonColor: '#16a34a',
+                cancelButtonText: 'Cancel',
+                confirmButtonText: `<i class="fas fa-check me-2"></i> Yes, ${newStatus}`,
+                reverseButtons: true
+            });
+
+            if (!confirmResult.isConfirmed) return;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: `Updating ticket status to ${newStatus}...`,
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            const startTime = Date.now();
             try {
                 const params = new URLSearchParams({ id: ticketId, status: newStatus });
                 const response = await fetch('/api/requests/update-status?' + params.toString(), { method: 'POST' });
 
+                // UX Delay Trick
+                const elapsedTime = Date.now() - startTime;
+                if (elapsedTime < 1200) await new Promise(r => setTimeout(r, 1200 - elapsedTime));
+
                 if (response.ok) {
-                    alert(`✅ Success! Ticket has been updated to ${newStatus}.`);
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Ticket Updated!',
+                        text: `Ticket has been successfully marked as ${newStatus}.`,
+                        confirmButtonColor: '#1e3a8a',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
                     location.reload();
-                } else {
-                    alert("❌ Failed to update the ticket. Please check the server.");
-                }
+                } else throw new Error();
             } catch (error) {
-                alert("Network connection error. Ensure the server is running.");
+                Swal.fire({ icon: 'error', title: 'Update Failed', text: 'Network connection error.', confirmButtonColor: '#1e3a8a' });
+            }
+        }
+
+        // ----------------------------------------------------
+        // FLOW 2: DENY TICKET (With Interactive Input)
+        // ----------------------------------------------------
+        else if (newStatus === 'Denied') {
+            const { value: adminNote, isConfirmed } = await Swal.fire({
+                title: 'Deny Request',
+                input: 'textarea',
+                inputLabel: 'Reason for Denial (Required)',
+                inputPlaceholder: 'Explain why this IT request is being denied...',
+                icon: 'warning',
+                iconColor: '#dc2626', // Alert Red
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonText: 'Cancel',
+                confirmButtonText: '<i class="fas fa-times me-2"></i> Deny Request',
+                reverseButtons: true,
+                inputValidator: (value) => {
+                    if (!value.trim()) return 'You must provide a reason for denying the request!';
+                }
+            });
+
+            if (!isConfirmed) return;
+
+            Swal.fire({
+                title: 'Denying...',
+                text: 'Updating ticket and notifying employee...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            const startTime = Date.now();
+            try {
+                // Passes the comments to the backend params
+                const params = new URLSearchParams({ id: ticketId, status: newStatus, comments: adminNote });
+                const response = await fetch('/api/requests/update-status?' + params.toString(), { method: 'POST' });
+
+                // UX Delay Trick
+                const elapsedTime = Date.now() - startTime;
+                if (elapsedTime < 1200) await new Promise(r => setTimeout(r, 1200 - elapsedTime));
+
+                if (response.ok) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Request Denied',
+                        text: 'The employee has been notified of the decision.',
+                        confirmButtonColor: '#1e3a8a',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    location.reload();
+                } else throw new Error();
+            } catch (error) {
+                Swal.fire({ icon: 'error', title: 'Denial Failed', text: 'Network connection error.', confirmButtonColor: '#1e3a8a' });
             }
         }
     }

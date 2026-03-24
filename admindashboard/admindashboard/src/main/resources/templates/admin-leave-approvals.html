@@ -241,6 +241,42 @@
         .badge-pending { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
         .badge-approved { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
         .badge-rejected { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+        /* --- ELITE HR-APPROVAL SWEETALERT STYLING --- */
+        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
+        .swal2-popup {
+            border-radius: 16px !important; /* Slightly sharper corners for official feel */
+            padding: 2.5em 2em !important;
+            border-top: 6px solid #1e3a8a !important; /* Official Navy Top Border */
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2) !important;
+        }
+        .swal2-title { color: #1e293b !important; font-weight: 800 !important; font-size: 1.5rem !important; }
+        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; }
+
+        /* Interactive Textarea Styling for Rejections */
+        .swal2-textarea {
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 8px !important;
+            padding: 15px !important;
+            font-size: 0.95rem !important;
+            color: #334155 !important;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important;
+            transition: all 0.2s;
+        }
+        .swal2-textarea:focus {
+            border-color: #1e3a8a !important;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1) !important;
+        }
+
+        /* Action Buttons */
+        .swal2-confirm {
+            border-radius: 8px !important; padding: 12px 25px !important;
+            font-weight: 700 !important; letter-spacing: 0.5px;
+        }
+        .swal2-cancel {
+            border-radius: 8px !important; padding: 12px 25px !important;
+            font-weight: 600 !important; background-color: #f1f5f9 !important; color: #64748b !important;
+        }
     </style>
 </head>
 <body>
@@ -314,7 +350,7 @@
                             <button class="btn-action btn-view" data-bs-toggle="modal" th:attr="data-bs-target='#detailsModal'+${leave.id}">
                                 <i class="fas fa-eye"></i> Details
                             </button>
-                            <button class="btn-action btn-deny" th:onclick="|openRejectModal(${leave.id})|">
+                            <button class="btn-action btn-deny" th:onclick="|rejectLeave(${leave.id})|">
                                 <i class="fas fa-times"></i> Reject
                             </button>
                             <button class="btn-action btn-approve" th:onclick="|approveLeave(${leave.id})|">
@@ -461,73 +497,116 @@
     </div>
 </th:block>
 
-<div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title fw-bold">Reject Leave Request</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4">
-                <input type="hidden" id="rejectLeaveId">
-                <label class="form-label fw-bold text-muted small">Reason for Rejection (Optional HR Note)</label>
-                <textarea id="adminNote" class="form-control" rows="3" placeholder="Provide a reason to the employee..."></textarea>
-            </div>
-            <div class="modal-footer bg-light border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger px-4" onclick="submitRejection()">Confirm Rejection</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    // 1. Approve Leave Action
+    // === 1. HR APPROVAL ENGINE (WITH UX DELAY) ===
     async function approveLeave(id) {
-        if (!confirm("Are you sure you want to approve this leave request?")) return;
+        const confirmResult = await Swal.fire({
+            title: 'Approve Leave?',
+            html: 'This will officially grant the requested time off and notify the employee.',
+            icon: 'question',
+            iconColor: '#16a34a', // Green icon for approval
+            showCancelButton: true,
+            confirmButtonColor: '#16a34a', // Green button
+            cancelButtonText: 'Cancel',
+            confirmButtonText: '<i class="fas fa-check me-2"></i> Yes, Approve',
+            reverseButtons: true
+        });
+
+        if (!confirmResult.isConfirmed) return;
+
+        Swal.fire({
+            title: 'Approving...',
+            text: 'Updating employee balances and schedules...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        const startTime = Date.now();
 
         try {
             const response = await fetch(`/api/admin/leave/approve/${id}`, { method: 'POST' });
+
+            // Visibility Delay
+            const elapsedTime = Date.now() - startTime;
+            if (elapsedTime < 1200) await new Promise(r => setTimeout(r, 1200 - elapsedTime));
+
             if (response.ok) {
-                alert("Leave Approved successfully!");
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Leave Approved!',
+                    text: 'The employee schedule has been updated.',
+                    confirmButtonColor: '#1e3a8a',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
                 window.location.reload();
             } else {
-                alert("Error approving leave: " + await response.text());
+                throw new Error(await response.text());
             }
         } catch (error) {
-            console.error("Error:", error);
-            alert("Connection error.");
+            Swal.fire({ icon: 'error', title: 'Approval Failed', text: error.message, confirmButtonColor: '#1e3a8a' });
         }
     }
 
-    // 2. Open Reject Modal
-    function openRejectModal(id) {
-        document.getElementById("rejectLeaveId").value = id;
-        document.getElementById("adminNote").value = ""; // Clear old notes
-        const rejectModal = new bootstrap.Modal(document.getElementById('rejectModal'));
-        rejectModal.show();
-    }
+    // === 2. HR REJECTION ENGINE (INTERACTIVE INPUT) ===
+    async function rejectLeave(id) {
+        // SweetAlert2 generates the text area natively!
+        const { value: adminNote, isConfirmed } = await Swal.fire({
+            title: 'Reject Leave Request',
+            input: 'textarea',
+            inputLabel: 'Reason for Rejection (Required)',
+            inputPlaceholder: 'Enter administrative notes for the employee...',
+            icon: 'warning',
+            iconColor: '#dc2626', // Red warning icon
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626', // Red confirm button
+            cancelButtonText: 'Cancel',
+            confirmButtonText: '<i class="fas fa-times me-2"></i> Reject Request',
+            reverseButtons: true,
+            inputValidator: (value) => {
+                if (!value.trim()) {
+                    return 'You must provide a reason to the employee!';
+                }
+            }
+        });
 
-    // 3. Submit Rejection
-    async function submitRejection() {
-        const id = document.getElementById("rejectLeaveId").value;
-        const note = document.getElementById("adminNote").value;
+        if (!isConfirmed) return;
 
-        const url = `/api/admin/leave/reject/${id}?note=${encodeURIComponent(note)}`;
+        Swal.fire({
+            title: 'Rejecting...',
+            text: 'Logging decision and notifying employee...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        const startTime = Date.now();
 
         try {
+            const url = `/api/admin/leave/reject/${id}?note=${encodeURIComponent(adminNote)}`;
             const response = await fetch(url, { method: 'POST' });
+
+            // Visibility Delay
+            const elapsedTime = Date.now() - startTime;
+            if (elapsedTime < 1200) await new Promise(r => setTimeout(r, 1200 - elapsedTime));
+
             if (response.ok) {
-                alert("Leave Request Rejected.");
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Request Rejected',
+                    text: 'The employee has been notified of the decision.',
+                    confirmButtonColor: '#1e3a8a',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
                 window.location.reload();
             } else {
-                alert("Error rejecting leave: " + await response.text());
+                throw new Error(await response.text());
             }
         } catch (error) {
-            console.error("Error:", error);
-            alert("Connection error.");
+            Swal.fire({ icon: 'error', title: 'Rejection Failed', text: error.message, confirmButtonColor: '#1e3a8a' });
         }
     }
 </script>

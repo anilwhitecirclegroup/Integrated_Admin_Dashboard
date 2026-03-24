@@ -88,6 +88,37 @@
         .table-custom { border-radius: 8px; overflow: hidden; border-collapse: separate; border-spacing: 0; border: 1px solid #e2e8f0; }
         .table-custom th { background-color: #f8fafc; color: #475569; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; padding: 12px; border-bottom: 2px solid #e2e8f0; }
         .table-custom td { padding: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+
+        /* --- ELITE HR-APPROVAL SWEETALERT STYLING --- */
+        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
+        .swal2-popup {
+            border-radius: 16px !important;
+            padding: 2.5em 2em !important;
+            border-top: 6px solid #1e3a8a !important; /* Official Navy Top Border */
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2) !important;
+        }
+        .swal2-title { color: #1e293b !important; font-weight: 800 !important; font-size: 1.5rem !important; }
+        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; }
+
+        /* Interactive Textarea Styling for Rejections */
+        .swal2-textarea {
+            border: 1px solid #cbd5e1 !important; border-radius: 8px !important;
+            padding: 15px !important; font-size: 0.95rem !important; color: #334155 !important;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important; transition: all 0.2s;
+        }
+        .swal2-textarea:focus {
+            border-color: #1e3a8a !important; box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1) !important;
+        }
+
+        /* Action Buttons */
+        .swal2-confirm {
+            border-radius: 8px !important; padding: 12px 25px !important;
+            font-weight: 700 !important; letter-spacing: 0.5px;
+        }
+        .swal2-cancel {
+            border-radius: 8px !important; padding: 12px 25px !important;
+            font-weight: 600 !important; background-color: #f1f5f9 !important; color: #64748b !important;
+        }
     </style>
 </head>
 <body>
@@ -145,6 +176,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     let currentData = [];
 
@@ -318,17 +351,113 @@
         modalInstance.show();
     }
 
-    function updateStatus(id, newStatus) {
-        if(!confirm(`Are you sure you want to ${newStatus === 'Approved' ? 'Approve' : 'Deny'} this timesheet?`)) return;
+    // === UPGRADED ADMINISTRATIVE APPROVAL ENGINE ===
+    async function updateStatus(id, newStatus) {
 
-        let url = `/api/admin/regularization/${id}/${newStatus}`;
+        // ----------------------------------------------------
+        // FLOW 1: APPROVE ATTENDANCE
+        // ----------------------------------------------------
+        if (newStatus === 'Approved') {
+            const confirmResult = await Swal.fire({
+                title: 'Approve Attendance?',
+                html: 'This will officially verify these attendance records for payroll.',
+                icon: 'question',
+                iconColor: '#16a34a', // Reassuring Green
+                showCancelButton: true,
+                confirmButtonColor: '#16a34a',
+                cancelButtonText: 'Cancel',
+                confirmButtonText: '<i class="fas fa-check me-2"></i> Yes, Approve',
+                reverseButtons: true
+            });
 
-        if(newStatus === 'Denied') {
-            const msg = prompt("Please provide a reason for rejection:");
-            if(!msg) return;
-            url += `?comments=${encodeURIComponent(msg)}`;
+            if (!confirmResult.isConfirmed) return;
+
+            Swal.fire({
+                title: 'Approving...',
+                text: 'Syncing attendance records to the database...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            const startTime = Date.now();
+            try {
+                const response = await fetch(`/api/admin/regularization/${id}/${newStatus}`, { method: 'POST' });
+
+                // UX Delay Trick for smooth animations
+                const elapsedTime = Date.now() - startTime;
+                if (elapsedTime < 1200) await new Promise(r => setTimeout(r, 1200 - elapsedTime));
+
+                if (response.ok) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Attendance Approved!',
+                        confirmButtonColor: '#1e3a8a',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    // Refresh the specific tab without reloading the whole page!
+                    loadRequests('Pending');
+                } else throw new Error();
+            } catch (error) {
+                Swal.fire({ icon: 'error', title: 'Approval Failed', text: 'Network connection error.', confirmButtonColor: '#1e3a8a' });
+            }
         }
-        fetch(url, {method: 'POST'}).then(res => { if(res.ok) loadRequests('Pending'); });
+
+        // ----------------------------------------------------
+        // FLOW 2: DENY ATTENDANCE (With Interactive Input)
+        // ----------------------------------------------------
+        else if (newStatus === 'Denied') {
+            const { value: adminNote, isConfirmed } = await Swal.fire({
+                title: 'Deny Attendance',
+                input: 'textarea',
+                inputLabel: 'Reason for Denial (Required)',
+                inputPlaceholder: 'Explain why the attendance record is being denied (e.g., "Missing clock-out time on Friday")...',
+                icon: 'warning',
+                iconColor: '#dc2626', // Alert Red
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonText: 'Cancel',
+                confirmButtonText: '<i class="fas fa-times me-2"></i> Deny Request',
+                reverseButtons: true,
+                inputValidator: (value) => {
+                    if (!value.trim()) return 'You must provide a reason for the employee to correct!';
+                }
+            });
+
+            if (!isConfirmed) return;
+
+            Swal.fire({
+                title: 'Denying...',
+                text: 'Returning attendance record to employee...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            const startTime = Date.now();
+            try {
+                const url = `/api/admin/regularization/${id}/${newStatus}?comments=${encodeURIComponent(adminNote)}`;
+                const response = await fetch(url, { method: 'POST' });
+
+                // UX Delay Trick
+                const elapsedTime = Date.now() - startTime;
+                if (elapsedTime < 1200) await new Promise(r => setTimeout(r, 1200 - elapsedTime));
+
+                if (response.ok) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Attendance Denied',
+                        text: 'The employee has been notified to make corrections.',
+                        confirmButtonColor: '#1e3a8a',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    // Refresh the specific tab
+                    loadRequests('Pending');
+                } else throw new Error();
+            } catch (error) {
+                Swal.fire({ icon: 'error', title: 'Denial Failed', text: 'Network connection error.', confirmButtonColor: '#1e3a8a' });
+            }
+        }
     }
 </script>
 </body>

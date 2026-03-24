@@ -94,6 +94,37 @@
         .table-custom td { padding: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
         .table-custom tbody tr:hover { background-color: #f8fafc; }
         .table-custom tbody tr:last-child td { border-bottom: none; }
+
+        /* --- ELITE HR-APPROVAL SWEETALERT STYLING --- */
+        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
+        .swal2-popup {
+            border-radius: 16px !important;
+            padding: 2.5em 2em !important;
+            border-top: 6px solid #1e3a8a !important; /* Official Navy Top Border */
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2) !important;
+        }
+        .swal2-title { color: #1e293b !important; font-weight: 800 !important; font-size: 1.5rem !important; }
+        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; }
+
+        /* Interactive Textarea Styling for Rejections */
+        .swal2-textarea {
+            border: 1px solid #cbd5e1 !important; border-radius: 8px !important;
+            padding: 15px !important; font-size: 0.95rem !important; color: #334155 !important;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important; transition: all 0.2s;
+        }
+        .swal2-textarea:focus {
+            border-color: #1e3a8a !important; box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1) !important;
+        }
+
+        /* Action Buttons */
+        .swal2-confirm {
+            border-radius: 8px !important; padding: 12px 25px !important;
+            font-weight: 700 !important; letter-spacing: 0.5px;
+        }
+        .swal2-cancel {
+            border-radius: 8px !important; padding: 12px 25px !important;
+            font-weight: 600 !important; background-color: #f1f5f9 !important; color: #64748b !important;
+        }
     </style>
 </head>
 <body>
@@ -151,6 +182,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     let currentData = [];
 
@@ -329,15 +362,113 @@
         modalInstance.show();
     }
 
-    function updateStatus(id, newStatus) {
-        if(!confirm(`Are you sure you want to ${newStatus === 'APPROVED' ? 'Approve' : 'Reject'} this timesheet?`)) return;
-        let url = `/api/admin/timesheet/${id}/${newStatus}`;
-        if(newStatus === 'REJECTED') {
-            const msg = prompt("Please provide a reason for rejection (this will be sent to the employee):");
-            if(!msg) return;
-            url += `?comments=${encodeURIComponent(msg)}`;
+    // === UPGRADED ADMINISTRATIVE APPROVAL ENGINE ===
+    async function updateStatus(id, newStatus) {
+
+        // ----------------------------------------------------
+        // FLOW 1: APPROVE TIMESHEET
+        // ----------------------------------------------------
+        if (newStatus === 'APPROVED') {
+            const confirmResult = await Swal.fire({
+                title: 'Approve Timesheet?',
+                html: 'This will officially record these hours for payroll and project tracking.',
+                icon: 'question',
+                iconColor: '#16a34a', // Reassuring Green
+                showCancelButton: true,
+                confirmButtonColor: '#16a34a',
+                cancelButtonText: 'Cancel',
+                confirmButtonText: '<i class="fas fa-check me-2"></i> Yes, Approve',
+                reverseButtons: true
+            });
+
+            if (!confirmResult.isConfirmed) return;
+
+            Swal.fire({
+                title: 'Approving...',
+                text: 'Syncing logged hours to the database...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            const startTime = Date.now();
+            try {
+                const response = await fetch(`/api/admin/timesheet/${id}/${newStatus}`, { method: 'POST' });
+
+                // UX Delay Trick for smooth animations
+                const elapsedTime = Date.now() - startTime;
+                if (elapsedTime < 1200) await new Promise(r => setTimeout(r, 1200 - elapsedTime));
+
+                if (response.ok) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Timesheet Approved!',
+                        confirmButtonColor: '#1e3a8a',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    // Refresh the specific tab without reloading the whole page!
+                    loadTimesheets('SUBMITTED');
+                } else throw new Error();
+            } catch (error) {
+                Swal.fire({ icon: 'error', title: 'Approval Failed', text: 'Network connection error.', confirmButtonColor: '#1e3a8a' });
+            }
         }
-        fetch(url, {method: 'POST'}).then(res => { if(res.ok) loadTimesheets('SUBMITTED'); });
+
+        // ----------------------------------------------------
+        // FLOW 2: REJECT TIMESHEET (With Interactive Input)
+        // ----------------------------------------------------
+        else if (newStatus === 'REJECTED') {
+            const { value: adminNote, isConfirmed } = await Swal.fire({
+                title: 'Reject Timesheet',
+                input: 'textarea',
+                inputLabel: 'Reason for Rejection (Required)',
+                inputPlaceholder: 'Tell the employee what needs to be fixed (e.g., "Missing hours on Tuesday")...',
+                icon: 'warning',
+                iconColor: '#dc2626', // Alert Red
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonText: 'Cancel',
+                confirmButtonText: '<i class="fas fa-times me-2"></i> Reject Timesheet',
+                reverseButtons: true,
+                inputValidator: (value) => {
+                    if (!value.trim()) return 'You must provide a reason for the employee to correct!';
+                }
+            });
+
+            if (!isConfirmed) return;
+
+            Swal.fire({
+                title: 'Rejecting...',
+                text: 'Returning timesheet to employee...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            const startTime = Date.now();
+            try {
+                const url = `/api/admin/timesheet/${id}/${newStatus}?comments=${encodeURIComponent(adminNote)}`;
+                const response = await fetch(url, { method: 'POST' });
+
+                // UX Delay Trick
+                const elapsedTime = Date.now() - startTime;
+                if (elapsedTime < 1200) await new Promise(r => setTimeout(r, 1200 - elapsedTime));
+
+                if (response.ok) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Timesheet Rejected',
+                        text: 'The employee has been notified to make corrections.',
+                        confirmButtonColor: '#1e3a8a',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    // Refresh the specific tab
+                    loadTimesheets('SUBMITTED');
+                } else throw new Error();
+            } catch (error) {
+                Swal.fire({ icon: 'error', title: 'Rejection Failed', text: 'Network connection error.', confirmButtonColor: '#1e3a8a' });
+            }
+        }
     }
 </script>
 </body>

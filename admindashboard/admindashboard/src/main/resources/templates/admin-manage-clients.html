@@ -79,6 +79,33 @@
         .form-control, .form-select { border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 15px; font-size: 0.9rem; background-color: #f8fafc; }
         .form-control:focus, .form-select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); background-color: white; }
         .readonly-input { background-color: #e2e8f0 !important; color: #64748b; cursor: not-allowed; }
+
+        /* --- PREMIUM SWEETALERT2 STYLING --- */
+        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
+        .swal2-popup {
+            border-radius: 20px !important;
+            box-shadow: 0 25px 50px -12px rgba(30, 58, 138, 0.25) !important;
+            padding: 2em !important; border: 1px solid #e2e8f0;
+        }
+        .swal2-title { color: #1e3a8a !important; font-weight: 800 !important; font-size: 1.5rem !important; }
+        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; }
+        .swal2-confirm {
+            border-radius: 10px !important; padding: 12px 30px !important;
+            font-weight: 700 !important; letter-spacing: 0.5px;
+            background-color: #1e3a8a !important;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2) !important;
+        }
+        .swal2-cancel {
+            border-radius: 10px !important; padding: 12px 30px !important;
+            font-weight: 600 !important;
+        }
+        /* Custom Danger Button for Deletes */
+        .swal2-confirm.swal2-danger-btn {
+            background-color: #ef4444 !important;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25) !important;
+        }
+
+    @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -281,6 +308,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     let globalClients = [];
     let viewModal;
@@ -440,7 +468,8 @@
         window.scrollTo(0, 0);
     }
 
-    function submitEditForm() {
+    // === UPGRADED EDIT SUBMISSION ===
+    async function submitEditForm() {
         const formElement = document.getElementById('editClientForm');
 
         if(!formElement.checkValidity()) {
@@ -450,31 +479,101 @@
 
         const formData = new FormData(formElement);
 
-        fetch('/api/admin/clients/update', {
-            method: 'POST',
-            body: formData
-        })
-        .then(res => {
+        // 1. Sleek Loading State
+        Swal.fire({
+            title: 'Saving Changes...',
+            text: 'Syncing client portfolio data...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        const startTime = Date.now();
+
+        try {
+            const res = await fetch('/api/admin/clients/update', {
+                method: 'POST',
+                body: formData
+            });
+
+            // Visibility Delay (Ensures the loading animation is seen)
+            const elapsedTime = Date.now() - startTime;
+            if (elapsedTime < 1000) await new Promise(r => setTimeout(r, 1000 - elapsedTime));
+
             if(res.ok) {
-                closeEditPage(); // Go back to the table view
-                loadClients();   // Refresh the table with updated data
-                setTimeout(() => alert("Client data updated successfully!"), 300);
+                closeEditPage(); // Switch view back to table
+                loadClients();   // Refresh table data
+
+                // 2. Success Modal
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Update Successful!',
+                    text: 'Client data has been updated and synced.',
+                    confirmButtonColor: '#1e3a8a',
+                    timer: 2500,
+                    timerProgressBar: true
+                });
             } else {
-                alert("Failed to update client details.");
+                throw new Error("Failed to update client details.");
             }
-        })
-        .catch(err => console.error("Error updating client:", err));
+        } catch (err) {
+            console.error("Error updating client:", err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Update Failed',
+                text: 'Could not save changes to the database. Please try again.',
+                confirmButtonColor: '#1e3a8a'
+            });
+        }
     }
 
-    function deleteClient(id, companyName) {
-        if(confirm(`Delete ${companyName}? This permanently removes their profile and login credentials.`)) {
-            fetch(`/api/admin/clients/${id}`, { method: 'DELETE' }).then(res => { if(res.ok) loadClients(); });
+    // === UPGRADED DELETE LOGIC ===
+    async function deleteClient(id, companyName) {
+        // 1. High-Stakes Warning Modal
+        const result = await Swal.fire({
+            title: 'Delete Client?',
+            html: `Are you sure you want to remove <b>${companyName}</b>? <br><br>This permanently deletes their profile and revokes login access.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete',
+            cancelButtonText: 'Cancel',
+            customClass: { confirmButton: 'swal2-danger-btn' }, // Makes the confirm button RED
+            reverseButtons: true
+        });
+
+        if (result.isConfirmed) {
+            // 2. Loading State
+            Swal.fire({
+                title: 'Deleting...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            try {
+                const res = await fetch(`/api/admin/clients/${id}`, { method: 'DELETE' });
+                if(res.ok) {
+                    // 3. Auto-closing Success Toast
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: `${companyName} has been removed from the directory.`,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    loadClients(); // Refresh the table
+                } else {
+                    throw new Error('Deletion failed');
+                }
+            } catch (err) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to delete the client.',
+                    confirmButtonColor: '#1e3a8a'
+                });
+            }
         }
     }
 </script>
 
-<style>
-    @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
-</style>
 </body>
 </html>

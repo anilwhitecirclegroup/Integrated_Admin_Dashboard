@@ -78,6 +78,26 @@
         /* Modal Customizations */
         .modal-confirm-icon { font-size: 3.5rem; color: #f59e0b; margin-bottom: 15px; }
         .modal-success-icon { font-size: 3.5rem; color: #10b981; margin-bottom: 15px; }
+
+        /* --- PREMIUM SWEETALERT2 STYLING --- */
+        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
+        .swal2-popup {
+            border-radius: 20px !important;
+            box-shadow: 0 25px 50px -12px rgba(30, 58, 138, 0.25) !important;
+            padding: 2em !important; border: 1px solid #e2e8f0;
+        }
+        .swal2-title { color: #1e3a8a !important; font-weight: 800 !important; font-size: 1.5rem !important; }
+        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; }
+        .swal2-confirm {
+            border-radius: 10px !important; padding: 12px 30px !important;
+            font-weight: 700 !important; letter-spacing: 0.5px;
+            background-color: #1e3a8a !important;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2) !important;
+        }
+        .swal2-cancel {
+            border-radius: 10px !important; padding: 12px 30px !important;
+            font-weight: 600 !important;
+        }
     </style>
 </head>
 <body>
@@ -219,7 +239,7 @@
             <div class="text-muted small">
                 <i class="fas fa-info-circle me-1"></i> A confirmation prompt will appear before the profile is created.
             </div>
-            <button type="submit" class="btn-submit">
+            <button type="button" class="btn-submit" onclick="confirmClientCreation()">
                 <i class="fas fa-user-plus me-2"></i> Create Client Profile
             </button>
         </div>
@@ -227,82 +247,91 @@
     </form>
 </div>
 
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg text-center p-4">
-            <div class="modal-body">
-                <i class="fas fa-exclamation-circle modal-confirm-icon"></i>
-                <h4 class="fw-bold text-dark mb-3">Review Details</h4>
-                <p class="text-muted mb-4">Are you sure you want to onboard this new client? This will automatically generate their system login credentials.</p>
-                <div class="d-flex justify-content-center gap-3">
-                    <button type="button" class="btn btn-light px-4 fw-bold border" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" id="btnConfirmSubmit" class="btn btn-primary px-4 fw-bold">Yes, Onboard Client</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg text-center p-4">
-            <div class="modal-body">
-                <i class="fas fa-check-circle modal-success-icon"></i>
-                <h4 class="fw-bold text-dark mb-3">Client Onboarded!</h4>
-                <p class="text-muted mb-4">The client profile and system login credentials have been successfully created and saved to the database.</p>
-                <div class="d-flex justify-content-center gap-3">
-                    <button type="button" class="btn btn-outline-primary px-4 fw-bold" onclick="resetForm()">Add Another Client</button>
-                    <a href="/admin/dashboard" class="btn btn-primary px-4 fw-bold">Back to Dashboard</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-    const clientForm = document.getElementById('clientForm');
-    const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
-    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    // === SMART VALIDATION & SUBMISSION ENGINE ===
+    async function confirmClientCreation() {
+        const form = document.getElementById('clientForm');
 
-    // Step 1: Intercept the form submission to show the Confirmation Modal
-    clientForm.addEventListener('submit', function(e) {
-        e.preventDefault(); // Stop the form from submitting normally
-        confirmModal.show();
-    });
+        // 1. NATIVE BROWSER VALIDATION
+        // If a required field is empty, the browser will highlight it automatically!
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
 
-    // Step 2: Handle the actual submission when "Yes, Onboard Client" is clicked
-    document.getElementById('btnConfirmSubmit').addEventListener('click', function() {
-        // Hide confirmation modal
-        confirmModal.hide();
-
-        // Grab the form data
-        const formData = new FormData(clientForm);
-
-        // Send data to the Java backend via fetch
-        fetch(clientForm.action, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if(response.ok) {
-                // If the backend processed it successfully, show the Success Modal!
-                successModal.show();
-            } else {
-                alert("There was an error saving the client to the database.");
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("Network error occurred while communicating with the server.");
+        // 2. DASHING CONFIRMATION MODAL
+        const confirmResult = await Swal.fire({
+            title: 'Onboard New Client?',
+            html: 'Are you sure you want to onboard this client?<br><br><small>This will automatically generate their system login credentials.</small>',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#1e3a8a',
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: 'Yes, Onboard Client',
+            cancelButtonText: 'Review Details',
+            reverseButtons: true
         });
-    });
 
-    // Step 3: Helper function to clear form if they want to add another client
-    function resetForm() {
-        successModal.hide();
-        clientForm.reset();
-        window.scrollTo(0, 0); // Scroll back to top
+        if (!confirmResult.isConfirmed) return;
+
+        // 3. LOADING STATE
+        Swal.fire({
+            title: 'Creating Profile...',
+            text: 'Setting up client workspace and generating credentials...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        const formData = new FormData(form);
+        const startTime = Date.now();
+
+        try {
+            // 4. SUBMIT TO BACKEND
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData
+            });
+
+            // Visibility Delay (Ensures the loading animation is seen)
+            const elapsedTime = Date.now() - startTime;
+            if (elapsedTime < 1200) await new Promise(r => setTimeout(r, 1200 - elapsedTime));
+
+            if (response.ok) {
+                // 5. ULTIMATE SUCCESS MODAL (With Choices)
+                const finalAction = await Swal.fire({
+                    icon: 'success',
+                    title: 'Client Onboarded!',
+                    text: 'The client profile and system login credentials have been successfully created.',
+                    showCancelButton: true,
+                    confirmButtonColor: '#1e3a8a',
+                    cancelButtonColor: '#10b981', // Emerald green for "Add Another"
+                    confirmButtonText: 'Back to Dashboard',
+                    cancelButtonText: 'Add Another Client',
+                    reverseButtons: true
+                });
+
+                if (finalAction.isConfirmed) {
+                    window.location.href = '/admin/dashboard';
+                } else {
+                    // Reset form and scroll to top
+                    form.reset();
+                    window.scrollTo(0, 0);
+                }
+            } else {
+                throw new Error("Failed to save to database");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Network Error',
+                text: 'An error occurred while communicating with the server. Please try again.',
+                confirmButtonColor: '#1e3a8a'
+            });
+        }
     }
 </script>
 </body>
