@@ -167,6 +167,9 @@
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
     </style>
+
+    <link href="/css/dark-mode.css" rel="stylesheet">
+    <script src="/js/theme-engine.js"></script>
 </head>
 <body>
 
@@ -240,8 +243,12 @@
         const originalText = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
 
+        // Check if dark mode is currently active
+        const isDarkMode = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        const captureBgColor = isDarkMode ? "#1e1e1e" : "#ffffff";
+
         html2canvas(captureElement, {
-            backgroundColor: "#ffffff",
+            backgroundColor: captureBgColor, // Dynamically applies dark or light background
             scale: 2 // High res
         }).then(canvas => {
             canvas.toBlob(function(blob) {
