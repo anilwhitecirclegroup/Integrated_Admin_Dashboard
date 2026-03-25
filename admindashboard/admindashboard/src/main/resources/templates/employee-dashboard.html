@@ -653,94 +653,11 @@
         }
     }
 
-    /* ==========================================================================
-           IMPROVED HIGH-CONTRAST DARK MODE STYLES
-           ========================================================================== */
-        body.dark-mode {
-            background-color: #121212 !important; /* True Dark/Black-Grey Background */
-            color: #e0e0e0 !important;
-        }
-
-        /* Surfaces (Cards, Navbar, Sidebar) */
-        body.dark-mode .sidebar,
-        body.dark-mode .top-navbar,
-        body.dark-mode .widget-card,
-        body.dark-mode .dash-calendar-card,
-        body.dark-mode .search-box-wrapper,
-        body.dark-mode .search-dropdown-card,
-        body.dark-mode .search-result-item,
-        body.dark-mode .modal-content,
-        body.dark-mode .bg-white,
-        body.dark-mode .bg-light {
-            background-color: #1e1e1e !important; /* Slightly lighter grey for depth */
-            border-color: #333333 !important;
-        }
-
-        /* Text Contrast Fixes */
-        body.dark-mode .text-dark,
-        body.dark-mode .app-text,
-        body.dark-mode h5,
-        body.dark-mode h6,
-        body.dark-mode span {
-            color: #ffffff !important; /* Bright white for primary text */
-        }
-        body.dark-mode .text-muted,
-        body.dark-mode .sidebar-link {
-            color: #a0aec0 !important; /* Soft grey for secondary text */
-        }
-
-        /* App Buttons (Restores borders so they pop against the card) */
-        body.dark-mode .app-btn {
-            background-color: #252525 !important;
-            color: #ffffff !important;
-            border: 1px solid #444444 !important; /* Visible border */
-        }
-        body.dark-mode .app-btn:hover {
-            background-color: #2d2d2d !important;
-            border-color: #3b82f6 !important; /* Bright blue hover accent */
-            box-shadow: 0 8px 15px rgba(59, 130, 246, 0.2) !important;
-        }
-
-        /* Section Headers (.navy-header, .cal-header-navy) */
-        body.dark-mode .navy-header,
-        body.dark-mode .cal-header-navy {
-            background-color: #0f172a !important; /* Very dark rich blue */
-            color: #ffffff !important;
-            border-bottom: 1px solid #1e3a8a !important;
-        }
-        body.dark-mode .navy-header i,
-        body.dark-mode .navy-header a,
-        body.dark-mode .cal-header-navy i,
-        body.dark-mode .cal-header-navy a {
-            color: #93c5fd !important; /* Bright cyan/blue for icons to stand out */
-        }
-
-        /* Calendar Fixes */
-        body.dark-mode .cal-month-title { color: #ffffff !important; }
-        body.dark-mode .cal-day-cell { color: #cbd5e1 !important; }
-        body.dark-mode .day-event {
-            background-color: #333333 !important;
-            color: #ffffff !important;
-            border-color: #555555 !important;
-        }
-        body.dark-mode .day-today {
-            background-color: #3b82f6 !important; /* Bright blue for 'Today' */
-            color: #ffffff !important;
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4) !important;
-        }
-
-        /* Search Bar & Dropdown */
-        body.dark-mode .form-control { color: #ffffff !important; }
-        body.dark-mode .form-control::placeholder { color: #a0aec0 !important; }
-        body.dark-mode .search-result-item:hover { background-color: #2a2a2a !important; border-left-color: #3b82f6 !important; }
-        body.dark-mode .search-icon-wrapper { background-color: #2a2a2a !important; color: #60a5fa !important; }
-
-        /* Dividers & Misc */
-        body.dark-mode .widget-header { border-bottom-color: #333333 !important; }
-        body.dark-mode hr { border-color: #444444 !important; }
-        body.dark-mode .widget-card.bg-dark { background-color: #121212 !important; border: 1px solid #333333 !important; }
 
     </style>
+
+    <link href="/css/dark-mode.css" rel="stylesheet">
+    <script src="/js/theme-engine.js"></script>
 </head>
 <body>
 
@@ -789,11 +706,13 @@
 
         <div class="col-md-4 pe-4 text-end">
             <div class="d-inline-flex align-items-center bg-light rounded-pill px-3 py-1 border">
-                <i class="fas fa-sun text-warning me-2 small"></i>
-                <div class="form-check form-switch mb-0">
-                    <input class="form-check-input" type="checkbox" role="switch" id="darkModeSwitch" style="cursor: pointer;">
+                <div class="form-check form-switch d-flex align-items-center">
+                    <i class="fas fa-sun text-warning me-2 small"></i>
+                    <input class="form-check-input fs-5 m-0" type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()" style="cursor: pointer;">
+                    <label class="form-check-label ms-2 text-dark" for="darkModeToggle">
+                        <i class="fas fa-moon"></i>
+                    </label>
                 </div>
-                <i class="fas fa-moon text-secondary ms-2 small"></i>
             </div>
         </div>
     </div>
@@ -1315,27 +1234,6 @@
         }
 
         updateBirthdayWidget();
-    });
-
-    // DARK MODE TOGGLE LOGIC
-    const darkModeSwitch = document.getElementById('darkModeSwitch');
-    const bodyElement = document.body;
-
-    // 1. Check if the user previously enabled dark mode
-    if (localStorage.getItem('theme') === 'dark') {
-        bodyElement.classList.add('dark-mode');
-        darkModeSwitch.checked = true;
-    }
-
-    // 2. Listen for the toggle switch click
-    darkModeSwitch.addEventListener('change', function() {
-        if (this.checked) {
-            bodyElement.classList.add('dark-mode');
-            localStorage.setItem('theme', 'dark'); // Save preference
-        } else {
-            bodyElement.classList.remove('dark-mode');
-            localStorage.setItem('theme', 'light'); // Save preference
-        }
     });
 
     //  DYNAMIC BIRTHDAY WIDGET LOGIC
