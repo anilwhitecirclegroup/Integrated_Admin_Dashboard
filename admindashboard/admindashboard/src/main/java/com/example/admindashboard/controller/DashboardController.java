@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.example.admindashboard.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -648,6 +647,58 @@ public class DashboardController {
         model.addAttribute("hardwareCount", hardwareCount);
 
         return "admin-helpdesk-requests";
+    }
+
+    @GetMapping("/api/employees/search")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> globalSearch(@RequestParam("query") String query) {
+
+        // 1. Return empty if query is too short
+        if (query == null || query.trim().length() < 2) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+
+        String keyword = query.trim();
+        List<Map<String, Object>> results = new ArrayList<>();
+
+        // 2. Search Employees (User Table)
+        List<User> employees = userRepository.searchByKeyword(keyword);
+        for (User u : employees) {
+            if (!"CLIENT".equalsIgnoreCase(u.getRole())) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("dbId", u.getId());
+                map.put("fullName", u.getFullName());
+                map.put("identifier", u.getUsername());
+                map.put("designation", u.getDesignation() != null ? u.getDesignation() : "Employee");
+                map.put("department", u.getBusinessUnit() != null ? u.getBusinessUnit() : "General");
+                map.put("email", u.getEmail() != null ? u.getEmail() : "N/A");
+                map.put("phone", u.getMobileNumber() != null ? u.getMobileNumber() : "N/A");
+                map.put("role", "EMPLOYEE");
+                results.add(map);
+            }
+        }
+
+        // 3. Search Real Clients (Client Table)
+        List<Client> clients = clientRepository.searchClients(keyword);
+        for (Client c : clients) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("dbId", c.getId());
+            map.put("fullName", c.getCompanyName());
+            map.put("identifier", c.getClientId());
+            map.put("designation", "Client Partner (" + c.getContactPerson() + ")");
+            map.put("department", c.getDomain() != null ? c.getDomain() : "External");
+            map.put("email", c.getOfficialEmail() != null ? c.getOfficialEmail() : "N/A");
+            map.put("phone", c.getPhoneNumber() != null ? c.getPhoneNumber() : "N/A");
+            map.put("role", "CLIENT");
+            results.add(map);
+        }
+
+        // 4. Limit to top 6 results
+        if (results.size() > 6) {
+            results = results.subList(0, 6);
+        }
+
+        return ResponseEntity.ok(results);
     }
 
 

@@ -61,6 +61,48 @@
         .nav-search i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
         .nav-actions { display: flex; align-items: center; gap: 20px; }
 
+        /*  SEARCH DROPDOWN */
+        .search-dropdown-menu {
+            position: absolute;
+            top: 120%; /* Drops it just below the search bar */
+            left: 0;
+            width: 100%;
+            min-width: 320px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(30, 58, 138, 0.15);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            z-index: 1050;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .search-result-item {
+            padding: 12px 18px;
+            border-bottom: 1px solid #f8fafc;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .search-result-item:last-child { border-bottom: none; }
+        .search-result-item:hover { background-color: #f1f5f9; padding-left: 22px; }
+
+        .search-avatar {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            color: #1e3a8a; border: 1px solid #bfdbfe;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1rem; flex-shrink: 0;
+        }
+
+        .search-info h6 { margin: 0 0 2px 0; font-size: 0.95rem; font-weight: 700; color: #1e293b; }
+        .search-info small { margin: 0; font-size: 0.8rem; color: #64748b; font-weight: 500;}
+        .search-empty { padding: 20px; text-align: center; color: #64748b; font-size: 0.9rem; font-weight: 600;}
+
         /*  2. SIDEBAR  */
         .sidebar {
             width: var(--sidebar-width);
@@ -413,9 +455,10 @@
         <img src="/images/wcg-logo.jpg" alt="Logo" style="height: 70px; border-radius: 6px;">
         WHITECIRCLE
     </div>
-    <div class="nav-search">
+    <div class="nav-search position-relative">
         <i class="fas fa-search"></i>
-        <input type="text" placeholder="Search system...">
+        <input type="text" id="globalSearchInput" placeholder="Search employees..." autocomplete="off">
+        <div id="searchResultsDropdown" class="search-dropdown-menu d-none"></div>
     </div>
     <div class="nav-actions">
         <div class="form-check form-switch mb-0">
@@ -595,6 +638,8 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     // 1. Dynamic Weekly Attendance Bar Chart
 const ctx1 = document.getElementById('attendanceChart').getContext('2d');
@@ -745,6 +790,135 @@ attendanceChart = new Chart(ctx1, {
             }
         });
     }
+
+    const searchInput = document.getElementById('globalSearchInput');
+    const searchDropdown = document.getElementById('searchResultsDropdown');
+    let searchTimeout;
+    let globalSearchResults = [];
+    // 1. Listen for typing with a "Debounce"
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+
+        if (query.length < 2) {
+            searchDropdown.classList.add('d-none');
+            return;
+        }
+
+        searchDropdown.innerHTML = '<div class="search-empty"><i class="fas fa-spinner fa-spin me-2 text-primary"></i>Searching directory...</div>';
+        searchDropdown.classList.remove('d-none');
+
+        searchTimeout = setTimeout(() => { performSearch(query); }, 300);
+    });
+
+    // 2. Fetch data from the Backend
+    async function performSearch(query) {
+        try {
+            const response = await fetch(`/api/employees/search?query=${encodeURIComponent(query)}`);
+            if (!response.ok) throw new Error('Search failed');
+
+            const results = await response.json();
+            globalSearchResults = results; // Save the results!
+            renderSearchResults(results);
+        } catch (error) {
+            console.error("Search error:", error);
+            searchDropdown.innerHTML = '<div class="search-empty text-danger"><i class="fas fa-exclamation-circle me-2"></i>Error connecting to directory.</div>';
+        }
+    }
+
+    // 3. Build the Dropdown UI (Now uses Array Index to prevent ID collisions!)
+    function renderSearchResults(results) {
+        searchDropdown.innerHTML = '';
+        if (results.length === 0) {
+            searchDropdown.innerHTML = '<div class="search-empty"><i class="fas fa-search me-2 opacity-50"></i>No matches found.</div>';
+        } else {
+            results.forEach((data, index) => {
+                const initials = (data.fullName || 'UN').substring(0, 2).toUpperCase();
+                const item = document.createElement('div');
+                item.className = 'search-result-item';
+                item.onclick = () => showUserModal(index); // Passing the array index!
+
+                item.innerHTML = `
+                    <div class="search-avatar shadow-sm">${initials}</div>
+                    <div class="search-info">
+                        <h6>${data.fullName} <span class="badge bg-secondary bg-opacity-10 text-secondary border ms-2" style="font-size: 0.65rem;">${data.identifier}</span></h6>
+                        <small><i class="fas fa-briefcase me-1 opacity-50"></i>${data.designation}</small>
+                    </div>
+                `;
+                searchDropdown.appendChild(item);
+            });
+        }
+    }
+
+    // 4. THE NEW ELITE PROFILE MODAL
+    function showUserModal(index) {
+        searchDropdown.classList.add('d-none');
+        searchInput.value = '';
+
+        const user = globalSearchResults[index];
+        if (!user) return;
+
+        const initials = (user.fullName || 'UN').substring(0, 2).toUpperCase();
+
+        Swal.fire({
+            title: false,
+            html: `
+                <div style="text-align: left; padding: 10px;">
+                    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px;">
+                        <div style="width: 70px; height: 70px; border-radius: 16px; background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: bold; box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);">
+                            ${initials}
+                        </div>
+                        <div>
+                            <h3 style="margin: 0 0 5px 0; color: #1e293b; font-weight: 800; font-size: 1.4rem;">${user.fullName}</h3>
+                            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle px-2 py-1" style="font-size: 0.8rem; letter-spacing: 0.5px;">${user.identifier}</span>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.95rem; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                        <div>
+                            <strong style="color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">Role / Designation</strong>
+                            <div style="color: #0f172a; font-weight: 700;"><i class="fas fa-user-tag me-2 text-primary opacity-75"></i>${user.designation}</div>
+                        </div>
+                        <div>
+                            <strong style="color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">Department / Domain</strong>
+                            <div style="color: #0f172a; font-weight: 700;"><i class="fas fa-sitemap me-2 text-primary opacity-75"></i>${user.department}</div>
+                        </div>
+                        <div>
+                            <strong style="color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">Official Email</strong>
+                            <div style="color: #0f172a; font-weight: 700;"><i class="fas fa-envelope me-2 text-primary opacity-75"></i>${user.email}</div>
+                        </div>
+                        <div>
+                            <strong style="color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">Contact Number</strong>
+                            <div style="color: #0f172a; font-weight: 700;"><i class="fas fa-phone-alt me-2 text-primary opacity-75"></i>${user.phone}</div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            showCloseButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#1e3a8a',
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: '<i class="fas fa-external-link-alt me-2"></i>Full Profile',
+            cancelButtonText: 'Close',
+            customClass: { popup: 'swal2-popup', confirmButton: 'swal2-confirm', cancelButton: 'swal2-cancel' }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Smart Routing using the new dbId variable
+                if (user.role === 'CLIENT') {
+                    window.location.href = '/admin/manage-clients';
+                } else {
+                    window.location.href = `/admin/manage-employees/edit/${user.dbId}`;
+                }
+            }
+        });
+    }
+
+    // 5. Click anywhere outside to close the dropdown
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+            searchDropdown.classList.add('d-none');
+        }
+    });
 
 </script>
 </body>
