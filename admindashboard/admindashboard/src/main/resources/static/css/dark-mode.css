@@ -1,0 +1,2104 @@
+/* ==============================================================
+   1. WHITE CIRCLE - GENTLE & PROFESSIONAL DARK MODE (V3.1)
+   ============================================================== */
+
+/* 1. Core Backgrounds (Soft Neutral Dark Gray) */
+[data-bs-theme="dark"] body {
+    background-color: #121212 !important;
+    color: #e4e4e7 !important;
+}
+
+/* 2. OVERRIDE CARDS, PANELS & SIDEBARS */
+[data-bs-theme="dark"] .bg-white,
+[data-bs-theme="dark"] .bg-light,
+[data-bs-theme="dark"] .card,
+[data-bs-theme="dark"] .content-panel,
+[data-bs-theme="dark"] .widget-card,
+[data-bs-theme="dark"] .dash-calendar-card,
+[data-bs-theme="dark"] .sidebar,
+[data-bs-theme="dark"] .search-dropdown-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* --- FIX 1: SIDEBAR ICONS (Fade white to Pure white) --- */
+[data-bs-theme="dark"] .sidebar-link i,
+[data-bs-theme="dark"] .sidebar-link {
+    color: rgba(255, 255, 255, 0.4) !important; /* Fade white base */
+    transition: color 0.2s ease !important;
+}
+[data-bs-theme="dark"] .sidebar-link:hover i,
+[data-bs-theme="dark"] .sidebar-link.active i,
+[data-bs-theme="dark"] .sidebar-link:hover,
+[data-bs-theme="dark"] .sidebar-link.active {
+    color: #ffffff !important; /* Pure white on hover and active */
+}
+
+/* --- FIX 3 & 4: HEADERS (White Text & Dividing Line) --- */
+[data-bs-theme="dark"] .bg-primary,
+[data-bs-theme="dark"] .card-header,
+[data-bs-theme="dark"] .section-header,
+[data-bs-theme="dark"] .navy-header,
+[data-bs-theme="dark"] .cal-header-navy,
+[data-bs-theme="dark"] .widget-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important; /* Crisp, thin white dividing line */
+    color: #ffffff !important; /* Pure white text for headers */
+}
+[data-bs-theme="dark"] .widget-header span {
+    color: #ffffff !important; /* Ensures spans inside headers turn white too */
+}
+
+/* 4. FIX TEXT COLORS INSIDE CARDS */
+[data-bs-theme="dark"] .text-dark,
+[data-bs-theme="dark"] .text-body,
+[data-bs-theme="dark"] h1, [data-bs-theme="dark"] h2,
+[data-bs-theme="dark"] h3, [data-bs-theme="dark"] h4,
+[data-bs-theme="dark"] h5, [data-bs-theme="dark"] h6 {
+    color: #e4e4e7 !important;
+}
+
+[data-bs-theme="dark"] .text-muted,
+[data-bs-theme="dark"] .text-secondary {
+    color: #a1a1aa !important;
+}
+
+/* 5. FIX BORDERS & DIVIDERS */
+[data-bs-theme="dark"] .border,
+[data-bs-theme="dark"] .border-bottom,
+[data-bs-theme="dark"] .border-top,
+[data-bs-theme="dark"] .border-start,
+[data-bs-theme="dark"] .border-end,
+[data-bs-theme="dark"] hr {
+    border-color: #2d2d2d !important;
+}
+
+/* --- FIX 2: APP BUTTONS (Thin White Borders) --- */
+[data-bs-theme="dark"] .app-btn {
+    background-color: #252526 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important; /* Elegant thin white border */
+    transition: all 0.2s ease !important;
+}
+[data-bs-theme="dark"] .app-btn:hover {
+    background-color: #2d2d30 !important;
+    border-color: rgba(255, 255, 255, 0.4) !important; /* Brightens up beautifully on hover */
+}
+[data-bs-theme="dark"] .app-text {
+    color: #d4d4d8 !important;
+}
+
+/* 7. FIX NAVBAR & SEARCH INPUTS */
+[data-bs-theme="dark"] .top-navbar {
+    background: rgba(18, 18, 18, 0.9) !important;
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .search-box-wrapper,
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] .search-box-wrapper:focus-within {
+    border-color: #7aa2f7 !important;
+    box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.15) !important;
+}
+
+/* 8. ICONS & ACCENT COLORS */
+[data-bs-theme="dark"] .text-dark i,
+[data-bs-theme="dark"] i.text-dark {
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] .text-primary,
+[data-bs-theme="dark"] .app-btn .text-primary {
+    color: #7aa2f7 !important; /* Gentle pastel blue */
+}
+
+/* 9. CALENDAR & DROPDOWN FIXES */
+[data-bs-theme="dark"] .search-result-item {
+    background-color: #1e1e1e !important;
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .search-result-item:hover {
+    background-color: #252526 !important;
+}
+[data-bs-theme="dark"] .search-icon-wrapper {
+    background-color: #2d2d2d !important;
+    color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .cal-month-title { color: #e4e4e7 !important; }
+[data-bs-theme="dark"] .day-today {
+    background-color: #7aa2f7 !important;
+    color: #121212 !important;
+}
+[data-bs-theme="dark"] .cal-legend { border-top-color: #2d2d2d !important; }
+
+
+/* ==============================================================
+   2. CONFERENCE ROOM SPECIFIC FIXES
+   ============================================================== */
+/* Fix the Top Navigation & Main Cards */
+[data-bs-theme="dark"] .top-header,
+[data-bs-theme="dark"] .meeting-card,
+[data-bs-theme="dark"] .book-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Fix the Booking Form Header */
+[data-bs-theme="dark"] .book-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+
+/* Fix the Time Column Divider */
+[data-bs-theme="dark"] .time-col {
+    border-right-color: #2d2d2d !important;
+}
+
+/* Fix the Location/Platform Badges */
+[data-bs-theme="dark"] .loc-badge {
+    background-color: #252526 !important;
+    color: #e4e4e7 !important;
+    border: 1px solid #333333 !important;
+}
+/* Adjust pastel text colors on the badges so they glow gently in dark mode */
+[data-bs-theme="dark"] .teams-badge { color: #818cf8 !important; } /* Soft Indigo */
+[data-bs-theme="dark"] .zoom-badge { color: #60a5fa !important; } /* Soft Blue */
+[data-bs-theme="dark"] .offline-badge { color: #fbbf24 !important; } /* Soft Amber */
+
+/* Fix the 'Copy Link' Box */
+[data-bs-theme="dark"] .meeting-link-box {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .meeting-link-box:hover {
+    background-color: #252526 !important;
+    border-color: #7aa2f7 !important; /* Gentle pastel blue outline on hover */
+}
+[data-bs-theme="dark"] .btn-copy {
+    color: #7aa2f7 !important;
+}
+
+/* Mute the 'Confirmed' Green Strip slightly so it isn't neon */
+[data-bs-theme="dark"] .meeting-card::before {
+    background-color: #059669 !important;
+}
+
+/* Invert the background and borders of the pop-ups */
+[data-bs-theme="dark"] div:where(.swal2-container) .swal2-popup {
+    background-color: #1e1e1e !important;
+    border: 1px solid #333333 !important;
+}
+
+/* Force the Title and Body Text to be readable */
+[data-bs-theme="dark"] div:where(.swal2-container) .swal2-title,
+[data-bs-theme="dark"] div:where(.swal2-container) .swal2-html-container {
+    color: #e4e4e7 !important;
+}
+
+/* Tone down the Cancel button to match the dark theme */
+[data-bs-theme="dark"] div:where(.swal2-container) .swal2-cancel {
+    background-color: #2d2d2d !important;
+    color: #e4e4e7 !important;
+}
+
+/* Make the Meeting Title crisp and white */
+[data-bs-theme="dark"] .meeting-title {
+    color: #ffffff !important;
+}
+
+/* Make the Organizer text a highly readable gray */
+[data-bs-theme="dark"] .meeting-organizer {
+    color: #a1a1aa !important;
+}
+
+/* Turn the Time text into our glowing pastel blue */
+[data-bs-theme="dark"] .time-start,
+[data-bs-theme="dark"] .time-end {
+    color: #7aa2f7 !important;
+}
+
+/* Force the inline-styled Date Badge to become dark */
+[data-bs-theme="dark"] .time-col div[style*="background: #f1f5f9"] {
+    background-color: #252526 !important;
+    color: #d4d4d8 !important;
+}
+
+
+/* ==============================================================
+   3. APPLY LEAVE SPECIFIC FIXES
+   ============================================================== */
+/* Fix the Top Header */
+[data-bs-theme="dark"] .top-header {
+    background: rgba(18, 18, 18, 0.95) !important;
+    border-bottom-color: #2d2d2d !important;
+}
+
+/* Fix Main App Cards & Headers */
+[data-bs-theme="dark"] .app-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+}
+[data-bs-theme="dark"] .app-card-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+
+/* Fix Inset Form Boxes (Makes them slightly darker than the card) */
+[data-bs-theme="dark"] .app-card-body .bg-light,
+[data-bs-theme="dark"] .modal-body .bg-light {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+}
+
+/* Fix Progress Bar Backgrounds */
+[data-bs-theme="dark"] .progress {
+    background-color: #2d2d2d !important;
+}
+
+/* Fix Recent Status List */
+[data-bs-theme="dark"] .list-group-item {
+    background-color: transparent !important;
+    border-bottom-color: #2d2d2d !important;
+}
+
+/* Fix the "Eye" View Button in Recent Leaves */
+[data-bs-theme="dark"] .list-group-item .btn-light {
+    background-color: #252526 !important;
+    border-color: #333333 !important;
+    color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .list-group-item .btn-light:hover {
+    background-color: #7aa2f7 !important;
+    color: #121212 !important;
+}
+
+/* --- GLOWING STATUS BADGES --- */
+/* Replaces harsh bright backgrounds with deep translucent colors and bright text */
+[data-bs-theme="dark"] .status-pending {
+    background-color: rgba(245, 158, 11, 0.1) !important; /* Deep Amber */
+    color: #fcd34d !important; /* Light Amber Text */
+    border-color: rgba(245, 158, 11, 0.2) !important;
+}
+[data-bs-theme="dark"] .status-approved {
+    background-color: rgba(16, 185, 129, 0.1) !important; /* Deep Green */
+    color: #6ee7b7 !important; /* Light Green Text */
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
+[data-bs-theme="dark"] .status-rejected {
+    background-color: rgba(239, 68, 68, 0.1) !important; /* Deep Red */
+    color: #fca5a5 !important; /* Light Red Text */
+    border-color: rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Fix Leave Details Modal Headers/Footers */
+[data-bs-theme="dark"] #leaveDetailsModal .modal-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+[data-bs-theme="dark"] #leaveDetailsModal .modal-footer {
+    background-color: #1e1e1e !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Fix Manager Comments Red Box */
+[data-bs-theme="dark"] .bg-danger-subtle {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    border-color: rgba(239, 68, 68, 0.2) !important;
+    color: #fca5a5 !important;
+}
+
+
+/* ==============================================================
+   4. ATTENDANCE REGULATION FIXES
+   ============================================================== */
+
+/* Fix Main Container & Summary Box */
+[data-bs-theme="dark"] .feature-card,
+[data-bs-theme="dark"] .summary-box {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .sum-item {
+    border-right-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .border-navy {
+    border-color: #333333 !important; /* Mute the harsh navy border */
+}
+
+/* Fix the Header row above the table */
+[data-bs-theme="dark"] .card-header-light,
+[data-bs-theme="dark"] .bg-light {
+    background-color: #1e1e1e !important;
+    border-bottom-color: #333333 !important;
+}
+[data-bs-theme="dark"] .text-navy {
+    color: #e4e4e7 !important;
+}
+
+/* Fix Table Headers (Navy Header) */
+[data-bs-theme="dark"] .bg-navy-header th {
+    background-color: #121212 !important;
+    color: #a1a1aa !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Fix Table Inputs (.tbl-input) */
+[data-bs-theme="dark"] .tbl-input {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] .tbl-input:focus {
+    border-color: #7aa2f7 !important;
+    box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.15) !important;
+}
+
+/* Fix Read-Only Inputs and Weekend/Holiday Rows */
+[data-bs-theme="dark"] .readonly-cell {
+    background-color: #252526 !important;
+    color: #a1a1aa !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .row-weekend {
+    background-color: #1a1a1a !important; /* Very subtle dark differentiation */
+}
+[data-bs-theme="dark"] .row-holiday {
+    background-color: rgba(16, 185, 129, 0.05) !important; /* Extremely soft green tint */
+}
+
+/* Fix the Summary Values Colors */
+[data-bs-theme="dark"] .sum-val.text-dark { color: #e4e4e7 !important; }
+[data-bs-theme="dark"] .sum-val.text-success { color: #6ee7b7 !important; } /* Glowing Pastel Green */
+[data-bs-theme="dark"] .sum-val.text-primary { color: #7aa2f7 !important; } /* Glowing Pastel Blue */
+[data-bs-theme="dark"] .sum-val.text-warning { color: #fcd34d !important; } /* Glowing Pastel Yellow */
+[data-bs-theme="dark"] .sum-lbl { color: #a1a1aa !important; }
+
+/* Fix the Slim Toast Pop-up */
+[data-bs-theme="dark"] .slim-toast-popup {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .slim-toast-title {
+    color: #e4e4e7 !important;
+}
+
+/* Fix the Top Navigation Bar */
+[data-bs-theme="dark"] .top-nav-bar {
+    background-color: #121212 !important;
+    border-bottom-color: #2d2d2d !important;
+}
+
+/* Ensure the vertical divider line in the nav bar is subtle */
+[data-bs-theme="dark"] .top-nav-bar .vr {
+    background-color: #333333 !important;
+}
+
+
+/* ==============================================================
+   5. MY APPROVALS SPECIFIC FIXES
+   ============================================================== */
+/* Fix Nav Pills & Badges */
+[data-bs-theme="dark"] .nav-pills {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .nav-pills .nav-link:not(.active):hover {
+    background-color: #252526 !important;
+}
+[data-bs-theme="dark"] .nav-link:not(.active) .badge-count {
+    background-color: #333333 !important;
+    color: #a1a1aa !important;
+}
+
+/* Fix Approval Cards */
+[data-bs-theme="dark"] .approval-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .approval-card:hover {
+    border-color: #475569 !important;
+    background-color: #252526 !important;
+}
+
+/* Fix Icon Boxes (Transforms solid bright backgrounds into elegant glowing translucent ones) */
+[data-bs-theme="dark"] .bg-leave { background-color: rgba(59, 130, 246, 0.15) !important; color: #93c5fd !important; }
+[data-bs-theme="dark"] .bg-timesheet { background-color: rgba(168, 85, 247, 0.15) !important; color: #d8b4fe !important; }
+[data-bs-theme="dark"] .bg-attendance { background-color: rgba(245, 158, 11, 0.15) !important; color: #fcd34d !important; }
+
+/* Fix Text Elements inside Cards */
+[data-bs-theme="dark"] .req-title { color: #ffffff !important; }
+[data-bs-theme="dark"] .req-meta { color: #a1a1aa !important; }
+[data-bs-theme="dark"] .req-desc { color: #d4d4d8 !important; }
+[data-bs-theme="dark"] .toggle-details-btn { color: #7aa2f7 !important; }
+[data-bs-theme="dark"] .toggle-details-btn:hover { color: #93c5fd !important; }
+
+/* Fix Expanded Content & Details Grid */
+[data-bs-theme="dark"] .expanded-content { border-top-color: #333333 !important; }
+[data-bs-theme="dark"] .details-grid {
+    background-color: #121212 !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .detail-label { color: #a1a1aa !important; }
+[data-bs-theme="dark"] .detail-value { color: #e4e4e7 !important; }
+
+/* Fix Custom Badges (Pending, Approved, Denied) */
+[data-bs-theme="dark"] .badge-pending {
+    background-color: rgba(245, 158, 11, 0.1) !important;
+    color: #fcd34d !important;
+    border-color: rgba(245, 158, 11, 0.2) !important;
+}
+[data-bs-theme="dark"] .badge-approved {
+    background-color: rgba(16, 185, 129, 0.1) !important;
+    color: #6ee7b7 !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
+[data-bs-theme="dark"] .badge-denied {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    color: #fca5a5 !important;
+    border-color: rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Fix Rejection Reason Box */
+[data-bs-theme="dark"] .rejection-box {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    border-left-color: #ef4444 !important;
+}
+[data-bs-theme="dark"] .rejection-box p.text-dark { color: #fca5a5 !important; }
+
+/* Fix Custom Filter Dropdown */
+[data-bs-theme="dark"] .filter-dropdown .dropdown-toggle {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] .filter-dropdown .dropdown-toggle:hover {
+    background-color: #252526 !important;
+    border-color: #475569 !important;
+}
+[data-bs-theme="dark"] .filter-dropdown .dropdown-menu {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .filter-dropdown .dropdown-item {
+    color: #d4d4d8 !important;
+}
+[data-bs-theme="dark"] .filter-dropdown .dropdown-item:hover {
+    background-color: #252526 !important;
+    color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .filter-dropdown .dropdown-item.active {
+    background-color: rgba(122, 162, 247, 0.15) !important;
+    color: #7aa2f7 !important;
+}
+
+/* Fix Embedded List Items (for timesheet breakdown) */
+[data-bs-theme="dark"] .list-group-item.bg-light {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+}
+
+
+/* ==============================================================
+   6. EMAIL SIGNATURE SPECIFIC FIXES
+   ============================================================== */
+
+/* Fix Preview Card & Inner Box */
+[data-bs-theme="dark"] .preview-card,
+[data-bs-theme="dark"] .signature-box {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+}
+
+/* Change the Accent Line to Pastel Blue */
+[data-bs-theme="dark"] .sig-content {
+    border-left-color: #7aa2f7 !important;
+}
+
+/* Override Inline Text Colors inside the Signature */
+[data-bs-theme="dark"] #signature-box {
+    color: #e4e4e7 !important; /* Base Text */
+}
+[data-bs-theme="dark"] #signature-box h3 {
+    color: #7aa2f7 !important; /* Pastel Blue Name */
+}
+[data-bs-theme="dark"] #signature-box a {
+    color: #7aa2f7 !important; /* Pastel Blue Email Link */
+}
+[data-bs-theme="dark"] #signature-box p,
+[data-bs-theme="dark"] #signature-box strong,
+[data-bs-theme="dark"] .company-logo span.text-dark {
+    color: #e4e4e7 !important; /* Ensures labels like "Mob:" stay readable */
+}
+
+/* Style the Copy Button to match the Studio Dark aesthetic */
+[data-bs-theme="dark"] .btn-copy {
+    background-color: #252526 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #e4e4e7 !important;
+    box-shadow: none !important;
+}
+[data-bs-theme="dark"] .btn-copy:hover {
+    background-color: #2d2d30 !important;
+    border-color: #7aa2f7 !important;
+    color: #7aa2f7 !important;
+}
+
+
+/* ==============================================================
+   7. RESET PASSWORD SPECIFIC FIXES
+   ============================================================== */
+/* Fix the Main Card */
+[data-bs-theme="dark"] .password-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Fix the Security Tip Alert Box (Transforms into a glowing translucent box) */
+[data-bs-theme="dark"] .security-tip {
+    background-color: rgba(122, 162, 247, 0.1) !important;
+    border-color: rgba(122, 162, 247, 0.2) !important;
+}
+[data-bs-theme="dark"] .security-tip h6,
+[data-bs-theme="dark"] .security-tip i {
+    color: #7aa2f7 !important; /* Pastel blue */
+}
+
+/* Fix Input Group Addons (The lock icons and Eye reveal button) */
+[data-bs-theme="dark"] .input-group-text,
+[data-bs-theme="dark"] .btn-reveal {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #a1a1aa !important;
+}
+[data-bs-theme="dark"] .btn-reveal:hover {
+    background-color: #252526 !important;
+    color: #e4e4e7 !important;
+}
+
+/* Fix Password Strength Meter Background Track */
+[data-bs-theme="dark"] .strength-meter {
+    background-color: #2d2d2d !important;
+}
+
+/* Fix Validation Criteria Text (Turns standard green into glowing pastel green) */
+[data-bs-theme="dark"] .req-item {
+    color: #a1a1aa !important;
+}
+[data-bs-theme="dark"] .req-item.valid {
+    color: #6ee7b7 !important;
+}
+[data-bs-theme="dark"] .req-item.valid i {
+    color: #6ee7b7 !important;
+}
+
+/* Ensure the sleek top-right Toast matches the dark theme */
+[data-bs-theme="dark"] div:where(.swal2-container) .swal2-toast {
+    background-color: #1e1e1e !important;
+    color: #e4e4e7 !important;
+    border: 1px solid #333333 !important;
+}
+
+
+/* ==============================================================
+   8. MY WHITECIRCLE SPECIFIC FIXES
+   ============================================================== */
+/* Deepen the Hero Banner Gradient */
+[data-bs-theme="dark"] .hero-section {
+    background: linear-gradient(135deg, #0f172a 0%, #111827 100%) !important; /* Deep Slate to Dark Gray */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Fix the Action Box Cards */
+[data-bs-theme="dark"] .action-box {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important; /* Removes the harsh solid navy border */
+}
+[data-bs-theme="dark"] .action-box:hover {
+    background-color: #252526 !important;
+    border-color: #7aa2f7 !important; /* Pastel blue border on hover */
+}
+
+/* Fix the Box Titles */
+[data-bs-theme="dark"] .box-title {
+    color: #e4e4e7 !important;
+}
+
+/* Fix the Icon Circles */
+[data-bs-theme="dark"] .icon-circle {
+    background-color: #121212 !important;
+    color: #7aa2f7 !important;
+}
+/* Invert the Icon Circle colors on hover to create a glowing effect */
+[data-bs-theme="dark"] .action-box:hover .icon-circle {
+    background-color: #7aa2f7 !important;
+    color: #121212 !important;
+}
+
+/* Ensure the Section Title line separator matches the pastel theme */
+[data-bs-theme="dark"] .border-primary {
+    border-color: #7aa2f7 !important;
+}
+
+
+/* ==============================================================
+   9. ERP & TIMESHEET SPECIFIC FIXES
+   ============================================================== */
+/* 1. Fix Top Action Cards */
+[data-bs-theme="dark"] .action-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .action-card:hover {
+    background-color: #252526 !important;
+    border-color: #7aa2f7 !important;
+}
+
+/* Action Card Icons (Glowing Pastels) */
+[data-bs-theme="dark"] .ac-create .ac-icon { background-color: rgba(59, 130, 246, 0.15) !important; color: #93c5fd !important; }
+[data-bs-theme="dark"] .ac-template .ac-icon { background-color: rgba(219, 39, 119, 0.15) !important; color: #f9a8d4 !important; } /* Pink */
+[data-bs-theme="dark"] .ac-report .ac-icon { background-color: rgba(16, 185, 129, 0.15) !important; color: #6ee7b7 !important; } /* Green */
+
+/* Invert icons on hover */
+[data-bs-theme="dark"] .ac-create:hover .ac-icon { background-color: #93c5fd !important; color: #121212 !important; }
+[data-bs-theme="dark"] .ac-template:hover .ac-icon { background-color: #f9a8d4 !important; color: #121212 !important; }
+[data-bs-theme="dark"] .ac-report:hover .ac-icon { background-color: #6ee7b7 !important; color: #121212 !important; }
+
+/* 2. Fix the Calendar Layout */
+[data-bs-theme="dark"] .calendar-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .calendar-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+[data-bs-theme="dark"] .cal-grid-header {
+    background-color: #121212 !important;
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .cal-head { color: #a1a1aa !important; }
+
+/* Calendar Days */
+[data-bs-theme="dark"] .cal-day {
+    background-color: #1e1e1e !important;
+    border-right-color: #2d2d2d !important;
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .cal-day:hover { background-color: #252526 !important; }
+[data-bs-theme="dark"] .cal-day.bg-light { background-color: #121212 !important; } /* Blank padding days */
+[data-bs-theme="dark"] .day-num { color: #e4e4e7 !important; }
+
+/* Calendar Typography (Present, Absent, Off) */
+[data-bs-theme="dark"] .info-present { color: #7aa2f7 !important; }
+[data-bs-theme="dark"] .info-absent { color: #fca5a5 !important; }
+[data-bs-theme="dark"] .info-off { color: #64748b !important; }
+
+/* Today Highlight (Creates a sleek inner glow instead of a solid block) */
+[data-bs-theme="dark"] .current-day {
+    background-color: rgba(122, 162, 247, 0.1) !important;
+    box-shadow: inset 0 0 0 2px #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .current-day .day-num { color: #7aa2f7 !important; }
+
+/* 3. Fix Recent Timesheets Panel */
+[data-bs-theme="dark"] .col-lg-4 .card {
+    background-color: #1e1e1e !important;
+    border: 1px solid #2d2d2d !important;
+}
+[data-bs-theme="dark"] .col-lg-4 .card > .p-3 {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* OVERRIDE INLINE JAVASCRIPT: Forces hover background to stay dark */
+[data-bs-theme="dark"] #recentTimecardsContainer > div {
+    border-bottom-color: #2d2d2d !important;
+    background-color: transparent !important;
+}
+[data-bs-theme="dark"] #recentTimecardsContainer > div:hover {
+    background-color: #252526 !important;
+}
+
+/* Fix Status Badges */
+[data-bs-theme="dark"] .badge.bg-primary { background-color: rgba(59, 130, 246, 0.2) !important; color: #93c5fd !important; }
+[data-bs-theme="dark"] .badge.bg-success { background-color: rgba(16, 185, 129, 0.2) !important; color: #6ee7b7 !important; }
+[data-bs-theme="dark"] .badge.bg-danger { background-color: rgba(239, 68, 68, 0.2) !important; color: #fca5a5 !important; }
+[data-bs-theme="dark"] .badge.bg-warning { background-color: rgba(245, 158, 11, 0.2) !important; color: #fcd34d !important; }
+
+
+
+/* ==============================================================
+   10. LOG TICKETS (HELPDESK) SPECIFIC FIXES
+   ============================================================== */
+/* 1. Hero Section & Search Bar */
+[data-bs-theme="dark"] .hero-section {
+    background: linear-gradient(135deg, #0f172a 0%, #111827 100%) !important; /* Deep Slate to Dark Gray */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+}
+[data-bs-theme="dark"] .hero-section .sub-text {
+    color: #94a3b8 !important;
+}
+
+/* Make the search bar dark and sleek */
+[data-bs-theme="dark"] .search-input {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] .search-input:focus {
+    border-color: #7aa2f7 !important;
+    box-shadow: 0 0 0 4px rgba(122, 162, 247, 0.15) !important;
+}
+[data-bs-theme="dark"] .search-icon {
+    color: #a1a1aa !important;
+}
+
+/* 2. Main Grid Cards */
+[data-bs-theme="dark"] .action-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .action-card:hover {
+    background-color: #252526 !important;
+    border-color: #7aa2f7 !important; /* Pastel blue border on hover */
+}
+[data-bs-theme="dark"] .card-heading {
+    color: #ffffff !important;
+}
+[data-bs-theme="dark"] .card-desc {
+    color: #a1a1aa !important;
+}
+
+/* Standard Blue Icons */
+[data-bs-theme="dark"] .action-card .icon-circle {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+    color: #7aa2f7 !important;
+    border-color: rgba(122, 162, 247, 0.2) !important;
+}
+[data-bs-theme="dark"] .action-card:hover .icon-circle {
+    background-color: #7aa2f7 !important;
+    color: #121212 !important;
+}
+
+/* 3. Report Incident Card (Red Overrides) */
+[data-bs-theme="dark"] a[href="/report-incident"]:hover {
+    border-color: #fca5a5 !important; /* Pastel Red Border */
+}
+[data-bs-theme="dark"] a[href="/report-incident"] .icon-circle {
+    background-color: rgba(239, 68, 68, 0.15) !important;
+    color: #fca5a5 !important; /* Pastel Red Icon */
+    border-color: rgba(239, 68, 68, 0.2) !important;
+}
+[data-bs-theme="dark"] a[href="/report-incident"]:hover .icon-circle {
+    background-color: #fca5a5 !important;
+    color: #121212 !important;
+}
+[data-bs-theme="dark"] a[href="/report-incident"] .card-heading {
+    color: #fca5a5 !important; /* Pastel Red Heading */
+}
+
+
+
+/* ==============================================================
+   11. PAYROLL PORTAL SPECIFIC FIXES
+   ============================================================== */
+/* 1. Page Headers & Filter Bar */
+[data-bs-theme="dark"] .page-title { color: #ffffff !important; }
+[data-bs-theme="dark"] .page-subtitle { color: #a1a1aa !important; }
+
+[data-bs-theme="dark"] .filter-bar {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .search-inp,
+[data-bs-theme="dark"] .filter-select {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] .search-inp:focus,
+[data-bs-theme="dark"] .filter-select:hover {
+    border-color: #7aa2f7 !important;
+}
+
+/* 2. Action Tiles */
+[data-bs-theme="dark"] .action-tile {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important; /* Replaces the hard navy border */
+}
+[data-bs-theme="dark"] .action-tile:hover {
+    background-color: #252526 !important;
+    border-color: #7aa2f7 !important; /* Pastel blue border on hover */
+}
+[data-bs-theme="dark"] .tile-title { color: #ffffff !important; }
+[data-bs-theme="dark"] .tile-desc { color: #a1a1aa !important; }
+
+/* Tile Icons (Glowing Pastels) */
+[data-bs-theme="dark"] .tile-icon {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+    color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .action-tile:hover .tile-icon {
+    background-color: #7aa2f7 !important;
+    color: #121212 !important;
+}
+
+/* 3. Content Panels & Tables */
+[data-bs-theme="dark"] .content-panel {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .panel-header {
+    background-color: #1e1e1e !important;
+    border-bottom-color: #333333 !important;
+}
+[data-bs-theme="dark"] .table-custom th {
+    background-color: #121212 !important;
+    color: #a1a1aa !important;
+    border-bottom-color: #333333 !important;
+}
+[data-bs-theme="dark"] .table-custom td {
+    color: #e4e4e7 !important;
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .table-hover tbody tr:hover td {
+    background-color: #252526 !important;
+}
+
+/* 4. Notifications List */
+[data-bs-theme="dark"] .notif-item {
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .notif-item:hover {
+    background-color: #252526 !important;
+}
+[data-bs-theme="dark"] .notif-text { color: #e4e4e7 !important; }
+[data-bs-theme="dark"] .notif-time { color: #a1a1aa !important; }
+
+/* Notification Icons */
+[data-bs-theme="dark"] .notif-icon {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+    color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .notif-item:hover .notif-icon {
+    background-color: #7aa2f7 !important;
+    color: #121212 !important;
+}
+
+/* 5. Buttons & Bottom Links */
+[data-bs-theme="dark"] .btn-action-sm {
+    background-color: #252526 !important;
+    border-color: #333333 !important;
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] .btn-action-sm:hover,
+[data-bs-theme="dark"] .panel-header .btn-action-sm:hover {
+    background-color: #7aa2f7 !important;
+    border-color: #7aa2f7 !important;
+    color: #121212 !important; /* Dark text on glowing blue background */
+}
+
+/* Notification Footer */
+[data-bs-theme="dark"] .col-lg-5 .p-3.bg-light.border-top {
+    background-color: #1e1e1e !important;
+    border-top-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .compliance-link {
+    color: #a1a1aa !important;
+}
+[data-bs-theme="dark"] .compliance-link:hover {
+    background-color: #252526 !important;
+    color: #7aa2f7 !important;
+}
+
+
+/* ==============================================================
+   12. CHAT CENTER SPECIFIC FIXES
+   ============================================================== */
+/* 1. Top Header */
+[data-bs-theme="dark"] .top-header {
+    background-color: #121212 !important;
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .header-title { color: #e4e4e7 !important; }
+[data-bs-theme="dark"] .header-separator { background-color: #333333 !important; }
+
+/* 2. Floating Panels (Sidebar, Header, History, Input Area) */
+[data-bs-theme="dark"] .chat-sidebar,
+[data-bs-theme="dark"] .chat-header,
+[data-bs-theme="dark"] .chat-history,
+[data-bs-theme="dark"] .chat-input-area {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 3. Sidebar Tabs & Search */
+[data-bs-theme="dark"] .sidebar-tabs {
+    background-color: #121212 !important;
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .sidebar-tab { color: #a1a1aa !important; }
+[data-bs-theme="dark"] .sidebar-tab:hover,
+[data-bs-theme="dark"] .sidebar-tab.active {
+    background-color: #1e1e1e !important;
+    color: #7aa2f7 !important;
+    border-bottom-color: #7aa2f7 !important;
+}
+
+[data-bs-theme="dark"] .search-container { border-bottom-color: #2d2d2d !important; }
+[data-bs-theme="dark"] .search-wrapper {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .search-wrapper:focus-within {
+    background-color: #1a1a1a !important;
+    border-color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .search-box { color: #e4e4e7 !important; }
+[data-bs-theme="dark"] .search-box::placeholder { color: #a1a1aa !important; }
+
+/* 4. Rich Contact List */
+[data-bs-theme="dark"] .contact-name { color: #e4e4e7 !important; }
+[data-bs-theme="dark"] .contact-time { color: #a1a1aa !important; }
+[data-bs-theme="dark"] .contact-msg { color: #94a3b8 !important; }
+
+[data-bs-theme="dark"] .contact-item:hover {
+    background-color: #252526 !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .contact-item.active-chat {
+    background-color: rgba(122, 162, 247, 0.1) !important;
+    border-color: rgba(122, 162, 247, 0.2) !important;
+    border-left-color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .contact-item.active-chat .contact-msg,
+[data-bs-theme="dark"] .contact-item:hover .contact-msg {
+    color: #7aa2f7 !important;
+}
+
+/* 5. Message Bubbles & Actions */
+[data-bs-theme="dark"] #activeChatFullName { color: #e4e4e7 !important; }
+
+[data-bs-theme="dark"] .received .msg-bubble {
+    background-color: #252526 !important;
+    color: #e4e4e7 !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .msg-time { color: #a1a1aa !important; }
+[data-bs-theme="dark"] .sent .msg-time { color: rgba(255, 255, 255, 0.7) !important; }
+
+/* Hover Action Buttons (Edit/Reply/React) */
+[data-bs-theme="dark"] .action-btn {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+    color: #a1a1aa !important;
+}
+[data-bs-theme="dark"] .action-btn:hover {
+    color: #7aa2f7 !important;
+    border-color: #7aa2f7 !important;
+}
+
+/* 6. Chat Input Area */
+[data-bs-theme="dark"] .input-wrapper {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .input-wrapper:focus-within {
+    background-color: #1a1a1a !important;
+    border-color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .chat-input { color: #e4e4e7 !important; }
+[data-bs-theme="dark"] .chat-input::placeholder { color: #a1a1aa !important; }
+
+[data-bs-theme="dark"] .btn-icon { color: #a1a1aa !important; }
+[data-bs-theme="dark"] .btn-icon:hover {
+    color: #7aa2f7 !important;
+    background-color: rgba(122, 162, 247, 0.1) !important;
+}
+
+/* 7. FAQ Accordion Fixes */
+[data-bs-theme="dark"] .accordion-item { border-bottom-color: #2d2d2d !important; }
+[data-bs-theme="dark"] .accordion-button {
+    background-color: #1e1e1e !important;
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: #252526 !important;
+    color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .accordion-body {
+    background-color: #1e1e1e !important;
+    color: #a1a1aa !important;
+}
+
+
+/* ==============================================================
+   13. MY PROFILE SPECIFIC FIXES
+   ============================================================== */
+/* 1. Main Profile Cards & Headers */
+[data-bs-theme="dark"] .pro-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .pro-card-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+
+/* 2. Identity Card Gradient (Shifts from bright white/blue to a sleek dark gradient) */
+[data-bs-theme="dark"] .identity-card-bg {
+    background: linear-gradient(135deg, #1e1e1e 0%, #252526 100%) !important;
+    border-color: #333333 !important;
+}
+
+/* 3. Floating Label Inputs & Readonly Fields */
+[data-bs-theme="dark"] .form-floating > .form-control {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] .form-floating > .form-control:focus {
+    background-color: #1a1a1a !important;
+    border-color: #7aa2f7 !important;
+    box-shadow: 0 4px 12px rgba(122, 162, 247, 0.1) !important;
+}
+[data-bs-theme="dark"] .form-floating > label {
+    color: #a1a1aa !important;
+}
+
+/* Make readonly fields slightly distinct so users know they can't type in them */
+[data-bs-theme="dark"] .form-control:read-only {
+    background-color: #1a1a1a !important;
+    color: #94a3b8 !important;
+}
+
+/* Ensures the highlighted Employee Name stays a readable glowing blue */
+[data-bs-theme="dark"] .form-floating > .form-control.text-primary {
+    color: #7aa2f7 !important;
+}
+
+/* 4. Profile Photo Borders (Matches the dark card instead of having a stark white ring) */
+[data-bs-theme="dark"] .profile-img {
+    border-color: #1e1e1e !important;
+}
+[data-bs-theme="dark"] .edit-photo-btn {
+    border-color: #1e1e1e !important;
+    background-color: #7aa2f7 !important;
+    color: #121212 !important;
+}
+
+/* 5. Resume Upload Box */
+[data-bs-theme="dark"] .resume-box {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .resume-box:hover {
+    background-color: #1a1a1a !important;
+    border-color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .resume-box h6 { color: #e4e4e7 !important; }
+
+/* The inner file attachment strip */
+[data-bs-theme="dark"] .resume-box .bg-white {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .resume-box a.text-dark { color: #e4e4e7 !important; }
+
+/* Action Buttons inside Resume Box */
+[data-bs-theme="dark"] .action-icon-btn:hover {
+    background-color: #252526 !important;
+}
+[data-bs-theme="dark"] .text-replace { color: #7aa2f7 !important; }
+[data-bs-theme="dark"] .text-delete { color: #fca5a5 !important; }
+
+
+/* ==============================================================
+   14. HOLIDAY SCHEDULE SPECIFIC FIXES
+   ============================================================== */
+/* Fix the Top Master Nav (Since it uses a unique class name) */
+[data-bs-theme="dark"] .master-nav {
+    background-color: rgba(18, 18, 18, 0.95) !important;
+    border-bottom-color: #2d2d2d !important;
+}
+
+/* Fix the Large Header Card Gradient */
+[data-bs-theme="dark"] .holiday-header-card {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important; /* Deep Slate to Dark Slate */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Fix Standard Holiday Items */
+[data-bs-theme="dark"] .holiday-item {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+    border-left-color: #7aa2f7 !important; /* Pastel Blue left border */
+}
+[data-bs-theme="dark"] .holiday-item:hover {
+    background-color: #252526 !important;
+    border-color: #475569 !important;
+}
+[data-bs-theme="dark"] .holiday-title { color: #e4e4e7 !important; }
+[data-bs-theme="dark"] .holiday-day-name { color: #a1a1aa !important; }
+
+/* Fix Date Boxes */
+[data-bs-theme="dark"] .date-box {
+    background-color: #121212 !important;
+}
+[data-bs-theme="dark"] .date-month { color: #7aa2f7 !important; }
+[data-bs-theme="dark"] .date-day { color: #e4e4e7 !important; }
+
+/* Standard Badge (Festival/National) */
+[data-bs-theme="dark"] .holiday-badge {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+    color: #93c5fd !important;
+}
+
+/* Fix Extended Holidays (Amber/Gold Festivals like Holi & Diwali) */
+[data-bs-theme="dark"] .holiday-extended {
+    border-left-color: #fcd34d !important; /* Pastel Gold border */
+    background-color: rgba(245, 158, 11, 0.05) !important; /* Very faint gold tint */
+}
+[data-bs-theme="dark"] .date-box.extended-date {
+    background-color: rgba(245, 158, 11, 0.1) !important;
+    color: #fcd34d !important;
+}
+[data-bs-theme="dark"] .date-box.extended-date .date-month {
+    color: #fcd34d !important;
+}
+[data-bs-theme="dark"] .badge-extended {
+    background-color: rgba(245, 158, 11, 0.15) !important;
+    color: #fcd34d !important;
+}
+
+/* Fix Weekend Holidays (Grayed out) */
+[data-bs-theme="dark"] .holiday-weekend {
+    border-left-color: #475569 !important;
+}
+[data-bs-theme="dark"] .date-box.bg-light {
+    background-color: #121212 !important;
+}
+[data-bs-theme="dark"] .holiday-title.text-secondary {
+    color: #94a3b8 !important;
+}
+[data-bs-theme="dark"] .badge-weekend {
+    background-color: #2d2d2d !important;
+    color: #a1a1aa !important;
+}
+
+
+/* ==============================================================
+   15. MY TIMEOFF & LEAVES SPECIFIC FIXES
+   ============================================================== */
+/* Fix the Master Navigation */
+[data-bs-theme="dark"] .master-nav {
+    background-color: #121212 !important;
+    border-bottom-color: #2d2d2d !important;
+}
+
+/* 1. Fix Balance Cards */
+[data-bs-theme="dark"] .balance-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .balance-card:hover {
+    background-color: #252526 !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .balance-value { color: #ffffff !important; }
+[data-bs-theme="dark"] .balance-label { color: #a1a1aa !important; }
+
+/* Ensure Big Status colors are readable */
+[data-bs-theme="dark"] .balance-value.text-success { color: #6ee7b7 !important; }
+[data-bs-theme="dark"] .balance-value.text-warning { color: #fcd34d !important; }
+
+/* 2. Fix Leave History Section & Table */
+[data-bs-theme="dark"] .history-section {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .history-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-bs-theme="dark"] .table-custom th {
+    background-color: #121212 !important;
+    color: #a1a1aa !important;
+    border-bottom-color: #333333 !important;
+}
+[data-bs-theme="dark"] .table-custom td {
+    color: #e4e4e7 !important;
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .table-hover tbody tr:hover td {
+    background-color: #252526 !important;
+}
+
+/* Fix "View Details" Table Button */
+[data-bs-theme="dark"] .table-custom .btn-light {
+    background-color: #252526 !important;
+    border-color: #333333 !important;
+    color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .table-custom .btn-light:hover {
+    background-color: #7aa2f7 !important;
+    color: #121212 !important;
+}
+
+/* 3. Fix Filter Dropdown in History Header */
+[data-bs-theme="dark"] .history-header .form-select {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #e4e4e7 !important;
+}
+
+/* 4. Glowing Status Badges (Inherited from Apply Leave logic) */
+[data-bs-theme="dark"] .status-pending {
+    background-color: rgba(245, 158, 11, 0.1) !important;
+    color: #fcd34d !important;
+    border-color: rgba(245, 158, 11, 0.2) !important;
+}
+[data-bs-theme="dark"] .status-approved {
+    background-color: rgba(16, 185, 129, 0.1) !important;
+    color: #6ee7b7 !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
+[data-bs-theme="dark"] .status-rejected {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    color: #fca5a5 !important;
+    border-color: rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Fix small text details */
+[data-bs-theme="dark"] .text-dark { color: #e4e4e7 !important; }
+
+
+/* ==============================================================
+   16. MY TIMESHEETS HISTORY SPECIFIC FIXES
+   ============================================================== */
+/* 1. Month Switcher & Controls Header */
+[data-bs-theme="dark"] .controls-header {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .month-switcher {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .month-display {
+    color: #7aa2f7 !important;
+    border-left-color: #333333 !important;
+    border-right-color: #333333 !important;
+}
+[data-bs-theme="dark"] .month-btn {
+    background-color: #121212 !important;
+}
+[data-bs-theme="dark"] .month-btn i {
+    color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .month-btn:hover:not(:disabled) {
+    background-color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .month-btn:hover:not(:disabled) i {
+    color: #121212 !important;
+}
+
+/* 2. Timesheet Cards */
+[data-bs-theme="dark"] .ts-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .ts-week-title { color: #ffffff !important; }
+[data-bs-theme="dark"] .ts-dates { color: #a1a1aa !important; }
+
+/* Hours Box & Daily Snapshot */
+[data-bs-theme="dark"] .ts-hours-box {
+    background-color: #121212 !important;
+}
+[data-bs-theme="dark"] .ts-hours-val { color: #7aa2f7 !important; }
+[data-bs-theme="dark"] .ts-hours-lbl { color: #a1a1aa !important; }
+
+[data-bs-theme="dark"] .ts-card .bg-light {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .ts-card .text-dark { color: #e4e4e7 !important; }
+
+/* 3. Empty State (No records found) */
+[data-bs-theme="dark"] .empty-state {
+    background-color: #1e1e1e !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .empty-state h4 { color: #7aa2f7 !important; }
+
+/* 4. Modal Specifics */
+[data-bs-theme="dark"] #timesheetModal .modal-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+[data-bs-theme="dark"] #timesheetModal .table thead {
+    background-color: #121212 !important;
+}
+[data-bs-theme="dark"] #timesheetModal .table td.text-dark {
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] #timesheetModal .text-navy {
+    color: #7aa2f7 !important;
+}
+
+/* 5. Status Badge Overrides (Submitted, Approved, Draft) */
+[data-bs-theme="dark"] .status-submitted {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+    color: #93c5fd !important;
+    border-color: rgba(59, 130, 246, 0.2) !important;
+}
+[data-bs-theme="dark"] .status-approved {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    color: #6ee7b7 !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
+[data-bs-theme="dark"] .status-draft {
+    background-color: rgba(161, 161, 170, 0.15) !important;
+    color: #d4d4d8 !important;
+    border-color: rgba(161, 161, 170, 0.2) !important;
+}
+
+
+/* ==============================================================
+   17. CREATE TIMESHEET SPECIFIC FIXES
+   ============================================================== */
+/* 1. Core Backgrounds */
+[data-bs-theme="dark"] body {
+    background-color: #121212 !important;
+    color: #e4e4e7 !important;
+}
+
+/* 2. Global Card & Panel Overrides */
+[data-bs-theme="dark"] .bg-white,
+[data-bs-theme="dark"] .card,
+[data-bs-theme="dark"] .content-panel,
+[data-bs-theme="dark"] .widget-card,
+[data-bs-theme="dark"] .sidebar {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+
+/* 3. Global Header Styling (White Text + Dividing Line) */
+[data-bs-theme="dark"] .navy-header,
+[data-bs-theme="dark"] .cal-header-navy,
+[data-bs-theme="dark"] .widget-header,
+[data-bs-theme="dark"] .panel-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+
+/* The outer wrapper should blend in */
+[data-bs-theme="dark"] .table-wrapper {
+    border-color: #333333 !important;
+    background-color: #1e1e1e !important;
+}
+
+/* Table Header Row Refinement */
+[data-bs-theme="dark"] .timecard-table thead tr {
+    background-color: #1e1e1e !important;
+}
+
+[data-bs-theme="dark"] .timecard-table thead th {
+    background-color: #1e1e1e !important;
+    color: #7aa2f7 !important; /* Signature Pastel Blue */
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.5px;
+}
+
+[data-bs-theme="dark"] .timecard-table thead th small {
+    color: #a1a1aa !important;
+}
+
+/* Table Cells & Borders */
+[data-bs-theme="dark"] .timecard-table td {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+    color: #e4e4e7 !important;
+}
+
+/* --- BOTTOM PART FIXES (Fixing the white area) --- */
+/* Targets the Additional Details container and Bottom Action Bar */
+[data-bs-theme="dark"] .p-4[style*="background-color: #f8fafc"],
+[data-bs-theme="dark"] .p-4.border-top.bg-white {
+    background-color: #1e1e1e !important; /* Matches main table area */
+    border-color: #2d2d2d !important;
+}
+
+/* Fix Labels in the bottom section */
+[data-bs-theme="dark"] label.text-dark {
+    color: #ffffff !important;
+    opacity: 0.9;
+}
+
+[data-bs-theme="dark"] small.text-muted {
+    color: #a1a1aa !important;
+}
+
+/* Fix Input Group Addon (hrs) */
+[data-bs-theme="dark"] .input-group-text {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #a1a1aa !important;
+}
+
+/* Form Inputs (Textarea and Numbers in bottom part) */
+[data-bs-theme="dark"] .grid-select,
+[data-bs-theme="dark"] .grid-input-hours,
+[data-bs-theme="dark"] .grid-input-text,
+[data-bs-theme="dark"] #overallComments,
+[data-bs-theme="dark"] .input-group input {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #ffffff !important;
+}
+
+/* Footer (Daily Totals) Row Fix */
+[data-bs-theme="dark"] .row-totals td,
+[data-bs-theme="dark"] .col-total {
+    background-color: #161616 !important;
+    color: #7aa2f7 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 5. General UI Fixes */
+[data-bs-theme="dark"] .btn-navy {
+    background-color: #1e3a8a !important;
+    border: none !important;
+}
+
+[data-bs-theme="dark"] .top-nav-bar {
+    background-color: #121212 !important;
+    border-bottom: 1px solid #2d2d2d !important;
+}
+
+[data-bs-theme="dark"] .text-dark {
+    color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .text-muted {
+    color: #a1a1aa !important;
+}
+
+/* Recalculate and Add Row buttons bar fix */
+[data-bs-theme="dark"] .p-3.bg-white.border-top.border-bottom {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+
+/* Make the Labels (Employee Name, ID, etc.) bright and readable */
+[data-bs-theme="dark"] .info-label {
+    color: #a1a1aa !important; /* Soft light gray */
+}
+
+/* Make the actual Values (Rahul Verma, EMP001) pop */
+[data-bs-theme="dark"] .info-value {
+    color: #ffffff !important; /* Pure white for high visibility */
+}
+
+/* Fix the "to" text between the date pickers */
+[data-bs-theme="dark"] .date-picker-group span.text-muted {
+    color: #e4e4e7 !important;
+}
+
+/* Ensure the vertical dividers in the top panel are visible but subtle */
+[data-bs-theme="dark"] .content-panel .border-end {
+    border-right-color: #333333 !important;
+}
+
+
+/* ==============================================================
+   18. TIMESHEET REPORTS SPECIFIC FIXES
+   ============================================================== */
+/* 1. Top Navigation & Control Card */
+[data-bs-theme="dark"] .master-nav {
+    background-color: #121212 !important;
+    border-bottom-color: #2d2d2d !important;
+}
+
+[data-bs-theme="dark"] .top-control-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+    border-left-color: #7aa2f7 !important; /* Pastel Blue accent instead of hard navy */
+}
+
+/* 2. Custom Month Switcher */
+[data-bs-theme="dark"] .custom-month-switcher {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .custom-month-switcher button {
+    background-color: #121212 !important;
+    color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .custom-month-switcher .month-text {
+    color: #ffffff !important;
+    border-left-color: #333333 !important;
+    border-right-color: #333333 !important;
+}
+[data-bs-theme="dark"] .custom-month-switcher button:hover {
+    background-color: #7aa2f7 !important;
+    color: #121212 !important;
+}
+
+/* 3. Filter Dropdowns */
+[data-bs-theme="dark"] .filter-dropdown {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] .filter-dropdown:focus {
+    border-color: #7aa2f7 !important;
+}
+
+/* 4. Stat Metric Cards */
+[data-bs-theme="dark"] .stat-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .stat-card h4 { color: #ffffff !important; }
+[data-bs-theme="dark"] .stat-icon.icon-navy { background: rgba(122, 162, 247, 0.1) !important; color: #7aa2f7 !important; }
+[data-bs-theme="dark"] .stat-icon.icon-success { background: rgba(110, 231, 183, 0.1) !important; color: #6ee7b7 !important; }
+[data-bs-theme="dark"] .stat-icon.icon-warning { background: rgba(252, 211, 77, 0.1) !important; color: #fcd34d !important; }
+
+/* 5. Inbox Container & Rows */
+[data-bs-theme="dark"] .inbox-container {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .inbox-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+[data-bs-theme="dark"] .inbox-row {
+    background-color: #1e1e1e !important;
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .inbox-row:hover {
+    background-color: #252526 !important;
+}
+
+/* Text Colors in Rows */
+[data-bs-theme="dark"] .text-navy { color: #7aa2f7 !important; }
+[data-bs-theme="dark"] .inbox-row .text-dark { color: #e4e4e7 !important; }
+[data-bs-theme="dark"] .inbox-row .border-start,
+[data-bs-theme="dark"] .inbox-row .border-end {
+    border-color: #333333 !important;
+}
+
+/* Solid White Pill in Header Fix */
+[data-bs-theme="dark"] .white-pill-badge {
+    background-color: #2d2d2d !important;
+    color: #7aa2f7 !important;
+    box-shadow: none !important;
+}
+
+/* 6. Status Badges (Submitted, Approved, Draft) */
+[data-bs-theme="dark"] .bg-submitted { background: rgba(59, 130, 246, 0.15) !important; color: #93c5fd !important; border-color: rgba(59, 130, 246, 0.2) !important; }
+[data-bs-theme="dark"] .bg-approved { background: rgba(16, 185, 129, 0.15) !important; color: #6ee7b7 !important; border-color: rgba(16, 185, 129, 0.2) !important; }
+[data-bs-theme="dark"] .bg-draft { background: rgba(245, 158, 11, 0.15) !important; color: #fcd34d !important; border-color: rgba(245, 158, 11, 0.2) !important; }
+
+/* 7. Details Modal & Nested Table */
+[data-bs-theme="dark"] #timesheetDetailsModal .modal-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+[data-bs-theme="dark"] #timesheetDetailsModal .modal-footer {
+    background-color: #1e1e1e !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+[data-bs-theme="dark"] .nested-table thead {
+    background-color: #121212 !important;
+    border-bottom-color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .nested-table thead th { color: #a1a1aa !important; }
+[data-bs-theme="dark"] .nested-table td { color: #e4e4e7 !important; border-bottom-color: #2d2d2d !important; }
+[data-bs-theme="dark"] .nested-table .badge.bg-light { background-color: #2d2d2d !important; color: #e4e4e7 !important; border-color: #333333 !important; }
+
+/* Modal Table Footer */
+[data-bs-theme="dark"] .nested-table tfoot {
+    background-color: #121212 !important;
+}
+[data-bs-theme="dark"] .comment-box {
+    background-color: #121212 !important;
+    border-top-color: #333333 !important;
+    color: #a1a1aa !important;
+}
+
+
+/* ==============================================================
+   19. SOFTWARE & ACCESS SERVICES SPECIFIC FIXES
+   ============================================================== */
+/* 1. Catalog Cards */
+[data-bs-theme="dark"] .catalog-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .catalog-card:hover {
+    background-color: #252526 !important;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4) !important;
+}
+[data-bs-theme="dark"] .catalog-card h5 { color: #ffffff !important; }
+
+/* Preserve the semantic colors but mute them for dark mode */
+[data-bs-theme="dark"] .catalog-icon { background-color: rgba(122, 162, 247, 0.1) !important; color: #7aa2f7 !important; }
+[data-bs-theme="dark"] .catalog-card[style*="border-top-color: #10b981"] .catalog-icon { background-color: rgba(16, 185, 129, 0.1) !important; color: #6ee7b7 !important; }
+[data-bs-theme="dark"] .catalog-card[style*="border-top-color: #f59e0b"] .catalog-icon { background-color: rgba(245, 158, 11, 0.1) !important; color: #fcd34d !important; }
+
+/* 2. Ticket Table & Container */
+[data-bs-theme="dark"] .ticket-container {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .ticket-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+[data-bs-theme="dark"] .table-custom thead {
+    background-color: #121212 !important;
+    border-bottom-color: #333333 !important;
+}
+[data-bs-theme="dark"] .table-custom td {
+    color: #e4e4e7 !important;
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .ticket-id {
+    background-color: #2d2d2d !important;
+    color: #7aa2f7 !important;
+}
+
+/* 3. Custom Modals & Forms */
+[data-bs-theme="dark"] .modal-header-custom {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+[data-bs-theme="dark"] .modal-body-custom {
+    background-color: #1e1e1e !important;
+}
+[data-bs-theme="dark"] .modal-footer-custom {
+    background-color: #1e1e1e !important;
+    border-top: 1px solid #333333 !important;
+}
+
+[data-bs-theme="dark"] .custom-form-label { color: #a1a1aa !important; }
+[data-bs-theme="dark"] .custom-form-control {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #ffffff !important;
+}
+[data-bs-theme="dark"] .custom-form-control:focus {
+    border-color: #7aa2f7 !important;
+    background-color: #1a1a1a !important;
+}
+[data-bs-theme="dark"] .custom-form-control:read-only {
+    background-color: #1a1a1a !important;
+    color: #94a3b8 !important;
+}
+
+/* 4. Details Modal (Justification Box) */
+[data-bs-theme="dark"] div[style*="background-color: #f8fafc"] {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] #myModalJustification { color: #e4e4e7 !important; }
+
+/* 5. Glowing Status Badges */
+[data-bs-theme="dark"] .bg-pending { background: rgba(245, 158, 11, 0.1) !important; color: #fcd34d !important; border-color: rgba(245, 158, 11, 0.2) !important; }
+[data-bs-theme="dark"] .bg-resolved { background: rgba(16, 185, 129, 0.1) !important; color: #6ee7b7 !important; border-color: rgba(16, 185, 129, 0.2) !important; }
+[data-bs-theme="dark"] .bg-progress { background: rgba(59, 130, 246, 0.1) !important; color: #93c5fd !important; border-color: rgba(59, 130, 246, 0.2) !important; }
+
+
+/* ==============================================================
+   20. MY ASSETS (INVENTORY) SPECIFIC FIXES
+   ============================================================== */
+/* 1. Global Nav & Backgrounds */
+[data-bs-theme="dark"] .master-nav {
+    background-color: #121212 !important;
+    border-bottom-color: #2d2d2d !important;
+}
+
+/* 2. Catalog Cards (Top Row) */
+[data-bs-theme="dark"] .catalog-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .catalog-card:hover {
+    background-color: #252526 !important;
+}
+[data-bs-theme="dark"] .catalog-icon {
+    background-color: rgba(122, 162, 247, 0.1) !important;
+    color: #7aa2f7 !important;
+}
+
+/* 3. Assigned Inventory Asset Cards */
+[data-bs-theme="dark"] .asset-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .asset-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+[data-bs-theme="dark"] .asset-header h6 { color: #ffffff !important; }
+[data-bs-theme="dark"] .asset-header i { color: #7aa2f7 !important; }
+
+/* Asset Card Body Content */
+[data-bs-theme="dark"] .asset-body h5.text-navy {
+    color: #7aa2f7 !important; /* Pastel blue for Device Name */
+}
+[data-bs-theme="dark"] .asset-meta {
+    border-bottom-color: #333333 !important;
+}
+[data-bs-theme="dark"] .meta-label { color: #a1a1aa !important; }
+[data-bs-theme="dark"] .meta-value { color: #e4e4e7 !important; }
+
+/* 4. Ticket Table Overrides */
+[data-bs-theme="dark"] .ticket-container {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .ticket-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+[data-bs-theme="dark"] .table-custom thead {
+    background-color: #121212 !important;
+    border-bottom-color: #333333 !important;
+}
+[data-bs-theme="dark"] .table-custom td {
+    color: #e4e4e7 !important;
+    border-bottom-color: #2d2d2d !important;
+}
+
+/* 5. Modals & Forms */
+[data-bs-theme="dark"] .modal-header-custom {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+[data-bs-theme="dark"] .modal-body-custom {
+    background-color: #1e1e1e !important;
+}
+[data-bs-theme="dark"] .modal-footer-custom {
+    background-color: #1e1e1e !important;
+    border-top: 1px solid #333333 !important;
+}
+[data-bs-theme="dark"] .custom-form-control {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #ffffff !important;
+}
+[data-bs-theme="dark"] .custom-form-control:read-only {
+    background-color: #1a1a1a !important;
+    color: #94a3b8 !important;
+}
+
+/* Success Badges (Active Status) */
+[data-bs-theme="dark"] .bg-active {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    color: #6ee7b7 !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+/* 6. Detail Modal Justification Box Fix */
+[data-bs-theme="dark"] div[style*="background-color: #f8fafc"] {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+}
+
+
+/* ==============================================================
+   21. REPORT INCIDENT (TICKET PORTAL) SPECIFIC FIXES
+   ============================================================== */
+/* 1. Master Nav & Backgrounds */
+[data-bs-theme="dark"] .master-nav {
+    background-color: #121212 !important;
+    border-bottom-color: #2d2d2d !important;
+}
+
+/* 2. Left Column: Form Card */
+[data-bs-theme="dark"] .form-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .form-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 4px solid #059669 !important; /* Muted Emerald for dark mode */
+}
+[data-bs-theme="dark"] .form-header h5 { color: #ffffff !important; }
+
+/* Custom Inputs & Labels */
+[data-bs-theme="dark"] .form-label { color: #a1a1aa !important; }
+[data-bs-theme="dark"] .custom-input {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] .custom-input:focus {
+    background-color: #1a1a1a !important;
+    border-color: #7aa2f7 !important;
+    box-shadow: 0 0 0 4px rgba(122, 162, 247, 0.1) !important;
+}
+[data-bs-theme="dark"] .custom-input::placeholder { color: #52525b !important; }
+[data-bs-theme="dark"] .custom-input option { background-color: #1e1e1e !important; color: #e4e4e7 !important; }
+
+/* Handle file input specifically */
+[data-bs-theme="dark"] input[type="file"].custom-input {
+    background-color: #121212 !important;
+    color: #a1a1aa !important;
+}
+
+/* 3. Right Column: Feed Tracker */
+[data-bs-theme="dark"] .feed-header {
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .feed-header h5 { color: #7aa2f7 !important; }
+
+/* Feed Items (Individual Incident Cards) */
+[data-bs-theme="dark"] .feed-item {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .feed-item:hover {
+    background-color: #252526 !important;
+    border-left-color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .feed-item h6.text-dark { color: #e4e4e7 !important; }
+
+/* Feed Icons (Specific to Incident types) */
+[data-bs-theme="dark"] .icon-hw { background: rgba(239, 68, 68, 0.15) !important; color: #fca5a5 !important; }
+[data-bs-theme="dark"] .icon-sw { background: rgba(245, 158, 11, 0.15) !important; color: #fcd34d !important; }
+[data-bs-theme="dark"] .icon-nw { background: rgba(59, 130, 246, 0.15) !important; color: #93c5fd !important; }
+
+/* Ticket Ref Badge */
+[data-bs-theme="dark"] .ticket-ref {
+    background-color: #121212 !important;
+    color: #7aa2f7 !important;
+}
+
+/* 4. Status Pills (Open, Progress, Resolved) */
+[data-bs-theme="dark"] .pill-open { background: rgba(239, 68, 68, 0.15) !important; color: #fca5a5 !important; }
+[data-bs-theme="dark"] .pill-progress { background: rgba(245, 158, 11, 0.15) !important; color: #fcd34d !important; }
+[data-bs-theme="dark"] .pill-resolved { background: rgba(16, 185, 129, 0.15) !important; color: #6ee7b7 !important; }
+
+/* 5. Collapse Area (Details inside feed) */
+[data-bs-theme="dark"] .collapse .border-top { border-top-color: #2d2d2d !important; }
+[data-bs-theme="dark"] .collapse div[style*="background-color: #f8fafc"] {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .collapse p.text-dark { color: #e4e4e7 !important; }
+
+
+/* ==============================================================
+   22. KNOWLEDGE BASE SPECIFIC FIXES
+   ============================================================== */
+/* 1. Search Hero Section */
+[data-bs-theme="dark"] .search-hero {
+    background-color: #1e1e1e !important;
+    background-image: radial-gradient(circle at top right, rgba(122, 162, 247, 0.15) 0%, transparent 40%) !important;
+    border: 1px solid #2d2d2d !important;
+}
+[data-bs-theme="dark"] .search-bar-wrapper .form-control {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border-color: #475569 !important;
+    color: #ffffff !important;
+}
+[data-bs-theme="dark"] .search-bar-wrapper .form-control:focus {
+    border-color: #7aa2f7 !important;
+    box-shadow: 0 0 0 4px rgba(122, 162, 247, 0.1) !important;
+}
+
+/* 2. Category Cards */
+[data-bs-theme="dark"] .kb-category-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .kb-category-card:hover {
+    background-color: #252526 !important;
+    border-color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .kb-category-card h6 { color: #ffffff !important; }
+
+[data-bs-theme="dark"] .kb-category-icon {
+    background-color: rgba(122, 162, 247, 0.1) !important;
+    color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .kb-category-card:hover .kb-category-icon {
+    background-color: #7aa2f7 !important;
+    color: #121212 !important;
+}
+
+/* 3. FAQ Section & Accordions */
+[data-bs-theme="dark"] .faq-section {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .faq-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 3px solid #059669 !important; /* Muted green border */
+}
+[data-bs-theme="dark"] .accordion-item {
+    background-color: transparent !important;
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .accordion-button {
+    color: #e4e4e7 !important;
+    background-color: transparent !important;
+}
+[data-bs-theme="dark"] .accordion-button:not(.collapsed) {
+    color: #7aa2f7 !important;
+    background-color: rgba(122, 162, 247, 0.05) !important;
+}
+[data-bs-theme="dark"] .accordion-body {
+    color: #a1a1aa !important;
+}
+[data-bs-theme="dark"] .accordion-body code {
+    background-color: #121212 !important;
+    color: #7aa2f7 !important;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* 4. Raise Query Card */
+[data-bs-theme="dark"] .query-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .query-header {
+    background-color: #1e1e1e !important;
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .query-header h6 { color: #7aa2f7 !important; }
+
+[data-bs-theme="dark"] .custom-input {
+    background-color: #121212 !important;
+    border-color: #333333 !important;
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] .custom-input:focus {
+    background-color: #1a1a1a !important;
+    border-color: #7aa2f7 !important;
+}
+
+/* 5. General Links & Muted Text */
+[data-bs-theme="dark"] .text-navy { color: #7aa2f7 !important; }
+[data-bs-theme="dark"] .text-muted { color: #a1a1aa !important; }
+
+
+
+/* ==============================================================
+   23. MASTER PROFILE PAGE SPECIFIC FIXES
+   ============================================================== */
+/* 1. Nav & Progress Bar Fixes */
+[data-bs-theme="dark"] .master-nav {
+    background-color: #121212 !important;
+    border-bottom-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .progress-track {
+    background-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] #percentLabel {
+    color: #7aa2f7 !important;
+}
+
+/* 2. Profile Main Card (Top Header Card) */
+[data-bs-theme="dark"] .profile-main-card {
+    background: linear-gradient(to right, #1e1e1e, #1a1a1a) !important;
+    border-color: #2d2d2d !important;
+    border-left-color: #7aa2f7 !important;
+}
+[data-bs-theme="dark"] .avatar-circle {
+    border-color: #1e1e1e !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 3. Section Cards & Headers */
+[data-bs-theme="dark"] .section-card {
+    background-color: #1e1e1e !important;
+    border-color: #2d2d2d !important;
+}
+[data-bs-theme="dark"] .section-header {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+[data-bs-theme="dark"] .section-header i {
+    color: #7aa2f7 !important;
+}
+
+/* Special Case: Emergency Contact Header (Red) */
+[data-bs-theme="dark"] .section-header.bg-danger {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    color: #fca5a5 !important;
+    border-bottom: 1px solid rgba(239, 68, 68, 0.2) !important;
+}
+[data-bs-theme="dark"] .section-card.border-danger {
+    border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+/* 4. Info Boxes (Data Tiles) */
+[data-bs-theme="dark"] .info-box {
+    background-color: #121212 !important;
+    border-color: #262626 !important;
+}
+[data-bs-theme="dark"] .info-box:hover {
+    background-color: #1a1a1a !important;
+    border-color: #333333 !important;
+}
+[data-bs-theme="dark"] .info-label {
+    color: #a1a1aa !important;
+}
+[data-bs-theme="dark"] .info-value,
+[data-bs-theme="dark"] .info-value-text {
+    color: #e4e4e7 !important;
+}
+[data-bs-theme="dark"] .info-value.text-primary {
+    color: #7aa2f7 !important;
+}
+
+/* Highlight for empty fields in Edit Mode */
+[data-bs-theme="dark"] .bg-pending {
+    background-color: rgba(122, 162, 247, 0.05) !important;
+    border-left-color: #475569 !important;
+}
+
+/* 5. Editable Fields (Edit Mode Inputs) */
+[data-bs-theme="dark"] .editable-field {
+    background-color: #1a1a1a !important;
+    border-color: #475569 !important;
+    color: #ffffff !important;
+}
+[data-bs-theme="dark"] .editable-field:focus {
+    border-color: #7aa2f7 !important;
+    box-shadow: 0 0 0 3px rgba(122, 162, 247, 0.15) !important;
+}
+[data-bs-theme="dark"] .editable-field option {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+}
+
+/* 6. General UI Elements */
+[data-bs-theme="dark"] .text-primary { color: #7aa2f7 !important; }
+[data-bs-theme="dark"] .badge.bg-success {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    color: #6ee7b7 !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
