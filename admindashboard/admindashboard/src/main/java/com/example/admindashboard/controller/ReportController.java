@@ -102,13 +102,14 @@ public class ReportController {
                 model.addAttribute("dataPage", timesheetPage);
                 return "admin/timesheets-report";
 
+            /* --- REVISED ReportController.java (Attendance Case) --- */
             case "attendance":
                 Pageable attPageable = PageRequest.of(page, size, Sort.by("weekStartDate").descending());
                 keyword = (search != null) ? search : "";
 
-                // Convert LocalDate to String for the DB comparison
-                String fromStr = (from != null) ? from.toString() : null;
-                String toStr = (to != null) ? to.toString() : null;
+                // If no dates provided, use a wide range to see all processed history
+                String fromStr = (from != null) ? from.toString() : "1970-01-01";
+                String toStr = (to != null) ? to.toString() : "9999-12-31";
 
                 Page<Attendance> attendancePage = attendanceRepository.searchAttendance(fromStr, toStr, keyword, attPageable);
                 model.addAttribute("dataPage", attendancePage);

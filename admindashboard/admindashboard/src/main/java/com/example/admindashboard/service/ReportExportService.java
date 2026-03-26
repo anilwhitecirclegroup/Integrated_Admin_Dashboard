@@ -166,21 +166,21 @@ public class ReportExportService {
     }
 
 
-    // EXPORT ATTENDANCE REPORT TO EXCEL
-    // ==========================================
+    // EXPORT ATTENDANCE REPORT TO EXCEL (Enhanced Detailed Version)
+    // ============================================================
     public void exportAttendanceReportToExcel(HttpServletResponse response, List<com.example.admindashboard.model.Attendance> attendanceList) throws IOException {
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Attendance Report");
+        Sheet sheet = workbook.createSheet("Attendance Detailed Report");
 
-        // 1. DEFINE HEADERS (Removed "Approved By")
+        // 1. DEFINE DETAILED HEADERS
         String[] columns = {
-                "Employee ID",
-                "Employee Name",
-                "Designation",
-                "Week Range",
-                "Submitted On",
-                "Total Hours",
-                "Status"
+                "EMP ID", "Employee Name", "Designation", "Week Range",
+                "Present Days", "Absent Days", "Total Hours", "Status", "Submitted On",
+                "Mon (Hrs/Status/Mode/Reason)",
+                "Tue (Hrs/Status/Mode/Reason)",
+                "Wed (Hrs/Status/Mode/Reason)",
+                "Thu (Hrs/Status/Mode/Reason)",
+                "Fri (Hrs/Status/Mode/Reason)",
         };
 
         // 2. CREATE HEADER ROW
@@ -200,38 +200,56 @@ public class ReportExportService {
         for (com.example.admindashboard.model.Attendance att : attendanceList) {
             Row row = sheet.createRow(rowIdx++);
 
-            // Employee Details
+            // Basic Info
             row.createCell(0).setCellValue(att.getUser() != null ? att.getUser().getUsername() : "N/A");
             row.createCell(1).setCellValue(att.getUser() != null ? att.getUser().getFullName() : "N/A");
+            String designation = att.getUser() != null ? att.getUser().getDesignation() : "N/A";
+            row.createCell(2).setCellValue(designation != null ? designation : "N/A");
 
-            String designation = att.getUser() != null ? att.getUser().getDesignation() : null;
-            row.createCell(2).setCellValue(designation != null && !designation.isEmpty() ? designation : "N/A");
+            // Range & Summary
+            String weekRange = (att.getWeekStartDate() != null ? att.getWeekStartDate() : "N/A") +
+                    " to " + (att.getWeekEndDate() != null ? att.getWeekEndDate() : "N/A");
+            row.createCell(3).setCellValue(weekRange);
+            row.createCell(4).setCellValue(att.getPresentDays() != null ? att.getPresentDays() : 0);
+            row.createCell(5).setCellValue(att.getAbsentDays() != null ? att.getAbsentDays() : 0);
+            row.createCell(6).setCellValue(att.getTotalHours() != null ? att.getTotalHours() : "0");
+            row.createCell(7).setCellValue(att.getApprovalStatus() != null ? att.getApprovalStatus() : "Pending");
 
-            // Week Range (Using String directly)
-            String weekStart = att.getWeekStartDate() != null ? att.getWeekStartDate() : "N/A";
-            String weekEnd = att.getWeekEndDate() != null ? att.getWeekEndDate() : "N/A";
-            row.createCell(3).setCellValue(weekStart + " to " + weekEnd);
+            String subDate = att.getSubmittedOn() != null ? att.getSubmittedOn().format(formatter) : "Not Submitted";
+            row.createCell(8).setCellValue(subDate);
 
-            // Submission Date (Using submittedOn)
-            if (att.getSubmittedOn() != null) {
-                row.createCell(4).setCellValue(att.getSubmittedOn().format(formatter));
-            } else {
-                row.createCell(4).setCellValue("Not Submitted");
-            }
+            // Detailed Daily Breakdown (Combined into single cells for readability)
+            row.createCell(9).setCellValue(formatDayInfo(att.getMondayHours(), att.getMondayStatus(), att.getMondayMode(), att.getMondayReason()));
+            row.createCell(10).setCellValue(formatDayInfo(att.getTuesdayHours(), att.getTuesdayStatus(), att.getTuesdayMode(), att.getTuesdayReason()));
+            row.createCell(11).setCellValue(formatDayInfo(att.getWednesdayHours(), att.getWednesdayStatus(), att.getWednesdayMode(), att.getWednesdayReason()));
+            row.createCell(12).setCellValue(formatDayInfo(att.getThursdayHours(), att.getThursdayStatus(), att.getThursdayMode(), att.getThursdayReason()));
+            row.createCell(13).setCellValue(formatDayInfo(att.getFridayHours(), att.getFridayStatus(), att.getFridayMode(), att.getFridayReason()));
 
-            // Hours & Status (Using String directly and approvalStatus)
-            row.createCell(5).setCellValue(att.getTotalHours() != null ? att.getTotalHours() : "0");
-            row.createCell(6).setCellValue(att.getApprovalStatus() != null ? att.getApprovalStatus() : "Pending");
         }
 
+        // 4. AUTO-SIZE COLUMNS
         for (int i = 0; i < columns.length; i++) {
             sheet.autoSizeColumn(i);
         }
 
+        // 5. WRITE TO RESPONSE
         ServletOutputStream outputStream = response.getOutputStream();
         workbook.write(outputStream);
         workbook.close();
         outputStream.close();
+    }
+
+    // HELPER: Format daily details into a single readable string for Excel
+    private String formatDayInfo(Double hours, String status, String mode, String reason) {
+        if (status == null && hours == null) return "-";
+        StringBuilder sb = new StringBuilder();
+        sb.append(hours != null ? hours : 0).append("h | ");
+        sb.append(status != null ? status : "N/A").append(" | ");
+        sb.append(mode != null ? mode : "N/A");
+        if (reason != null && !reason.isEmpty()) {
+            sb.append(" (").append(reason).append(")");
+        }
+        return sb.toString();
     }
 
 

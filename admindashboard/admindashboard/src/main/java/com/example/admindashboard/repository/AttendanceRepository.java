@@ -34,11 +34,13 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     List<Attendance> findByStatus(String status);
 
-
     // NEW: ADVANCED SEARCH & FILTERING FOR ATTENDANCE REPORT PAGE
 
-    // 1. For the UI Table (Returns Paginated Data)
+    /* --- UPDATED ATTENDANCE REPOSITORY --- */
+
+    // 1. For the UI Table (Excludes Drafts, Shows Processed Records)
     @Query("SELECT a FROM Attendance a WHERE " +
+            "(a.approvalStatus IS NOT NULL AND a.approvalStatus != 'Draft') AND " + // <--- THE FIX
             "(:fromDate IS NULL OR a.weekStartDate >= :fromDate) AND " +
             "(:toDate IS NULL OR a.weekStartDate <= :toDate) AND " +
             "(:keyword IS NULL OR :keyword = '' OR " +
@@ -50,8 +52,9 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             @Param("keyword") String keyword,
             Pageable pageable);
 
-    // 2. For the Excel Export (Returns Full List Data)
+    // 2. For the Excel Export (Excludes Drafts)
     @Query("SELECT a FROM Attendance a WHERE " +
+            "(a.approvalStatus IS NOT NULL AND a.approvalStatus != 'Draft') AND " + // <--- THE FIX
             "(:fromDate IS NULL OR a.weekStartDate >= :fromDate) AND " +
             "(:toDate IS NULL OR a.weekStartDate <= :toDate) AND " +
             "(:keyword IS NULL OR :keyword = '' OR " +
