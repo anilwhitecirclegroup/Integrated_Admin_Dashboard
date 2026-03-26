@@ -84,6 +84,11 @@
         .modal-header-custom { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%) !important; }
         .profile-label { font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
         .profile-value { font-size: 0.95rem; font-weight: 500; color: #1e293b; }
+
+        /* New Table Utilities */
+        .badge-present { background-color: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; font-size: 0.7rem; }
+        .badge-absent { background-color: #fef2f2; color: #991b1b; border: 1px solid #fecaca; font-size: 0.7rem; }
+        .badge-mode { background-color: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; font-size: 0.7rem; }
     </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
@@ -156,8 +161,8 @@
                     <tr>
                         <th class="ps-4 text-uppercase">ID</th>
                         <th class="text-uppercase">Employee Name</th>
-                        <th class="text-uppercase">Week Range (DD-MM-YYYY)</th>
-                        <th class="text-uppercase">Submitted On</th>
+                        <th class="text-uppercase">Week Range</th>
+                        <th class="text-uppercase">Days (P/A)</th>
                         <th class="text-uppercase">Total Hours</th>
                         <th class="text-uppercase">Status</th>
                         <th class="text-end pe-4 text-uppercase">Action</th>
@@ -172,7 +177,10 @@
                             <span class="opacity-50 mx-1">to</span>
                             <span th:text="${sheet.weekEndDate}"></span>
                         </td>
-                        <td class="text-muted fw-medium" th:text="${sheet.submittedOn != null ? #temporals.format(sheet.submittedOn, 'dd-MM-yyyy') : '-'}">Date</td>
+                        <td>
+                            <span class="badge bg-success bg-opacity-10 text-success" th:text="${sheet.presentDays + ' P'}">0 P</span>
+                            <span class="badge bg-danger bg-opacity-10 text-danger" th:text="${sheet.absentDays + ' A'}">0 A</span>
+                        </td>
                         <td>
                             <span class="badge bg-info bg-opacity-10 text-info fw-bold"
                                   th:text="${(sheet.totalHours != null ? sheet.totalHours : '0')} + ' hrs'">0 hrs</span>
@@ -208,7 +216,7 @@
 <div th:if="${dataPage != null}">
     <div th:each="sheet : ${dataPage.content}">
         <div class="modal fade" th:id="|modal-sheet-${sheet.id}|" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content border-0 shadow-lg overflow-hidden" style="border-radius: 20px;">
                     <div class="modal-header modal-header-custom text-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
                         <h5 class="modal-title fw-bold m-0"><i class="fas fa-calendar-check me-2"></i>Attendance Breakdown</h5>
@@ -216,13 +224,13 @@
                     </div>
                     <div class="modal-body p-0 bg-light">
                         <div class="row g-0">
-                            <div class="col-md-4 bg-white border-end text-center p-4 d-flex flex-column justify-content-center">
+                            <div class="col-lg-3 bg-white border-end text-center p-4">
                                 <div class="bg-primary bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3 border border-primary border-opacity-25"
                                      style="width: 80px; height: 80px; font-size: 2rem; color: var(--bs-primary); font-weight: bold;">
                                     <span th:text="${#strings.substring(sheet.user.fullName,0,1)}"></span>
                                 </div>
                                 <h5 class="fw-bold mb-1 text-dark" th:text="${sheet.user.fullName}">Name</h5>
-                                <span class="badge bg-primary px-3 py-1 mb-4 mx-auto" th:text="${sheet.user.username}">ID</span>
+                                <span class="badge bg-primary px-3 py-1 mb-4" th:text="${sheet.user.username}">ID</span>
 
                                 <div class="w-100 border-top pt-4 text-start">
                                     <div class="small text-muted fw-bold text-uppercase mb-1">Week Duration</div>
@@ -232,6 +240,16 @@
                                         <span th:text="${sheet.weekEndDate}"></span>
                                     </div>
 
+                                    <div class="small text-muted fw-bold text-uppercase mb-1">Weekly Summary</div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="small text-muted">Present Days:</span>
+                                        <span class="fw-bold text-success" th:text="${sheet.presentDays}">0</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-4">
+                                        <span class="small text-muted">Absent Days:</span>
+                                        <span class="fw-bold text-danger" th:text="${sheet.absentDays}">0</span>
+                                    </div>
+
                                     <div class="small text-muted fw-bold text-uppercase mb-1">Approval Status</div>
                                     <span class="badge rounded-pill px-3 py-1 fw-bold"
                                           th:classappend="${sheet.approvalStatus == 'Approved' ? 'bg-success bg-opacity-10 text-success' : 'bg-warning bg-opacity-10 text-warning'}"
@@ -239,41 +257,63 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-8 p-4 p-lg-5">
-                                <h6 class="text-muted text-uppercase fw-bold mb-4 border-bottom pb-2">Weekly Performance Details</h6>
-                                <div class="row mb-4 bg-white p-3 rounded-3 shadow-sm border border-light">
-                                    <div class="col-6 border-end">
-                                        <div class="profile-label">Submission Date</div>
-                                        <div class="profile-value text-dark fw-bold fs-5"
-                                             th:text="${sheet.submittedOn != null ? #temporals.format(sheet.submittedOn, 'dd-MM-yyyy') : 'Not Submitted'}"></div>
-                                    </div>
-                                    <div class="col-6 ps-4">
-                                        <div class="profile-label">Total Weekly Hours</div>
-                                        <div class="profile-value text-primary fw-bold fs-5" th:text="${(sheet.totalHours != null ? sheet.totalHours : '0')} + ' hrs'"></div>
-                                    </div>
-                                </div>
+                            <div class="col-lg-9 p-4 p-lg-5">
+                                <h6 class="text-muted text-uppercase fw-bold mb-4 border-bottom pb-2">Full Weekly Breakdown</h6>
 
-                                <div class="table-responsive rounded-3 border bg-white shadow-sm mt-2">
+                                <div class="table-responsive rounded-3 border bg-white shadow-sm">
                                     <table class="table table-hover text-center align-middle mb-0" style="font-size: 0.9rem;">
                                         <thead class="bg-light text-muted text-uppercase" style="font-size: 0.75rem;">
                                         <tr>
-                                            <th class="py-3 border-0">Mon</th>
-                                            <th class="py-3 border-0">Tue</th>
-                                            <th class="py-3 border-0">Wed</th>
-                                            <th class="py-3 border-0">Thu</th>
-                                            <th class="py-3 border-0">Fri</th>
+                                            <th class="py-3 border-0 text-start ps-4">Day</th>
+                                            <th class="py-3 border-0">Hours</th>
+                                            <th class="py-3 border-0">Status</th>
+                                            <th class="py-3 border-0">Work Mode</th>
+                                            <th class="py-3 border-0 text-start">Specific Reason</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr class="fw-bold text-dark">
-                                            <td class="py-3" th:text="${sheet.mondayHours != null ? sheet.mondayHours : '0'}"></td>
-                                            <td class="py-3" th:text="${sheet.tuesdayHours != null ? sheet.tuesdayHours : '0'}"></td>
-                                            <td class="py-3" th:text="${sheet.wednesdayHours != null ? sheet.wednesdayHours : '0'}"></td>
-                                            <td class="py-3" th:text="${sheet.thursdayHours != null ? sheet.thursdayHours : '0'}"></td>
-                                            <td class="py-3" th:text="${sheet.fridayHours != null ? sheet.fridayHours : '0'}"></td>
+                                        <tr th:style="${sheet.mondayStatus == 'Absent' ? 'background-color: #fef2f2;' : ''}">
+                                            <td class="text-start ps-4 fw-bold">Monday</td>
+                                            <td th:text="${sheet.mondayHours}"></td>
+                                            <td><span th:class="${sheet.mondayStatus == 'Present' ? 'badge badge-present' : 'badge badge-absent'}" th:text="${sheet.mondayStatus}"></span></td>
+                                            <td><span class="badge badge-mode" th:text="${sheet.mondayMode}"></span></td>
+                                            <td class="text-start small text-muted italic" th:text="${sheet.mondayReason}"></td>
+                                        </tr>
+                                        <tr th:style="${sheet.tuesdayStatus == 'Absent' ? 'background-color: #fef2f2;' : ''}">
+                                            <td class="text-start ps-4 fw-bold">Tuesday</td>
+                                            <td th:text="${sheet.tuesdayHours}"></td>
+                                            <td><span th:class="${sheet.tuesdayStatus == 'Present' ? 'badge badge-present' : 'badge badge-absent'}" th:text="${sheet.tuesdayStatus}"></span></td>
+                                            <td><span class="badge badge-mode" th:text="${sheet.tuesdayMode}"></span></td>
+                                            <td class="text-start small text-muted italic" th:text="${sheet.tuesdayReason}"></td>
+                                        </tr>
+                                        <tr th:style="${sheet.wednesdayStatus == 'Absent' ? 'background-color: #fef2f2;' : ''}">
+                                            <td class="text-start ps-4 fw-bold">Wednesday</td>
+                                            <td th:text="${sheet.wednesdayHours}"></td>
+                                            <td><span th:class="${sheet.wednesdayStatus == 'Present' ? 'badge badge-present' : 'badge badge-absent'}" th:text="${sheet.wednesdayStatus}"></span></td>
+                                            <td><span class="badge badge-mode" th:text="${sheet.wednesdayMode}"></span></td>
+                                            <td class="text-start small text-muted italic" th:text="${sheet.wednesdayReason}"></td>
+                                        </tr>
+                                        <tr th:style="${sheet.thursdayStatus == 'Absent' ? 'background-color: #fef2f2;' : ''}">
+                                            <td class="text-start ps-4 fw-bold">Thursday</td>
+                                            <td th:text="${sheet.thursdayHours}"></td>
+                                            <td><span th:class="${sheet.thursdayStatus == 'Present' ? 'badge badge-present' : 'badge badge-absent'}" th:text="${sheet.thursdayStatus}"></span></td>
+                                            <td><span class="badge badge-mode" th:text="${sheet.thursdayMode}"></span></td>
+                                            <td class="text-start small text-muted italic" th:text="${sheet.thursdayReason}"></td>
+                                        </tr>
+                                        <tr th:style="${sheet.fridayStatus == 'Absent' ? 'background-color: #fef2f2;' : ''}">
+                                            <td class="text-start ps-4 fw-bold">Friday</td>
+                                            <td th:text="${sheet.fridayHours}"></td>
+                                            <td><span th:class="${sheet.fridayStatus == 'Present' ? 'badge badge-present' : 'badge badge-absent'}" th:text="${sheet.fridayStatus}"></span></td>
+                                            <td><span class="badge badge-mode" th:text="${sheet.fridayMode}"></span></td>
+                                            <td class="text-start small text-muted italic" th:text="${sheet.fridayReason}"></td>
                                         </tr>
                                         </tbody>
                                     </table>
+                                </div>
+
+                                <div class="mt-4 p-3 bg-white rounded-3 border border-warning-subtle shadow-sm" th:if="${sheet.reason != null}">
+                                    <small class="profile-label text-warning d-block mb-1"><i class="fas fa-comment-dots me-2"></i>General Weekly Notes</small>
+                                    <p class="profile-value mb-0" th:text="${sheet.reason}"></p>
                                 </div>
 
                                 <div class="text-end mt-4 pt-3">
@@ -316,14 +356,11 @@
                                     window.location.search.includes('search=');
 
         dateInputs.forEach(function(input) {
-            // Baseline HTML fallback
             input.setAttribute('max', '9999-12-31');
 
-            // Prevent typing more than 4 digits in the year field
             input.addEventListener('input', function() {
                 if (this.value) {
                     let dateParts = this.value.split('-');
-                    // If the year string (the first part) exceeds 4 characters, slice it
                     if (dateParts[0].length > 4) {
                         dateParts[0] = dateParts[0].slice(0, 4);
                         this.value = dateParts.join('-');
@@ -331,7 +368,6 @@
                 }
             });
 
-            // If it is a fresh page load (no filters in URL), force the input to be blank
             if (!isActivelyFiltering) {
                 input.value = '';
             }
