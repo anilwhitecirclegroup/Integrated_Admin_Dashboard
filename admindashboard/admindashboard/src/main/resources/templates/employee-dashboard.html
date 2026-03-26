@@ -1011,8 +1011,9 @@
         "2026-12-25": { name: "Christmas Day", type: "standard" }
     };
 
-    function renderDashboardCalendar(dateToRender) {
+    function renderDashboardCalendar(dateToRender = new Date()) {
         const today = new Date();
+        // Now dateToRender will never be undefined!
         const month = dateToRender.getMonth();
         const year = dateToRender.getFullYear();
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -1088,9 +1089,6 @@
 
     // Initial Load
     renderDashboardCalendar(currentDisplayDate);
-
-    // Run the function when the page loads
-    renderDashboardCalendar();
     });
 
     document.addEventListener("DOMContentLoaded", function() {

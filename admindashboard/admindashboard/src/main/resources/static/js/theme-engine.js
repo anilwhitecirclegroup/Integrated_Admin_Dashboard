@@ -1,25 +1,32 @@
-// === UNIVERSAL THEME ENGINE (BOOTSTRAP 5.3 NATIVE) ===
+// === UNIVERSAL THEME ENGINE (State-Based Fix) ===
 
-// 1. Check local storage immediately (Prevents light/dark flashing on load)
+// 1. Apply theme immediately on load
 const savedTheme = localStorage.getItem('whitecircle-theme') || 'light';
 document.documentElement.setAttribute('data-bs-theme', savedTheme);
 
-// 2. Function to toggle the theme
+// 2. Updated Function: Now it's "Double-Trigger Proof"
 function toggleDarkMode() {
-    const currentTheme = document.documentElement.getAttribute('data-bs-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    const toggleCheckbox = document.getElementById('darkModeToggle');
+    let newTheme;
 
-    // Apply to HTML tag
+    if (toggleCheckbox) {
+        // IMPORTANT: We look at the checkbox state, not the current theme.
+        // If it's checked, it's dark. If not, it's light.
+        // Even if this runs 10 times, the result is the same!
+        newTheme = toggleCheckbox.checked ? 'dark' : 'light';
+    } else {
+        // Fallback for pages without a checkbox (e.g., a simple button)
+        const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+        newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    }
+
     document.documentElement.setAttribute('data-bs-theme', newTheme);
-
-    // Save to browser memory
     localStorage.setItem('whitecircle-theme', newTheme);
 
-    // Sync UI
+    // Sync any other UI elements if needed
     updateToggleUI(newTheme);
 }
 
-// 3. Keep the toggle switch UI in sync
 function updateToggleUI(theme) {
     const toggleCheckbox = document.getElementById('darkModeToggle');
     if (toggleCheckbox) {
@@ -27,17 +34,14 @@ function updateToggleUI(theme) {
     }
 }
 
-// 4. Safely bind events once the DOM is ready (THE FIX)
+// 3. Re-enable this block! It handles the Admin Dashboard.
 document.addEventListener('DOMContentLoaded', () => {
-    // Sync the toggle switch to match the saved theme
-    updateToggleUI(document.documentElement.getAttribute('data-bs-theme'));
+    const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+    updateToggleUI(currentTheme);
 
-    // Dynamically attach the event listener.
-    // This removes the need for an inline 'onchange' attribute in your HTML!
     const toggleCheckbox = document.getElementById('darkModeToggle');
     if (toggleCheckbox) {
-        // Remove any old listeners just in case, then add the new one
-        toggleCheckbox.removeEventListener('change', toggleDarkMode);
+        // We add the listener for pages like Admin that don't have 'onchange'
         toggleCheckbox.addEventListener('change', toggleDarkMode);
     }
 });
