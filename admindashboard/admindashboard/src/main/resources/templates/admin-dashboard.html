@@ -447,6 +447,9 @@
             .chart-wrapper { height: 200px; }
         }
     </style>
+
+    <link href="/css/dark-mode.css" rel="stylesheet">
+    <script src="/js/theme-engine.js"></script>
 </head>
 <body>
 
@@ -462,7 +465,7 @@
     </div>
     <div class="nav-actions">
         <div class="form-check form-switch mb-0">
-            <input class="form-check-input" type="checkbox" role="switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="darkModeToggle">
         </div>
         <i class="fas fa-moon text-secondary"></i>
     </div>
@@ -719,6 +722,7 @@ attendanceChart = new Chart(ctx1, {
             }
         ]
     },
+
     options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -751,7 +755,7 @@ attendanceChart = new Chart(ctx1, {
                 beginAtZero: true,
                 max: 100, // Hard-caps the Y-axis at 100
                 grid: {
-                    color: '#f1f5f9',
+                    color: 'rgba(161, 161, 170, 0.2)', // Soft translucent gray for both themes!
                     drawBorder: false
                 },
                 ticks: {
@@ -759,7 +763,7 @@ attendanceChart = new Chart(ctx1, {
                     font: { family: "'Plus Jakarta Sans', sans-serif" }
                 }
             }
-        },
+        }, // <--- THIS WAS THE MISSING COMMA!
         interaction: {
             mode: 'nearest',
             axis: 'x',

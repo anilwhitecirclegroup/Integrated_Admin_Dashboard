@@ -1,9 +1,7 @@
 // === UNIVERSAL THEME ENGINE (BOOTSTRAP 5.3 NATIVE) ===
 
-// 1. Check local storage immediately
+// 1. Check local storage immediately (Prevents light/dark flashing on load)
 const savedTheme = localStorage.getItem('whitecircle-theme') || 'light';
-
-// MAGIC LINE: This tells Bootstrap 5 to switch its entire color palette!
 document.documentElement.setAttribute('data-bs-theme', savedTheme);
 
 // 2. Function to toggle the theme
@@ -29,6 +27,17 @@ function updateToggleUI(theme) {
     }
 }
 
+// 4. Safely bind events once the DOM is ready (THE FIX)
 document.addEventListener('DOMContentLoaded', () => {
+    // Sync the toggle switch to match the saved theme
     updateToggleUI(document.documentElement.getAttribute('data-bs-theme'));
+
+    // Dynamically attach the event listener.
+    // This removes the need for an inline 'onchange' attribute in your HTML!
+    const toggleCheckbox = document.getElementById('darkModeToggle');
+    if (toggleCheckbox) {
+        // Remove any old listeners just in case, then add the new one
+        toggleCheckbox.removeEventListener('change', toggleDarkMode);
+        toggleCheckbox.addEventListener('change', toggleDarkMode);
+    }
 });
