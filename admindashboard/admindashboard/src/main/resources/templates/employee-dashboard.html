@@ -556,105 +556,11 @@
             color: white;
             transform: scale(1.05);
         }
-
-
-        /* ==========================================================================
-           MOBILE RESPONSIVENESS PATCH (Applies ONLY to Screens < 991px)
-           ========================================================================== */
-        @media (max-width: 991px) {
-
-            /* 1. RESET BODY PADDING & SCROLLING */
-            html, body {
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                padding-bottom: 80px !important;
-                overflow-x: hidden !important;
-                width: 100% !important;
-            }
-
-            /* 2. TRANSFORM SIDEBAR TO BOTTOM APP BAR */
-            .sidebar {
-                top: auto !important; bottom: 0 !important; left: 0 !important;
-                width: 100% !important; height: 60px !important;
-                flex-direction: row !important; justify-content: space-around !important;
-                align-items: center !important; padding: 0 !important;
-                background: white !important; border-right: none !important;
-                border-top: 1px solid #e0e0e0 !important; box-shadow: 0 -4px 10px rgba(0,0,0,0.05) !important;
-                z-index: 9999 !important;
-            }
-            .sidebar > div { display: contents !important; margin: 0 !important; }
-            .sidebar-link { margin-bottom: 0 !important; font-size: 1.4rem !important; }
-            .profile-btn div { width: 35px !important; height: 35px !important; }
-
-            /* 3. RESET MAIN CONTENT */
-            .main-content { margin-left: 0 !important; padding: 15px !important; height: auto !important; }
-
-            /* 4. TOP NAVBAR LAYOUT FIX */
-            .top-navbar {
-                display: flex !important;
-                flex-direction: row !important;
-                flex-wrap: wrap !important; /* Allow wrapping */
-                height: auto !important;
-                gap: 0 !important;
-                padding: 15px !important;
-            }
-
-            /* ROW 1: BRANDING (Centered & Large) */
-            .top-navbar .col-md-4:nth-child(1) {
-                width: 100% !important;
-                flex: 0 0 100% !important;
-                display: flex !important;
-                justify-content: center !important; /* Centered Logo */
-                align-items: center !important;
-                margin-bottom: 15px !important;
-                padding: 0 !important;
-            }
-            .top-navbar img { height: 50px !important; } /* Increased Size */
-            .top-navbar span { font-size: 1.5rem !important; } /* Increased Size */
-
-            /* ROW 2: SEARCH (Left, ~65% width) */
-            .top-navbar .col-md-4:nth-child(2) {
-                width: 65% !important;
-                flex: 0 0 65% !important;
-                padding-right: 10px !important;
-            }
-
-            /* ROW 2: TOGGLE (Right, ~35% width) */
-            .top-navbar .col-md-4:nth-child(3) {
-                width: 35% !important;
-                flex: 0 0 35% !important;
-                display: flex !important;
-                justify-content: flex-end !important;
-                align-items: center !important;
-                padding: 0 !important;
-            }
-
-            /* 5. WIDGET STACKING FIX */
-            .row { display: flex; flex-direction: column; margin-left: 0 !important; margin-right: 0 !important; }
-            .col-lg-6, .col-lg-4, .col-md-6 { width: 100% !important; padding: 0 !important; margin-bottom: 20px !important; }
-
-            /* 6. APP BUTTONS (2 per row) */
-            .widget-body .row { flex-direction: row !important; flex-wrap: wrap !important; }
-            .widget-body .col-md-6 { width: 50% !important; padding: 5px !important; }
-
-            .parallel-col { height: auto !important; gap: 20px !important; }
-
-            /* --- SEARCH BAR ACTIVE/FOCUS ANIMATION --- */
-        .search-box-wrapper {
-            border: 2px solid #e2e8f0;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-        }
-        /* When the user clicks inside the search bar: */
-        .search-box-wrapper:focus-within {
-            transform: translateY(-3px); /* Lifts it up */
-            border-color: #3b82f6; /* Changes border to blue */
-            box-shadow: 0 12px 25px rgba(59, 130, 246, 0.15); /* Adds a deep blue glowing shadow */
-        }
     }
 
-
     </style>
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/mobile-responsive.css" rel="stylesheet">
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>
