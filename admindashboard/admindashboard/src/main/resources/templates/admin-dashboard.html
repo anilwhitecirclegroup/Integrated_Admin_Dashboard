@@ -419,34 +419,9 @@
 
         .chart-wrapper { position: relative; height: 100%; width: 100%; display: flex; align-items: center; justify-content: center; }
 
-        /* Mobile Patch */
-        @media (max-width: 991px) {
-            body { overflow: auto; height: auto; padding-bottom: 80px; padding-top: 0; }
-            .top-navbar { position: relative; height: auto; flex-wrap: wrap; padding: 15px; }
-            .nav-brand { width: 100%; justify-content: center; }
-            .nav-search { width: 100%; order: 2; margin: 10px 0; }
-            .nav-actions { width: 100%; justify-content: flex-end; order: 3; }
-
-            .sidebar {
-                top: auto; bottom: 0; left: 0; width: 100%; height: 65px;
-                flex-direction: row; padding: 0; z-index: 9999; border-radius: 0; border: none; border-top: 1px solid var(--border);
-            }
-            .sidebar-title, .sidebar-footer { display: none; }
-            .nav-item { flex-direction: column; padding: 5px; font-size: 0.6rem; background: transparent !important; }
-            .nav-item i { font-size: 1.2rem; }
-
-            .main-wrapper { margin-left: 0; padding: 15px; height: auto; gap: 15px; }
-
-            /* Reset Layouts */
-            .dashboard-row { flex-direction: column; height: auto; }
-            .col-40, .col-60, .stats-container { width: 100%; height: auto; }
-            .stats-container { flex-direction: column; }
-            .stat-box, .dashboard-card { height: auto !important; min-height: 180px; }
-
-            .feature-grid { grid-template-columns: repeat(2, 1fr); }
-            .chart-wrapper { height: 200px; }
-        }
     </style>
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/mobile-responsive.css" rel="stylesheet">
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>
@@ -815,18 +790,26 @@ attendanceChart = new Chart(ctx1, {
         searchTimeout = setTimeout(() => { performSearch(query); }, 300);
     });
 
-    // 2. Fetch data from the Backend
+    // 2. Fetch data from the Backend (With Safety Checks)
     async function performSearch(query) {
         try {
             const response = await fetch(`/api/employees/search?query=${encodeURIComponent(query)}`);
-            if (!response.ok) throw new Error('Search failed');
+
+            // SECURITY CHECK: Did we get HTML instead of JSON?
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new TypeError("Received HTML instead of JSON. Spring Security might be blocking this URL for Admins.");
+            }
+
+            if (!response.ok) throw new Error('Search failed with status: ' + response.status);
 
             const results = await response.json();
-            globalSearchResults = results; // Save the results!
+            globalSearchResults = results;
             renderSearchResults(results);
+
         } catch (error) {
             console.error("Search error:", error);
-            searchDropdown.innerHTML = '<div class="search-empty text-danger"><i class="fas fa-exclamation-circle me-2"></i>Error connecting to directory.</div>';
+            searchDropdown.innerHTML = '<div class="search-empty text-danger"><i class="fas fa-exclamation-circle me-2"></i>Error connecting to directory. Check console.</div>';
         }
     }
 
