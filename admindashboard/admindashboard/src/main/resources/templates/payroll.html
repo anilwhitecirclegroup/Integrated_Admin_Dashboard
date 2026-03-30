@@ -269,7 +269,76 @@
 
     </style>
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/mobile-responsive.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 991px) {
+
+            /* 1. COMPACT GLOBAL LAYOUT */
+            html, body {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            body { padding-top: 80px !important; }
+
+            /* 2. SHRINK THE TOP NAV BAR */
+            .top-nav-bar {
+                height: auto !important; padding: 12px 15px !important; display: grid !important;
+                grid-template-columns: 1fr auto !important; gap: 12px !important; align-items: center !important;
+            }
+
+            .brand-section { width: 100% !important; justify-content: flex-start !important; margin: 0 !important; min-width: 0 !important; }
+            .brand-section i.fa-file-invoice-dollar { font-size: 1.6rem !important; margin-top: 2px !important; }
+            .brand-section span { font-size: 1.1rem !important; margin-left: 8px !important; padding-left: 8px !important; line-height: 1.1 !important; }
+
+            .btn-back { margin: 0 !important; width: auto !important; padding: 6px 12px !important; font-size: 0.75rem !important; border-radius: 8px !important; white-space: nowrap !important; }
+
+            /* 3. PAGE HEADER */
+            .page-header { margin-top: 10px !important; margin-bottom: 15px !important; }
+            .page-title { font-size: 1.4rem !important; margin-bottom: 2px !important; }
+            .page-subtitle { font-size: 0.85rem !important; }
+
+            /* 4. STACK THE FILTER BAR */
+            .filter-bar {
+                padding: 12px !important; display: flex !important; flex-direction: row !important;
+                flex-wrap: wrap !important; align-items: center !important; gap: 8px !important; margin-bottom: 20px !important;
+            }
+            .filter-bar > i.fa-search { display: none !important; }
+            .search-inp { width: 100% !important; flex: 0 0 100% !important; margin: 0 !important; }
+
+            /* Squeeze selects to fit 3 across if possible, or wrap neatly */
+            .filter-select { flex: 1 1 30% !important; min-width: 0 !important; margin: 0 !important; padding: 8px 4px !important; font-size: 0.7rem !important; text-overflow: ellipsis !important; overflow: hidden !important; }
+
+            .btn-filter { width: 100% !important; flex: 0 0 100% !important; margin: 0 !important; padding: 10px !important; }
+
+            /* 5. 2x2 GRID FOR ACTION TILES */
+            .container > .row.g-4.mb-5 { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; margin-bottom: 20px !important; }
+            .container > .row.g-4.mb-5 > .col-md-3 { width: 100% !important; padding: 0 !important; margin: 0 !important; }
+
+            .action-tile { padding: 15px 10px !important; border-width: 1px !important; }
+            .tile-icon { width: 40px !important; height: 40px !important; font-size: 1rem !important; margin-bottom: 10px !important; }
+            .tile-title { font-size: 0.85rem !important; margin-bottom: 2px !important; }
+            .tile-desc { font-size: 0.65rem !important; line-height: 1.2 !important; }
+
+            /* 6. COMPACT TABLES & LISTS */
+            .panel-header { padding: 12px 15px !important; }
+            .panel-title { font-size: 0.9rem !important; }
+
+            .table-custom th, .table-custom td { padding: 10px 8px !important; font-size: 0.75rem !important; }
+            .table-custom td strong { font-size: 0.8rem !important; }
+            .badge { font-size: 0.65rem !important; padding: 4px 8px !important; }
+
+            .notif-item { padding: 12px 15px !important; gap: 10px !important; }
+            .notif-icon { width: 32px !important; height: 32px !important; font-size: 0.8rem !important; }
+            .notif-text { font-size: 0.85rem !important; }
+            .notif-time { font-size: 0.7rem !important; }
+
+            .compliance-link { font-size: 0.8rem !important; padding: 6px 12px !important; }
+        }
+    </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>

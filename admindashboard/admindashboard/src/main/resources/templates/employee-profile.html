@@ -176,7 +176,94 @@
 
     </style>
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/mobile-responsive.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 991px) {
+
+            /* 1. COMPACT GLOBAL LAYOUT */
+            html, body {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            body { padding-top: 80px !important; }
+
+            /* 2. REORGANIZE HEADER & SHORTEN BUTTONS */
+            .top-header {
+                height: auto !important; padding: 12px 15px !important; display: flex !important;
+                flex-direction: row !important; justify-content: space-between !important; align-items: center !important;
+            }
+            .page-title { min-width: 0 !important; width: auto !important; flex: 1 !important; }
+            .page-title i { font-size: 1.3rem !important; }
+            .page-title span {
+                font-size: 1.1rem !important; margin-left: 8px !important;
+                padding-left: 8px !important; line-height: 1.1 !important; white-space: nowrap !important;
+            }
+
+            .top-header > .d-flex { gap: 6px !important; }
+
+            /* Shorten "Edit Details" to "Edit" and "Back to Home" to "Back" */
+            .btn-outline-primary, .btn-back-home {
+                padding: 6px 10px !important; font-size: 0px !important; /* Hide original text */
+                border-radius: 8px !important; display: flex !important; align-items: center !important;
+            }
+            .btn-outline-primary i, .btn-back-home i { font-size: 0.75rem !important; margin: 0 !important; }
+
+            .btn-outline-primary::after { content: "Edit"; font-size: 0.75rem; margin-left: 4px; font-weight: 700; }
+            .btn-back-home::after { content: "Back"; font-size: 0.75rem; margin-left: 4px; font-weight: 700; }
+
+            /* 3. PROFILE CONTAINER & CARD RE-ORDERING */
+            .profile-container { margin-top: 15px !important; padding: 0 12px !important; }
+
+            /* Force the main row to be a flex column so we can order all cards */
+            .profile-container .row.g-4 { display: flex !important; flex-direction: column !important; }
+
+            /* Treat the columns as 'transparent' containers so cards are siblings */
+            .col-lg-8, .col-lg-4 { display: contents !important; }
+
+            /* Set default order for all cards */
+            .pro-card { order: 2; margin-bottom: 15px !important; border-radius: 12px !important; }
+
+            /* Keep Identity Card at the top */
+            .identity-card-bg { order: 1 !important; }
+
+            /* FORCE RESUME CARD TO THE VERY BOTTOM */
+            .pro-card:has(.fa-file-pdf),
+            .pro-card:nth-child(3) { order: 10 !important; margin-bottom: 40px !important; }
+
+            /* 4. IDENTITY CARD (TOP SECTION) */
+            .pro-card.identity-card-bg .pro-card-body {
+                flex-direction: column !important; padding: 20px 15px !important; gap: 15px !important;
+            }
+            .profile-photo-wrapper { width: 90px !important; height: 90px !important; margin-bottom: 10px !important; }
+
+            /* 5. INPUT FIELD TIGHTENING */
+            .form-floating > .form-control {
+                height: 3rem !important; font-size: 0.85rem !important;
+                padding-top: 1.2rem !important; padding-bottom: 0.4rem !important;
+            }
+            .form-floating > label { padding: 0.8rem 0.75rem !important; font-size: 0.75rem !important; }
+
+            .row.g-3 > .col-md-6 { width: 100% !important; margin-bottom: 10px !important; }
+            .row.g-2 > .col-6 { width: 50% !important; }
+
+            /* 6. CARD HEADERS & RESUME BOX */
+            .pro-card-header { padding: 10px 15px !important; font-size: 0.75rem !important; }
+            .pro-card-body { padding: 15px !important; }
+
+            .resume-box { padding: 20px 15px !important; }
+            .resume-box i.fa-3x { font-size: 2rem !important; }
+            .resume-box h6 { font-size: 0.85rem !important; }
+
+            .resume-box .mt-4.pt-3 {
+                flex-direction: column !important; gap: 10px !important; text-align: center !important;
+            }
+            .resume-box .d-flex.gap-1 { width: 100% !important; justify-content: center !important; }
+        }
+    </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>

@@ -211,7 +211,75 @@
 
     </style>
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/mobile-responsive.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 991px) {
+
+            /* 1. COMPACT GLOBAL LAYOUT */
+            html, body {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            body { padding-top: 75px !important; }
+
+            /* 2. SHRINK THE TOP NAV BAR */
+            .top-header {
+                height: auto !important; padding: 12px 15px !important; display: flex !important;
+                flex-direction: row !important; justify-content: space-between !important; align-items: center !important; flex-wrap: nowrap !important;
+            }
+
+            .top-header > .d-flex { min-width: 0 !important; width: auto !important; flex: 1 !important; }
+            .top-header i.fa-business-time { font-size: 1.6rem !important; }
+            .top-header span { font-size: 1.2rem !important; margin-left: 8px !important; padding-left: 8px !important; line-height: 1.1 !important; white-space: nowrap !important; }
+
+            .btn-back-home {
+                flex: 0 0 auto !important; margin: 0 0 0 10px !important; width: auto !important;
+                padding: 6px 12px !important; font-size: 0.75rem !important; border-radius: 8px !important; white-space: nowrap !important;
+            }
+
+            /* 3. MAIN CONTAINER & ACTION CARDS */
+            .main-container { margin-top: 15px !important; padding: 0 15px !important; margin-bottom: 30px !important; }
+            .row.g-4 { gap: 12px !important; }
+
+            .action-card { padding: 15px !important; border-radius: 12px !important; border-width: 2px !important; gap: 15px !important; }
+            .ac-icon { width: 45px !important; height: 45px !important; font-size: 1.2rem !important; border-radius: 10px !important; }
+            .action-card h5 { font-size: 1rem !important; margin-bottom: 2px !important; }
+            .action-card small { font-size: 0.75rem !important; }
+
+            /* 4. CALENDAR RESPONSIVE FIXES */
+            .calendar-card { border-radius: 12px !important; }
+
+            /* Reorganize Calendar Header */
+            .calendar-header { position: relative !important; padding: 35px 10px 15px 10px !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; }
+            .calendar-header > div:nth-child(2) { display: contents !important; }
+
+            #monthYearDisplay { order: 2 !important; font-size: 1.05rem !important; margin: 0 15px !important; }
+            .calendar-header > div:nth-child(2) > button:nth-child(1) { order: 1 !important; padding: 5px 10px !important; font-size: 1.1rem !important; }
+            .calendar-header > div:nth-child(2) > button:nth-child(2) { order: 3 !important; padding: 5px 10px !important; font-size: 1.1rem !important; }
+
+            /* Move 'Today' button to top right corner */
+            .calendar-header > div:nth-child(2) > button:nth-child(3) { position: absolute !important; top: 10px !important; right: 12px !important; margin: 0 !important; padding: 4px 10px !important; font-size: 0.7rem !important; }
+
+            /* Shrink Calendar Grid Cells */
+            .cal-head { padding: 8px 2px !important; font-size: 0.65rem !important; }
+            .cal-day { min-height: 55px !important; padding: 6px 2px !important; align-items: center !important; }
+            .day-num { font-size: 0.85rem !important; margin-bottom: 4px !important; }
+
+            /* Stack icons and text in the cells */
+            .day-info { font-size: 0.55rem !important; text-align: center !important; flex-direction: column !important; line-height: 1.2 !important; }
+            .info-icon { margin-right: 0 !important; margin-bottom: 2px !important; font-size: 0.55rem !important; }
+
+            /* 5. RECENT TIMECARDS */
+            .card-body .p-3 { padding: 12px 15px !important; }
+            .card-body h6 { font-size: 0.85rem !important; }
+            .card-body small { font-size: 0.7rem !important; }
+            .card-body .badge { font-size: 0.65rem !important; padding: 4px 10px !important; }
+        }
+    </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>

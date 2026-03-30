@@ -206,7 +206,81 @@
 
     </style>
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/mobile-responsive.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 991px) {
+
+            /* 1. COMPACT GLOBAL LAYOUT */
+            html, body {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            body { padding-top: 80px !important; }
+
+            /* 2. SHRINK THE TOP NAV BAR */
+            .top-header {
+                height: auto !important; padding: 12px 15px !important; flex-direction: row !important;
+                justify-content: space-between !important; align-items: center !important; flex-wrap: nowrap !important;
+            }
+
+            .top-header > .d-flex { min-width: 0 !important; width: auto !important; justify-content: flex-start !important; }
+            .top-header i.fa-check-double { font-size: 1.6rem !important; }
+            .top-header > .d-flex > div { padding-left: 8px !important; margin-left: 8px !important; }
+            .top-header span { font-size: 1.1rem !important; line-height: 1 !important; }
+            .top-header small { font-size: 0.85rem !important; }
+
+            .btn-back-home {
+                width: auto !important; padding: 6px 12px !important; font-size: 0.75rem !important;
+                border-radius: 8px !important; display: inline-flex !important; white-space: nowrap !important; margin: 0 !important;
+            }
+
+            /* 3. MAIN CONTAINER & FILTER AREA */
+            .main-container { padding: 0 15px !important; margin-bottom: 20px !important; }
+
+            .d-flex.justify-content-between.align-items-center.mb-4 { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; margin-bottom: 15px !important; }
+            .d-flex.justify-content-between.align-items-center.mb-4 > div:first-child h4 { font-size: 1.15rem !important; }
+            .d-flex.justify-content-between.align-items-center.mb-4 > div:first-child p { font-size: 0.8rem !important; }
+
+            .filter-dropdown, .filter-dropdown .dropdown-toggle { width: 100% !important; }
+            .filter-dropdown .dropdown-toggle { justify-content: space-between !important; padding: 10px 15px !important; }
+            .filter-dropdown .dropdown-menu { width: 100% !important; }
+
+            /* 4. HORIZONTAL SCROLLING FOR TABS */
+            .nav-pills {
+                display: flex !important; flex-wrap: nowrap !important; overflow-x: auto !important;
+                padding: 6px !important; width: 100% !important; margin-bottom: 15px !important;
+                -webkit-overflow-scrolling: touch; scrollbar-width: none;
+            }
+            .nav-pills::-webkit-scrollbar { display: none; }
+            .nav-pills .nav-item { flex: 0 0 auto !important; }
+            .nav-pills .nav-link { white-space: nowrap !important; padding: 8px 12px !important; font-size: 0.8rem !important; }
+
+            /* 5. COMPACT APPROVAL CARDS */
+            .approval-card { padding: 12px 10px 12px 15px !important; gap: 10px !important; margin-bottom: 12px !important; }
+            .icon-box { width: 35px !important; height: 35px !important; font-size: 1rem !important; }
+
+            .header-row { flex-wrap: wrap !important; gap: 6px !important; }
+            .req-title { font-size: 0.85rem !important; margin-bottom: 2px !important; }
+            .req-meta { font-size: 0.65rem !important; }
+            .status-badge { padding: 4px 8px !important; font-size: 0.6rem !important; }
+            .toggle-details-btn { font-size: 0.75rem !important; margin-top: 4px !important; }
+
+            .expanded-content { margin-top: 8px !important; padding-top: 8px !important; }
+            .req-desc { font-size: 0.8rem !important; margin-bottom: 8px !important; }
+
+            /* 6. DETAILS GRID */
+            .details-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; padding: 8px 10px !important; }
+            .detail-label { font-size: 0.6rem !important; }
+            .detail-value { font-size: 0.7rem !important; }
+
+            .rejection-box { padding: 10px !important; margin-top: 8px !important; }
+            .rejection-box p { font-size: 0.75rem !important; }
+        }
+    </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>

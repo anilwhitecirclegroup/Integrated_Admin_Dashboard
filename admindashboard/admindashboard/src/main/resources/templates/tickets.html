@@ -148,7 +148,57 @@
 
     </style>
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/mobile-responsive.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 991px) {
+
+            /* 1. COMPACT GLOBAL LAYOUT */
+            html, body {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            body { padding-top: 80px !important; }
+
+            /* 2. SHRINK THE TOP NAV BAR */
+            .top-nav-bar {
+                height: auto !important; padding: 12px 15px !important; display: grid !important;
+                grid-template-columns: 1fr auto !important; gap: 12px !important; align-items: center !important;
+            }
+
+            .brand-section { width: 100% !important; justify-content: flex-start !important; margin: 0 !important; min-width: 0 !important; }
+            .brand-section i.fa-ticket-alt { font-size: 1.6rem !important; margin-top: 2px !important; }
+            .brand-section span { font-size: 1.2rem !important; margin-left: 8px !important; padding-left: 8px !important; line-height: 1.1 !important; }
+
+            .btn-back { margin: 0 !important; width: auto !important; padding: 6px 12px !important; font-size: 0.75rem !important; border-radius: 8px !important; white-space: nowrap !important; }
+
+            /* 3. HERO SECTION ADJUSTMENTS */
+            .container-fluid.px-4.px-md-5 { padding-left: 15px !important; padding-right: 15px !important; }
+
+            .hero-section { margin-top: 15px !important; padding: 20px 15px !important; border-radius: 16px !important; margin-bottom: 20px !important; }
+            .greeting-text { font-size: 1.5rem !important; margin-bottom: 5px !important; }
+            .sub-text { font-size: 0.85rem !important; margin-bottom: 15px !important; line-height: 1.4 !important; }
+
+            /* Compress Search Bar */
+            .search-input { font-size: 0.85rem !important; padding-left: 40px !important; height: 40px !important; }
+            .search-icon { left: 15px !important; font-size: 1rem !important; }
+
+            /* 4. COMPACT INSTRUCTION TEXT */
+            .container-fluid.px-4.px-md-5 > .text-center.mb-5.mt-2 { margin-bottom: 20px !important; }
+            .container-fluid h5.fw-semibold { font-size: 0.9rem !important; padding: 0 10px !important; line-height: 1.4 !important; }
+
+            /* 5. SHRINK ACTION CARDS */
+            .row.g-4 { gap: 12px !important; margin-bottom: 30px !important; }
+
+            .action-card { padding: 25px 20px !important; min-height: auto !important; border-radius: 12px !important; }
+            .icon-circle { width: 55px !important; height: 55px !important; font-size: 1.5rem !important; margin-bottom: 15px !important; }
+            .card-heading { font-size: 1.1rem !important; margin-bottom: 8px !important; }
+            .card-desc { font-size: 0.85rem !important; line-height: 1.4 !important; }
+        }
+    </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>

@@ -166,7 +166,140 @@
 
     </style>
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/mobile-responsive.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 991px) {
+
+            /* 1. COMPACT GLOBAL LAYOUT */
+            html, body {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            body { padding-top: 80px !important; }
+            .main-container { padding: 0 15px !important; width: 100% !important; }
+
+            /* 2. SHRINK MASTER NAV & SHORTEN BUTTON */
+            .master-nav {
+                height: auto !important; padding: 12px 15px !important; display: grid !important;
+                grid-template-columns: 1fr auto !important; gap: 10px !important; align-items: center !important;
+            }
+            .master-nav > .d-flex { min-width: 0 !important; width: auto !important; flex: 1 !important; }
+            .master-nav i.fa-box-open { font-size: 1.5rem !important; margin-top: 2px !important; }
+            .master-nav span { font-size: 1.15rem !important; margin-left: 8px !important; padding-left: 8px !important; line-height: 1.1 !important; white-space: normal !important; }
+            .master-nav small { display: none !important; }
+
+            /* Shorten Back Button to "Back" */
+            .btn-back {
+                padding: 6px 12px !important; font-size: 0px !important;
+                border-radius: 8px !important; display: inline-flex !important; align-items: center !important;
+            }
+            .btn-back i { font-size: 0.85rem !important; margin: 0 !important; }
+            .btn-back::after { content: "Back"; font-size: 0.85rem; margin-left: 5px; font-weight: 700; }
+
+            /* 3. CATALOG & ASSET CARDS (Stacking) */
+            .row.g-4.mb-5 { display: flex !important; flex-direction: column !important; gap: 12px !important; }
+
+            /* Catalog Cards (Hardware Actions) */
+            .catalog-card { padding: 15px !important; border-radius: 12px !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; text-align: left !important; }
+            .catalog-icon { width: 45px !important; height: 45px !important; font-size: 1.2rem !important; margin-bottom: 0 !important; flex-shrink: 0 !important; }
+            .catalog-card h5 { font-size: 1rem !important; margin-bottom: 2px !important; }
+            .catalog-card p { font-size: 0.75rem !important; line-height: 1.3 !important; }
+
+            /* Assigned Inventory Cards */
+            .asset-card { border-radius: 12px !important; }
+            .asset-header { padding: 10px 15px !important; }
+            .asset-header h6 { font-size: 0.85rem !important; }
+            .asset-body { padding: 15px !important; }
+            .asset-body h5 { font-size: 1rem !important; margin-bottom: 10px !important; }
+            .asset-meta { font-size: 0.75rem !important; padding-bottom: 6px !important; margin-bottom: 6px !important; }
+
+            /* 4. TICKET TABLE-TO-CARD CONVERSION & FILTER FIX */
+            .ticket-container { border-radius: 12px !important; margin-bottom: 30px !important; border: none !important; background: transparent !important;}
+            .ticket-header { padding: 12px 15px !important; border-radius: 12px 12px 0 0 !important; }
+            .ticket-header h6 { font-size: 0.9rem !important; }
+            #statusFilter { width: 130px !important; font-size: 0.75rem !important; height: 32px !important; padding: 0 10px !important; }
+
+            .table-custom thead { display: none !important; }
+            .table-custom tbody { display: flex !important; flex-direction: column !important; gap: 10px !important; padding: 10px 0 !important; }
+
+            /* Crucial: Using flex instead of block !important to ensure JS filter compatibility */
+            .ticket-row {
+                display: flex;
+                flex-direction: column;
+                background: white !important;
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 12px !important;
+                padding: 12px !important;
+                position: relative !important;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.02) !important;
+            }
+
+            .table-custom td {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 4px 0 !important;
+                border: none !important;
+                font-size: 0.75rem !important;
+                width: 100% !important;
+            }
+
+            /* Re-order elements for better hierarchy */
+            .table-custom td:nth-child(1) { order: 1; margin-bottom: 4px; } /* ID */
+            .table-custom td:nth-child(5) { order: 2; width: auto !important; position: absolute; top: 12px; right: 12px; } /* Status */
+
+            /* Labels */
+            .table-custom td:nth-child(1)::before { content: "Ticket ID:"; font-weight: 700; color: #94a3b8; margin-right: 5px; text-transform: uppercase; }
+            .ticket-id { font-size: 0.7rem !important; padding: 2px 6px !important; }
+
+            /* Device / Subject (Main Text) */
+            .table-custom td:nth-child(3) {
+                order: 3;
+                font-size: 0.95rem !important;
+                font-weight: 800 !important;
+                color: var(--navy) !important;
+                justify-content: flex-start !important;
+                border-bottom: 1px dashed #f1f5f9 !important;
+                padding-bottom: 8px !important;
+                margin-bottom: 8px !important;
+                text-align: left !important;
+            }
+
+            /* Type and Date Labels */
+            .table-custom td:nth-child(2)::before { content: "Category:"; font-weight: 700; color: #64748b; margin-right: 8px; }
+            .table-custom td:nth-child(4)::before { content: "Submitted:"; font-weight: 700; color: #64748b; margin-right: 8px; }
+
+            .table-custom td:nth-child(2), .table-custom td:nth-child(4) {
+                order: 4;
+                justify-content: flex-start !important;
+                color: #475569 !important;
+                font-weight: 600 !important;
+            }
+
+            /* Action Button */
+            .table-custom td:nth-child(6) {
+                order: 5;
+                margin-top: 10px !important;
+                padding-top: 8px !important;
+                border-top: 1px solid #f1f5f9 !important;
+                justify-content: center !important;
+            }
+            .table-custom td:nth-child(6) button { width: 100% !important; padding: 8px !important; }
+
+            /* 5. MODAL FORM TIGHTENING */
+            .modal-body-custom { padding: 20px 15px !important; }
+            .custom-form-label { font-size: 0.7rem !important; margin-bottom: 5px !important; }
+            .custom-form-control { padding: 10px !important; font-size: 0.85rem !important; border-radius: 8px !important; }
+
+            /* Force side-by-side modal fields */
+            .modal-body-custom .col-md-4 { width: 50% !important; display: inline-block !important; }
+            .modal-body-custom .col-md-4:last-of-type { width: 100% !important; display: block !important; }
+        }
+    </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>

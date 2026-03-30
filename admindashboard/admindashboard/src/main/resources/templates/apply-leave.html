@@ -138,7 +138,147 @@
 
     </style>
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/mobile-responsive.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 991px) {
+
+            /* 1. COMPACT GLOBAL LAYOUT */
+            html, body {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+
+            /* 2. SHRINK THE TOP NAV BAR */
+            .top-header {
+                height: auto !important;
+                padding: 12px 15px !important;
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                flex-wrap: nowrap !important;
+            }
+            .page-title { min-width: 0 !important; width: auto !important; flex: 1 !important; }
+            .page-title i { font-size: 1.6rem !important; margin-top: 2px !important; }
+            .page-title span {
+                font-size: 1.1rem !important; margin-left: 8px !important;
+                padding-left: 8px !important; line-height: 1.1 !important; white-space: nowrap !important;
+            }
+            .top-header > div:last-child { flex: 0 0 auto !important; margin-left: auto !important; }
+            .btn-back-home {
+                width: auto !important; padding: 6px 12px !important; font-size: 0.75rem !important;
+                border-radius: 8px !important; white-space: nowrap !important; margin: 0 !important;
+            }
+
+            /* 3. ADJUST MAIN CONTAINER MARGINS */
+            .main-container { margin-top: 75px !important; padding: 0 12px !important; }
+
+            /* 4. COMPACT APP CARDS */
+            .app-card { margin-bottom: 15px !important; border-radius: 12px !important; }
+            .app-card-header { padding: 10px 15px !important; font-size: 0.8rem !important; }
+            .app-card-body { padding: 15px !important; }
+
+            /* 5. APPLICANT DETAILS (Turn into tight 2-column grid) */
+            .app-card:nth-child(1) .row.g-3 {
+                display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 8px !important;
+            }
+            .app-card:nth-child(1) .col-md-6 {
+                width: 100% !important; margin: 0 !important; padding: 6px 8px !important;
+                background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 8px;
+            }
+            .app-card:nth-child(1) .form-label { margin-bottom: 0 !important; font-size: 0.65rem !important; }
+            .app-card:nth-child(1) .form-control:read-only {
+                background: transparent !important; border: none !important;
+                padding: 0 !important; height: auto !important;
+                font-size: 0.8rem !important; color: #1e293b !important; box-shadow: none !important;
+            }
+
+            /* 6. LEAVE REQUEST FORM */
+            .app-card:nth-child(2) .row.g-3 { --bs-gutter-y: 12px !important; }
+            .form-label { font-size: 0.75rem !important; margin-bottom: 4px !important; }
+            .form-control, .form-select { height: 2.6rem !important; padding: 6px 10px !important; font-size: 0.85rem !important; }
+
+            /* Put 'From Date' and 'To Date' Side-by-Side */
+            .app-card:nth-child(2) .col-md-4:nth-child(3),
+            .app-card:nth-child(2) .col-md-4:nth-child(4) {
+                width: 50% !important; display: inline-block !important;
+            }
+            .app-card:nth-child(2) .col-md-4:nth-child(3) { padding-right: 5px !important; }
+            .app-card:nth-child(2) .col-md-4:nth-child(4) { padding-left: 5px !important; padding-right: 0 !important; }
+            .app-card:nth-child(2) .col-md-4:nth-child(5) { width: 100% !important; }
+
+            /* Stack Action Buttons (Submit on top) */
+            .col-12.text-end.mt-4 {
+                display: flex !important; flex-direction: column-reverse !important;
+                gap: 10px !important; margin-top: 15px !important; text-align: center !important;
+            }
+            .col-12.text-end.mt-4 button {
+                width: 100% !important; margin: 0 !important; padding: 12px !important; font-size: 0.95rem !important;
+            }
+
+            /* 7. RECENT STATUS LIST & BALANCE CARDS */
+            .list-group-item { padding: 10px 12px !important; }
+            .list-group-item .fw-bold { font-size: 0.85rem !important; }
+            .badge-status { font-size: 0.65rem !important; padding: 4px 8px !important; }
+            .list-group-item small { font-size: 0.7rem !important; }
+            .mb-4 { margin-bottom: 15px !important; }
+            .progress { height: 6px !important; }
+            #el-left { font-size: 1.2rem !important; }
+            .bg-warning.rounded-circle { width: 32px !important; height: 32px !important; font-size: 0.8rem !important; }
+
+            /* 8. SHRINK DETAILS MODAL */
+            #leaveDetailsModal .modal-dialog { margin: 15px !important; }
+            #leaveDetailsModal .modal-header { padding: 12px 15px !important; }
+            #leaveDetailsModal .modal-title { font-size: 1rem !important; }
+            #leaveDetailsModal .modal-body { padding: 15px !important; }
+            #leaveDetailsModal .modal-body .row { --bs-gutter-y: 10px !important; }
+            #leaveDetailsModal small.text-muted { font-size: 0.65rem !important; }
+            #leaveDetailsModal span.text-dark { font-size: 0.8rem !important; }
+
+
+            /* --- DARK MODE PATCH FOR APPLICANT DETAILS --- */
+            .dark-mode .app-card:nth-child(1) .col-md-6 {
+                background: rgba(255, 255, 255, 0.05) !important; /* Semi-transparent dark block */
+                border-color: rgba(255, 255, 255, 0.1) !important;
+            }
+            .dark-mode .app-card:nth-child(1) .form-label {
+                color: #94a3b8 !important; /* Muted label color */
+            }
+            .dark-mode .app-card:nth-child(1) .form-control:read-only {
+                color: #e2e8f0 !important; /* Bright text for the values */
+            }
+
+            /* Fix for other card bodies that might stay white */
+            .dark-mode .app-card,
+            .dark-mode .app-card-body {
+                background-color: #1e293b !important; /* Deep Navy/Grey */
+                color: #f1f5f9 !important;
+            }
+
+            /* Ensure inputs and textareas in cards are readable */
+            .dark-mode .form-control,
+            .dark-mode .form-select {
+                background-color: #0f172a !important;
+                border-color: #334155 !important;
+                color: #f1f5f9 !important;
+            }
+
+            /* Fix Top Header for Dark Mode Mobile */
+            .dark-mode .top-header {
+                background: #0f172a !important;
+                border-bottom-color: #1e3a8a !important;
+            }
+            .dark-mode .top-header span,
+            .dark-mode .top-header i {
+                color: #ffffff !important;
+            }
+
+        }
+    </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>

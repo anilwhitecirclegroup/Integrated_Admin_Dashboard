@@ -97,7 +97,92 @@
 
     </style>
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/mobile-responsive.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 991px) {
+
+            /* 1. COMPACT GLOBAL LAYOUT */
+            html, body {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            body { padding-top: 115px !important; } /* Buffer for taller 2-row header */
+            .container-fluid { padding: 0 12px !important; }
+
+            /* 2. REORGANIZE THE MASTER NAV (2 Rows) */
+            .master-nav {
+                height: auto !important; padding: 12px 15px !important; display: grid !important;
+                grid-template-columns: 1fr auto !important; gap: 10px !important; align-items: center !important;
+            }
+
+            .master-nav > .d-flex:first-child { min-width: 0 !important; }
+            .master-nav i.fa-calendar-check { font-size: 1.6rem !important; margin-top: 2px !important; }
+            .master-nav span.d-block { font-size: 1.2rem !important; line-height: 1.1 !important; white-space: normal !important; }
+            .master-nav small { display: none !important; } /* Hide subtitle to save space */
+            .master-nav > .d-flex:last-child { display: contents !important; } /* Unwrap the button container */
+
+            /* Shrink Back Button to just an Icon + "Back" */
+            .master-nav .btn-back-home {
+                grid-column: 2 !important; grid-row: 1 !important; padding: 6px 12px !important; margin: 0 !important;
+                font-size: 0px !important; display: flex !important; align-items: center !important; white-space: nowrap !important;
+            }
+            .master-nav .btn-back-home i { font-size: 0.85rem !important; margin-right: 5px !important; }
+            .master-nav .btn-back-home::after { content: "Back" !important; font-size: 0.85rem !important; }
+
+            /* Drop Apply Button to Row 2, Full Width */
+            .master-nav .btn-apply {
+                grid-column: 1 / -1 !important; grid-row: 2 !important; width: 100% !important; padding: 8px !important;
+                font-size: 0.85rem !important; margin: 0 !important; display: flex !important; justify-content: center !important;
+            }
+
+            /* 3. CONDENSE HEADINGS */
+            .container-fluid > .mb-4 h4 { font-size: 1.1rem !important; margin-bottom: 4px !important; }
+            .container-fluid > .mb-4 p { font-size: 0.8rem !important; line-height: 1.3 !important; }
+
+            /* 4. MICRO-GRID FOR BALANCE CARDS (3 side-by-side) */
+            .container-fluid > .row.g-4:first-of-type { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; margin-bottom: 20px !important; }
+            .container-fluid > .row.g-4:first-of-type > .col-md-4 { width: 100% !important; padding: 0 !important; margin: 0 !important; }
+
+            .balance-card { padding: 10px 5px !important; border-radius: 10px !important; align-items: center !important; text-align: center !important; justify-content: flex-start !important; }
+
+            /* Hide the extra details so the cards stay tiny */
+            .balance-card .badge, .balance-card .mt-auto { display: none !important; }
+
+            .icon-box { width: 32px !important; height: 32px !important; font-size: 0.9rem !important; margin: 0 auto !important; position: static !important;}
+            .balance-value { font-size: 1.3rem !important; margin: 6px 0 2px !important; }
+            .balance-label { font-size: 0.55rem !important; line-height: 1.1 !important; margin: 0 !important; }
+
+            /* 5. HISTORY SECTION HEADER */
+            .history-section { border-radius: 12px !important; margin-top: 10px !important; }
+            .history-header { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: space-between !important; padding: 12px 15px !important; }
+            .history-header h6 { font-size: 0.85rem !important; margin: 0 !important; }
+            #statusFilter { width: auto !important; max-width: 120px !important; font-size: 0.75rem !important; padding: 4px 8px !important; margin: 0 !important; }
+
+            /* 6. TABLE-TO-CARD CONVERSION */
+            .table-custom thead { display: none !important; } /* Hide horizontal headers */
+            .table-custom tbody { display: flex !important; flex-direction: column !important; gap: 10px !important; padding: 10px !important; background: #f8fafc !important; }
+
+            /* Transform Rows into Cards */
+            .table-custom tr { display: flex !important; flex-direction: column !important; background: white !important; border: 1px solid #cbd5e1 !important; border-radius: 10px !important; padding: 12px !important; margin: 0 !important; box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important; }
+            .table-custom td { display: flex !important; justify-content: space-between !important; align-items: center !important; padding: 5px 0 !important; border: none !important; font-size: 0.8rem !important; }
+
+            /* Add Custom Labels */
+            .table-custom td:nth-child(2)::before { content: "Duration"; font-weight: 700; color: #64748b; font-size: 0.65rem; text-transform: uppercase; }
+            .table-custom td:nth-child(3)::before { content: "Total Days"; font-weight: 700; color: #64748b; font-size: 0.65rem; text-transform: uppercase; }
+            .table-custom td:nth-child(4)::before { content: "Status"; font-weight: 700; color: #64748b; font-size: 0.65rem; text-transform: uppercase; }
+
+            /* Style Specific Cells */
+            .table-custom td:nth-child(1) { font-size: 0.95rem !important; padding-bottom: 8px !important; margin-bottom: 6px !important; border-bottom: 1px dashed #e2e8f0 !important; }
+
+            /* Full Width Action Button */
+            .table-custom td:last-child { margin-top: 8px !important; padding-top: 10px !important; border-top: 1px dashed #e2e8f0 !important; justify-content: center !important; }
+            .table-custom td:last-child button { width: 100% !important; padding: 8px !important; font-size: 0.85rem !important; }
+        }
+    </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>

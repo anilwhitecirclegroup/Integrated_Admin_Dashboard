@@ -168,7 +168,71 @@
 
     </style>
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/mobile-responsive.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 991px) {
+
+            /* 1. COMPACT GLOBAL LAYOUT */
+            html, body {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            body { padding-top: 75px !important; }
+
+            /* 2. SHRINK THE TOP NAV BAR */
+            .top-nav-bar {
+                height: auto !important; padding: 12px 15px !important; flex-direction: row !important;
+                justify-content: space-between !important; align-items: center !important; flex-wrap: nowrap !important;
+            }
+            .brand-section { width: auto !important; justify-content: flex-start !important; margin-bottom: 0 !important; }
+            .brand-section i.fa-signature { font-size: 1.4rem !important; margin-top: 2px !important; }
+            .brand-section span { font-size: 1.1rem !important; margin-left: 8px !important; padding-left: 8px !important; }
+
+            .btn-back {
+                width: auto !important; padding: 6px 12px !important; font-size: 0.75rem !important;
+                border-radius: 8px !important; display: inline-flex !important; white-space: nowrap !important; margin-top: 0 !important;
+            }
+
+            /* 3. ADJUST MAIN CONTAINER */
+            .container {
+                display: flex !important; flex-direction: column !important;
+                justify-content: flex-start !important; /* Fix: Aligns to top instead of center */
+                min-height: calc(100vh - 85px) !important;
+                padding-bottom: 20px !important;
+                padding-top: 30px !important; /* Controls the exact gap from the navbar */
+            }
+            .preview-container { margin: 0 auto !important; padding: 0 10px !important; width: 100% !important; }
+            .preview-container h3 { font-size: 1.25rem !important; } /* Made heading slightly larger */
+            .preview-container p.text-muted { font-size: 0.9rem !important; padding: 0 5px !important; }
+
+            /* 4. FIX THE CARD PADDING & SIGNATURE SIZING */
+            .preview-card { padding: 30px 20px !important; border-radius: 12px !important; margin-top: 20px !important; }
+            .signature-box { padding: 15px !important; width: 100% !important; overflow-x: auto !important; }
+            .sig-content { padding-left: 15px !important; gap: 12px !important; border-left-width: 4px !important; }
+
+            /* Scaled up all the text and logo inside the signature */
+            #signature-box h3 { font-size: 1.3rem !important; margin-bottom: 4px !important; }
+            #signature-box p { font-size: 0.9rem !important; }
+            #signature-box a { word-break: break-all !important; font-size: 0.9rem !important; }
+            #signature-box .d-flex img { height: 36px !important; }
+            #signature-box .d-flex span.fw-bold { font-size: 1rem !important; }
+            #signature-box .d-flex small.italic { font-size: 0.75rem !important; }
+
+            /* 5. FULL WIDTH ACTION BUTTON */
+            .btn-copy {
+                width: 100% !important;
+                margin-top: 20px !important;
+                padding: 12px 15px !important;
+                font-size: 0.95rem !important;
+                justify-content: center !important;
+                border-radius: 12px !important;
+            }
+        }
+    </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>

@@ -151,7 +151,77 @@
 
     </style>
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/mobile-responsive.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 991px) {
+
+            /* 1. COMPACT GLOBAL LAYOUT */
+            html, body {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            body { padding-top: 80px !important; }
+            .main-container { padding: 0 15px !important; width: 100% !important; }
+
+            /* 2. MASTER NAV OVERHAUL */
+            .master-nav {
+                height: auto !important; padding: 12px 15px !important; display: flex !important;
+                flex-direction: row !important; justify-content: space-between !important; align-items: center !important;
+            }
+            .master-nav > .d-flex { min-width: 0 !important; width: auto !important; flex: 1 !important; }
+            .master-nav i.fa-book-open-reader { font-size: 1.5rem !important; margin-top: 2px !important; }
+            .master-nav span { font-size: 1.1rem !important; margin-left: 8px !important; padding-left: 8px !important; line-height: 1.1 !important; white-space: normal !important; }
+            .master-nav small { display: none !important; }
+
+            /* Shorten Back Button to "Back" */
+            .btn-back {
+                padding: 6px 12px !important; font-size: 0px !important;
+                border-radius: 8px !important; display: inline-flex !important; align-items: center !important;
+            }
+            .btn-back i { font-size: 0.75rem !important; margin: 0 !important; }
+            .btn-back::after { content: "Back"; font-size: 0.75rem; margin-left: 5px; font-weight: 700; font-family: 'Inter', sans-serif; }
+
+            /* 3. SEARCH HERO COMPRESSION */
+            .search-hero { padding: 25px 15px !important; margin-bottom: 15px !important; }
+            .search-bar-wrapper { margin-top: 10px !important; }
+            .search-bar-wrapper .form-control { padding: 10px 15px 10px 40px !important; font-size: 0.85rem !important; }
+            .search-bar-wrapper .search-icon { left: 15px !important; font-size: 0.9rem !important; }
+
+            /* 4. 2x2 GRID FOR TOPICS */
+            .main-container > h5 { font-size: 1rem !important; margin-bottom: 12px !important; }
+            .row.g-4.mb-5 {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px !important;
+                margin-bottom: 25px !important;
+            }
+            .row.g-4.mb-5 > div { width: 100% !important; padding: 0 !important; }
+
+            .kb-category-card { padding: 15px 10px !important; }
+            .kb-category-icon { width: 40px !important; height: 40px !important; font-size: 1.1rem !important; margin-bottom: 8px !important; }
+            .kb-category-card h6 { font-size: 0.8rem !important; margin-bottom: 4px !important; }
+            .kb-category-card p { font-size: 0.65rem !important; line-height: 1.2 !important; }
+
+            /* 5. FAQ & ACCORDION TIGHTENING */
+            .faq-header { padding: 12px 15px !important; }
+            .faq-header h5 { font-size: 0.95rem !important; }
+            .faq-body { padding: 15px !important; }
+
+            .accordion-button { font-size: 0.85rem !important; padding: 12px 0 !important; line-height: 1.4 !important; }
+            .accordion-body { font-size: 0.8rem !important; padding-bottom: 15px !important; }
+
+            /* 6. QUERY FORM ADJUSTMENTS */
+            .query-card { margin-top: 10px !important; margin-bottom: 30px !important; }
+            .query-header { padding: 15px !important; }
+            .query-body { padding: 15px !important; }
+            .custom-input { font-size: 0.85rem !important; padding: 10px !important; }
+            .form-label { font-size: 0.65rem !important; }
+        }
+    </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>

@@ -286,7 +286,81 @@
 
     </style>
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/mobile-responsive.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 991px) {
+            /* 1. GLOBAL LAYOUT FIXES */
+            body { height: 100dvh; overflow: hidden; }
+            .top-header { padding: 12px 15px !important; height: 65px !important; }
+            .header-title { font-size: 1.1rem !important; letter-spacing: 0; }
+            .top-header i.fa-comments { font-size: 1.5rem !important; }
+            .top-header .header-separator { display: none !important; }
+
+            /* Compact Header Button */
+            .btn-back-home { padding: 6px 12px !important; font-size: 0 !important; border-radius: 8px !important; }
+            .btn-back-home i { font-size: 0.85rem !important; margin: 0 !important; }
+            .btn-back-home::after { content: "Home"; font-size: 0.85rem; margin-left: 5px; font-weight: 700; font-family: 'Inter'; }
+
+            /* 2. CONVERT TO FULL-PAGE VIEWS */
+            .chat-container {
+                padding: 0 !important;
+                gap: 0 !important;
+                position: relative;
+                flex-direction: column;
+            }
+
+            /* View 1: Sidebar as the full screen */
+            .chat-sidebar {
+                width: 100% !important;
+                border-radius: 0 !important;
+                border: none !important;
+                height: 100% !important;
+                display: flex !important;
+            }
+
+            /* View 2: Main Chat (Hidden by default on mobile) */
+            .chat-main {
+                position: absolute;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background: var(--bg-color);
+                z-index: 100;
+                display: none !important; /* Hidden until a chat is clicked */
+                gap: 0 !important;
+            }
+
+            /* TRIGGER: Show Chat View */
+            body.mobile-chat-open .chat-main { display: flex !important; }
+            body.mobile-chat-open .chat-sidebar { display: none !important; }
+
+            /* 3. MOBILE CHAT HEADER */
+            .chat-header { border-radius: 0 !important; padding: 10px 15px !important; border-top: none !important; }
+            .chat-header .avatar { width: 35px !important; height: 35px !important; font-size: 0.9rem !important; }
+            .chat-header h6 { font-size: 0.9rem !important; }
+
+            /* Inject a "Back to List" button via CSS for mobile */
+            .chat-header::before {
+                content: '\f060'; /* FontAwesome arrow-left */
+                font-family: 'Font Awesome 6 Free'; font-weight: 900;
+                font-size: 1.2rem; color: var(--bs-primary);
+                margin-right: 15px; cursor: pointer; display: flex; align-items: center;
+            }
+
+            /* 4. CHAT BUBBLES & INPUT */
+            .chat-history { padding: 15px !important; border-radius: 0 !important; border: none !important; }
+            .msg-bubble { max-width: 85% !important; padding: 10px 14px !important; font-size: 0.85rem !important; }
+
+            .chat-input-area { border-radius: 0 !important; border: none !important; border-top: 1px solid var(--border-color) !important; padding: 10px 12px !important; }
+            .input-wrapper { padding: 2px 5px !important; }
+            .chat-input { padding: 8px 10px !important; font-size: 0.85rem !important; }
+            .btn-send { width: 40px !important; height: 40px !important; font-size: 1rem !important; }
+            .btn-icon { font-size: 1.1rem !important; padding: 8px !important; }
+
+            /* Sidebar Contact List Tweaks */
+            .contact-item { margin: 2px 0 !important; border-radius: 0 !important; border-bottom: 1px solid #f1f5f9 !important; padding: 15px !important; }
+            .contact-msg { max-width: 180px !important; }
+        }
+    </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>
@@ -529,6 +603,8 @@
 
     // 4. CHAT FUNCTIONS
     function loadChat(contactId, username, fullname) {
+
+        if (window.innerWidth < 992) { document.body.classList.add('mobile-chat-open'); }
         activeContactId = contactId;
         activeContactName = username;
         activeContactFullName = fullname;
@@ -744,6 +820,14 @@
     document.querySelector('.chat-input').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             sendMessage();
+        }
+    });
+
+    // MOBILE BACK BUTTON LOGIC
+    document.querySelector('.chat-header').addEventListener('click', function(e) {
+        // If they clicked the left side of the header (where our back arrow is)
+        if (window.innerWidth < 992 && e.offsetX < 50) {
+            document.body.classList.remove('mobile-chat-open');
         }
     });
 

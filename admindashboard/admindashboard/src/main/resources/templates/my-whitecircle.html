@@ -121,7 +121,64 @@
         }
     </style>
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/mobile-responsive.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 991px) {
+
+            /* 1. COMPACT GLOBAL LAYOUT */
+            html, body {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            body { padding-top: 75px !important; }
+
+            /* 2. SHRINK THE TOP NAV BAR */
+            .top-header {
+                height: auto !important; padding: 12px 15px !important; display: flex !important;
+                flex-direction: row !important; justify-content: space-between !important; align-items: center !important; flex-wrap: nowrap !important;
+            }
+
+            .top-header > .d-flex { min-width: 0 !important; width: auto !important; flex: 1 !important; }
+            .top-header i.fa-id-badge { font-size: 1.6rem !important; }
+            .top-header span { font-size: 1.1rem !important; margin-left: 8px !important; padding-left: 8px !important; line-height: 1.1 !important; white-space: nowrap !important; }
+
+            .btn-back-home {
+                flex: 0 0 auto !important; margin: 0 0 0 10px !important; width: auto !important;
+                padding: 6px 12px !important; font-size: 0.75rem !important; border-radius: 8px !important; white-space: nowrap !important;
+            }
+
+            /* 3. HERO SECTION ADJUSTMENTS */
+            .hero-section {
+                margin-top: 0 !important; padding: 20px 10px !important; border-radius: 0 0 25px 25px !important;
+                margin-bottom: 25px !important; height: auto !important; position: relative !important; display: block !important;
+            }
+            .hero-section .container { display: block !important; min-height: 0 !important; height: auto !important; padding: 0 !important; margin: 0 auto !important; }
+            .hero-logo { width: 50px !important; height: 50px !important; margin-bottom: 8px !important; }
+            .greeting-text { font-size: 1.25rem !important; margin-bottom: 5px !important;}
+            .sub-text { font-size: 0.8rem !important; margin-bottom: 0 !important;}
+
+            /* 4. QUICK ACTION GRID */
+            .container-grid { padding: 0 12px !important; margin-top: 15px !important; margin-bottom: 20px !important; display: block !important; }
+            .container-grid h5 { font-size: 1rem !important; margin-bottom: 15px !important; line-height: 1.2 !important; padding-top: 5px !important; }
+
+            /* Force a 3-column grid on mobile */
+            .container-grid .row {
+                display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important;
+                margin-top: 0 !important; margin-left: 0 !important; margin-right: 0 !important;
+            }
+
+            .container-grid .col { width: 100% !important; padding: 0 !important; margin: 0 !important;}
+
+            /* Squeeze the boxes so 3 fit across */
+            .action-box { padding: 12px 6px !important; border-radius: 10px !important; border-width: 1px !important; min-height: 100px !important; justify-content: flex-start !important; }
+            .icon-circle { width: 38px !important; height: 38px !important; font-size: 1.1rem !important; margin-bottom: 8px !important; flex-shrink: 0 !important; }
+            .box-title { font-size: 0.65rem !important; line-height: 1.1 !important; text-align: center !important; margin: 0 !important; }
+        }
+    </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>

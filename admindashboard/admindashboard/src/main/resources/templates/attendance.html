@@ -146,7 +146,95 @@
 
     </style>
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/mobile-responsive.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 991px) {
+
+            /* 1. COMPACT GLOBAL LAYOUT */
+            html, body {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            body { padding-top: 135px !important; } /* Buffer for taller stacked navbar */
+
+            /* 2. REORGANIZE THE TOP NAV BAR INTO A GRID */
+            .top-nav-bar {
+                height: auto !important;
+                padding: 12px 15px !important;
+                display: grid !important;
+                grid-template-columns: 1fr auto !important;
+                grid-template-areas:
+                    "brand backbtn"
+                    "timesheet timesheet" !important;
+                gap: 12px !important; align-items: center !important;
+            }
+
+            .brand-section { grid-area: brand !important; width: 100% !important; justify-content: flex-start !important; margin: 0 !important; }
+            .btn-back-home { grid-area: backbtn !important; margin: 0 !important; width: auto !important; padding: 6px 12px !important; font-size: 0.75rem !important; border-radius: 8px !important; white-space: nowrap !important; }
+            .nav-tabs-container { grid-area: timesheet !important; width: 100% !important; margin: 0 !important; display: flex !important; }
+
+            .brand-section i { font-size: 1.6rem !important; margin-top: 2px !important; }
+            .brand-section span { font-size: 1.1rem !important; margin-left: 8px !important; padding-left: 8px !important; line-height: 1.1 !important; font-weight: 800 !important; }
+
+            .nav-tabs-container .vr { display: none !important; }
+            .btn-navy-shine { width: 100% !important; padding: 8px !important; font-size: 0.8rem !important; border-radius: 8px !important; justify-content: center !important; }
+
+            /* 3. MAIN CONTAINER & HEADER FIXES */
+            .main-container { margin-top: 15px !important; padding: 0 12px !important; }
+
+            .card-header-light { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+            .card-header-light > div:last-child { width: 100% !important; }
+            .card-header-light input[type="week"] { width: 100% !important; height: 40px !important; }
+
+            /* 4. THE MAGIC TABLE-TO-CARD CONVERSION */
+            .attendance-table thead { display: none !important; } /* Hide the horizontal headers */
+            .attendance-table, .attendance-table tbody, .attendance-table tr, .attendance-table td { display: block !important; width: 100% !important; }
+
+            .attendance-table tr {
+                margin: 0 0 15px 0 !important; border: 1px solid #cbd5e1 !important; border-radius: 12px !important;
+                overflow: hidden !important; background: white !important; box-shadow: 0 2px 6px rgba(0,0,0,0.03) !important;
+            }
+
+            .attendance-table td {
+                display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important;
+                text-align: center !important; border-bottom: 1px solid #f1f5f9 !important; padding: 10px 15px !important; gap: 6px !important;
+            }
+            .attendance-table td:last-child { border-bottom: none !important; }
+
+            /* Highlight the Day/Date Row */
+            .attendance-table td:nth-child(1) {
+                background: var(--bs-primary) !important; color: white !important; font-size: 0.95rem !important;
+                padding: 10px !important; flex-direction: row !important; gap: 8px !important;
+            }
+            .attendance-table td:nth-child(1) .text-muted { color: #bfdbfe !important; }
+
+            /* Add Custom Labels to replace the hidden headers */
+            .attendance-table td:nth-child(2)::before { content: "Planned Hours"; font-weight: 700; font-size: 0.65rem; color: #64748b; text-transform: uppercase; }
+            .attendance-table td:nth-child(3)::before { content: "Recorded Hours"; font-weight: 700; font-size: 0.65rem; color: #64748b; text-transform: uppercase; }
+            .attendance-table td:nth-child(4)::before { content: "Status"; font-weight: 700; font-size: 0.65rem; color: #64748b; text-transform: uppercase; }
+            .attendance-table td:nth-child(5)::before { content: "Mode / Reason"; font-weight: 700; font-size: 0.65rem; color: #64748b; text-transform: uppercase; }
+
+            /* Fix Input Sizing */
+            .attendance-table td > div { flex-direction: column !important; align-items: center !important; width: 100% !important; gap: 5px !important; }
+            .tbl-input { width: 100% !important; max-width: 250px !important; padding: 8px !important; font-size: 0.85rem !important; height: auto !important; text-align: center !important; text-align-last: center !important; }
+            .planned-val { width: 100% !important; font-size: 1rem !important; padding: 0 !important; }
+
+            /* 5. STACK ACTION BUTTONS (Submit on top) */
+            .border-top.bg-light .d-flex.gap-2 { flex-direction: column-reverse !important; width: 100% !important; }
+            .border-top.bg-light .btn { width: 100% !important; padding: 12px !important; font-size: 0.95rem !important; margin: 0 !important;}
+
+            /* 6. RESPONSIVE SUMMARY GRID */
+            .summary-box { flex-wrap: wrap !important; gap: 8px !important; margin-top: 15px !important; background: transparent !important; border: none !important;}
+            .sum-item { width: calc(50% - 4px) !important; padding: 12px !important; background: white !important; border: 1px solid #e2e8f0 !important; border-radius: 10px !important; }
+            .sum-item:last-child { width: 100% !important; } /* Awaiting Approval takes full width at bottom */
+            .sum-val { font-size: 1.15rem !important; }
+            .sum-lbl { font-size: 0.65rem !important; }
+        }
+    </style>
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>
