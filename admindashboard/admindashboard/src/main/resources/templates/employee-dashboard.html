@@ -697,6 +697,56 @@
             #employeeDirModal span, #employeeDirModal a { font-size: 0.68rem !important; font-weight: 700 !important; color: #1e293b !important; }
             #employeeDirModal hr { display: none; }
 
+
+            /* =========================================================
+               9. MOBILE-ONLY DARK MODE FIXES (SEARCH & PROFILE MODAL)
+               ========================================================= */
+            [data-bs-theme="dark"] #employeeDirModal .modal-content,
+            [data-bs-theme="dark"] .search-dropdown-card,
+            [data-bs-theme="dark"] .search-result-item {
+                background-color: #1e1e1e !important;
+                border-color: #333333 !important;
+            }
+
+            /* The inset detail boxes (Department, Email, etc.) */
+            [data-bs-theme="dark"] #employeeDirModal .mb-3,
+            [data-bs-theme="dark"] #employeeDirModal .col-md-6 > div {
+                background-color: #121212 !important;
+                border-color: #2d2d2d !important;
+            }
+
+            /* Avatar Rings & Backgrounds */
+            [data-bs-theme="dark"] #employeeDirModal .bg-white.p-1,
+            [data-bs-theme="dark"] #modalEmpAvatar,
+            [data-bs-theme="dark"] .search-icon-wrapper {
+                background-color: #121212 !important;
+                border-color: #333333 !important;
+            }
+
+            /* Text Contrast Fixes */
+            [data-bs-theme="dark"] #employeeDirModal .text-dark,
+            [data-bs-theme="dark"] #employeeDirModal a.text-dark,
+            [data-bs-theme="dark"] .search-result-item .text-dark {
+                color: #ffffff !important;
+            }
+
+            [data-bs-theme="dark"] #employeeDirModal .text-muted,
+            [data-bs-theme="dark"] .search-result-item .text-muted {
+                color: #94a3b8 !important;
+            }
+
+            /* Location Badge */
+            [data-bs-theme="dark"] #employeeDirModal .badge.bg-light {
+                background-color: #2d2d2d !important;
+                color: #e2e8f0 !important;
+                border-color: #475569 !important;
+            }
+
+            /* Search Dropdown Hover Effect */
+            [data-bs-theme="dark"] .search-result-item:hover {
+                background-color: #2a2a2a !important;
+            }
+
         }
     </style>
 
