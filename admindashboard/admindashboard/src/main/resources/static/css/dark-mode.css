@@ -3775,3 +3775,926 @@
     background-color: #121212 !important;
 }
 [data-bs-theme="dark"] .modal-body .table td.py-3 { border-bottom-color: #2d2d2d !important; color: #ffffff !important; }
+
+
+
+/* ====================================================================
+   ADMIN PORTAL: MOBILE-ONLY DARK MODE FIXES (LEAVE REPORT)
+   ==================================================================== */
+@media (max-width: 991px) {
+
+    /* 1. Force the absolute bottom of the screen to be dark */
+    [data-bs-theme="dark"] html,
+    [data-bs-theme="dark"] body {
+        background-color: #121212 !important;
+        min-height: 100vh !important;
+    }
+    /* 2. Fix the White Table Cards */
+    [data-bs-theme="dark"] .table-card {
+        background-color: #1e1e1e !important;
+        border-color: #333333 !important;
+        background: #1e1e1e !important; /* Overrides any mobile CSS gradients */
+    }
+    /* If the table rows were transformed into cards on mobile */
+    [data-bs-theme="dark"] .table-card tbody tr {
+        background-color: #1e1e1e !important;
+        border-color: #333333 !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2) !important;
+    }
+    /* Make the inner cells transparent so the dark card shows */
+    [data-bs-theme="dark"] .table-card tbody td {
+        background-color: transparent !important;
+        border-color: #333333 !important;
+        color: #f8fafc !important;
+    }
+
+    /* 3. Fix Text Contrast Inside the Cards */
+    [data-bs-theme="dark"] .table-card tbody td .text-dark {
+        color: #ffffff !important; /* Employee Name, Leave Type */
+    }
+    [data-bs-theme="dark"] .table-card tbody td .text-muted {
+        color: #94a3b8 !important; /* Dates, Reason */
+    }
+
+    /* 4. Ensure the Details Modal is Dark */
+    [data-bs-theme="dark"] #leaveDetailsModal .modal-content,
+    [data-bs-theme="dark"] #leaveDetailsModal .modal-body {
+        background-color: #121212 !important;
+    }
+    [data-bs-theme="dark"] #leaveDetailsModal .text-dark {
+        color: #ffffff !important;
+    }
+    [data-bs-theme="dark"] #leaveDetailsModal .bg-light {
+        background-color: #1e1e1e !important;
+        border-color: #333333 !important;
+    }
+}
+
+/* ====================================================================
+   ADMIN PORTAL: MOBILE-ONLY DARK MODE FIXES (EMPLOYEE MASTER REPORT)
+   ==================================================================== */
+@media (max-width: 991px) {
+
+    /* 1. Crush the White Outer Wrapper */
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .card.border-0.shadow-sm {
+        background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* 2. Force-Paint the Row Cards */
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .table tr {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border: 1px solid #333333 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+
+    /* 3. Force-Paint the Cells (Overrides the white bleed) */
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .table td {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+    }
+
+    /* Keep the dashed border on the bottom of the first cell */
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .table td:nth-child(1) {
+        border-bottom-color: #333333 !important;
+    }
+
+    /* 4. Fix Text Colors */
+    /* Name */
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .table td:nth-child(2) {
+        color: #ffffff !important;
+    }
+    /* ID */
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .table td:nth-child(1),
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .table td.text-primary {
+        color: #93c5fd !important;
+    }
+    /* Email Label */
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .table td:nth-child(3)::before {
+        color: #94a3b8 !important;
+    }
+    /* Email Text */
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .table td:nth-child(3) {
+        color: #f8fafc !important;
+    }
+
+    /* 5. Fix the View Details Button */
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .table td:nth-child(5) button {
+        background-color: #121212 !important;
+        border-color: #333333 !important;
+        color: #bfdbfe !important;
+    }
+
+    /* 6. Pagination Footer */
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .card-footer.bg-white {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border-top: 1px solid #333333 !important;
+    }
+
+    /* 7. Fix Filter Card & Search Bar */
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .filter-card {
+        background-color: #1e1e1e !important;
+        border-color: #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .input-group-text.bg-white,
+    html[data-bs-theme="dark"] body:has(#employeeSearch) #employeeSearch {
+        background-color: #121212 !important;
+        border-color: #333333 !important;
+        color: #f8fafc !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .search-input-active,
+    html[data-bs-theme="dark"] body:has(#employeeSearch) .search-input-active ~ .input-group-text {
+        background-color: rgba(30, 58, 138, 0.2) !important;
+        border-color: #3b82f6 !important;
+        color: #ffffff !important;
+    }
+}
+
+
+/* ====================================================================
+   ADMIN PORTAL: MOBILE-ONLY DARK MODE FIXES (WEEKLY TIMESHEET REPORT)
+   ==================================================================== */
+@media (max-width: 991px) {
+
+    /* 1. Fix the Top Filter Card & Inputs */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .filter-card {
+        background-color: #1e1e1e !important;
+        border-color: #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .input-group-text.bg-white,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .search-container .form-control,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) input[type="date"] {
+        background-color: #121212 !important;
+        background: #121212 !important;
+        border-color: #333333 !important;
+        color: #f8fafc !important;
+    }
+
+    /* 2. Neutralize the Outer Wrapper */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .table-card {
+        background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* 3. Force-Paint the Row Cards Dark */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .table-card .table tr {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important; /* Critical override */
+        border: 1px solid #333333 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+    /* Make Inner Cells Transparent */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .table-card .table td {
+        background-color: transparent !important;
+        background: transparent !important;
+        color: #f8fafc !important; /* Default light text */
+    }
+
+    /* 4. Fix Main Card Text Colors */
+    /* Name */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .table-card .table td:nth-child(2) {
+        color: #ffffff !important;
+    }
+    /* EMP ID */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .table-card .table td:nth-child(1) {
+        color: #93c5fd !important;
+    }
+    /* Labels */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .table-card .table td::before {
+        color: #94a3b8 !important;
+    }
+    /* Action Button */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .btn-action {
+        background-color: #121212 !important;
+        border-color: #333333 !important;
+        color: #bfdbfe !important;
+    }
+
+    /* 5. Fix the Details Modal Inner Cards */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .modal-content {
+        background-color: #121212 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .modal-content .col-lg-3,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .modal-content .col-md-4 {
+        border-bottom-color: #333333 !important;
+    }
+    /* Modal Row Cards */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .modal-body .table tr {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border-color: #333333 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .modal-body .table td {
+        background-color: transparent !important;
+        background: transparent !important;
+        border-bottom-color: #333333 !important;
+        border-top-color: #333333 !important; /* Target the 'Total' top border */
+        color: #f8fafc !important;
+    }
+
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .modal-body .table td::before {
+        color: #94a3b8 !important;
+    }
+    /* General Text Color Resets for the Page */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .text-dark,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) h4.text-dark {
+        color: #ffffff !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="timesheet"]) .text-muted {
+        color: #94a3b8 !important;
+    }
+}
+
+
+/* ====================================================================
+   ADMIN PORTAL: MOBILE-ONLY DARK MODE FIXES (ATTENDANCE REPORT)
+   ==================================================================== */
+@media (max-width: 991px) {
+
+    /* 1. Fix the Top Filter Card & Inputs */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .filter-card {
+        background-color: #1e1e1e !important;
+        border-color: #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .input-group-text.bg-white,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .search-container .form-control,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) input[type="date"] {
+        background-color: #121212 !important;
+        background: #121212 !important;
+        border-color: #333333 !important;
+        color: #f8fafc !important;
+    }
+
+    /* 2. Neutralize the Outer Wrapper */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card {
+        background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* 3. Force-Paint the Row Cards Dark */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table tr {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important; /* Critical override */
+        border: 1px solid #333333 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+
+    /* Make Inner Cells Transparent */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table td {
+        background-color: transparent !important;
+        background: transparent !important;
+        color: #f8fafc !important;
+    }
+
+    /* 4. Fix Main Card Text Colors */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table td:nth-child(2) {
+        color: #ffffff !important; /* Name */
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table td:nth-child(1) {
+        color: #93c5fd !important; /* EMP ID */
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table td::before {
+        color: #94a3b8 !important; /* Labels */
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table td:nth-child(3) {
+        border-bottom-color: #333333 !important; /* Week Range dashed line */
+    }
+    /* Action Button */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .btn-action {
+        background-color: #121212 !important;
+        border-color: #333333 !important;
+        color: #bfdbfe !important;
+    }
+
+    /* 5. Fix the Details Modal */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-content {
+        background-color: #121212 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-content .col-lg-3,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-content .col-md-4 {
+        border-bottom-color: #333333 !important;
+    }
+    /* Modal Row Cards */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-body .table tr {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border-color: #333333 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-body .table td {
+        background-color: transparent !important;
+        background: transparent !important;
+        color: #f8fafc !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-body .table td:nth-child(1) {
+        color: #60a5fa !important; /* Day Name (e.g. Monday) */
+        border-bottom-color: #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-body .table td::before {
+        color: #94a3b8 !important;
+    }
+    /* Reason Box inside Modal */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-body .table td:nth-child(5) {
+        background-color: #121212 !important;
+        background: #121212 !important;
+        border-color: #333333 !important;
+    }
+    /* General Text Color Resets */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .text-dark,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) h4.text-dark {
+        color: #ffffff !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .text-muted {
+        color: #94a3b8 !important;
+    }
+}
+
+/* ====================================================================
+   ADMIN PORTAL: THE ULTIMATE MOBILE DARK MODE FIX (ATTENDANCE REPORT)
+   ==================================================================== */
+@media (max-width: 991px) {
+
+    /* 1. Fix the Search and Filter Inputs */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .filter-card {
+        background-color: #1e1e1e !important;
+        border-color: #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .input-group-text.bg-white,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .search-container .form-control,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) input[type="date"] {
+        background-color: #121212 !important;
+        background: #121212 !important;
+        border-color: #333333 !important;
+        color: #f8fafc !important;
+    }
+
+    /* 2. NEUTRALIZE THE OUTER CARD */
+    /* This completely erases the massive white box behind the table */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card {
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* 3. FORCE-PAINT EVERY ROW AND CELL DARK */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table tbody tr,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table tbody td {
+        background: #1e1e1e !important;
+        background-color: #1e1e1e !important;
+        border-color: #333333 !important;
+        color: #f8fafc !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table tbody tr {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+        border: 1px solid #333333 !important;
+        border-radius: 12px !important;
+    }
+    /* Keep the dashed line for the Week Range cell */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table td:nth-child(3) {
+        border-bottom: 1px dashed #333333 !important;
+    }
+
+    /* 4. Fix Text Colors */
+    /* Name */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table td:nth-child(2) {
+        color: #ffffff !important;
+    }
+    /* EMP ID */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table td:nth-child(1) {
+        color: #93c5fd !important;
+    }
+    /* Injected mobile labels */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table td::before {
+        color: #94a3b8 !important;
+    }
+
+    /* 5. Fix the View Details Button */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .btn-action,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .table-card .table td:nth-child(7) .btn {
+        background: #121212 !important;
+        background-color: #121212 !important;
+        border-color: #333333 !important;
+        color: #bfdbfe !important;
+    }
+
+    /* 6. MODAL FIXES */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-content {
+        background-color: #121212 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-content .col-lg-3 {
+        border-bottom-color: #333333 !important;
+    }
+    /* Modal Row Cards Force-Paint */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-body .table tr,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-body .table td {
+        background: #1e1e1e !important;
+        background-color: #1e1e1e !important;
+        border-color: #333333 !important;
+        color: #f8fafc !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-body .table tr {
+        border: 1px solid #333333 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+    /* Day text color in Modal (e.g. Monday) */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-body .table td:nth-child(1) {
+        color: #60a5fa !important;
+        border-bottom: 2px solid #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-body .table td::before {
+        color: #94a3b8 !important;
+    }
+    /* Specific Reason box in Modal */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .modal-body .table td:nth-child(5) {
+        background: #121212 !important;
+        background-color: #121212 !important;
+        border: 1px solid #333333 !important;
+    }
+    /* General text fixes for the page */
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .text-dark,
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) h4.text-dark {
+        color: #ffffff !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeSearch):has(input[value="attendance"]) .text-muted {
+        color: #94a3b8 !important;
+    }
+}
+
+/* ====================================================================
+   ADMIN PORTAL: MOBILE-ONLY DARK MODE FIXES (TIMESHEET APPROVALS)
+   ==================================================================== */
+
+@media (max-width: 991px) {
+
+    /* 1. Fix the Top Nav Pills (Tabs) */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .nav-pills {
+        background-color: transparent !important;
+    }
+    html[data-bs-theme="dark"] body:has(#timesheetList) .nav-pills .nav-link:not(.active) {
+        background-color: #1e1e1e !important;
+        border-color: #333333 !important;
+        color: #94a3b8 !important;
+    }
+
+    /* 2. Neutralize the Outer Wrapper Background */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .card.border-0.shadow-sm,
+    html[data-bs-theme="dark"] body:has(#timesheetList) #timesheetList {
+        background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+    }
+
+    /* 3. Force-Paint the Row Cards Dark */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .timesheet-row {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border: 1px solid #333333 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+
+    /* Internal Card Borders */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .timesheet-row > div:nth-child(1) {
+        border-bottom: 1px dashed #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#timesheetList) .timesheet-row > div:nth-child(4) {
+        border-top: 1px solid #333333 !important;
+    }
+
+    /* 4. Fix Text Colors in Main Cards */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .timesheet-row .text-dark,
+    html[data-bs-theme="dark"] body:has(#timesheetList) .timesheet-row h6.text-dark {
+        color: #ffffff !important;
+    }
+    html[data-bs-theme="dark"] body:has(#timesheetList) .timesheet-row .text-muted,
+    html[data-bs-theme="dark"] body:has(#timesheetList) .timesheet-row > div:nth-child(2) span:first-child,
+    html[data-bs-theme="dark"] body:has(#timesheetList) .timesheet-row > div:nth-child(3) span:first-child {
+        color: #94a3b8 !important; /* "Submitted On" and "Total Hours" labels */
+    }
+
+    /* Badges & Avatars */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .badge.bg-secondary.bg-opacity-10 {
+        background-color: #121212 !important;
+        color: #93c5fd !important;
+        border-color: #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#timesheetList) .timesheet-row .badge.bg-light {
+        background-color: #121212 !important;
+        color: #bfdbfe !important;
+        border-color: #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#timesheetList) .avatar-circle {
+        background-color: #121212 !important;
+        border-color: #333333 !important;
+        color: #60a5fa !important;
+    }
+
+    /* 5. Action Button (Details) */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .btn-view {
+        background-color: #121212 !important;
+        border: 1px solid #333333 !important;
+        color: #bfdbfe !important;
+    }
+
+    /* 6. MODAL FIXES (Breakdown View) */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .modal-content {
+        background-color: #121212 !important;
+    }
+
+    /* Top Header Block inside Modal */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .modal-body .text-end {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border: 1px solid #333333 !important;
+    }
+
+    /* Modal Row Cards */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .modal-body .table tr {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border-color: #333333 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+
+    /* Make inner cells transparent */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .modal-body .table td {
+        background-color: transparent !important;
+        background: transparent !important;
+        border-bottom-color: #333333 !important;
+        color: #f8fafc !important;
+    }
+
+    /* The Top Project Header Cell */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .modal-body .table td:nth-child(1) {
+        background-color: #121212 !important;
+        background: #121212 !important;
+        border-bottom: 2px solid #333333 !important;
+    }
+
+    /* The Blue Total Cell at the bottom of the card */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .modal-body .table td:nth-child(10) {
+        background-color: #1e3a8a !important;
+        color: #ffffff !important;
+    }
+    html[data-bs-theme="dark"] body:has(#timesheetList) .modal-body .table td:nth-child(10)::before {
+        color: #bfdbfe !important;
+    }
+
+    /* Injected Mobile Labels */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .modal-body .table td::before {
+        color: #94a3b8 !important;
+    }
+
+    /* Global Text Resets for the Page */
+    html[data-bs-theme="dark"] body:has(#timesheetList) .text-dark {
+        color: #ffffff !important;
+    }
+}
+
+/* ====================================================================
+   ADMIN PORTAL: MOBILE-ONLY DARK MODE FIXES (ATTENDANCE APPROVALS)
+   ==================================================================== */
+@media (max-width: 991px) {
+
+    /* 1. Fix the Top Nav Pills (Tabs) */
+    html[data-bs-theme="dark"] body:has(#requestList) .nav-pills {
+        background-color: transparent !important;
+    }
+    html[data-bs-theme="dark"] body:has(#requestList) .nav-pills .nav-link:not(.active) {
+        background-color: #1e1e1e !important;
+        border-color: #333333 !important;
+        color: #94a3b8 !important;
+    }
+
+    /* 2. Neutralize the Outer Wrapper Background */
+    html[data-bs-theme="dark"] body:has(#requestList) .card.border-0.shadow-sm,
+    html[data-bs-theme="dark"] body:has(#requestList) #requestList {
+        background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+    }
+
+    /* 3. Force-Paint the Row Cards Dark */
+    html[data-bs-theme="dark"] body:has(#requestList) .timesheet-row {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border: 1px solid #333333 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+    /* Internal Card Borders */
+    html[data-bs-theme="dark"] body:has(#requestList) .timesheet-row > div:nth-child(1) {
+        border-bottom: 1px dashed #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#requestList) .timesheet-row > div:nth-child(4) {
+        border-top: 1px solid #333333 !important;
+    }
+
+    /* 4. Fix Text Colors in Main Cards */
+    html[data-bs-theme="dark"] body:has(#requestList) .timesheet-row .text-dark,
+    html[data-bs-theme="dark"] body:has(#requestList) .timesheet-row h6.text-dark {
+        color: #ffffff !important;
+    }
+    html[data-bs-theme="dark"] body:has(#requestList) .timesheet-row .text-muted,
+    html[data-bs-theme="dark"] body:has(#requestList) .timesheet-row > div:nth-child(2) span:first-child,
+    html[data-bs-theme="dark"] body:has(#requestList) .timesheet-row > div:nth-child(3) span:first-child {
+        color: #94a3b8 !important; /* "No. of Days" and "Total Hours" labels */
+    }
+    /* Badges & Avatars */
+    html[data-bs-theme="dark"] body:has(#requestList) .badge.bg-secondary.bg-opacity-10,
+    html[data-bs-theme="dark"] body:has(#requestList) .timesheet-row .badge.bg-light {
+        background-color: #121212 !important;
+        color: #93c5fd !important;
+        border-color: #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#requestList) .avatar-circle {
+        background-color: #121212 !important;
+        border-color: #333333 !important;
+        color: #60a5fa !important;
+    }
+
+    /* 5. Action Buttons (View, Approve, Reject Icons) */
+    html[data-bs-theme="dark"] body:has(#requestList) .timesheet-row > div:nth-child(4) button {
+        background-color: #121212 !important;
+        border: 1px solid #333333 !important;
+        color: #bfdbfe !important;
+    }
+    html[data-bs-theme="dark"] body:has(#requestList) .timesheet-row > div:nth-child(4) button:hover {
+        background-color: #3b82f6 !important;
+        color: #ffffff !important;
+    }
+
+    /* 6. MODAL FIXES (Breakdown View) */
+    html[data-bs-theme="dark"] body:has(#requestList) .modal-content {
+        background-color: #121212 !important;
+    }
+    /* Top Header Block inside Modal */
+    html[data-bs-theme="dark"] body:has(#requestList) .modal-body .text-end {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border: 1px solid #333333 !important;
+    }
+    /* Modal Row Cards */
+    html[data-bs-theme="dark"] body:has(#requestList) .modal-body .table-custom tr {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border-color: #333333 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+    /* Make inner cells transparent */
+    html[data-bs-theme="dark"] body:has(#requestList) .modal-body .table-custom td {
+        background-color: transparent !important;
+        background: transparent !important;
+        border-bottom-color: #333333 !important;
+        color: #f8fafc !important;
+    }
+    /* The Top Day Header Cell (Monday, Tuesday, etc.) */
+    html[data-bs-theme="dark"] body:has(#requestList) .modal-body .table-custom td:nth-child(1) {
+        background-color: #121212 !important;
+        background: #121212 !important;
+        border-bottom: 2px solid #333333 !important;
+    }
+    /* Injected Mobile Labels */
+    html[data-bs-theme="dark"] body:has(#requestList) .modal-body .table-custom td::before {
+        color: #94a3b8 !important;
+    }
+    /* Global Text Resets for the Page */
+    html[data-bs-theme="dark"] body:has(#requestList) .text-dark {
+        color: #ffffff !important;
+    }
+
+/* 7. MODAL FIX: Crush the White Present/Absent Summary Box */
+    html[data-bs-theme="dark"] body:has(#requestList) #modalContent > div:first-child > div,
+    html[data-bs-theme="dark"] body:has(#requestList) #modalContent .bg-white,
+    html[data-bs-theme="dark"] body:has(#requestList) #modalContent .bg-light,
+    html[data-bs-theme="dark"] body:has(#requestList) .modal-body [style*="background"] {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border: 1px solid #333333 !important;
+    }
+
+    /* Fix the text colors inside the summary box */
+    html[data-bs-theme="dark"] body:has(#requestList) #modalContent .text-muted,
+    html[data-bs-theme="dark"] body:has(#requestList) #modalContent .small {
+        color: #94a3b8 !important; /* 'PRESENT' and 'ABSENT' labels */
+    }
+
+    /* Force the big numbers (4 and 1) to be pure white */
+    html[data-bs-theme="dark"] body:has(#requestList) #modalContent h3,
+    html[data-bs-theme="dark"] body:has(#requestList) #modalContent h4,
+    html[data-bs-theme="dark"] body:has(#requestList) #modalContent .fs-2,
+    html[data-bs-theme="dark"] body:has(#requestList) #modalContent .fs-3,
+    html[data-bs-theme="dark"] body:has(#requestList) #modalContent .fs-4,
+    html[data-bs-theme="dark"] body:has(#requestList) #modalContent .fw-bold {
+        color: #ffffff !important;
+    }
+}
+
+/* ====================================================================
+   ADMIN PORTAL: MOBILE-ONLY DARK MODE FIXES (LEAVE APPROVALS)
+   ==================================================================== */
+@media (max-width: 991px) {
+
+    /* 1. Fix the Top Nav Pills (Tabs) */
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .nav-pills {
+        background-color: transparent !important;
+    }
+    /* Darken the inactive tabs (Approved, Rejected) */
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .nav-pills .nav-link:not(.active) {
+        background-color: #1e1e1e !important;
+        border-color: #333333 !important;
+        color: #94a3b8 !important;
+    }
+    /* Fix the little number badges inside the tabs */
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .nav-pills .nav-link .badge-count {
+        background-color: #333333 !important;
+        color: #f8fafc !important;
+    }
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .nav-pills .nav-link.active .badge-count {
+        background-color: rgba(255,255,255,0.2) !important; /* Subtle highlight for the active tab */
+    }
+
+    /* 2. Standardize the Approval Cards */
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .approval-card {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border: 1px solid #333333 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+    /* Card Internal Dashed Divider */
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .approval-card .d-flex.flex-column.align-items-end {
+        border-top: 1px dashed #333333 !important;
+    }
+
+    /* 3. Fix Text Colors inside Cards */
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .approval-card .emp-name {
+        color: #ffffff !important;
+    }
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .approval-card .text-muted,
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .approval-card .leave-details {
+        color: #94a3b8 !important;
+    }
+    /* Inner Pills and Avatars */
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .approval-card .emp-initials {
+        background-color: #121212 !important;
+        border: 1px solid #333333 !important;
+        color: #60a5fa !important;
+    }
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .approval-card .p-2.bg-light,
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .approval-card .leave-dates {
+        background-color: #121212 !important;
+        background: #121212 !important;
+        border: 1px solid #333333 !important;
+        color: #cbd5e1 !important;
+    }
+
+    /* 4. Standardize Action Buttons (Details, Reject, Approve) */
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .approval-card .btn-action,
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .approval-card .btn-view {
+        background-color: #121212 !important;
+        border: 1px solid #333333 !important;
+        color: #bfdbfe !important;
+    }
+
+    /* 5. MODAL FIXES (Leave Details Breakdown View) */
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .modal-content {
+        background-color: #1e1e1e !important;
+        border: 1px solid #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .modal-header {
+        border-bottom: 1px solid #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .modal-footer {
+        border-top: 1px solid #333333 !important;
+    }
+    /* Modal Row Data & Reason Box */
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .modal-body .text-muted {
+        color: #94a3b8 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .modal-body .text-dark,
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .modal-title {
+        color: #ffffff !important;
+    }
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .modal-body .bg-light {
+        background-color: #121212 !important;
+        background: #121212 !important;
+        border: 1px solid #333333 !important;
+        color: #f8fafc !important;
+    }
+    /* Global Text Resets for the Top Page Intro */
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .page-intro h5 {
+        color: #ffffff !important;
+    }
+    html[data-bs-theme="dark"] body:has(#approvalTabs) .page-intro p {
+        color: #94a3b8 !important;
+    }
+}
+
+
+/* ====================================================================
+   ADMIN PORTAL: MOBILE-ONLY DARK MODE FIXES (STAFF DIRECTORY)
+   ==================================================================== */
+@media (max-width: 991px) {
+
+    /* 1. Neutralize the Outer Wrappers */
+    html[data-bs-theme="dark"] body:has(#employeeModal) .content-card,
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table-responsive {
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* 2. Force-Paint the Row Cards Dark (Kills the white skeleton) */
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table tr {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border: 1px solid #333333 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+
+    /* 3. Make inner cells transparent so they blend perfectly into the card */
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table td {
+        background-color: transparent !important;
+        background: transparent !important;
+        border-color: #333333 !important;
+        color: #f8fafc !important; /* Default light text */
+    }
+    /* Fix the dashed border above the action buttons */
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table td:nth-child(8) {
+        border-top: 1px dashed #333333 !important;
+    }
+
+    /* 4. Fix Text Colors */
+    /* Employee Name */
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table td:nth-child(1) .text-dark,
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table td:nth-child(2) {
+        color: #ffffff !important;
+    }
+    /* EMP ID */
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table td:nth-child(1) .text-primary,
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table td:nth-child(1) .small {
+        color: #93c5fd !important;
+    }
+    /* Links and Emails */
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table td:nth-child(4) a,
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table td:nth-child(4) {
+        color: #cbd5e1 !important;
+    }
+    /* Injected Mobile Labels (Designation, Department, etc.) */
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table td::before {
+        color: #94a3b8 !important;
+    }
+
+    /* 5. Action Buttons (View, Edit) */
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table td:nth-child(8) .btn {
+        background-color: #121212 !important;
+        border: 1px solid #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table td:nth-child(8) .btn-outline-primary {
+        color: #60a5fa !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeModal) .table td:nth-child(8) .btn-outline-warning {
+        color: #fbbf24 !important;
+    }
+
+    /* 6. MODAL FIXES (Employee Quick View) */
+    html[data-bs-theme="dark"] body:has(#employeeModal) #employeeModal .modal-content {
+        background-color: #121212 !important;
+        border: 1px solid #333333 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeModal) #employeeModal .modal-header,
+    html[data-bs-theme="dark"] body:has(#employeeModal) #employeeModal .col-md-6.border-end {
+        border-bottom: 1px solid #333333 !important;
+    }
+    /* Inner Modal Detail Boxes */
+    html[data-bs-theme="dark"] body:has(#employeeModal) #employeeModal .mb-3,
+    html[data-bs-theme="dark"] body:has(#employeeModal) #employeeModal .col-md-6 > div {
+        background-color: #1e1e1e !important;
+        background: #1e1e1e !important;
+        border: 1px solid #333333 !important;
+    }
+    /* Modal Text Colors */
+    html[data-bs-theme="dark"] body:has(#employeeModal) #employeeModal span,
+    html[data-bs-theme="dark"] body:has(#employeeModal) #employeeModal a,
+    html[data-bs-theme="dark"] body:has(#employeeModal) #employeeModal h4,
+    html[data-bs-theme="dark"] body:has(#employeeModal) #employeeModal .text-dark,
+    html[data-bs-theme="dark"] body:has(#employeeModal) #employeeModal #modalEmpName {
+        color: #ffffff !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeModal) #employeeModal h6 {
+        color: #94a3b8 !important;
+    }
+    html[data-bs-theme="dark"] body:has(#employeeModal) #employeeModal small {
+        color: #64748b !important;
+    }
+}
+

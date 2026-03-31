@@ -253,6 +253,35 @@
             .modal-body { padding: 0 !important; }
             .nested-table th, .nested-table td { padding: 10px 8px !important; font-size: 0.75rem !important; white-space: nowrap !important; }
             .comment-box { padding: 12px 15px !important; font-size: 0.8rem !important; }
+
+            /* =========================================================
+               7. QUICK FILTERS MOBILE FIX (TIMESHEET REPORTS)
+               ========================================================= */
+
+            /* Add a little breathing room above the filters */
+            .top-control-card .col-md-4:last-child {
+                margin-top: 15px !important;
+                padding-top: 15px !important;
+                border-top: 1px dashed #e2e8f0 !important; /* Nice visual separator */
+                padding-left: 0 !important;
+            }
+
+            /* Force the filters into a perfect 50/50 grid so they never overflow */
+            .top-control-card .col-md-4:last-child .d-flex {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+                width: 100% !important;
+            }
+
+            /* Shrink the dropdowns to fit */
+            .filter-dropdown {
+                width: 100% !important;
+                font-size: 0.75rem !important; /* Smaller text */
+                padding: 8px 6px !important;   /* Tighter inner spacing */
+                text-overflow: ellipsis !important; /* Add '...' if text is too long */
+                overflow: hidden !important;
+            }
         }
     </style>
 

@@ -111,6 +111,198 @@
 
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>
+
+    <style>
+        @media (max-width: 991px) {
+
+            /* 1. Neutralize the white card wrapper holding the table */
+            html[data-bs-theme="dark"] body .card.card-custom.bg-white {
+                background: transparent !important;
+                background-color: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            /* 2. Force-Paint the Table Rows (Cards) Dark */
+            html[data-bs-theme="dark"] body .table-custom tbody tr {
+                background-color: #1e1e1e !important;
+                background: #1e1e1e !important; /* Critical shorthand override */
+                border: 1px solid #333333 !important;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
+            }
+
+            /* 3. Force-Paint the Inner Cells Dark to block white bleed-through */
+            html[data-bs-theme="dark"] body .table-custom tbody td {
+                background-color: #1e1e1e !important;
+                background: #1e1e1e !important;
+                border-color: #333333 !important;
+                color: #f8fafc !important;
+            }
+
+            /* Keep the dashed line for separating data */
+            html[data-bs-theme="dark"] body .table-custom tbody td:not(:last-child) {
+                border-bottom: 1px dashed #333333 !important;
+            }
+
+            /* 4. Fix Text Colors */
+            html[data-bs-theme="dark"] body .table-custom tbody td .text-dark {
+                color: #ffffff !important; /* Company and Contact Names */
+            }
+            html[data-bs-theme="dark"] body .table-custom tbody td .text-muted,
+            html[data-bs-theme="dark"] body .table-custom tbody td::before {
+                color: #94a3b8 !important; /* Injected mobile labels */
+            }
+
+            /* Darken the Client ID Info Pill */
+            html[data-bs-theme="dark"] body .info-pill {
+                background-color: #121212 !important;
+                color: #bfdbfe !important;
+                border-color: #333333 !important;
+            }
+
+            /* 5. Action Buttons (View, Edit, Delete) */
+            html[data-bs-theme="dark"] body .btn-action-group {
+                border-top: 1px dashed #333333 !important;
+                padding-top: 15px !important;
+            }
+            html[data-bs-theme="dark"] body .btn-action-group .btn-icon {
+                background-color: #121212 !important;
+                border: 1px solid #333333 !important;
+            }
+            html[data-bs-theme="dark"] body .btn-action-group .btn-view { color: #60a5fa !important; }
+            html[data-bs-theme="dark"] body .btn-action-group .btn-edit { color: #fbbf24 !important; }
+            html[data-bs-theme="dark"] body .btn-action-group .btn-delete { color: #f87171 !important; }
+
+            /* 6. Edit View Form Cards */
+            html[data-bs-theme="dark"] body #editView .form-section-card {
+                background-color: #1e1e1e !important;
+                border-color: #333333 !important;
+            }
+            html[data-bs-theme="dark"] body #editView .form-section-card .bg-white {
+                background-color: transparent !important;
+            }
+            html[data-bs-theme="dark"] body #editView .form-control.readonly-input {
+                background-color: #121212 !important;
+                border-color: #2d2d2d !important;
+                color: #94a3b8 !important;
+            }
+
+            /* 7. View Details Modal */
+            html[data-bs-theme="dark"] body #viewClientModal .modal-content,
+            html[data-bs-theme="dark"] body #viewClientModal .bg-light,
+            html[data-bs-theme="dark"] body #viewModalContent .bg-white {
+                background-color: #121212 !important;
+                border-color: #333333 !important;
+            }
+            html[data-bs-theme="dark"] body #viewModalContent .text-dark,
+            html[data-bs-theme="dark"] body #viewModalContent h4 {
+                color: #ffffff !important;
+            }
+            html[data-bs-theme="dark"] body #viewModalContent .text-primary {
+                color: #93c5fd !important;
+            }
+
+            /* =========================================================
+               KILL THE LEAKY LEAVE LABELS & RESTORE CLIENT LABELS
+               ========================================================= */
+            /* 1. Wipe the slate clean of all leaked ::before content */
+            #clientDirectoryTable td::before {
+                content: none !important;
+                display: block !important;
+                font-weight: 800 !important;
+                font-size: 0.65rem !important;
+                text-transform: uppercase !important;
+                margin-bottom: 4px !important;
+                color: #64748b !important; /* Default light mode label color */
+            }
+
+            /* 2. Inject the correct Client Directory labels */
+            #clientDirectoryTable td:nth-child(1)::before {
+                display: none !important; /* Main title needs no label */
+            }
+            #clientDirectoryTable td:nth-child(2)::before {
+                content: "Primary Contact" !important;
+            }
+            #clientDirectoryTable td:nth-child(3)::before {
+                content: "Project Allocation" !important;
+            }
+            #clientDirectoryTable td:nth-child(4)::before {
+                content: "Account Status" !important;
+                margin-bottom: 0 !important; /* Keeps the badge aligned */
+            }
+            #clientDirectoryTable td:nth-child(5)::before {
+                display: none !important; /* Action buttons need no label */
+            }
+
+            /* 3. Ensure labels respect Dark Mode */
+            html[data-bs-theme="dark"] body #clientDirectoryTable td::before {
+                color: #94a3b8 !important;
+            }
+
+            /* =========================================================
+               CLIENT DIRECTORY: STRUCTURE & GRID FIX
+               ========================================================= */
+            /* Neutralize any leaked grid layouts from other pages */
+            body #clientDirectoryTable tr {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 12px !important;
+                padding: 15px !important;
+            }
+            body #clientDirectoryTable td {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                width: 100% !important;
+                padding: 0 !important;
+                border: none !important;
+            }
+
+            /* Cell 1: Main Title & Avatar */
+            body #clientDirectoryTable td:nth-child(1) {
+                padding-bottom: 12px !important;
+                border-bottom: 2px solid #e2e8f0 !important;
+            }
+            html[data-bs-theme="dark"] body #clientDirectoryTable td:nth-child(1) {
+                border-bottom: 2px solid #333333 !important;
+            }
+
+            /* Cell 4: Status Badge (Align horizontally) */
+            body #clientDirectoryTable td:nth-child(4) {
+                flex-direction: row !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+            body #clientDirectoryTable td:nth-child(4)::before {
+                margin-bottom: 0 !important; /* Keep label and badge on same line */
+            }
+
+            /* Cell 5: Action Buttons Container */
+            body #clientDirectoryTable td:nth-child(5) {
+                flex-direction: row !important;
+                justify-content: space-between !important;
+                gap: 10px !important;
+                padding-top: 15px !important;
+                border-top: 1px dashed #e2e8f0 !important;
+                margin-top: 5px !important;
+            }
+            html[data-bs-theme="dark"] body #clientDirectoryTable td:nth-child(5) {
+                border-top: 1px dashed #333333 !important;
+            }
+            /* Make the inner button group take full width */
+            body #clientDirectoryTable td:nth-child(5) .btn-action-group {
+                width: 100% !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                gap: 10px !important;
+            }
+            body #clientDirectoryTable td:nth-child(5) .btn-action-group .btn-icon {
+                flex: 1 !important;
+                height: 42px !important;
+                font-size: 1.1rem !important;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -142,7 +334,7 @@
                 </a>
             </div>
             <div class="table-responsive">
-                <table class="table table-custom mb-0">
+                <table id="clientDirectoryTable" class="table table-custom mb-0">
                     <thead>
                     <tr>
                         <th style="width: 30%;">Client & Industry</th>
