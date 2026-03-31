@@ -181,6 +181,61 @@
             /* Full Width Action Button */
             .table-custom td:last-child { margin-top: 8px !important; padding-top: 10px !important; border-top: 1px dashed #e2e8f0 !important; justify-content: center !important; }
             .table-custom td:last-child button { width: 100% !important; padding: 8px !important; font-size: 0.85rem !important; }
+
+            /* =========================================================
+               7. MOBILE-ONLY DARK MODE FIXES (LEAVE HISTORY CARDS)
+               ========================================================= */
+
+            /* Fix the wrapper and the inner list background */
+            [data-bs-theme="dark"] .history-section {
+                background-color: #1e1e1e !important;
+                border-color: #333333 !important;
+            }
+            [data-bs-theme="dark"] .table-custom tbody {
+                background-color: #121212 !important; /* Deep inset background */
+            }
+
+            /* Convert the white cards to dark cards */
+            [data-bs-theme="dark"] .table-custom tr {
+                background-color: #1e1e1e !important;
+                border-color: #333333 !important;
+            }
+
+            /* Fix text colors inside the cards */
+            [data-bs-theme="dark"] .table-custom td {
+                color: #f8fafc !important;
+            }
+
+            /* Dim the dashed divider lines */
+            [data-bs-theme="dark"] .table-custom td:nth-child(1),
+            [data-bs-theme="dark"] .table-custom td:last-child {
+                border-color: #333333 !important;
+            }
+
+            /* Fix the injected Labels (Duration, Total Days, Status) */
+            [data-bs-theme="dark"] .table-custom td::before {
+                color: #94a3b8 !important;
+            }
+
+            /* Override the hardcoded text classes (like .text-dark on the leave type) */
+            [data-bs-theme="dark"] .table-custom td .text-dark {
+                color: #ffffff !important;
+            }
+            [data-bs-theme="dark"] .table-custom td .text-muted {
+                color: #94a3b8 !important;
+            }
+
+            /* Make the "View Details" button look sleek in dark mode */
+            [data-bs-theme="dark"] .table-custom td:last-child button {
+                background-color: #2d2d2d !important;
+                color: #bfdbfe !important; /* Soft blue text */
+                border-color: #475569 !important;
+            }
+            [data-bs-theme="dark"] .table-custom td:last-child button:hover {
+                background-color: #3b82f6 !important;
+                color: #ffffff !important;
+            }
+
         }
     </style>
 

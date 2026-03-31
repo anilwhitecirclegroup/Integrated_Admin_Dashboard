@@ -233,6 +233,29 @@
             .sum-item:last-child { width: 100% !important; } /* Awaiting Approval takes full width at bottom */
             .sum-val { font-size: 1.15rem !important; }
             .sum-lbl { font-size: 0.65rem !important; }
+
+            /* =========================================================
+               7. MOBILE-ONLY DARK MODE FIXES (SUMMARY BOXES)
+               ========================================================= */
+            [data-bs-theme="dark"] .summary-box .sum-item {
+                background-color: #1e1e1e !important;
+                border-color: #2d2d2d !important;
+            }
+
+            /* Fix the 'Total Actual' text which is hardcoded to .text-dark */
+            [data-bs-theme="dark"] .summary-box .text-dark {
+                color: #ffffff !important;
+            }
+
+            /* Brighten the standard blue numbers (Total Planned, Leave) for dark mode */
+            [data-bs-theme="dark"] .summary-box .sum-val:not(.text-success):not(.text-warning):not(.text-dark) {
+                color: #93c5fd !important; /* Light pastel blue */
+            }
+
+            /* Brighten the 'Awaiting Approval' text slightly for better contrast */
+            [data-bs-theme="dark"] .summary-box .text-warning {
+                color: #fcd34d !important;
+            }
         }
     </style>
 

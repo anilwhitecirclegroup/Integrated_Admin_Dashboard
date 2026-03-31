@@ -277,6 +277,51 @@
                 color: #ffffff !important;
             }
 
+            /* =========================================================
+               9. MOBILE-ONLY DARK MODE PATCH
+               ========================================================= */
+
+            /* Fix the Applicant Details wrapper boxes */
+            [data-bs-theme="dark"] .app-card:nth-child(1) .col-md-6 {
+                background-color: #121212 !important;
+                border-color: #2d2d2d !important;
+            }
+
+            /* Fix the Labels (Employee Name, ID, etc.) */
+            [data-bs-theme="dark"] .app-card:nth-child(1) .form-label {
+                color: #94a3b8 !important;
+            }
+
+            /* Fix the actual values (Shivam Sharma, EMP002, etc.) */
+            [data-bs-theme="dark"] .app-card:nth-child(1) .form-control:read-only {
+                color: #ffffff !important;
+                background-color: transparent !important;
+            }
+
+            /* Fix Mobile Top Header */
+            [data-bs-theme="dark"] .top-header {
+                background-color: #121212 !important;
+                border-bottom-color: #2d2d2d !important;
+            }
+            [data-bs-theme="dark"] .top-header .text-dark {
+                color: #ffffff !important;
+            }
+
+            /* Ensure all standard inputs and dropdowns are dark */
+            [data-bs-theme="dark"] .form-control,
+            [data-bs-theme="dark"] .form-select,
+            [data-bs-theme="dark"] textarea {
+                background-color: #121212 !important;
+                border-color: #333333 !important;
+                color: #f8fafc !important;
+            }
+
+            /* Fix Card Backgrounds */
+            [data-bs-theme="dark"] .app-card {
+                background-color: #1e1e1e !important;
+                border-color: #333333 !important;
+            }
+
         }
     </style>
 

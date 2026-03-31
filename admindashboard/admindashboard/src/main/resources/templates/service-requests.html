@@ -316,6 +316,61 @@
             #viewMyRequestModal .row.g-3 .col-6 { width: 50% !important; }
             #myModalDetails { font-size: 1.1rem !important; }
             #myModalJustification { font-size: 0.85rem !important; }
+
+            /* =========================================================
+               6. MOBILE-ONLY DARK MODE FIXES (SERVICE REQUEST FEED)
+               ========================================================= */
+
+            /* Fix the Catalog Action Cards */
+            [data-bs-theme="dark"] .catalog-card {
+                background-color: #1e1e1e !important;
+                border-color: #333333 !important;
+            }
+            [data-bs-theme="dark"] .catalog-card .text-dark {
+                color: #ffffff !important;
+            }
+
+            /* Fix the white skeleton background on the ticket rows */
+            [data-bs-theme="dark"] .ticket-row {
+                background-color: #1e1e1e !important;
+                border-color: #333333 !important;
+                background: #1e1e1e !important; /* Overrides underlying gradients */
+            }
+
+            /* Dim the dashed divider lines inside the cards */
+            [data-bs-theme="dark"] .table-custom td:nth-child(3) {
+                border-bottom-color: #333333 !important;
+            }
+            [data-bs-theme="dark"] .table-custom td:nth-child(6) {
+                border-top-color: #333333 !important;
+            }
+
+            /* Fix the custom injected labels (Ticket ID, Category, etc.) */
+            [data-bs-theme="dark"] .table-custom td::before {
+                color: #94a3b8 !important;
+            }
+
+            /* Fix the hardcoded text classes inside the ticket card */
+            [data-bs-theme="dark"] .table-custom td .text-dark,
+            [data-bs-theme="dark"] .table-custom td:nth-child(3) {
+                color: #ffffff !important; /* Category Name / Subject */
+            }
+            [data-bs-theme="dark"] .table-custom td .text-muted,
+            [data-bs-theme="dark"] .table-custom td:nth-child(2),
+            [data-bs-theme="dark"] .table-custom td:nth-child(4) {
+                color: #94a3b8 !important; /* Dates and Details */
+            }
+
+            /* Make the "View" button match the dark UI perfectly */
+            [data-bs-theme="dark"] .table-custom td:nth-child(6) button {
+                background-color: #2d2d2d !important;
+                color: #bfdbfe !important; /* Soft light blue text */
+                border-color: #475569 !important;
+            }
+            [data-bs-theme="dark"] .table-custom td:nth-child(6) button:hover {
+                background-color: #3b82f6 !important;
+                color: #ffffff !important;
+            }
         }
     </style>
 

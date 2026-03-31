@@ -363,6 +363,61 @@
             #btnSubmit { grid-area: submit !important; width: 100% !important; padding: 14px !important; font-size: 1rem !important; border-radius: 12px !important; }
             #btnSaveDraft { grid-area: save !important; width: 100% !important; padding: 10px !important; font-size: 0.85rem !important; border-radius: 10px !important; }
             #btnCancel { grid-area: cancel !important; width: 100% !important; padding: 10px !important; font-size: 0.85rem !important; border-radius: 10px !important; }
+
+            /* =========================================================
+               8. MOBILE-ONLY DARK MODE FIXES (BOTTOM SECTIONS)
+               ========================================================= */
+
+            /* Fix the mid-page utility bar (Add Row, Recalculate) */
+            [data-bs-theme="dark"] .p-3.bg-white.border-top.border-bottom {
+                background-color: #1e1e1e !important;
+                border-color: #333333 !important;
+            }
+            [data-bs-theme="dark"] .btn-outline-navy.bg-white,
+            [data-bs-theme="dark"] .btn-outline-secondary.bg-white {
+                background-color: #121212 !important;
+                color: #bfdbfe !important; /* Soft blue text */
+                border-color: #333333 !important;
+            }
+
+            /* Fix the light grey wrapper background at the bottom */
+            [data-bs-theme="dark"] .p-4[style*="background-color: #f8fafc"] {
+                background-color: #1e1e1e !important;
+            }
+
+            /* Fix the individual white cards containing the inputs */
+            [data-bs-theme="dark"] .p-4[style*="background-color: #f8fafc"] > .d-flex > div {
+                background-color: #121212 !important;
+                border-color: #2d2d2d !important;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+            }
+
+            /* Fix text labels that are hardcoded to text-dark */
+            [data-bs-theme="dark"] .p-4[style*="background-color: #f8fafc"] .text-dark {
+                color: #f8fafc !important;
+            }
+
+            /* Fix the Textarea, Number Input, and File Input */
+            [data-bs-theme="dark"] #overallComments,
+            [data-bs-theme="dark"] .input-group input,
+            [data-bs-theme="dark"] .input-group .input-group-text,
+            [data-bs-theme="dark"] .p-2.bg-white.rounded.border {
+                background-color: #1e1e1e !important;
+                border-color: #333333 !important;
+                color: #f8fafc !important;
+            }
+
+            /* Make the disabled file input text readable */
+            [data-bs-theme="dark"] input[type="file"].text-muted {
+                color: #94a3b8 !important;
+            }
+
+            /* Fix the sticky bottom Action Bar (Save, Submit, Cancel) */
+            [data-bs-theme="dark"] .p-4.border-top.bg-white.d-flex.justify-content-end {
+                background-color: #1e1e1e !important;
+                border-top-color: #333333 !important;
+                box-shadow: 0 -10px 20px rgba(0,0,0,0.3) !important;
+            }
         }
     </style>
 
