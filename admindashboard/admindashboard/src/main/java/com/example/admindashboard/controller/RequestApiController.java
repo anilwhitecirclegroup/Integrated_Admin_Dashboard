@@ -1,15 +1,18 @@
 package com.example.admindashboard.controller;
 
-import com.whitecircle.hrms.model.ServiceRequest;
-import com.whitecircle.hrms.repository.ServiceRequestRepository;
+// I fixed your imports to match your project structure!
+import com.example.admindashboard.model.ServiceRequest;
+import com.example.admindashboard.repository.ServiceRequestRepository;
 import com.example.admindashboard.service.EmailService;
 import com.example.admindashboard.model.User;
 import com.example.admindashboard.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +66,7 @@ public class RequestApiController {
             emailData.put("detailItem", savedRequest.getDetailItem());
             emailData.put("justification", savedRequest.getJustification());
 
-            // TODO: Replace with your actual testing email!
+            // TODO: Replace with your actual admin testing email!
             String adminEmail = "arcthunder07@gmail.com";
 
             // Fire the background email!
@@ -92,10 +95,50 @@ public class RequestApiController {
         ServiceRequest request = repository.findById(id).orElseThrow();
         request.setStatus(status);
         repository.save(request);
+
+        // --- EMAIL TRIGGER START ---
+        try {
+            // 1. Look up the employee's email using the UserRepository since ServiceRequest isn't directly linked
+            // We assume employeeId matches the username (e.g., "EMP001").
+            // If your lookup method is different (like findByEmployeeId), update this line!
+            Optional<User> userOpt = userRepository.findByUsername(request.getEmployeeId());
+            String employeeEmail = "no-reply@whitecircle.com"; // Fallback if lookup fails
+
+            if (userOpt.isPresent() && userOpt.get().getEmail() != null) {
+                employeeEmail = userOpt.get().getEmail();
+            }
+
+            Map<String, Object> emailData = new HashMap<>();
+
+            emailData.put("empName", request.getEmployeeName());
+
+            // Format specific type cleanly (e.g., "HW-1042 - RAM Upgrade")
+            String specificType = (request.getTicketId() != null ? request.getTicketId() : "Ticket") +
+                    (request.getCategory() != null ? " - " + request.getCategory() : "");
+            emailData.put("specificType", specificType);
+
+            if (request.getSubmissionDate() != null) {
+                emailData.put("submittedOn", request.getSubmissionDate());
+            }
+
+            // Create a dynamic title like "HARDWARE Ticket" or "SOFTWARE Ticket"
+            String prettyRequestType = (request.getType() != null ? request.getType().toUpperCase() : "IT") + " Ticket";
+
+            emailService.sendRequestStatusUpdateToEmployee(
+                    employeeEmail,
+                    request.getEmployeeName(),
+                    prettyRequestType,
+                    status,
+                    emailData
+            );
+        } catch (Exception e) {
+            System.err.println("⚠️ Warning: Could not trigger IT Ticket status email: " + e.getMessage());
+        }
+        // --- EMAIL TRIGGER END ---
+
         return ResponseEntity.ok("Status updated to " + status);
     }
 
-    // Fixed the path and the repository variable name
     @GetMapping("/{id}")
     public ResponseEntity<ServiceRequest> getRequestById(@PathVariable Long id) {
         return repository.findById(id)

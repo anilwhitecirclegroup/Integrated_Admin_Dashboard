@@ -145,7 +145,6 @@ public class EmailService {
     }
 
 
-
     @Async
     public void sendSimpleEmail(String to, String subject, String text) {
         try {
@@ -162,4 +161,43 @@ public class EmailService {
             System.err.println("❌ Failed to send simple email: " + e.getMessage());
         }
     }
+
+
+    @Async
+    public void sendRequestStatusUpdateToEmployee(String employeeEmail, String employeeName, String requestType, String status, Map<String, Object> templateModel) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            // 1. Setup Email Routing
+            helper.setTo(employeeEmail);
+            helper.setFrom(systemEmail, "WhiteCircle HRMS");
+
+            // 2. Dynamic Subject Line (e.g., "Update on your Leave Request: Approved")
+            helper.setSubject("Update on your " + requestType + " Request: " + status.toUpperCase());
+
+            // 3. Inject Data into Thymeleaf
+            Context thymeleafContext = new Context();
+            thymeleafContext.setVariables(templateModel);
+
+            // Pass the dynamic title and status directly to the template context
+            thymeleafContext.setVariable("requestType", requestType);
+            thymeleafContext.setVariable("status", status);
+
+            // 4. Process the Universal HTML Template
+            // We will create this single file next: src/main/resources/templates/emails/employee-status-update.html
+            String htmlBody = templateEngine.process("emails/employee-status-update", thymeleafContext);
+
+            // 5. Send!
+            helper.setText(htmlBody, true);
+            mailSender.send(message);
+
+            System.out.println("✅ Status Update (" + status + ") Email Sent Successfully to Employee: " + employeeEmail);
+
+        } catch (Exception e) {
+            System.err.println("❌ Failed to send status update email to employee: " + e.getMessage());
+        }
+    }
+
+
 }
