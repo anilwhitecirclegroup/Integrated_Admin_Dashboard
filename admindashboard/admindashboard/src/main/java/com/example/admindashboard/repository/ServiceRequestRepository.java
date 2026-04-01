@@ -1,13 +1,14 @@
-package com.whitecircle.hrms.repository;
+package com.example.admindashboard.repository;
 
-import com.whitecircle.hrms.model.ServiceRequest;
+import com.example.admindashboard.model.ServiceRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
 public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, Long> {
+
+    // Custom query method used by your controller
     List<ServiceRequest> findByEmployeeIdOrderBySubmissionDateDesc(String employeeId);
-    List<ServiceRequest> findByStatus(String status);
+
 }

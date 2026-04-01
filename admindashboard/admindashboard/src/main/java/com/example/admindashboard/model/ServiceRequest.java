@@ -1,11 +1,9 @@
-package com.whitecircle.hrms.model;
+package com.example.admindashboard.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import java.time.LocalDate;
 
 @Entity
-@Data
 @Table(name = "service_requests")
 public class ServiceRequest {
 
@@ -41,17 +39,66 @@ public class ServiceRequest {
     @PrePersist
     public void generateTicketId() {
         String prefix;
-
-        // Logic to assign prefixes based on the request category
         if ("HARDWARE".equalsIgnoreCase(type)) {
             prefix = "HW-";
         } else if ("INCIDENT".equalsIgnoreCase(type)) {
             prefix = "INC-";
         } else {
-            // Software, System Access, and Permissions all get SR-
             prefix = "SR-";
         }
-
         this.ticketId = prefix + (int)(Math.random() * 9000 + 1000);
     }
+
+    // --- GETTERS AND SETTERS ---
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getTicketId() { return ticketId; }
+    public void setTicketId(String ticketId) { this.ticketId = ticketId; }
+
+    public String getEmployeeId() { return employeeId; }
+    public void setEmployeeId(String employeeId) { this.employeeId = employeeId; }
+
+    public String getEmployeeName() { return employeeName; }
+    public void setEmployeeName(String employeeName) { this.employeeName = employeeName; }
+
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
+
+    public String getManagerName() { return managerName; }
+    public void setManagerName(String managerName) { this.managerName = managerName; }
+
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+
+    public String getPriority() { return priority; }
+    public void setPriority(String priority) { this.priority = priority; }
+
+    public LocalDate getSubmissionDate() { return submissionDate; }
+    public void setSubmissionDate(LocalDate submissionDate) { this.submissionDate = submissionDate; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getDetailItem() { return detailItem; }
+    public void setDetailItem(String detailItem) { this.detailItem = detailItem; }
+
+    public String getDurationOrLevel() { return durationOrLevel; }
+    public void setDurationOrLevel(String durationOrLevel) { this.durationOrLevel = durationOrLevel; }
+
+    public String getAssetTag() { return assetTag; }
+    public void setAssetTag(String assetTag) { this.assetTag = assetTag; }
+
+    public String getOperatingSystem() { return operatingSystem; }
+    public void setOperatingSystem(String operatingSystem) { this.operatingSystem = operatingSystem; }
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+
+    public String getJustification() { return justification; }
+    public void setJustification(String justification) { this.justification = justification; }
 }
