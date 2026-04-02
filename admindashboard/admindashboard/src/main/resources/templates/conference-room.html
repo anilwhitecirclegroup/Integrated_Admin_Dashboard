@@ -437,6 +437,10 @@
                             </select>
                             <label>Platform</label>
                         </div>
+                        <div class="mb-3" id="meetingLinkContainer">
+                            <label class="form-label">Meeting Link</label>
+                            <input type="url" class="form-control" id="meetingLink" name="meetingLink" placeholder="Paste Teams, Zoom, or Meet link here...">
+                        </div>
 
                         <div class="form-floating mb-3 d-none" id="roomField">
                             <select class="form-select" id="roomName">
@@ -590,6 +594,10 @@
             meetingTitle: document.getElementById("meetingTitle").value,
             meetingMode: currentMode,
             platform: platformOrRoomValue,
+
+            // NEW: Grab the link from the input field
+            meetingLink: document.getElementById("meetingLink") ? document.getElementById("meetingLink").value : "",
+
             participantType: document.getElementById("participantType").value,
             specificEmployeeIds: document.getElementById("specificEmployeeIds").value,
             startTime: document.getElementById("startTime").value,
@@ -677,6 +685,19 @@
     document.querySelectorAll('input[type="date"]').forEach(function(dateInput) {
         if (!dateInput.getAttribute('max')) {
             dateInput.setAttribute('max', '9999-12-31');
+        }
+    });
+
+    // Assuming your Meeting Mode dropdown has the ID 'meetingMode'
+    document.getElementById('meetingMode').addEventListener('change', function() {
+        var linkContainer = document.getElementById('meetingLinkContainer');
+        var platformLabel = document.querySelector('label[for="platform"]'); // Adjust if you have an ID on the label
+
+        if(this.value.includes('Offline')) {
+            linkContainer.style.display = 'none';
+            document.getElementById('meetingLink').value = ''; // Clear the link
+        } else {
+            linkContainer.style.display = 'block';
         }
     });
 </script>

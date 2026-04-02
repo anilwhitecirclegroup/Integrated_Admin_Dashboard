@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Meeting Invitation</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f6f9; color: #333; padding: 20px; }
+        .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+
+        .header { background-color: #1e3a8a; color: #ffffff; padding: 20px; text-align: center; }
+        .header h2 { margin: 0; font-size: 20px; letter-spacing: 0.5px; }
+
+        .content { padding: 30px; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th, .data-table td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        .data-table th { color: #64748b; font-size: 13px; text-transform: uppercase; width: 35%; }
+        .data-table td { font-weight: 600; color: #1e293b; }
+
+        .footer { background-color: #f8fafc; padding: 15px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; }
+    </style>
+</head>
+<body>
+
+<div class="email-container">
+    <div class="header">
+        <h2>WhiteCircle HRMS | Meeting Invitation</h2>
+    </div>
+
+    <div class="content">
+        <p>Hello <strong th:text="${participantName}">Employee</strong>,</p>
+        <p>You have been invited to a new meeting scheduled by <strong th:text="${organizerName}">Organizer</strong>.</p>
+
+        <table class="data-table">
+            <tr>
+                <th>Meeting Topic</th>
+                <td th:text="${meetingTitle}">Topic</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td th:text="${meetingDate}">YYYY-MM-DD</td>
+            </tr>
+            <tr>
+                <th>Time</th>
+                <td><span th:text="${startTime}">00:00</span> to <span th:text="${endTime}">00:00</span></td>
+            </tr>
+            <tr>
+                <th>Mode</th>
+                <td th:text="${meetingMode}">Online/Offline</td>
+            </tr>
+            <tr>
+                <th>Platform / Venue</th>
+                <td th:text="${platform}">Platform Details</td>
+            </tr>
+            <tr th:if="${meetingLink != null and !meetingLink.isEmpty()}">
+                <th>Meeting Link</th>
+                <td>
+                    <a th:href="${meetingLink}" style="color: #2563eb; font-weight: bold; text-decoration: none;">🔗 Click Here to Join</a>
+                </td>
+            </tr>
+        </table>
+
+        <center>
+            <a href="http://localhost:8080/conference-room"
+               style="display: inline-block; background-color: #2563eb; padding: 14px 30px; border-radius: 6px; text-decoration: none; border: 1px solid #1d4ed8; margin-top: 25px;">
+                <span style="color: #ffffff; font-family: 'Segoe UI', Arial, sans-serif; font-size: 15px; font-weight: bold;">View in Conference Room</span>
+            </a>
+        </center>
+    </div>
+
+    <div class="footer">
+        This is an automated calendar notification from the WhiteCircle HRMS Portal. Please do not reply directly to this email.
+    </div>
+</div>
+
+</body>
+</html>

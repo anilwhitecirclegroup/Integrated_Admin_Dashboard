@@ -31,6 +31,9 @@ public class Meeting {
     private LocalTime startTime;
     private LocalTime endTime;
 
+    @Column(length = 1000) // URLs can sometimes be very long
+    private String meetingLink;
+
     // GETTERS AND SETTERS
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -61,4 +64,7 @@ public class Meeting {
 
     public LocalTime getEndTime() { return endTime; }
     public void setEndTime(LocalTime endTime) { this.endTime = endTime; }
+
+    public String getMeetingLink() { return meetingLink; }
+    public void setMeetingLink(String meetingLink) { this.meetingLink = meetingLink; }
 }

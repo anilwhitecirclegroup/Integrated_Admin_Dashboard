@@ -200,4 +200,30 @@ public class EmailService {
     }
 
 
+    @Async
+    public void sendMeetingInvite(String participantEmail, String participantName, String meetingTitle, Map<String, Object> templateModel) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(participantEmail);
+            helper.setFrom(systemEmail, "WhiteCircle HRMS");
+            helper.setSubject("Meeting Invite: " + meetingTitle);
+
+            Context thymeleafContext = new Context();
+            thymeleafContext.setVariables(templateModel);
+            thymeleafContext.setVariable("participantName", participantName);
+
+            String htmlBody = templateEngine.process("emails/meeting-invite", thymeleafContext);
+
+            helper.setText(htmlBody, true);
+            mailSender.send(message);
+
+            System.out.println("✅ Meeting Invite Email Sent Successfully to: " + participantEmail);
+
+        } catch (Exception e) {
+            System.err.println("❌ Failed to send meeting invite email to " + participantEmail + ": " + e.getMessage());
+        }
+    }
+
 }
