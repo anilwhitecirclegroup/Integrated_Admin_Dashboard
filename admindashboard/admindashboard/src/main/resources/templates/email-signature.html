@@ -47,14 +47,14 @@
         }
         .btn-back:hover { background: #172554; color: white; transform: translateY(-1px); }
 
-        /*  PREVIEW CONTAINER (Updated Size)  */
+        /* PREVIEW CONTAINER (Updated Size)  */
         .preview-container {
             max-width: 800px;
             margin: 50px auto;
             text-align: center;
         }
 
-        /*  PREVIEW CARD (Updated Border & Padding)  */
+        /* PREVIEW CARD (Updated Border & Padding)  */
         .preview-card {
             background: white;
             border-radius: 16px;
@@ -130,9 +130,6 @@
             transition: 0.5s;
         }
 
-        /* Auto-run shine every 3 seconds logic would need JS,
-           but CSS hover or continuous animation is easier.
-           Let's do a continuous slow pass. */
         .btn-copy::before {
             animation: shine 3s infinite;
         }
@@ -200,13 +197,13 @@
             /* 3. ADJUST MAIN CONTAINER */
             .container {
                 display: flex !important; flex-direction: column !important;
-                justify-content: flex-start !important; /* Fix: Aligns to top instead of center */
+                justify-content: flex-start !important;
                 min-height: calc(100vh - 85px) !important;
                 padding-bottom: 20px !important;
-                padding-top: 30px !important; /* Controls the exact gap from the navbar */
+                padding-top: 30px !important;
             }
             .preview-container { margin: 0 auto !important; padding: 0 10px !important; width: 100% !important; }
-            .preview-container h3 { font-size: 1.25rem !important; } /* Made heading slightly larger */
+            .preview-container h3 { font-size: 1.25rem !important; }
             .preview-container p.text-muted { font-size: 0.9rem !important; padding: 0 5px !important; }
 
             /* 4. FIX THE CARD PADDING & SIGNATURE SIZING */
@@ -268,12 +265,12 @@
 
                     <div id="signature-box" th:object="${user}" style="font-family: Arial, sans-serif; color: #333;">
                         <h3 style="color: #1e3a8a; margin-bottom: 5px;" th:text="*{fullName}">[Employee Name Will appear here]</h3>
-                        <p style="margin: 2px 0; font-weight: bold;" th:text="*{designation?.toUpperCase() ?: 'EMPLOYEE'}">[Designation]</p>
-                        <p style="margin: 2px 0;" th:text="*{businessUnit ?: 'General'}">[Department]</p>
+                        <p style="margin: 2px 0; font-weight: bold;" th:text="*{employeeProfile?.designation?.toUpperCase() ?: 'EMPLOYEE'}">[Designation]</p>
+                        <p style="margin: 2px 0;" th:text="*{employeeProfile?.businessUnit ?: 'General'}">[Department]</p>
 
                         <div style="margin-top: 10px; font-size: 0.9rem;">
                             <p style="margin: 2px 0;">
-                                <strong>Mob:</strong> <span th:text="*{mobileNumber}">[Phone]</span>
+                                <strong>Mob:</strong> <span th:text="*{employeeProfile?.mobileNumber ?: 'Not Provided'}">[Phone]</span>
                             </p>
                             <p style="margin: 2px 0;">
                                 <strong>Email:</strong> <a th:href="'mailto:' + *{email}" th:text="*{email}" style="color: #1e3a8a; text-decoration: none;">[Email]</a>
@@ -314,8 +311,8 @@
         const captureBgColor = isDarkMode ? "#1e1e1e" : "#ffffff";
 
         html2canvas(captureElement, {
-            backgroundColor: captureBgColor, // Dynamically applies dark or light background
-            scale: 2 // High res
+            backgroundColor: captureBgColor,
+            scale: 2
         }).then(canvas => {
             canvas.toBlob(function(blob) {
                 try {

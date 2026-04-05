@@ -32,24 +32,24 @@
 
         .filter-card, .table-card, .form-card {
             background: #ffffff;
-            border: 1px solid #e2e8f0; /* Thin border */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); /* Subtle base shadow */
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             border-radius: 16px;
             overflow: hidden;
-            transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
+            transition: all 0.3s ease-in-out;
         }
 
         .form-card:hover {
-            transform: translateY(-5px); /* Lift effect */
-            box-shadow: 0 20px 25px -5px rgba(30, 58, 138, 0.1), 0 10px 10px -5px rgba(30, 58, 138, 0.04); /* Deeper primary-colored shadow */
-            border-color: var(--bs-primary); /* Highlight border on hover */
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(30, 58, 138, 0.1), 0 10px 10px -5px rgba(30, 58, 138, 0.04);
+            border-color: var(--bs-primary);
         }
 
         .form-card:hover .form-control:disabled {
             background-color: #f1f5f9 !important;
         }
 
-        /*  ACTIVE SEARCH HIGHLIGHTS  */
+        /* ACTIVE SEARCH HIGHLIGHTS  */
         .active-search-container {
             border: 2px solid #3b82f6 !important;
             background-color: #eff6ff !important;
@@ -69,7 +69,7 @@
         .form-control, .form-select { background-color: #f8fafc; border: 1px solid #e2e8f0; transition: all 0.2s; }
         .form-control:focus, .form-select:focus { border-color: #93c5fd; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
 
-        /*  UPGRADED TABLE STYLING  */
+        /* UPGRADED TABLE STYLING  */
         .table > :not(caption) > * > * { padding: 1.25rem 1rem; border-bottom: 1px solid #e2e8f0; }
         thead th { background-color: #e2e8f0 !important; color: #475569; font-size: 0.75rem; letter-spacing: 0.5px; border-bottom: 2px solid #cbd5e1 !important;}
 
@@ -81,7 +81,7 @@
         .table-hover tbody tr { transition: background-color 0.2s ease, box-shadow 0.2s ease; cursor: default; }
         .table-hover tbody tr:hover {
             background-color: #f1f5f9 !important;
-            box-shadow: inset 4px 0 0 0 var(--bs-primary); /* Uses inset shadow instead of scaling layout! */
+            box-shadow: inset 4px 0 0 0 var(--bs-primary);
         }
 
         /* Action Buttons */
@@ -102,7 +102,6 @@
     </style>
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/mobile-responsive.css" rel="stylesheet">
-
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>
 </head>
@@ -196,9 +195,22 @@
                         <tr th:each="emp : ${employees}">
                             <td class="ps-4 fw-bold text-primary" th:text="${emp.username}">ID</td>
                             <td class="fw-bold text-dark" th:text="${emp.fullName}">Name</td>
-                            <td class="text-muted fw-medium" th:text="${emp.designation != null ? emp.designation : '-'}">Role</td>
-                            <td><span class="badge bg-secondary bg-opacity-10 text-secondary fw-bold px-3 py-2" th:text="${emp.businessUnit != null ? emp.businessUnit : 'Unassigned'}">BU</span></td>
-                            <td class="text-muted fw-medium" th:text="${emp.workLocation != null ? emp.workLocation : '-'}">Location</td>
+
+                            <td>
+                                <span th:if="${emp.employeeProfile != null and !#strings.isEmpty(emp.employeeProfile.designation)}" th:text="${emp.employeeProfile.designation}" class="text-muted fw-medium"></span>
+                                <span th:unless="${emp.employeeProfile != null and !#strings.isEmpty(emp.employeeProfile.designation)}" class="badge bg-light text-secondary border fw-normal">Unassigned</span>
+                            </td>
+
+                            <td>
+                                <span th:if="${emp.employeeProfile != null and !#strings.isEmpty(emp.employeeProfile.businessUnit)}" th:text="${emp.employeeProfile.businessUnit}" class="badge bg-secondary bg-opacity-10 text-secondary fw-bold px-3 py-2"></span>
+                                <span th:unless="${emp.employeeProfile != null and !#strings.isEmpty(emp.employeeProfile.businessUnit)}" class="badge bg-light text-secondary border fw-normal">Unassigned</span>
+                            </td>
+
+                            <td>
+                                <span th:if="${emp.employeeProfile != null and !#strings.isEmpty(emp.employeeProfile.workLocation)}" th:text="${emp.employeeProfile.workLocation}" class="text-muted fw-medium"></span>
+                                <span th:unless="${emp.employeeProfile != null and !#strings.isEmpty(emp.employeeProfile.workLocation)}" class="text-muted small fst-italic">Not Provided</span>
+                            </td>
+
                             <td class="text-end pe-4">
                                 <a th:href="@{/admin/manage-employees/edit/{id}(id=${emp.id})}" class="btn-action">
                                     <i class="fas fa-user-edit me-1"></i> Edit / View Full
@@ -253,15 +265,15 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-sm">Designation</label>
-                            <input type="text" class="form-control" name="designation" th:value="${emp.designation}">
+                            <input type="text" class="form-control" name="designation" th:value="${emp.employeeProfile?.designation}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-sm">Total Experience</label>
-                            <input type="text" class="form-control" name="experience" th:value="${emp.experience}">
+                            <input type="text" class="form-control" name="experience" th:value="${emp.employeeProfile?.experience}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-sm">Joining Date</label>
-                            <input type="date" class="form-control" name="joiningDate" th:value="${emp.joiningDate}">
+                            <input type="date" class="form-control" name="joiningDate" th:value="${emp.employeeProfile?.joiningDate}">
                         </div>
                     </div>
                 </div>
@@ -275,62 +287,62 @@
                     <div class="row g-4">
                         <div class="col-md-3">
                             <label class="form-label-sm">Business Unit</label>
-                            <input type="text" class="form-control" name="businessUnit" th:value="${emp.businessUnit}">
+                            <input type="text" class="form-control" name="businessUnit" th:value="${emp.employeeProfile?.businessUnit}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-sm">Account Name</label>
-                            <input type="text" class="form-control" name="accountName" th:value="${emp.accountName}">
+                            <input type="text" class="form-control" name="accountName" th:value="${emp.employeeProfile?.accountName}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-sm">Project Name</label>
-                            <input type="text" class="form-control" name="projectName" th:value="${emp.projectName}">
+                            <input type="text" class="form-control" name="projectName" th:value="${emp.employeeProfile?.projectName}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-sm">Project Code</label>
-                            <input type="text" class="form-control" name="projectCode" th:value="${emp.projectCode}">
+                            <input type="text" class="form-control" name="projectCode" th:value="${emp.employeeProfile?.projectCode}">
                         </div>
 
                         <div class="col-md-3">
                             <label class="form-label-sm">Customer Name</label>
-                            <input type="text" class="form-control" name="customerName" th:value="${emp.customerName}">
+                            <input type="text" class="form-control" name="customerName" th:value="${emp.employeeProfile?.customerName}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-sm">Team Group</label>
-                            <input type="text" class="form-control" name="teamGroup" th:value="${emp.teamGroup}">
+                            <input type="text" class="form-control" name="teamGroup" th:value="${emp.employeeProfile?.teamGroup}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-sm">Vertical Name</label>
-                            <input type="text" class="form-control" name="verticalName" th:value="${emp.verticalName}">
+                            <input type="text" class="form-control" name="verticalName" th:value="${emp.employeeProfile?.verticalName}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-sm">Domain/Industry</label>
-                            <input type="text" class="form-control" name="domainIndustry" th:value="${emp.domainIndustry}">
+                            <input type="text" class="form-control" name="domainIndustry" th:value="${emp.employeeProfile?.domainIndustry}">
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label-sm">Reporting Manager</label>
-                            <input type="text" class="form-control" name="reportingManager" th:value="${emp.reportingManager}">
+                            <input type="text" class="form-control" name="reportingManager" th:value="${emp.employeeProfile?.reportingManager}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-sm">Project Manager</label>
-                            <input type="text" class="form-control" name="projectManager" th:value="${emp.projectManager}">
+                            <input type="text" class="form-control" name="projectManager" th:value="${emp.employeeProfile?.projectManager}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-sm">BU-HR Contact</label>
-                            <input type="text" class="form-control" name="buHrContact" th:value="${emp.buHrContact}">
+                            <input type="text" class="form-control" name="buHrContact" th:value="${emp.employeeProfile?.buHrContact}">
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label-sm">Work Location</label>
-                            <input type="text" class="form-control" name="workLocation" th:value="${emp.workLocation}">
+                            <input type="text" class="form-control" name="workLocation" th:value="${emp.employeeProfile?.workLocation}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-sm">City</label>
-                            <input type="text" class="form-control" name="city" th:value="${emp.city}">
+                            <input type="text" class="form-control" name="city" th:value="${emp.employeeProfile?.city}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-sm">Country</label>
-                            <input type="text" class="form-control" name="country" th:value="${emp.country}">
+                            <input type="text" class="form-control" name="country" th:value="${emp.employeeProfile?.country}">
                         </div>
                     </div>
                 </div>
@@ -345,24 +357,24 @@
                     <div class="row g-4 mb-4">
                         <div class="col-md-3">
                             <label class="form-label-sm">Date of Birth</label>
-                            <input type="date" class="form-control" name="dob" th:value="${emp.employeeProfile.dob}">
+                            <input type="date" class="form-control" name="dob" th:value="${emp.employeeProfile?.dob}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-sm">Gender</label>
                             <select class="form-select" name="gender">
                                 <option value="">Select...</option>
-                                <option value="Male" th:selected="${emp.employeeProfile.gender == 'Male'}">Male</option>
-                                <option value="Female" th:selected="${emp.employeeProfile.gender == 'Female'}">Female</option>
-                                <option value="Other" th:selected="${emp.employeeProfile.gender == 'Other'}">Other</option>
+                                <option value="Male" th:selected="${emp.employeeProfile?.gender == 'Male'}">Male</option>
+                                <option value="Female" th:selected="${emp.employeeProfile?.gender == 'Female'}">Female</option>
+                                <option value="Other" th:selected="${emp.employeeProfile?.gender == 'Other'}">Other</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-sm">Aadhar Number</label>
-                            <input type="text" class="form-control" name="aadharNo" th:value="${emp.employeeProfile.aadharNo}">
+                            <input type="text" class="form-control" name="aadharNo" th:value="${emp.employeeProfile?.aadharNo}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label-sm">PAN Number</label>
-                            <input type="text" class="form-control" name="panNo" th:value="${emp.employeeProfile.panNo}">
+                            <input type="text" class="form-control" name="panNo" th:value="${emp.employeeProfile?.panNo}">
                         </div>
                     </div>
 
@@ -370,23 +382,23 @@
                     <div class="row g-4 mb-4">
                         <div class="col-md-4">
                             <label class="form-label-sm">Personal Mobile</label>
-                            <input type="text" class="form-control" name="mobileNumber" th:value="${emp.mobileNumber}">
+                            <input type="text" class="form-control" name="mobileNumber" th:value="${emp.employeeProfile?.mobileNumber}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-sm">Alternate Mobile</label>
-                            <input type="text" class="form-control" name="altMobile" th:value="${emp.employeeProfile.altMobile}">
+                            <input type="text" class="form-control" name="altMobile" th:value="${emp.employeeProfile?.altMobile}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-sm">Personal Email</label>
-                            <input type="email" class="form-control" name="personalEmail" th:value="${emp.employeeProfile.personalEmail}">
+                            <input type="email" class="form-control" name="personalEmail" th:value="${emp.employeeProfile?.personalEmail}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label-sm">Permanent Address</label>
-                            <textarea class="form-control" rows="2" name="permanentAddress" th:text="${emp.employeeProfile.permanentAddress}"></textarea>
+                            <textarea class="form-control" rows="2" name="permanentAddress" th:text="${emp.employeeProfile?.permanentAddress}"></textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label-sm">Working / Current Address</label>
-                            <textarea class="form-control" rows="2" name="workingAddress" th:text="${emp.employeeProfile.workingAddress}"></textarea>
+                            <textarea class="form-control" rows="2" name="workingAddress" th:text="${emp.employeeProfile?.workingAddress}"></textarea>
                         </div>
                     </div>
 
@@ -394,15 +406,15 @@
                     <div class="row g-4">
                         <div class="col-md-4">
                             <label class="form-label-sm">Contact Name</label>
-                            <input type="text" class="form-control" name="emergencyContactName" th:value="${emp.employeeProfile.emergencyContactName}">
+                            <input type="text" class="form-control" name="emergencyContactName" th:value="${emp.employeeProfile?.emergencyContactName}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-sm">Relationship</label>
-                            <input type="text" class="form-control" name="relationWithEmployee" th:value="${emp.employeeProfile.relationWithEmployee}">
+                            <input type="text" class="form-control" name="relationWithEmployee" th:value="${emp.employeeProfile?.relationWithEmployee}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-sm">Emergency Phone</label>
-                            <input type="text" class="form-control" name="emergencyPhone" th:value="${emp.employeeProfile.emergencyPhone}">
+                            <input type="text" class="form-control" name="emergencyPhone" th:value="${emp.employeeProfile?.emergencyPhone}">
                         </div>
                     </div>
                 </div>

@@ -46,7 +46,7 @@
 
         .main-container { max-width: 1400px; width: 96%; margin: 0 auto; padding: 0 20px; }
 
-        /*  QUICK ACTION CARDS  */
+        /* QUICK ACTION CARDS  */
         .catalog-card {
             background: white; border-radius: 12px; padding: 25px;
             border: 1px solid #e2e8f0; border-top: 4px solid var(--navy);
@@ -83,7 +83,7 @@
 
         .ticket-id { font-family: monospace; font-weight: 700; color: #64748b; background: #f1f5f9; padding: 4px 8px; border-radius: 4px; }
 
-        /*  RICH MODAL STYLING */
+        /* RICH MODAL STYLING */
         .modal-content {
             border: none;
             border-radius: 16px;
@@ -154,7 +154,7 @@
         }
         .btn-cancel:hover { background: #f1f5f9; color: #0f172a; }
 
-        /*  ELITE IT-PORTAL SWEETALERT STYLING  */
+        /* ELITE IT-PORTAL SWEETALERT STYLING  */
         div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
         .swal2-popup {
             border-radius: 24px !important;
@@ -182,198 +182,6 @@
 
     </style>
     <link href="/css/style.css" rel="stylesheet">
-
-    <style>
-        @media (max-width: 991px) {
-
-            /* 1. COMPACT GLOBAL LAYOUT */
-            html, body {
-                padding-top: 0 !important;
-                margin-top: 0 !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                overflow-x: hidden !important;
-                width: 100% !important;
-            }
-            body { padding-top: 80px !important; }
-            .main-container { padding: 0 15px !important; width: 100% !important; }
-
-            /* 2. REORGANIZE THE TOP NAV BAR */
-            .master-nav {
-                height: auto !important; padding: 12px 15px !important; display: grid !important;
-                grid-template-columns: 1fr auto !important; gap: 10px !important; align-items: center !important;
-            }
-            .master-nav > .d-flex { min-width: 0 !important; width: auto !important; flex: 1 !important; }
-            .master-nav i.fa-laptop-code { font-size: 1.3rem !important; margin-top: 2px !important; }
-            .master-nav span { font-size: 0.95rem !important; margin-left: 8px !important; padding-left: 8px !important; line-height: 1.1 !important; white-space: normal !important; }
-            .master-nav small { display: none !important; } /* Hide subtitle to save vertical space */
-
-            /* Shorten Back Button to "Back" */
-            .btn-back {
-                padding: 6px 12px !important; font-size: 0px !important;
-                border-radius: 8px !important; display: inline-flex !important; align-items: center !important;
-            }
-            .btn-back i { font-size: 0.85rem !important; margin: 0 !important; }
-            .btn-back::after { content: "Back"; font-size: 0.85rem; margin-left: 5px; font-weight: 700; }
-
-            /* 3. CATALOG CARDS (Stack Vertically) */
-            .row.g-4.mb-5 { display: flex !important; flex-direction: column !important; gap: 12px !important; }
-            .catalog-card { padding: 15px !important; border-radius: 12px !important; display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; text-align: left !important; }
-            .catalog-icon { width: 45px !important; height: 45px !important; font-size: 1.2rem !important; margin-bottom: 0 !important; flex-shrink: 0 !important; }
-            .catalog-card h5 { font-size: 1rem !important; margin-bottom: 2px !important; }
-            .catalog-card p { font-size: 0.75rem !important; line-height: 1.3 !important; }
-
-            /* 4. COMPACT TICKET CARD CONVERSION & FILTER FIX */
-            .ticket-container { border-radius: 12px !important; margin-bottom: 30px !important; border: none !important; background: transparent !important;}
-            .ticket-header { padding: 12px 15px !important; border-radius: 12px 12px 0 0 !important; }
-            .ticket-header h6 { font-size: 0.9rem !important; }
-            #statusFilter { width: 130px !important; font-size: 0.75rem !important; height: 32px !important; padding: 0 10px !important; }
-
-            .table-custom thead { display: none !important; }
-            .table-custom tbody { display: flex !important; flex-direction: column !important; gap: 10px !important; padding: 10px 0 !important; }
-
-            /* REMOVED !important from display to allow JS filtering to work */
-            .ticket-row {
-                display: flex;
-                flex-direction: column;
-                background: white !important;
-                border: 1px solid #e2e8f0 !important;
-                border-radius: 12px !important;
-                padding: 12px !important;
-                position: relative !important;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.02) !important;
-            }
-
-            .table-custom td {
-                display: flex !important;
-                justify-content: space-between !important;
-                align-items: center !important;
-                padding: 4px 0 !important;
-                border: none !important;
-                font-size: 0.75rem !important;
-                width: 100% !important;
-            }
-
-            /* Header Row of Card: ID and Status side-by-side */
-            .table-custom td:nth-child(1) { order: 1; margin-bottom: 5px; }
-            .table-custom td:nth-child(5) { order: 2; width: auto !important; position: absolute; top: 12px; right: 12px; }
-
-            /* Ticket ID label */
-            .table-custom td:nth-child(1)::before { content: "ID:"; font-weight: 700; color: #94a3b8; margin-right: 5px; text-transform: uppercase; }
-            .ticket-id { font-size: 0.7rem !important; padding: 2px 6px !important; }
-
-            /* Subject (The most important text) */
-            .table-custom td:nth-child(3) {
-                order: 3;
-                font-size: 1rem !important;
-                font-weight: 800 !important;
-                color: var(--navy) !important;
-                justify-content: flex-start !important;
-                border-bottom: 1px dashed #f1f5f9 !important;
-                padding-bottom: 8px !important;
-                margin-bottom: 8px !important;
-            }
-
-            /* Type and Date on one line each, very clean */
-            .table-custom td:nth-child(2)::before { content: "Type:"; font-weight: 700; color: #64748b; margin-right: 8px; }
-            .table-custom td:nth-child(4)::before { content: "Submitted:"; font-weight: 700; color: #64748b; margin-right: 8px; }
-
-            .table-custom td:nth-child(2), .table-custom td:nth-child(4) {
-                order: 4;
-                justify-content: flex-start !important;
-                color: #475569 !important;
-                font-weight: 600 !important;
-            }
-
-            /* Action Button - Centered at bottom */
-            .table-custom td:nth-child(6) {
-                order: 5;
-                margin-top: 10px !important;
-                padding-top: 8px !important;
-                border-top: 1px solid #f1f5f9 !important;
-                justify-content: center !important;
-            }
-            .table-custom td:nth-child(6) button { width: 100% !important; padding: 8px !important; font-size: 0.85rem !important; }
-
-            /* Status Badge Scaling */
-            .status-badge { padding: 4px 10px !important; font-size: 0.65rem !important; }
-
-            /* 5. MODAL FORM TIGHTENING */
-            .modal-body-custom { padding: 20px 15px !important; }
-            .row.g-4 { --bs-gutter-y: 1rem !important; }
-            .custom-form-label { font-size: 0.7rem !important; margin-bottom: 5px !important; }
-            .custom-form-control { padding: 10px !important; font-size: 0.85rem !important; border-radius: 8px !important; }
-
-            /* Put OS and Priority side-by-side in modals */
-            #softwareLicenseModal .col-md-4:nth-child(3),
-            #softwareLicenseModal .col-md-4:nth-child(4),
-            #systemAccessModal .col-md-4:nth-child(3),
-            #systemAccessModal .col-md-4:nth-child(4) { width: 50% !important; display: inline-block !important; }
-
-            /* 6. VIEW DETAILS MODAL FIXES */
-            #viewMyRequestModal .modal-body { padding: 20px 15px !important; }
-            #viewMyRequestModal .col-md-6.border-end { border-end: none !important; border-bottom: 1px solid #f1f5f9 !important; padding-bottom: 15px !important; margin-bottom: 15px !important; }
-            #viewMyRequestModal .row.g-3 .col-6 { width: 50% !important; }
-            #myModalDetails { font-size: 1.1rem !important; }
-            #myModalJustification { font-size: 0.85rem !important; }
-
-            /* =========================================================
-               6. MOBILE-ONLY DARK MODE FIXES (SERVICE REQUEST FEED)
-               ========================================================= */
-
-            /* Fix the Catalog Action Cards */
-            [data-bs-theme="dark"] .catalog-card {
-                background-color: #1e1e1e !important;
-                border-color: #333333 !important;
-            }
-            [data-bs-theme="dark"] .catalog-card .text-dark {
-                color: #ffffff !important;
-            }
-
-            /* Fix the white skeleton background on the ticket rows */
-            [data-bs-theme="dark"] .ticket-row {
-                background-color: #1e1e1e !important;
-                border-color: #333333 !important;
-                background: #1e1e1e !important; /* Overrides underlying gradients */
-            }
-
-            /* Dim the dashed divider lines inside the cards */
-            [data-bs-theme="dark"] .table-custom td:nth-child(3) {
-                border-bottom-color: #333333 !important;
-            }
-            [data-bs-theme="dark"] .table-custom td:nth-child(6) {
-                border-top-color: #333333 !important;
-            }
-
-            /* Fix the custom injected labels (Ticket ID, Category, etc.) */
-            [data-bs-theme="dark"] .table-custom td::before {
-                color: #94a3b8 !important;
-            }
-
-            /* Fix the hardcoded text classes inside the ticket card */
-            [data-bs-theme="dark"] .table-custom td .text-dark,
-            [data-bs-theme="dark"] .table-custom td:nth-child(3) {
-                color: #ffffff !important; /* Category Name / Subject */
-            }
-            [data-bs-theme="dark"] .table-custom td .text-muted,
-            [data-bs-theme="dark"] .table-custom td:nth-child(2),
-            [data-bs-theme="dark"] .table-custom td:nth-child(4) {
-                color: #94a3b8 !important; /* Dates and Details */
-            }
-
-            /* Make the "View" button match the dark UI perfectly */
-            [data-bs-theme="dark"] .table-custom td:nth-child(6) button {
-                background-color: #2d2d2d !important;
-                color: #bfdbfe !important; /* Soft light blue text */
-                border-color: #475569 !important;
-            }
-            [data-bs-theme="dark"] .table-custom td:nth-child(6) button:hover {
-                background-color: #3b82f6 !important;
-                color: #ffffff !important;
-            }
-        }
-    </style>
-
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>
 </head>
@@ -496,18 +304,15 @@
 <div class="modal fade" id="softwareLicenseModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-
             <div class="modal-header-custom d-flex justify-content-between align-items-center">
                 <h5 class="modal-title-custom" id="modalDynamicTitle">
                     <i class="fas fa-laptop-code"></i> Request Software License
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body-custom">
                 <form id="softwareRequestForm">
                     <div class="row g-4">
-
                         <div class="col-md-6">
                             <label class="custom-form-label">Select Software / Tool <span class="text-danger">*</span></label>
                             <select class="form-select custom-form-control" required>
@@ -519,7 +324,6 @@
                                 <option value="Other">Other (Specify in justification)</option>
                             </select>
                         </div>
-
                         <div class="col-md-6">
                             <label class="custom-form-label">Required Duration <span class="text-danger">*</span></label>
                             <select class="form-select custom-form-control" required>
@@ -529,7 +333,6 @@
                                 <option value="Trial">Trial / Evaluation (30 Days)</option>
                             </select>
                         </div>
-
                         <div class="col-md-4">
                             <label class="custom-form-label">Operating System <span class="text-danger">*</span></label>
                             <select class="form-select custom-form-control" required>
@@ -540,7 +343,6 @@
                                 <option value="Linux">Linux (Ubuntu/CentOS)</option>
                             </select>
                         </div>
-
                         <div class="col-md-4">
                             <label class="custom-form-label">Priority Level <span class="text-danger">*</span></label>
                             <select class="form-select custom-form-control" required>
@@ -549,12 +351,10 @@
                                 <option value="High">High (Urgent)</option>
                             </select>
                         </div>
-
                         <div class="col-md-4">
                             <label class="custom-form-label">Date Submitted</label>
                             <input type="text" class="form-control custom-form-control text-muted fw-bold" id="submissionDate" readonly style="background-color: #e2e8f0; cursor: not-allowed;">
                         </div>
-
                         <div class="col-12">
                             <label class="custom-form-label">Business Justification & Cost Center <span class="text-danger">*</span></label>
                             <textarea class="form-control custom-form-control" rows="3" placeholder="Please explain why this software is required for your role, and provide your project code if applicable..." required></textarea>
@@ -563,7 +363,6 @@
                     </div>
                 </form>
             </div>
-
             <div class="modal-footer-custom">
                 <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-navy" style="padding: 10px 24px; border-radius: 10px; font-weight: 600;" onclick="submitSoftwareRequest()">
@@ -577,18 +376,15 @@
 <div class="modal fade" id="systemAccessModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-
             <div class="modal-header-custom d-flex justify-content-between align-items-center">
                 <h5 class="modal-title-custom" id="systemModalTitle">
                     <i class="fas fa-key"></i> Request System Access
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body-custom">
                 <form id="systemAccessForm">
                     <div class="row g-4">
-
                         <div class="col-md-6">
                             <label class="custom-form-label">Target System / Portal <span class="text-danger">*</span></label>
                             <select class="form-select custom-form-control" required>
@@ -601,7 +397,6 @@
                                 <option value="Other">Other (Specify below)</option>
                             </select>
                         </div>
-
                         <div class="col-md-6">
                             <label class="custom-form-label">Requested Access Level <span class="text-danger">*</span></label>
                             <select class="form-select custom-form-control" required>
@@ -611,7 +406,6 @@
                                 <option value="Admin">Administrator / Superuser</option>
                             </select>
                         </div>
-
                         <div class="col-md-4">
                             <label class="custom-form-label">Environment <span class="text-danger">*</span></label>
                             <select class="form-select custom-form-control" required>
@@ -621,7 +415,6 @@
                                 <option value="Production">Production (PROD)</option>
                             </select>
                         </div>
-
                         <div class="col-md-4">
                             <label class="custom-form-label">Required Duration <span class="text-danger">*</span></label>
                             <select class="form-select custom-form-control" required>
@@ -630,12 +423,10 @@
                                 <option value="Temporary - 1 Week">Temporary (1 Week)</option>
                             </select>
                         </div>
-
                         <div class="col-md-4">
                             <label class="custom-form-label">Date Submitted</label>
                             <input type="text" class="form-control custom-form-control text-muted fw-bold" id="sysSubmissionDate" readonly style="background-color: #e2e8f0; cursor: not-allowed;">
                         </div>
-
                         <div class="col-12">
                             <label class="custom-form-label">Business Justification <span class="text-danger">*</span></label>
                             <textarea class="form-control custom-form-control" rows="3" placeholder="Please detail why you need this access, linking any relevant Jira tickets or project codes..." required></textarea>
@@ -644,7 +435,6 @@
                     </div>
                 </form>
             </div>
-
             <div class="modal-footer-custom">
                 <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-navy" style="padding: 10px 24px; border-radius: 10px; font-weight: 600;" onclick="submitSystemAccessRequest()">
@@ -658,18 +448,15 @@
 <div class="modal fade" id="modifyPermissionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-
             <div class="modal-header-custom d-flex justify-content-between align-items-center">
                 <h5 class="modal-title-custom" id="permissionModalTitle">
                     <i class="fas fa-user-shield"></i> Modify Permissions
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body-custom">
                 <form id="permissionRequestForm">
                     <div class="row g-4">
-
                         <div class="col-md-6">
                             <label class="custom-form-label">Application / System <span class="text-danger">*</span></label>
                             <select class="form-select custom-form-control" required>
@@ -681,7 +468,6 @@
                                 <option value="Other">Other (Specify below)</option>
                             </select>
                         </div>
-
                         <div class="col-md-6">
                             <label class="custom-form-label">Action Required <span class="text-danger">*</span></label>
                             <select class="form-select custom-form-control" required>
@@ -691,22 +477,18 @@
                                 <option value="Transfer">Transfer Role (Department Change)</option>
                             </select>
                         </div>
-
                         <div class="col-md-4">
                             <label class="custom-form-label">Current Role <span class="text-danger">*</span></label>
                             <input type="text" class="form-control custom-form-control" placeholder="e.g., Developer, Viewer" required>
                         </div>
-
                         <div class="col-md-4">
                             <label class="custom-form-label">Requested Role <span class="text-danger">*</span></label>
                             <input type="text" class="form-control custom-form-control" placeholder="e.g., Admin, Maintainer" required>
                         </div>
-
                         <div class="col-md-4">
                             <label class="custom-form-label">Date Submitted</label>
                             <input type="text" class="form-control custom-form-control text-muted fw-bold" id="permSubmissionDate" readonly style="background-color: #e2e8f0; cursor: not-allowed;">
                         </div>
-
                         <div class="col-12">
                             <label class="custom-form-label">Business Justification <span class="text-danger">*</span></label>
                             <textarea class="form-control custom-form-control" rows="3" placeholder="Please explain why your current permissions are insufficient and why this change is needed..." required></textarea>
@@ -715,7 +497,6 @@
                     </div>
                 </form>
             </div>
-
             <div class="modal-footer-custom">
                 <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-navy" style="padding: 10px 24px; border-radius: 10px; font-weight: 600;" onclick="submitPermissionRequest()">
@@ -795,18 +576,15 @@
 
 <script th:inline="javascript">
 
-    // 1. Safe Thymeleaf extraction (Declared ONLY ONCE)
+    // FIXED: Safe Thymeleaf extraction utilizing the EmployeeProfile vault
     const sessionUser = {
         id: /*[[${user != null ? user.username : 'EMP-0000'}]]*/ 'EMP-0000',
         name: /*[[${user != null ? user.fullName : 'Unknown User'}]]*/ 'Unknown User',
-        dept: /*[[${user != null ? user.businessUnit : 'General'}]]*/ 'General',
-        manager: /*[[${user != null ? user.reportingManager : 'Admin'}]]*/ 'Admin'
+        dept: /*[[${user?.employeeProfile?.businessUnit ?: 'General'}]]*/ 'General',
+        manager: /*[[${user?.employeeProfile?.reportingManager ?: 'Admin'}]]*/ 'Admin'
     };
 
-    // 2. Main function to open the correct modal (Lazy Initialization)
     function openRequestModal(type) {
-        console.log("Card clicked! Opening modal for: " + type);
-
         const today = new Date();
         const options = { day: '2-digit', month: 'short', year: 'numeric' };
         const formattedDate = today.toLocaleDateString('en-GB', options);
@@ -845,53 +623,43 @@
         });
     }
 
-    //  UPGRADED HARDWARE-PORTAL SUBMISSION ENGINE
-    async function handleSubmission(formId, category) {
+    // FIXED: Upgraded submission engine to correctly parse Software/Access fields
+    async function handleSubmission(formId, categoryName) {
         const form = document.getElementById(formId);
         const selects = form.querySelectorAll('select');
         const inputs = form.querySelectorAll('input[type="text"]:not([readonly])');
         const textarea = form.querySelector('textarea');
 
+        // Extract priority safely
         let priorityValue = "Medium";
         const priorityDropdown = Array.from(selects).find(sel =>
             Array.from(sel.options).some(opt => opt.value === 'Medium')
         );
         if (priorityDropdown) priorityValue = priorityDropdown.value;
 
-        let detailValue = "";
-        let durationLevel = "";
-        let assetTagVal = "";
-        let locVal = "";
-
-        if (category === 'Accessory Request') {
-            detailValue = selects[0].value;
-            locVal = selects[1].value;
-        } else if (category === 'Hardware Upgrade') {
-            assetTagVal = inputs[0].value;
-            detailValue = selects[0].value;
-            durationLevel = "From " + inputs[1].value + " to " + inputs[2].value;
-        }
+        // Grab values from the specific forms
+        let detailValue = selects[0] ? selects[0].value : "N/A";
+        let durationLevel = selects[1] ? selects[1].value : "N/A";
 
         const formData = {
             employeeId: sessionUser.id,
             employeeName: sessionUser.name,
             department: sessionUser.dept,
             managerName: sessionUser.manager,
-            type: "HARDWARE",
-            category: category,
+            type: "SOFTWARE",
+            category: categoryName,
             detailItem: detailValue,
             durationOrLevel: durationLevel,
-            assetTag: assetTagVal,
-            location: locVal,
+            assetTag: "N/A",
+            location: "N/A",
             priority: priorityValue,
-            justification: textarea.value,
+            justification: textarea ? textarea.value : "N/A",
             status: "Pending Approval"
         };
 
-        // 1. CONFIRMATION
         const confirmResult = await Swal.fire({
-            title: `Submit Hardware Request?`,
-            html: `You are requesting a <b>${category}</b> for <b>${formData.detailItem}</b>.<br><br>Priority: <b>${priorityValue}</b>`,
+            title: `Submit Service Request?`,
+            html: `You are requesting <b>${categoryName}</b> for <b>${formData.detailItem}</b>.<br><br>Priority: <b>${priorityValue}</b>`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Confirm & Submit',
@@ -901,17 +669,15 @@
 
         if (!confirmResult.isConfirmed) return;
 
-        // 2. LOADING STATE (Now with guaranteed visibility)
         Swal.fire({
             title: 'Processing Request...',
-            text: 'Allocating ticket and notifying IT Procurement...',
+            text: 'Allocating ticket and notifying IT Department...',
             allowOutsideClick: false,
             didOpen: () => {
                 Swal.showLoading();
             }
         });
 
-        // Record the start time so we can calculate the delay
         const startTime = Date.now();
 
         try {
@@ -921,21 +687,17 @@
                 body: JSON.stringify(formData)
             });
 
-            // --- THE VISIBILITY TRICK ---
-            // Calculate how much time has passed. If it's less than 1.5 seconds,
-            // we wait for the remainder so the user can actually see the "Processing" modal.
             const elapsedTime = Date.now() - startTime;
-            const minimumDisplayTime = 1500; // 1.5 seconds
+            const minimumDisplayTime = 1500;
             if (elapsedTime < minimumDisplayTime) {
                 await new Promise(resolve => setTimeout(resolve, minimumDisplayTime - elapsedTime));
             }
 
             if (response.ok) {
-                // 3. SUCCESS MODAL
                 await Swal.fire({
                     icon: 'success',
                     title: 'Request Logged!',
-                    html: `Your <b>${category}</b> has been successfully queued. IT will review your justification shortly.`,
+                    html: `Your <b>${categoryName}</b> request has been successfully queued. IT will review your justification shortly.`,
                     confirmButtonText: 'Understood',
                     timer: 4000,
                     timerProgressBar: true
@@ -948,26 +710,24 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Submission Failed',
-                text: 'The Inventory Portal could not connect. Please check your connection.',
+                text: 'The Portal could not connect to the database. Please check your connection.',
                 confirmButtonColor: '#1e3a8a'
             });
         }
     }
 
-    // Connect buttons to the handler - ALL are type 'SOFTWARE', but distinct categories
-    function submitSoftwareRequest() { handleSubmission('softwareRequestForm', 'SOFTWARE', 'Software License'); }
-    function submitSystemAccessRequest() { handleSubmission('systemAccessForm', 'SOFTWARE', 'System Access'); }
-    function submitPermissionRequest() { handleSubmission('permissionRequestForm', 'SOFTWARE', 'Permission Mod'); }
+    // Connect buttons to the handler safely
+    function submitSoftwareRequest() { handleSubmission('softwareRequestForm', 'Software License'); }
+    function submitSystemAccessRequest() { handleSubmission('systemAccessForm', 'System Access'); }
+    function submitPermissionRequest() { handleSubmission('permissionRequestForm', 'Permission Modification'); }
 
     async function viewMyRequestDetails(id) {
         try {
-            // Fetch data from the endpoint
             const response = await fetch('/api/requests/' + id);
 
             if (response.ok) {
                 const data = await response.json();
 
-                // Populate Modal fields
                 document.getElementById('myModalTicketId').textContent = data.ticketId;
                 document.getElementById('myModalEmpName').textContent = data.employeeName;
                 document.getElementById('myModalEmpId').textContent = data.employeeId;
@@ -982,13 +742,11 @@
                 document.getElementById('myModalDate').textContent = data.submissionDate;
                 document.getElementById('myModalJustification').textContent = data.justification;
 
-                // Priority Badge Colors
                 const pBadge = document.getElementById('myModalPriority');
                 pBadge.textContent = data.priority;
                 pBadge.className = 'badge px-3 py-2 ' +
                     (data.priority === 'High' ? 'bg-danger' : (data.priority === 'Medium' ? 'bg-warning text-dark' : 'bg-info text-dark'));
 
-                // Status Badge Colors (Matching Employee Table Styles)
                 const statusBadge = document.getElementById('myModalStatus');
                 statusBadge.textContent = data.status;
                 statusBadge.className = 'badge px-3 py-2 ';
@@ -1011,7 +769,6 @@
                     statusBadge.style.border = '1px solid #c7d2fe';
                 }
 
-                // Show the Modal
                 const detailsModal = new bootstrap.Modal(document.getElementById('viewMyRequestModal'));
                 detailsModal.show();
             } else {
@@ -1031,7 +788,6 @@
         rows.forEach(row => {
             const rowStatus = row.getAttribute('data-status');
 
-            // Show if "All" is selected, or if the row's status matches the dropdown
             if (filterValue === 'All' || rowStatus === filterValue || (filterValue === 'Pending Approval' && rowStatus === 'Pending')) {
                 row.style.display = '';
                 visibleCount++;
@@ -1040,7 +796,6 @@
             }
         });
 
-        // Show/Hide the "No matching requests" message
         const emptyRow = document.getElementById('emptyFilterRow');
         if (emptyRow) {
             emptyRow.style.display = (visibleCount === 0 && rows.length > 0) ? '' : 'none';

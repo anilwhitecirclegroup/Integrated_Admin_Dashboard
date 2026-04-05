@@ -36,7 +36,7 @@
 
         .main-container { max-width: 1500px; width: 96%; margin: 0 auto; padding: 0 20px; }
 
-        /*  SPLIT SCREEN LAYOUT STYLES  */
+        /* SPLIT SCREEN LAYOUT STYLES  */
 
         /* Left Column: Form Card */
         .form-card {
@@ -45,11 +45,11 @@
         }
         .form-header {
             background: var(--navy); color: white;
-            padding: 15px 20px; /* Reduced padding */
+            padding: 15px 20px;
             border-bottom: 4px solid #10b981;
         }
         .form-body {
-            padding: 15px 20px; /* Reduced padding */
+            padding: 15px 20px;
         }
 
         /* ENHANCED INPUTS (Hover, Focus, Faded Placeholders) */
@@ -65,14 +65,14 @@
         }
         .custom-input:focus {
             background: white; border-color: var(--navy);
-            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.15); /* Distinct focus ring */
+            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.15);
             outline: none;
         }
 
         /* Smaller, Faded Placeholders */
         .custom-input {
             background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px;
-            padding: 8px 12px; /* Slimmer inputs */
+            padding: 8px 12px;
             font-weight: 500; transition: all 0.2s ease;
             color: #1e293b; font-size: 0.9rem;
         }
@@ -83,8 +83,8 @@
         select.custom-input option { color: #1e293b; font-size: 0.95rem; }
 
         .form-label {
-            font-weight: 700; color: #475569; font-size: 0.75rem; /* Smaller label */
-            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; /* Tighter gap */
+            font-weight: 700; color: #475569; font-size: 0.75rem;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
         }
 
         /* Right Column: Feed Tracker */
@@ -97,10 +97,10 @@
         }
         .feed-item {
             background: white; border-radius: 12px;
-            padding: 12px 15px; /* Tighter padding for 5 items */
+            padding: 12px 15px;
             border: 1px solid #e2e8f0;
-            margin-bottom: 10px; /* Reduced spacing between cards */
-            display: flex; gap: 15px; /* Tighter gap */
+            margin-bottom: 10px;
+            display: flex; gap: 15px;
             align-items: flex-start;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s;
         }
@@ -109,13 +109,13 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
         .feed-icon {
-            width: 40px; height: 40px; /* Smaller icons */
+            width: 40px; height: 40px;
             border-radius: 8px; flex-shrink: 0;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; /* Smaller icon font */
+            font-size: 1.2rem;
         }
         .feed-content p {
-            font-size: 0.75rem !important; /* Compresses long descriptions */
+            font-size: 0.75rem !important;
             line-height: 1.3;
         }
 
@@ -159,7 +159,6 @@
             font-weight: 600 !important; background-color: #f1f5f9 !important; color: #64748b !important;
         }
 
-        /* Custom Warning/Incident Icon color */
         .swal2-icon.swal2-warning { border-color: #f59e0b !important; color: #f59e0b !important; }
 
     </style>
@@ -206,7 +205,6 @@
             .form-header h5 { font-size: 1rem !important; }
             .form-body { padding: 15px !important; }
 
-            /* Symmetrical side-by-side categories */
             .form-body .row.g-2 > .col-md-6 { width: 50% !important; display: inline-block !important; }
             .custom-input { font-size: 0.85rem !important; padding: 10px !important; border-radius: 8px !important; }
             .form-label { font-size: 0.65rem !important; margin-bottom: 4px !important; }
@@ -229,11 +227,10 @@
                 gap: 12px !important;
                 border-radius: 12px !important;
                 margin-bottom: 12px !important;
-                display: flex; /* Kept for JS compatibility */
+                display: flex;
                 flex-direction: column !important;
             }
 
-            /* Put Icon and Header text on one line */
             .feed-item > .d-flex.gap-3 { width: 100% !important; gap: 10px !important; }
             .feed-icon { width: 35px !important; height: 35px !important; font-size: 1rem !important; border-radius: 8px !important; }
 
@@ -412,167 +409,161 @@
                         </div>
 
                     </div>
+                </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script th:inline="javascript">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:inline="javascript">
 
-    // 1. Safe Thymeleaf extraction (Declared ONLY ONCE)
-    const sessionUser = {
-        id: /*[[${user != null ? user.username : 'EMP-0000'}]]*/ 'EMP-0000',
-        name: /*[[${user != null ? user.fullName : 'Unknown User'}]]*/ 'Unknown User',
-        dept: /*[[${user != null ? user.businessUnit : 'General'}]]*/ 'General',
-        manager: /*[[${user != null ? user.reportingManager : 'Admin'}]]*/ 'Admin'
-    };
+        // FIXED: Safe Thymeleaf extraction utilizing the EmployeeProfile vault
+        const sessionUser = {
+            id: /*[[${user != null ? user.username : 'EMP-0000'}]]*/ 'EMP-0000',
+            name: /*[[${user != null ? user.fullName : 'Unknown User'}]]*/ 'Unknown User',
+            dept: /*[[${user?.employeeProfile?.businessUnit ?: 'General'}]]*/ 'General',
+            manager: /*[[${user?.employeeProfile?.reportingManager ?: 'Admin'}]]*/ 'Admin'
+        };
 
-    // 2. Sub-category dynamic data dictionary
-    const subCategories = {
-        "Hardware": ["Laptop / PC", "Monitor / Display", "Keyboard / Mouse", "Docking Station", "Headset / Audio", "Other Physical Device"],
-        "Software": ["Operating System (Windows/Mac)", "Microsoft Office (Outlook, Word, etc.)", "Internal Tool (HRMS, ERP)", "Development Tool (IDE, Docker)", "Other Application"],
-        "Network": ["VPN / GlobalProtect", "Office Wi-Fi / Ethernet", "Unable to reach Internal Server", "Internet Connectivity Issue"]
-    };
+        // Sub-category dynamic data dictionary
+        const subCategories = {
+            "Hardware": ["Laptop / PC", "Monitor / Display", "Keyboard / Mouse", "Docking Station", "Headset / Audio", "Other Physical Device"],
+            "Software": ["Operating System (Windows/Mac)", "Microsoft Office (Outlook, Word, etc.)", "Internal Tool (HRMS, ERP)", "Development Tool (IDE, Docker)", "Other Application"],
+            "Network": ["VPN / GlobalProtect", "Office Wi-Fi / Ethernet", "Unable to reach Internal Server", "Internet Connectivity Issue"]
+        };
 
-    function populateSubCategories() {
-        const categorySelect = document.getElementById("incidentCategory");
-        const subCategorySelect = document.getElementById("incidentSubCategory");
-        const selectedCategory = categorySelect.value;
+        function populateSubCategories() {
+            const categorySelect = document.getElementById("incidentCategory");
+            const subCategorySelect = document.getElementById("incidentSubCategory");
+            const selectedCategory = categorySelect.value;
 
-        subCategorySelect.innerHTML = '<option value="" selected disabled hidden>Select Specific Item...</option>';
+            subCategorySelect.innerHTML = '<option value="" selected disabled hidden>Select Specific Item...</option>';
 
-        if (selectedCategory && subCategories[selectedCategory]) {
-            subCategorySelect.disabled = false;
-            subCategories[selectedCategory].forEach(item => {
-                const option = document.createElement("option");
-                option.value = item;
-                option.textContent = item;
-                subCategorySelect.appendChild(option);
-            });
-        } else {
-            subCategorySelect.disabled = true;
-        }
-    }
-
-    // FIXED INCIDENT-SUBMISSION ENGINE
-async function submitIncident() {
-    const form = document.getElementById('incidentForm');
-    const selects = form.querySelectorAll('select');
-    const inputs = form.querySelectorAll('input[type="text"]');
-    const textarea = form.querySelector('textarea');
-
-    // 1. Validation Check
-    if (!selects[0].value || !selects[1].value || !inputs[0].value || !textarea.value) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Missing Info',
-            text: 'Please fill in Category, Item, Title, and Description.',
-            confirmButtonColor: '#1e3a8a'
-        });
-        return;
-    }
-
-    const formData = {
-        employeeId: sessionUser.id,
-        employeeName: sessionUser.name,
-        department: sessionUser.dept,
-        managerName: sessionUser.manager,
-        type: "INCIDENT",
-        category: selects[0].value,
-        detailItem: inputs[0].value,
-        durationOrLevel: selects[1].value,
-        priority: selects[2].value,
-        justification: textarea.value,
-        status: "Open"
-    };
-
-    // 2. Confirmation Modal
-    const confirmResult = await Swal.fire({
-        title: 'Report Incident?',
-        html: `Logging a <b>${formData.priority} Priority</b> ticket for:<br><br><i class="fas fa-bolt text-warning me-2"></i><b>${formData.detailItem}</b>`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Submit Ticket',
-        cancelButtonText: 'Review Form',
-        reverseButtons: true
-    });
-
-    if (!confirmResult.isConfirmed) return;
-
-    // 3. Loading State (FIXED: Removed the stray 'k')
-    Swal.fire({
-        title: 'Logging Incident...',
-        text: 'Analyzing priority and alerting IT Response Team...',
-        allowOutsideClick: false,
-        didOpen: () => {
-            Swal.showLoading();
-        }
-    });
-
-    const startTime = Date.now();
-
-    try {
-        const response = await fetch('/api/requests/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        });
-
-        const elapsedTime = Date.now() - startTime;
-        const minDisplayTime = 1600;
-        if (elapsedTime < minDisplayTime) {
-            await new Promise(resolve => setTimeout(resolve, minDisplayTime - elapsedTime));
-        }
-
-        if (response.ok) {
-            await Swal.fire({
-                icon: 'success',
-                title: 'Incident Logged',
-                html: `Ticket ID generated. <b>IT Support</b> has been notified and will investigate shortly.`,
-                confirmButtonText: 'Back to Dashboard',
-                timer: 4000,
-                timerProgressBar: true
-            });
-            location.reload();
-        } else {
-            throw new Error("Log failed");
-        }
-    } catch (error) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Helpdesk Offline',
-            text: 'Could not reach the IT portal. Please check your network connection.',
-            confirmButtonColor: '#1e3a8a'
-        });
-    }
-}
-
-    //  FEED FILTER LOGIC
-    function filterIncidents() {
-        const filterValue = document.getElementById('statusFilter').value;
-        const rows = document.querySelectorAll('.incident-row');
-        let visibleCount = 0;
-
-        rows.forEach(row => {
-            const rowStatus = row.getAttribute('data-status');
-
-            if (filterValue === 'All' || rowStatus === filterValue) {
-                row.style.display = 'flex'; // Use flex to maintain the side-by-side icon layout
-                visibleCount++;
+            if (selectedCategory && subCategories[selectedCategory]) {
+                subCategorySelect.disabled = false;
+                subCategories[selectedCategory].forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item;
+                    option.textContent = item;
+                    subCategorySelect.appendChild(option);
+                });
             } else {
-                row.style.display = 'none';
+                subCategorySelect.disabled = true;
+            }
+        }
+
+    async function submitIncident() {
+        const form = document.getElementById('incidentForm');
+        const selects = form.querySelectorAll('select');
+        const inputs = form.querySelectorAll('input[type="text"]');
+        const textarea = form.querySelector('textarea');
+
+        if (!selects[0].value || !selects[1].value || !inputs[0].value || !textarea.value) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Missing Info',
+                text: 'Please fill in Category, Item, Title, and Description.',
+                confirmButtonColor: '#1e3a8a'
+            });
+            return;
+        }
+
+        const formData = {
+            employeeId: sessionUser.id,
+            employeeName: sessionUser.name,
+            department: sessionUser.dept,
+            managerName: sessionUser.manager,
+            type: "INCIDENT",
+            category: selects[0].value,
+            detailItem: inputs[0].value,
+            durationOrLevel: selects[1].value,
+            priority: selects[2].value,
+            justification: textarea.value,
+            status: "Open"
+        };
+
+        const confirmResult = await Swal.fire({
+            title: 'Report Incident?',
+            html: `Logging a <b>${formData.priority} Priority</b> ticket for:<br><br><i class="fas fa-bolt text-warning me-2"></i><b>${formData.detailItem}</b>`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Submit Ticket',
+            cancelButtonText: 'Review Form',
+            reverseButtons: true
+        });
+
+        if (!confirmResult.isConfirmed) return;
+
+        Swal.fire({
+            title: 'Logging Incident...',
+            text: 'Analyzing priority and alerting IT Response Team...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
             }
         });
 
-        // Show/Hide the empty message
-        const emptyRow = document.getElementById('emptyFilterRow');
-        if (emptyRow) {
-            emptyRow.style.display = (visibleCount === 0 && rows.length > 0) ? 'block' : 'none';
+        const startTime = Date.now();
+
+        try {
+            const response = await fetch('/api/requests/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const elapsedTime = Date.now() - startTime;
+            const minDisplayTime = 1600;
+            if (elapsedTime < minDisplayTime) {
+                await new Promise(resolve => setTimeout(resolve, minDisplayTime - elapsedTime));
+            }
+
+            if (response.ok) {
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Incident Logged',
+                    html: `Ticket ID generated. <b>IT Support</b> has been notified and will investigate shortly.`,
+                    confirmButtonText: 'Back to Dashboard',
+                    timer: 4000,
+                    timerProgressBar: true
+                });
+                location.reload();
+            } else {
+                throw new Error("Log failed");
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Helpdesk Offline',
+                text: 'Could not reach the IT portal. Please check your network connection.',
+                confirmButtonColor: '#1e3a8a'
+            });
         }
     }
-</script>
+
+        function filterIncidents() {
+            const filterValue = document.getElementById('statusFilter').value;
+            const rows = document.querySelectorAll('.incident-row');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const rowStatus = row.getAttribute('data-status');
+
+                if (filterValue === 'All' || rowStatus === filterValue) {
+                    row.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            const emptyRow = document.getElementById('emptyFilterRow');
+            if (emptyRow) {
+                emptyRow.style.display = (visibleCount === 0 && rows.length > 0) ? 'block' : 'none';
+            }
+        }
+    </script>
 </body>
 </html>

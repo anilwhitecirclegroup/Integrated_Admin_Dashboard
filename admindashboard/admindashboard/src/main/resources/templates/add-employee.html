@@ -9,7 +9,7 @@
 
     <style>
         :root {
-            --primary-blue: #1e3a8a; /* Kept for existing form buttons */
+            --primary-blue: #1e3a8a;
             --bs-primary: #1e3a8a;
             --bs-primary-dark: #172554;
             --bg-light: #f4f6f9;
@@ -42,27 +42,27 @@
         .navbar-brand {
             font-size: 1.5rem;
             font-weight: 700;
-            color: white !important; /* Ensures text stays white */
+            color: white !important;
         }
 
         /* Card Styling - Made Compact */
         .section-card {
             background: #fff;
             border: none;
-            border-radius: 8px; /* Slightly tighter radius */
+            border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            margin-bottom: 20px; /* Reduced margin */
+            margin-bottom: 20px;
             overflow: hidden;
         }
 
         .section-header {
             background-color: var(--primary-blue);
             color: white;
-            padding: 10px 15px; /* Reduced padding */
+            padding: 10px 15px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            font-size: 0.95 rem; /* Slightly smaller font */
+            font-size: 0.95 rem;
         }
 
         .section-header i {
@@ -72,13 +72,13 @@
 
         /* Input Fields - Compact View */
         .card-body {
-            padding: 1.25rem !important; /* Reduced from p-4 */
+            padding: 1.25rem !important;
         }
 
         .form-floating > .form-control {
             border: 1px solid #dee2e6;
             border-radius: 6px;
-            height: calc(3.0rem + 2px); /* Slightly shorter inputs */
+            height: calc(3.0rem + 2px);
             min-height: calc(3.0rem + 2px);
             line-height: 1.25;
             font-size: 0.9rem;
@@ -102,7 +102,6 @@
             text-align: center;
         }
 
-        /* 1. CREATE EMPLOYEE BUTTON (With Shine Effect) */
         .btn-submit {
             background-color: var(--primary-blue);
             color: white;
@@ -113,11 +112,10 @@
             font-size: 1rem;
             border-radius: 50px;
             transition: all 0.3s ease;
-            position: relative; /* Required for the shine */
-            overflow: hidden;   /* Keeps the shine inside the button */
+            position: relative;
+            overflow: hidden;
         }
 
-        /* The Shine Animation Layer */
         .btn-submit::after {
             content: "";
             position: absolute;
@@ -129,7 +127,6 @@
             transition: 0.5s;
         }
 
-        /* Hover State: Moves the shine across */
         .btn-submit:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(30, 58, 138, 0.4);
@@ -137,10 +134,9 @@
         }
 
         .btn-submit:hover::after {
-            left: 100%; /* Triggers the movement */
+            left: 100%;
         }
 
-        /* 2. CANCEL BUTTON (Red on Hover) */
         .btn-cancel {
             border-radius: 50px;
             padding: 10px 30px;
@@ -151,13 +147,13 @@
         }
 
         .btn-cancel:hover {
-            background-color: #dc3545; /* Bright Red */
+            background-color: #dc3545;
             border-color: #dc3545;
-            color: white;              /* Text turns white */
+            color: white;
             box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
         }
 
-        /*  PREMIUM SWEETALERT2 STYLING  */
+        /* PREMIUM SWEETALERT2 STYLING */
         div:where(.swal2-container) { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; }
         .swal2-popup {
             border-radius: 20px !important;
@@ -180,7 +176,6 @@
     </style>
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/mobile-responsive.css" rel="stylesheet">
-
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>
 </head>
@@ -236,7 +231,7 @@
                                            required
                                            th:value="${user?.username}"
                                            th:classappend="${errorMessage} ? 'is-invalid' : ''"
-                                    oninput="this.value = this.value.toUpperCase().trim()">
+                                           oninput="this.value = this.value.toUpperCase().trim()">
 
                                     <label for="empId">Employee ID *</label>
 
@@ -253,7 +248,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="designation" id="designation" placeholder="Role" required th:value="${user?.designation}">
+                                    <input type="text" class="form-control" name="designation" id="designation" placeholder="Role" required th:value="${user?.employeeProfile?.designation}">
                                     <label for="designation">Designation *</label>
                                 </div>
                             </div>
@@ -265,13 +260,13 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="experience" id="experience" placeholder="Exp">
+                                    <input type="text" class="form-control" name="experience" id="experience" placeholder="Exp" th:value="${user?.employeeProfile?.experience}">
                                     <label for="experience">Experience</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="date" class="form-control" name="joiningDate" id="joiningDate">
+                                    <input type="date" class="form-control" name="joiningDate" id="joiningDate" th:value="${user?.employeeProfile?.joiningDate}">
                                     <label for="joiningDate">Date of Joining</label>
                                 </div>
                             </div>
@@ -287,49 +282,49 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="businessUnit" id="bu" placeholder="BU">
+                                    <input type="text" class="form-control" name="businessUnit" id="bu" placeholder="BU" th:value="${user?.employeeProfile?.businessUnit}">
                                     <label for="bu">Business Unit</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="accountName" id="account" placeholder="Acc">
+                                    <input type="text" class="form-control" name="accountName" id="account" placeholder="Acc" th:value="${user?.employeeProfile?.accountName}">
                                     <label for="account">Account Name</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="projectName" id="projName" placeholder="Proj">
+                                    <input type="text" class="form-control" name="projectName" id="projName" placeholder="Proj" th:value="${user?.employeeProfile?.projectName}">
                                     <label for="projName">Project Name</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="projectCode" id="projCode" placeholder="Code">
+                                    <input type="text" class="form-control" name="projectCode" id="projCode" placeholder="Code" th:value="${user?.employeeProfile?.projectCode}">
                                     <label for="projCode">Project Code</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="teamGroup" id="team" placeholder="Team">
+                                    <input type="text" class="form-control" name="teamGroup" id="team" placeholder="Team" th:value="${user?.employeeProfile?.teamGroup}">
                                     <label for="team">Team / Group</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="customerName" id="customer" placeholder="Cust">
+                                    <input type="text" class="form-control" name="customerName" id="customer" placeholder="Cust" th:value="${user?.employeeProfile?.customerName}">
                                     <label for="customer">Customer Name</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="verticalName" id="vertical" placeholder="Vert">
+                                    <input type="text" class="form-control" name="verticalName" id="vertical" placeholder="Vert" th:value="${user?.employeeProfile?.verticalName}">
                                     <label for="vertical">Vertical Name</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="domainIndustry" id="domain" placeholder="Dom">
+                                    <input type="text" class="form-control" name="domainIndustry" id="domain" placeholder="Dom" th:value="${user?.employeeProfile?.domainIndustry}">
                                     <label for="domain">Domain / Industry</label>
                                 </div>
                             </div>
@@ -348,25 +343,25 @@
                         <div class="row g-3">
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" name="mobileNumber" class="form-control" id="mobileNumber" placeholder="Mobile Number" required th:value="${user?.mobileNumber}">
+                                    <input type="text" name="mobileNumber" class="form-control" id="mobileNumber" placeholder="Mobile Number" required th:value="${user?.employeeProfile?.mobileNumber}">
                                     <label for="mobileNumber">Mobile Number *</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="workLocation" id="location" placeholder="Loc">
+                                    <input type="text" class="form-control" name="workLocation" id="location" placeholder="Loc" th:value="${user?.employeeProfile?.workLocation}">
                                     <label for="location">Work Location</label>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="city" id="city" placeholder="City">
+                                    <input type="text" class="form-control" name="city" id="city" placeholder="City" th:value="${user?.employeeProfile?.city}">
                                     <label for="city">City</label>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="country" id="country" placeholder="Country">
+                                    <input type="text" class="form-control" name="country" id="country" placeholder="Country" th:value="${user?.employeeProfile?.country}">
                                     <label for="country">Country</label>
                                 </div>
                             </div>
@@ -382,19 +377,19 @@
                         <div class="row g-3">
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="reportingManager" id="rm" placeholder="RM">
+                                    <input type="text" class="form-control" name="reportingManager" id="rm" placeholder="RM" th:value="${user?.employeeProfile?.reportingManager}">
                                     <label for="rm">Reporting Manager</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="projectManager" id="pm" placeholder="PM">
+                                    <input type="text" class="form-control" name="projectManager" id="pm" placeholder="PM" th:value="${user?.employeeProfile?.projectManager}">
                                     <label for="pm">Project Manager</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="buHrContact" id="hr" placeholder="HR">
+                                    <input type="text" class="form-control" name="buHrContact" id="hr" placeholder="HR" th:value="${user?.employeeProfile?.buHrContact}">
                                     <label for="hr">BU-HR Contact</label>
                                 </div>
                             </div>
@@ -444,7 +439,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    // Remove the red border as soon as the user starts typing again
     document.getElementById('empId').addEventListener('input', function() {
         this.classList.remove('is-invalid');
         const alertBox = document.querySelector('.alert-danger');
@@ -452,25 +446,20 @@
     });
 
 
-    // Force all date inputs to have a maximum year of 9999 (4 digits)
     document.querySelectorAll('input[type="date"]').forEach(function(dateInput) {
         if (!dateInput.getAttribute('max')) {
             dateInput.setAttribute('max', '9999-12-31');
         }
     });
 
-    // SMART VALIDATION & SUBMISSION ENGINE
     function confirmEmployeeCreation() {
         const form = document.getElementById('addEmployeeForm');
 
-        // 1. Check if all mandatory fields are filled
         if (!form.checkValidity()) {
-            // If empty, this triggers the browser to highlight the exact missing field!
             form.reportValidity();
             return;
         }
 
-        // 2. Launch the Premium Confirmation Modal
         Swal.fire({
             title: 'Add New Employee?',
             html: 'Are you sure you want to onboard this employee?<br><br><small>Please verify all details before confirming.</small>',
@@ -484,7 +473,6 @@
         }).then((result) => {
             if (result.isConfirmed) {
 
-                // 3. Show Loading Spinner while submitting
                 Swal.fire({
                     title: 'Creating Profile...',
                     text: 'Setting up employee workspace and credentials...',
@@ -494,7 +482,6 @@
                     }
                 });
 
-                // 4. Submit the form to the backend
                 form.submit();
             }
         });

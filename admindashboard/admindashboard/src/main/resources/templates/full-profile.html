@@ -12,7 +12,7 @@
             --navy-hover: #172a6b;
             --light-blue: #f0f4f8;
             --border-color: #e2e8f0;
-            --bg-color: #f4f7f9; /* Slightly richer off-white for depth */
+            --bg-color: #f4f7f9;
             --text-main: #0f172a;
             --text-muted: #64748b;
             --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
@@ -26,7 +26,7 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             padding-top: 120px;
-            letter-spacing: -0.01em; /* Modern typography touch */
+            letter-spacing: -0.01em;
         }
 
         .master-nav {
@@ -42,7 +42,7 @@
 
         .progress-container { width: 260px; margin-right: 25px; text-align: right; }
         .progress-track {
-            width: 160px; height: 8px; /* Slimmer, sleeker */
+            width: 160px; height: 8px;
             background-color: #e2e8f0; border-radius: 20px;
             overflow: hidden; float: right; margin-top: 6px;
         }
@@ -57,7 +57,7 @@
             border: 1px solid var(--border-color); margin-bottom: 24px;
             box-shadow: var(--card-shadow);
             transition: all 0.3s ease;
-            overflow: hidden; /* <-- THIS FIXES THE CORNER OVERLAP */
+            overflow: hidden;
         }
         .section-card:hover {
             transform: translateY(-2px);
@@ -70,12 +70,10 @@
             letter-spacing: 0.5px; border-bottom: none;
             display: flex; align-items: center; text-transform: uppercase;
         }
-        /* Make the icons light blue so they pop against the dark navy background */
         .section-header i { color: #93c5fd; margin-right: 12px; font-size: 1.15rem; }
 
         .section-body { padding: 20px; }
 
-        /* Header Main Card - Premium Gradient */
         .profile-main-card {
             background: linear-gradient(to right, #ffffff, #f8fafc);
             border-radius: 16px; border: 1px solid #e2e8f0;
@@ -84,7 +82,6 @@
         }
         .profile-main-card:hover { transform: translateY(-2px); box-shadow: var(--card-shadow-hover); }
 
-        /* Avatar Enhancements */
         .avatar-circle {
             width: 95px; height: 95px;
             background: linear-gradient(135deg, var(--navy) 0%, #3b82f6 100%);
@@ -94,7 +91,6 @@
             border: 4px solid white;
         }
 
-        /* Information Grid Boxes - Soft & Interactive */
         .info-box {
             background: #fdfdfd; border: 1px solid #f8fafc;
             border-radius: 10px; padding: 12px 16px; margin-bottom: 12px;
@@ -102,11 +98,9 @@
         }
         .info-box:hover { background: #f8fafc; border-color: #e2e8f0; }
 
-        /* Professional Typography for Labels/Values */
         .info-label { color: var(--text-muted); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; display: block; }
         .info-value { color: var(--text-main); font-size: 0.95rem; font-weight: 500; word-break: break-word; }
 
-        /* Edit Mode Input Styling (SaaS style) */
         .editable-field {
             display: none; width: 100%;
             border: 1px solid #cbd5e1; border-radius: 6px;
@@ -122,18 +116,15 @@
         .editing .editable-card .editable-field { display: block; }
         .editing .editable-card .info-value-text { display: none; }
 
-        /* Highlight missing fields with a subtle left-border indicator */
         .bg-pending { background-color: #f8fafc !important; border-left: 3px solid #94a3b8 !important; }
         .info-value-text:empty::before { content: "\200b"; }
 
-        /* Button Enhancements */
         .btn-primary { background: var(--navy); border: none; box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.2); transition: all 0.2s; }
         .btn-primary:hover { background: var(--navy-hover); transform: translateY(-1px); box-shadow: 0 6px 8px -1px rgba(30, 58, 138, 0.3); }
 
         .btn-success { background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%); border: none; box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.2); }
         .btn-success:hover { background: linear-gradient(135deg, #15803d 0%, #16a34a 100%); transform: translateY(-1px); }
 
-        /* Sleeker Back Button - Restored to Solid Navy */
         .btn-back {
             background-color: var(--navy); color: white;
             font-weight: 600; padding: 8px 20px; border-radius: 10px;
@@ -145,7 +136,6 @@
             transform: translateY(-1px); box-shadow: 0 4px 6px rgba(30, 58, 138, 0.3);
         }
 
-        /* Modern Status Badge */
         .badge.bg-success { background-color: #dcfce7 !important; color: #166534 !important; font-weight: 700; padding: 0.6em 1.2em; border-radius: 8px; border: 1px solid #bbf7d0; }
     </style>
     <link href="/css/style.css" rel="stylesheet">
@@ -175,11 +165,9 @@
                 flex-wrap: nowrap !important;
             }
 
-            /* Branding Side */
             .master-nav > .d-flex:first-child { min-width: 0 !important; flex: 0 1 auto !important; }
             .master-nav i.fa-id-card { font-size: 1.5rem !important; color: var(--navy) !important; }
 
-            /* Remove vertical line and big margins to save space */
             .master-nav span.fw-bold {
                 border-left: none !important;
                 margin-left: 8px !important;
@@ -189,7 +177,6 @@
                 letter-spacing: 0px !important;
             }
 
-            /* Control Side (Progress + Buttons) */
             .master-nav > .d-flex:last-child {
                 gap: 5px !important;
                 flex: 0 0 auto !important;
@@ -197,17 +184,14 @@
                 align-items: center !important;
             }
 
-            /* Hide the words "Profile:" and "Complete" on mobile, just show the % */
             .progress-container { display: flex !important; width: auto !important; margin: 0 !important; }
             .progress-container .small { font-size: 0.85rem !important; margin: 0 !important; font-weight: 800 !important; color: var(--navy) !important; }
             .progress-container .small { display: flex !important; }
-            .progress-container .small::before { content: ""; } /* Removes "Profile:" if it was hardcoded text */
+            .progress-container .small::before { content: ""; }
 
-            /* Hide bulky parts */
             .progress-container .text-muted,
             .progress-track { display: none !important; }
 
-            /* Tiny high-speed buttons */
             #editToggleBtn, .btn-back {
                 padding: 6px 10px !important;
                 font-size: 0px !important;
@@ -236,10 +220,8 @@
             .section-header { padding: 10px 15px !important; font-size: 0.75rem !important; }
             .section-body { padding: 12px !important; }
 
-            /* Force all columns to 100% width */
             .row.g-3 > div { width: 100% !important; margin-bottom: 0 !important; }
 
-            /* Symmetrical split for specific small fields like Gender/DOB or City/Country */
             .row.g-3 > .col-md-6:has(input[type="date"]),
             .row.g-3 > .col-md-6:has(select),
             .row.g-2 > .col-6 { width: 50% !important; }
@@ -313,7 +295,7 @@
                     </div>
                     <div class="col-md-3">
                         <label class="info-label">Designation</label>
-                        <div class="info-value" th:text="${user.designation}"></div>
+                        <div class="info-value" th:text="${user.employeeProfile?.designation}"></div>
                     </div>
                     <div class="col-md-3">
                         <label class="info-label">Official Email</label>
@@ -335,8 +317,8 @@
                                 <div class="info-box">
                                     <label class="info-label">Mobile Number</label>
                                     <div class="info-value">
-                                        <span class="info-value-text" th:text="${user.mobileNumber}"></span>
-                                        <input type="text" name="mobileNumber" class="editable-field" th:value="${user.mobileNumber}">
+                                        <span class="info-value-text" th:text="${user.employeeProfile?.mobileNumber}"></span>
+                                        <input type="text" name="mobileNumber" class="editable-field" th:value="${user.employeeProfile?.mobileNumber}">
                                     </div>
                                 </div>
                             </div>
@@ -415,14 +397,14 @@
                     <div class="section-header"><i class="fas fa-project-diagram me-2"></i> PROJECT & ALLOCATION</div>
                     <div class="section-body">
                         <div class="row g-3">
-                            <div class="col-md-6"><div class="info-box"><label class="info-label">Business Unit</label><div class="info-value" th:text="${user.businessUnit}"></div></div></div>
-                            <div class="col-md-6"><div class="info-box"><label class="info-label">Account Name</label><div class="info-value" th:text="${user.accountName}"></div></div></div>
-                            <div class="col-md-6"><div class="info-box"><label class="info-label">Project Name</label><div class="info-value" th:text="${user.projectName}"></div></div></div>
-                            <div class="col-md-6"><div class="info-box"><label class="info-label">Project Code</label><div class="info-value" th:text="${user.projectCode}"></div></div></div>
-                            <div class="col-md-6"><div class="info-box"><label class="info-label">Team / Group</label><div class="info-value" th:text="${user.teamGroup}"></div></div></div>
-                            <div class="col-md-6"><div class="info-box"><label class="info-label">Vertical Name</label><div class="info-value" th:text="${user.verticalName}"></div></div></div>
-                            <div class="col-md-6"><div class="info-box"><label class="info-label">Customer Name</label><div class="info-value" th:text="${user.customerName}"></div></div></div>
-                            <div class="col-md-6"><div class="info-box"><label class="info-label">Domain / Industry</label><div class="info-value" th:text="${user.domainIndustry}"></div></div></div>
+                            <div class="col-md-6"><div class="info-box"><label class="info-label">Business Unit</label><div class="info-value" th:text="${user.employeeProfile?.businessUnit}"></div></div></div>
+                            <div class="col-md-6"><div class="info-box"><label class="info-label">Account Name</label><div class="info-value" th:text="${user.employeeProfile?.accountName}"></div></div></div>
+                            <div class="col-md-6"><div class="info-box"><label class="info-label">Project Name</label><div class="info-value" th:text="${user.employeeProfile?.projectName}"></div></div></div>
+                            <div class="col-md-6"><div class="info-box"><label class="info-label">Project Code</label><div class="info-value" th:text="${user.employeeProfile?.projectCode}"></div></div></div>
+                            <div class="col-md-6"><div class="info-box"><label class="info-label">Team / Group</label><div class="info-value" th:text="${user.employeeProfile?.teamGroup}"></div></div></div>
+                            <div class="col-md-6"><div class="info-box"><label class="info-label">Vertical Name</label><div class="info-value" th:text="${user.employeeProfile?.verticalName}"></div></div></div>
+                            <div class="col-md-6"><div class="info-box"><label class="info-label">Customer Name</label><div class="info-value" th:text="${user.employeeProfile?.customerName}"></div></div></div>
+                            <div class="col-md-6"><div class="info-box"><label class="info-label">Domain / Industry</label><div class="info-value" th:text="${user.employeeProfile?.domainIndustry}"></div></div></div>
                         </div>
                     </div>
                 </div>
@@ -454,15 +436,15 @@
                         <div class="info-box mb-3">
                             <label class="info-label">Date of Joining</label>
                             <div class="info-value">
-                                <span class="info-value-text" th:text="${user.joiningDate}"></span>
-                                <input type="date" name="joiningDate" class="editable-field" th:value="${user.joiningDate}" max="9999-12-31">
+                                <span class="info-value-text" th:text="${user.employeeProfile?.joiningDate}"></span>
+                                <input type="date" name="joiningDate" class="editable-field" th:value="${user.employeeProfile?.joiningDate}" max="9999-12-31">
                             </div>
                         </div>
                         <div class="info-box mb-3">
                             <label class="info-label">Experience</label>
                             <div class="info-value">
-                                <span class="info-value-text" th:text="${user.experience}"></span>
-                                <input type="text" name="experience" class="editable-field" th:value="${user.experience}">
+                                <span class="info-value-text" th:text="${user.employeeProfile?.experience}"></span>
+                                <input type="text" name="experience" class="editable-field" th:value="${user.employeeProfile?.experience}">
                             </div>
                         </div>
                         <div class="info-box mb-3">
@@ -477,8 +459,8 @@
                                 <div class="info-box">
                                     <label class="info-label">City</label>
                                     <div class="info-value">
-                                        <span class="info-value-text" th:text="${user.city}"></span>
-                                        <input type="text" name="city" class="editable-field" th:value="${user.city}" placeholder="e.g., Nagpur">
+                                        <span class="info-value-text" th:text="${user.employeeProfile?.city}"></span>
+                                        <input type="text" name="city" class="editable-field" th:value="${user.employeeProfile?.city}" placeholder="e.g., Nagpur">
                                     </div>
                                 </div>
                             </div>
@@ -486,8 +468,8 @@
                                 <div class="info-box">
                                     <label class="info-label">State/Country</label>
                                     <div class="info-value">
-                                        <span class="info-value-text" th:text="${user.country}"></span>
-                                        <input type="text" name="country" class="editable-field" th:value="${user.country}" placeholder="e.g., Maharashtra, India">
+                                        <span class="info-value-text" th:text="${user.employeeProfile?.country}"></span>
+                                        <input type="text" name="country" class="editable-field" th:value="${user.employeeProfile?.country}" placeholder="e.g., Maharashtra, India">
                                     </div>
                                 </div>
                             </div>
@@ -498,9 +480,9 @@
                 <div class="section-card">
                     <div class="section-header"><i class="fas fa-users-cog me-2"></i> REPORTING LINES</div>
                     <div class="section-body">
-                        <div class="info-box mb-3"><label class="info-label">Reporting Manager</label><div class="info-value" th:text="${user.reportingManager}"></div></div>
-                        <div class="info-box mb-3"><label class="info-label">Project Manager</label><div class="info-value" th:text="${user.projectManager}"></div></div>
-                        <div class="info-box"><label class="info-label">BU-HR Contact</label><div class="info-value" th:text="${user.buHrContact}"></div></div>
+                        <div class="info-box mb-3"><label class="info-label">Reporting Manager</label><div class="info-value" th:text="${user.employeeProfile?.reportingManager}"></div></div>
+                        <div class="info-box mb-3"><label class="info-label">Project Manager</label><div class="info-value" th:text="${user.employeeProfile?.projectManager}"></div></div>
+                        <div class="info-box"><label class="info-label">BU-HR Contact</label><div class="info-value" th:text="${user.employeeProfile?.buHrContact}"></div></div>
                     </div>
                 </div>
 

@@ -21,7 +21,7 @@
             color: #334155;
         }
 
-        /*  HEADER  */
+        /* HEADER  */
         .top-header {
             background: white; border-bottom: 1px solid #e2e8f0;
             padding: 22px 40px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
@@ -41,14 +41,14 @@
             background-color: #172554; transform: translateY(-2px); color: white;
         }
 
-        /*  CONTAINER */
+        /* CONTAINER */
         .main-container {
             max-width: 1300px;
             margin: 125px auto 40px;
             padding: 0 20px;
         }
 
-        /*  CARDS  */
+        /* CARDS  */
         .app-card {
             background: white; border: 1px solid #e2e8f0;
             border-radius: 16px; overflow: hidden; margin-bottom: 24px;
@@ -68,7 +68,7 @@
         .app-card-header i { color: #bfdbfe; margin-right: 10px; font-size: 1.1rem; }
         .app-card-body { padding: 25px; }
 
-        /*  VIEW ALL LINK INTERACTIVITY  */
+        /* VIEW ALL LINK INTERACTIVITY  */
         .view-all-link {
             color: white;
             text-decoration: none;
@@ -98,7 +98,7 @@
         }
         .view-all-link:hover::after { width: 100%; /* Expands to full width on hover */}
 
-        /*  FORMS  */
+        /* FORMS  */
         .form-label {
             font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 6px;
         }
@@ -111,7 +111,7 @@
         }
         .form-control:read-only { background-color: #f1f5f9; color: #475569; }
 
-        /*  STATUS BADGES  */
+        /* STATUS BADGES  */
         .badge-status { padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
         .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
         .status-approved { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
@@ -370,13 +370,13 @@
                         <div class="col-md-6">
                             <label class="form-label">Department</label>
                             <input type="text" class="form-control"
-                                   th:value="${user.businessUnit != null ? user.businessUnit : 'General'}" readonly>
+                                   th:value="${user.employeeProfile?.businessUnit ?: 'General'}" readonly>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Reporting Manager</label>
                             <input type="text" class="form-control"
-                                   th:value="${user.reportingManager != null ? user.reportingManager : 'N/A'}" readonly>
+                                   th:value="${user.employeeProfile?.reportingManager ?: 'N/A'}" readonly>
                         </div>
                     </div>
                 </div>
@@ -610,7 +610,7 @@
 
         if (start && end && end >= start) {
             const diffTime = Math.abs(end - start);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include start date
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
             totalInput.value = diffDays;
         } else {
             totalInput.value = "0";
@@ -650,7 +650,7 @@
         });
 
         if (!confirmResult.isConfirmed) {
-            return; // Stops submission if they click cancel
+            return;
         }
 
         const payload = {
@@ -718,7 +718,7 @@
             text: "All entered details will be cleared. Are you sure?",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#dc3545', // Red color for destructive action
+            confirmButtonColor: '#dc3545',
             cancelButtonColor: '#94a3b8',
             confirmButtonText: 'Yes, clear form',
             cancelButtonText: 'No, keep editing'
@@ -816,7 +816,6 @@
                     html += `<small class="text-secondary" style="font-size: 0.75rem;">Approver: Manager</small>`;
                 }
 
-                // Add the new View Details button
                 html += `
                             <button type="button" class="btn btn-sm btn-light border text-primary rounded-circle shadow-sm" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" onclick="openLeaveModal(${index})" title="View Details" onmouseover="this.classList.replace('btn-light', 'btn-primary'); this.classList.replace('text-primary', 'text-white');" onmouseout="this.classList.replace('btn-primary', 'btn-light'); this.classList.replace('text-white', 'text-primary');">
                                 <i class="fas fa-eye"></i>
@@ -833,7 +832,6 @@
         }
     }
 
-    // Function to populate and open the Modal
     function openLeaveModal(index) {
         const leave = window.recentLeavesData[index];
         if (!leave) return;
@@ -898,10 +896,9 @@
         }
     }
 
-    // Update the DOMContentLoaded listener to call BOTH functions now
     document.addEventListener("DOMContentLoaded", function() {
         fetchRecentLeaves();
-        fetchLeaveBalance(); // Add this line!
+        fetchLeaveBalance();
     });
 </script>
 

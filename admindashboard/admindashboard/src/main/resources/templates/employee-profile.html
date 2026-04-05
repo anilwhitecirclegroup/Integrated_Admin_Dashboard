@@ -82,7 +82,7 @@
         }
         .form-control:read-only { background-color: #f1f5f9; color: #475569; }
 
-        /*  PHOTO & RESUME  */
+        /* PHOTO & RESUME  */
         .profile-photo-wrapper {
             position: relative; width: 120px; height: 120px; margin: 0 auto 20px;
         }
@@ -138,7 +138,7 @@
             box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08);
         }
 
-        /*  3. RESUME BOX HOVER  */
+        /* 3. RESUME BOX HOVER  */
         .resume-box {
             border: 2px dashed #cbd5e1;
             padding: 30px; text-align: center;
@@ -156,14 +156,14 @@
             box-shadow: 0 8px 15px rgba(30, 58, 138, 0.15);
         }
 
-        /*  UPDATE: IDENTITY CARD BORDER  */
+        /* UPDATE: IDENTITY CARD BORDER  */
         .identity-card-bg {
             background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%);
             /* CHANGED: Navy Blue Border (2px for visibility) */
             border: 2px solid var(--bs-primary) !important;
         }
 
-        /*  RESUME ACTION BUTTONS */
+        /* RESUME ACTION BUTTONS */
         .action-icon-btn {
             width: 32px; height: 32px;
             border-radius: 6px;
@@ -320,7 +320,7 @@
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <input type="text" class="form-control fw-bold" id="empDesig"
-                                           th:value="${user.designation}" readonly>
+                                           th:value="${user.employeeProfile?.designation}" readonly>
                                     <label for="empDesig">Designation</label>
                                 </div>
                             </div>
@@ -334,7 +334,7 @@
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="empExp"
-                                           th:value="${user.experience}" readonly>
+                                           th:value="${user.employeeProfile?.experience}" readonly>
                                     <label for="empExp">Experience</label>
                                 </div>
                             </div>
@@ -346,14 +346,14 @@
                     <div class="pro-card-header"><i class="fas fa-laptop-code"></i> Project & Allocation</div>
                     <div class="pro-card-body">
                         <div class="row g-3">
-                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.businessUnit}" readonly><label>Business Unit</label></div></div>
-                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.accountName}" readonly><label>Account Name</label></div></div>
-                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.projectName}" readonly><label>Project Name</label></div></div>
-                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.projectCode}" readonly><label>Project Code</label></div></div>
-                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.teamGroup}" readonly><label>Team / Group</label></div></div>
-                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.customerName}" readonly><label>Customer Name</label></div></div>
-                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.verticalName}" readonly><label>Vertical Name</label></div></div>
-                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.domainIndustry}" readonly><label>Domain/Industry</label></div></div>
+                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.businessUnit}" readonly><label>Business Unit</label></div></div>
+                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.accountName}" readonly><label>Account Name</label></div></div>
+                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.projectName}" readonly><label>Project Name</label></div></div>
+                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.projectCode}" readonly><label>Project Code</label></div></div>
+                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.teamGroup}" readonly><label>Team / Group</label></div></div>
+                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.customerName}" readonly><label>Customer Name</label></div></div>
+                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.verticalName}" readonly><label>Vertical Name</label></div></div>
+                            <div class="col-md-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.domainIndustry}" readonly><label>Domain/Industry</label></div></div>
                         </div>
                     </div>
                 </div>
@@ -397,13 +397,13 @@
                                 <input type="email" class="form-control" th:value="${user.email}" readonly>
                                 <label>Official Email</label>
                             </div>
-                            <div class="form-floating"><input type="tel" class="form-control" th:value="${user.mobileNumber}" readonly><label>Mobile Number</label></div>
-                            <div class="form-floating"><input type="text" class="form-control" th:value="${user.workLocation}" readonly><label>Work Location</label></div>
+                            <div class="form-floating"><input type="tel" class="form-control" th:value="${user.employeeProfile?.mobileNumber}" readonly><label>Mobile Number</label></div>
+                            <div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.workLocation}" readonly><label>Work Location</label></div>
                             <div class="row g-2">
-                                <div class="col-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.city}" readonly><label>City</label></div></div>
-                                <div class="col-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.country}" readonly><label>Country</label></div></div>
+                                <div class="col-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.city}" readonly><label>City</label></div></div>
+                                <div class="col-6"><div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.country}" readonly><label>Country</label></div></div>
                             </div>
-                            <div class="form-floating"><input type="text" class="form-control" th:value="${user.joiningDate}" readonly><label>Date of Joining</label></div>
+                            <div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.joiningDate}" readonly><label>Date of Joining</label></div>
                         </div>
                     </div>
                 </div>
@@ -412,9 +412,9 @@
                     <div class="pro-card-header"><i class="fas fa-sitemap"></i> Reporting Lines</div>
                     <div class="pro-card-body d-flex flex-column justify-content-center">
                         <div class="d-flex flex-column gap-3">
-                            <div class="form-floating"><input type="text" class="form-control" th:value="${user.reportingManager}" readonly><label>Reporting Manager</label></div>
-                            <div class="form-floating"><input type="text" class="form-control" th:value="${user.projectManager}" readonly><label>Project Manager</label></div>
-                            <div class="form-floating"><input type="text" class="form-control" th:value="${user.buHrContact}" readonly><label>BU-HR Contact</label></div>
+                            <div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.reportingManager}" readonly><label>Reporting Manager</label></div>
+                            <div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.projectManager}" readonly><label>Project Manager</label></div>
+                            <div class="form-floating"><input type="text" class="form-control" th:value="${user.employeeProfile?.buHrContact}" readonly><label>BU-HR Contact</label></div>
                         </div>
                     </div>
                 </div>

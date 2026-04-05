@@ -51,7 +51,7 @@
                 </div>
 
                 <div class="card-body p-4">
-                    <form th:action="@{/admin/staff/edit/{id}(id=${employee.id})}" th:object="${employee}" method="post">
+                    <form th:action="@{/admin/staff/edit/{id}(id=${employee.id})}" method="post">
 
                         <div class="row mb-4 bg-light p-3 rounded">
                             <div class="col-md-6">
@@ -69,44 +69,44 @@
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label for="designation" class="form-label fw-semibold small text-uppercase">Designation</label>
-                                <input type="text" class="form-control" id="designation" th:field="*{designation}" required>
+                                <input type="text" class="form-control" id="designation" name="employeeProfile.designation" th:value="${employee.employeeProfile?.designation}" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="businessUnit" class="form-label fw-semibold small text-uppercase">Department / BU</label>
-                                <input type="text" class="form-control" id="businessUnit" th:field="*{businessUnit}" required>
+                                <input type="text" class="form-control" id="businessUnit" name="employeeProfile.businessUnit" th:value="${employee.employeeProfile?.businessUnit}" required>
                             </div>
                         </div>
 
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label for="projectName" class="form-label fw-semibold small text-uppercase">Current Project</label>
-                                <input type="text" class="form-control" id="projectName" th:field="*{projectName}">
+                                <input type="text" class="form-control" id="projectName" name="employeeProfile.projectName" th:value="${employee.employeeProfile?.projectName}">
                             </div>
                             <div class="col-md-6">
                                 <label for="projectCode" class="form-label fw-semibold small text-uppercase text-primary">Project Code</label>
-                                <input type="text" class="form-control" id="projectCode" th:field="*{projectCode}">
+                                <input type="text" class="form-control" id="projectCode" name="employeeProfile.projectCode" th:value="${employee.employeeProfile?.projectCode}">
                             </div>
                         </div>
 
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label for="teamGroup" class="form-label fw-semibold small text-uppercase text-primary">Team / Group</label>
-                                <input type="text" class="form-control" id="teamGroup" th:field="*{teamGroup}">
+                                <input type="text" class="form-control" id="teamGroup" name="employeeProfile.teamGroup" th:value="${employee.employeeProfile?.teamGroup}">
                             </div>
                             <div class="col-md-6">
                                 <label for="reportingManager" class="form-label fw-semibold small text-uppercase">Reporting Manager</label>
-                                <input type="text" class="form-control" id="reportingManager" th:field="*{reportingManager}">
+                                <input type="text" class="form-control" id="reportingManager" name="employeeProfile.reportingManager" th:value="${employee.employeeProfile?.reportingManager}">
                             </div>
                         </div>
 
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="projectManager" class="form-label fw-semibold small text-uppercase text-primary">Project Manager</label>
-                                <input type="text" class="form-control" id="projectManager" th:field="*{projectManager}">
+                                <input type="text" class="form-control" id="projectManager" name="employeeProfile.projectManager" th:value="${employee.employeeProfile?.projectManager}">
                             </div>
                             <div class="col-md-6">
                                 <label for="buHrContact" class="form-label fw-semibold small text-uppercase text-primary">BU-HR Contact</label>
-                                <input type="text" class="form-control" id="buHrContact" th:field="*{buHrContact}">
+                                <input type="text" class="form-control" id="buHrContact" name="employeeProfile.buHrContact" th:value="${employee.employeeProfile?.buHrContact}">
                             </div>
                         </div>
 

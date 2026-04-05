@@ -214,19 +214,19 @@
                                         <div class="mb-4">
                                             <div class="profile-label">Department / BU</div>
                                             <div class="profile-value text-dark fw-bold"
-                                                 th:text="${emp.businessUnit != null ? emp.businessUnit : 'Unassigned'}">IT</div>
+                                                 th:text="${emp.employeeProfile?.businessUnit ?: 'Unassigned'}">IT</div>
                                         </div>
                                         <div>
                                             <div class="profile-label">Contact Number</div>
                                             <div class="profile-value text-dark fw-bold"
-                                                 th:text="${emp.mobileNumber != null ? emp.mobileNumber : 'Not Available'}">Number</div>
+                                                 th:text="${emp.employeeProfile?.mobileNumber ?: 'Not Available'}">Number</div>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="mb-4">
                                             <div class="profile-label">Designation</div>
                                             <div class="profile-value text-dark fw-bold"
-                                                 th:text="${emp.designation != null ? emp.designation : 'N/A'}">Role</div>
+                                                 th:text="${emp.employeeProfile?.designation ?: 'N/A'}">Role</div>
                                         </div>
                                         <div>
                                             <div class="profile-label">Official Email</div>
@@ -242,14 +242,14 @@
                                         <div class="profile-label">City / Location</div>
                                         <div class="profile-value">
                                             <i class="fas fa-map-marker-alt text-muted me-2"></i>
-                                            <span th:text="${emp.city != null ? emp.city : 'Remote'}">Location</span>
+                                            <span th:text="${emp.employeeProfile?.city ?: 'Remote'}">Location</span>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="profile-label">Joining Date</div>
                                         <div class="profile-value">
                                             <i class="far fa-calendar-alt text-muted me-2"></i>
-                                            <span th:text="${emp.joiningDate != null ? emp.joiningDate : 'N/A'}">Date</span>
+                                            <span th:text="${emp.employeeProfile?.joiningDate ?: 'N/A'}">Date</span>
                                         </div>
                                     </div>
                                 </div>
@@ -272,15 +272,13 @@
         const searchInput = document.getElementById('employeeSearch');
         const clearBtn = document.getElementById('clearSearch');
 
-        // Handles X button click
         if (clearBtn) {
             clearBtn.addEventListener('click', function() {
                 searchInput.value = '';
-                searchInput.closest('form').submit(); // Refresh results immediately
+                searchInput.closest('form').submit();
             });
         }
 
-        // Dynamically show/hide X button while typing
         searchInput.addEventListener('input', function() {
             if (this.value.length > 0) {
                 clearBtn.style.setProperty('display', 'flex', 'important');
@@ -290,7 +288,6 @@
         });
     });
 
-    // Force all date inputs to have a maximum year of 9999 (4 digits)
     document.querySelectorAll('input[type="date"]').forEach(function(dateInput) {
         if (!dateInput.getAttribute('max')) {
             dateInput.setAttribute('max', '9999-12-31');
