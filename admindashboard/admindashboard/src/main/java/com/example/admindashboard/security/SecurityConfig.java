@@ -4,13 +4,14 @@ import com.example.admindashboard.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true) // NEW: This turns on @PreAuthorize!
 public class SecurityConfig {
 
     @Autowired
@@ -19,35 +20,34 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()) // Note: In production, consider enabling CSRF for form endpoints
                 .authorizeHttpRequests(auth -> auth
+                        // Publicly accessible assets and login
                         .requestMatchers("/login", "/css/**", "/js/**", "/images/**").permitAll()
 
-                        // ROLE BASED ROUTING
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/employee/**").hasRole("EMPLOYEE")
-                        .requestMatchers("/client/**").hasRole("CLIENT")
-
-                        // EXPLICITLY ALLOW API ACCESS
-                        .requestMatchers("/api/**").authenticated()
-
+                        // All other requests MUST be authenticated.
+                        // The actual granular permission checks will now happen inside the Controllers!
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/perform_login")
-
-                        // Using a Smart Success Handler instead of a default URL
                         .successHandler((request, response, authentication) -> {
-                            var roles = authentication.getAuthorities().toString();
-                            if (roles.contains("ROLE_ADMIN")) {
+
+                            // FIXED: Smart routing based on GRANULAR PERMISSIONS
+                            String authorities = authentication.getAuthorities().toString();
+
+                            // If the user has the master key to view the admin portal, send them there
+                            if (authorities.contains("admin_dashboard_view")) {
                                 response.sendRedirect("/admin/dashboard");
-                            } else if (roles.contains("ROLE_EMPLOYEE")) {
+                            }
+                            // Client portal routing
+                            else if (authorities.contains("ROLE_CLIENT")) {
+                                response.sendRedirect("/client/dashboard");
+                            }
+                            // Default fallback for standard employees
+                            else {
                                 response.sendRedirect("/employee/dashboard");
-                            } else if (roles.contains("ROLE_CLIENT")) { // ADDED THIS LINE
-                                    response.sendRedirect("/client/dashboard");
-                            } else {
-                                response.sendRedirect("/login");
                             }
                         })
                         .failureUrl("/login?error=true")

@@ -1,5 +1,6 @@
 package com.example.admindashboard.service;
 
+import com.example.admindashboard.model.EmployeeProfile;
 import com.example.admindashboard.model.Timesheet;
 import com.example.admindashboard.model.User;
 import jakarta.servlet.ServletOutputStream;
@@ -41,20 +42,21 @@ public class ReportExportService {
         int rowIdx = 1;
         for (User user : employees) {
             Row row = sheet.createRow(rowIdx++);
+            EmployeeProfile profile = user.getEmployeeProfile(); // Grab the new profile object
 
             row.createCell(0).setCellValue(user.getUsername()); // EMP ID
             row.createCell(1).setCellValue(user.getFullName());
             row.createCell(2).setCellValue(user.getEmail() != null ? user.getEmail() : "N/A");
-            row.createCell(3).setCellValue(user.getDesignation() != null ? user.getDesignation() : "N/A");
-            row.createCell(4).setCellValue(user.getBusinessUnit() != null ? user.getBusinessUnit() : "N/A");
 
-            // Date handling
-            row.createCell(5).setCellValue(user.getJoiningDate() != null ? user.getJoiningDate().toString() : "N/A");
+            // Extract HR data safely from the Profile
+            row.createCell(3).setCellValue(profile != null && profile.getDesignation() != null ? profile.getDesignation() : "N/A");
+            row.createCell(4).setCellValue(profile != null && profile.getBusinessUnit() != null ? profile.getBusinessUnit() : "N/A");
+            row.createCell(5).setCellValue(profile != null && profile.getJoiningDate() != null ? profile.getJoiningDate().toString() : "N/A");
+            row.createCell(6).setCellValue(profile != null && profile.getExperience() != null ? profile.getExperience() : "N/A");
+            row.createCell(7).setCellValue(profile != null && profile.getMobileNumber() != null ? profile.getMobileNumber() : "N/A");
+            row.createCell(8).setCellValue(profile != null && profile.getReportingManager() != null ? profile.getReportingManager() : "N/A");
 
-            row.createCell(6).setCellValue(user.getExperience() != null ? user.getExperience() : "N/A");
-            row.createCell(7).setCellValue(user.getMobileNumber() != null ? user.getMobileNumber() : "N/A");
-            row.createCell(8).setCellValue(user.getReportingManager() != null ? user.getReportingManager() : "N/A");
-            row.createCell(9).setCellValue("Active");
+            row.createCell(9).setCellValue(user.getStatus() != null ? user.getStatus() : "Active");
         }
 
         // Auto-size columns for a professional look
@@ -70,7 +72,6 @@ public class ReportExportService {
     }
 
     //---- 2. EXPORT WEEKLY TIMESHEET REPORT
-    //---- 2. EXPORT WEEKLY TIMESHEET REPORT (Detailed Task Breakdown)
     public void exportTimesheetReportToExcel(HttpServletResponse response, List<com.example.admindashboard.model.WeeklyTimesheet> timesheets) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Timesheet Details");
@@ -99,7 +100,12 @@ public class ReportExportService {
         for (com.example.admindashboard.model.WeeklyTimesheet ts : timesheets) {
             String empId = ts.getUser() != null ? ts.getUser().getUsername() : "N/A";
             String empName = ts.getUser() != null ? ts.getUser().getFullName() : "N/A";
-            String designation = ts.getUser() != null && ts.getUser().getDesignation() != null ? ts.getUser().getDesignation() : "N/A";
+
+            // Safely get Designation from the Profile
+            String designation = "N/A";
+            if (ts.getUser() != null && ts.getUser().getEmployeeProfile() != null && ts.getUser().getEmployeeProfile().getDesignation() != null) {
+                designation = ts.getUser().getEmployeeProfile().getDesignation();
+            }
 
             String weekRange = (ts.getWeekStartDate() != null && ts.getWeekEndDate() != null) ?
                     ts.getWeekStartDate().format(formatter) + " to " + ts.getWeekEndDate().format(formatter) : "N/A";
@@ -166,7 +172,7 @@ public class ReportExportService {
     }
 
 
-    // EXPORT ATTENDANCE REPORT TO EXCEL (Enhanced Detailed Version)
+    // EXPORT ATTENDANCE REPORT TO EXCEL
     // ============================================================
     public void exportAttendanceReportToExcel(HttpServletResponse response, List<com.example.admindashboard.model.Attendance> attendanceList) throws IOException {
         Workbook workbook = new XSSFWorkbook();
@@ -203,8 +209,13 @@ public class ReportExportService {
             // Basic Info
             row.createCell(0).setCellValue(att.getUser() != null ? att.getUser().getUsername() : "N/A");
             row.createCell(1).setCellValue(att.getUser() != null ? att.getUser().getFullName() : "N/A");
-            String designation = att.getUser() != null ? att.getUser().getDesignation() : "N/A";
-            row.createCell(2).setCellValue(designation != null ? designation : "N/A");
+
+            // Safely get Designation from the Profile
+            String designation = "N/A";
+            if (att.getUser() != null && att.getUser().getEmployeeProfile() != null && att.getUser().getEmployeeProfile().getDesignation() != null) {
+                designation = att.getUser().getEmployeeProfile().getDesignation();
+            }
+            row.createCell(2).setCellValue(designation);
 
             // Range & Summary
             String weekRange = (att.getWeekStartDate() != null ? att.getWeekStartDate() : "N/A") +
@@ -224,7 +235,6 @@ public class ReportExportService {
             row.createCell(11).setCellValue(formatDayInfo(att.getWednesdayHours(), att.getWednesdayStatus(), att.getWednesdayMode(), att.getWednesdayReason()));
             row.createCell(12).setCellValue(formatDayInfo(att.getThursdayHours(), att.getThursdayStatus(), att.getThursdayMode(), att.getThursdayReason()));
             row.createCell(13).setCellValue(formatDayInfo(att.getFridayHours(), att.getFridayStatus(), att.getFridayMode(), att.getFridayReason()));
-
         }
 
         // 4. AUTO-SIZE COLUMNS
@@ -253,7 +263,7 @@ public class ReportExportService {
     }
 
 
-    // --- 3. HELPER METHOD: CREATE HEADER STYLE (This fixes the error) ---
+    // --- 3. HELPER METHOD: CREATE HEADER STYLE ---
     private CellStyle createHeaderStyle(Workbook workbook) {
         CellStyle style = workbook.createCellStyle();
 

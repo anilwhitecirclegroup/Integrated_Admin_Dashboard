@@ -1,5 +1,6 @@
 package com.example.admindashboard.service;
 
+import com.example.admindashboard.model.EmployeeProfile;
 import com.example.admindashboard.model.User;
 import com.example.admindashboard.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +27,28 @@ public class UserService {
     public void updateEmployeeProfessionalDetails(Long id, User updatedData) {
         User existingUser = findById(id);
 
-        // Safely update only the allowed professional details
-        existingUser.setDesignation(updatedData.getDesignation());
-        existingUser.setBusinessUnit(updatedData.getBusinessUnit()); // Matching your HTML variable
-        existingUser.setProjectName(updatedData.getProjectName());   // Matching your HTML variable
-        existingUser.setReportingManager(updatedData.getReportingManager());
-        existingUser.setProjectCode(updatedData.getProjectCode());
-        existingUser.setBuHrContact(updatedData.getBuHrContact());
-        existingUser.setTeamGroup(updatedData.getTeamGroup());
-        existingUser.setProjectManager(updatedData.getProjectManager());
+        // 1. Fetch or create the profile
+        EmployeeProfile existingProfile = existingUser.getEmployeeProfile();
+        if (existingProfile == null) {
+            existingProfile = new EmployeeProfile();
+            existingProfile.setUser(existingUser);
+        }
 
+        // 2. Safely extract incoming profile updates
+        EmployeeProfile incomingProfile = updatedData.getEmployeeProfile();
+        if (incomingProfile != null) {
+            existingProfile.setDesignation(incomingProfile.getDesignation());
+            existingProfile.setBusinessUnit(incomingProfile.getBusinessUnit());
+            existingProfile.setProjectName(incomingProfile.getProjectName());
+            existingProfile.setReportingManager(incomingProfile.getReportingManager());
+            existingProfile.setProjectCode(incomingProfile.getProjectCode());
+            existingProfile.setBuHrContact(incomingProfile.getBuHrContact());
+            existingProfile.setTeamGroup(incomingProfile.getTeamGroup());
+            existingProfile.setProjectManager(incomingProfile.getProjectManager());
+        }
+
+        // 3. Save the linked data
+        existingUser.setEmployeeProfile(existingProfile);
         userRepository.save(existingUser);
     }
 
@@ -44,12 +57,23 @@ public class UserService {
         // Find the logged-in user securely using their username
         User existingUser = findByUsername(username);
 
-        // ONLY update personal fields allowed by Admin policy
-        existingUser.setMobileNumber(updatedData.getMobileNumber());
-        existingUser.setWorkLocation(updatedData.getWorkLocation());
-        existingUser.setCity(updatedData.getCity());
+        // 1. Fetch or create the profile
+        EmployeeProfile existingProfile = existingUser.getEmployeeProfile();
+        if (existingProfile == null) {
+            existingProfile = new EmployeeProfile();
+            existingProfile.setUser(existingUser);
+        }
 
-        // Save the changes
+        // 2. ONLY update personal fields allowed by Admin policy
+        EmployeeProfile incomingProfile = updatedData.getEmployeeProfile();
+        if (incomingProfile != null) {
+            existingProfile.setMobileNumber(incomingProfile.getMobileNumber());
+            existingProfile.setWorkLocation(incomingProfile.getWorkLocation());
+            existingProfile.setCity(incomingProfile.getCity());
+        }
+
+        // 3. Save the changes
+        existingUser.setEmployeeProfile(existingProfile);
         userRepository.save(existingUser);
     }
 }
