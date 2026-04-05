@@ -5,6 +5,7 @@ import com.example.admindashboard.model.User;
 import com.example.admindashboard.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -26,14 +28,19 @@ public class ManageEmployeeDataController {
     private UserRepository userRepository;
 
     //  1. THE LIST VIEW (With Search & Sort)
+    // NEW LOCK: Only users with 'employee_view' can access this page
+    @PreAuthorize("hasAuthority('employee_view')")
     @GetMapping("/admin/manage-employees")
     public String showManageEmployeesPage(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String sort,
             Model model) {
 
+        // FIXED: Show ALL internal staff by excluding Clients and the Super Admin
         Stream<User> employeeStream = userRepository.findAll().stream()
-                .filter(user -> "EMPLOYEE".equals(user.getRole()));
+                .filter(user -> user.getRole() != null &&
+                        !"CLIENT".equalsIgnoreCase(user.getRole().getRoleName()) &&
+                        !"SUPER_ADMIN".equalsIgnoreCase(user.getRole().getRoleName()));
 
         if (search != null && !search.trim().isEmpty()) {
             String lowerSearch = search.toLowerCase();
@@ -60,6 +67,8 @@ public class ManageEmployeeDataController {
     }
 
     //  2. THE EDIT VIEW (Full Page Form)
+    // NEW LOCK: Only users with 'employee_edit' can open the edit form
+    @PreAuthorize("hasAuthority('employee_edit')")
     @GetMapping("/admin/manage-employees/edit/{id}")
     public String showEditEmployeePage(@PathVariable Long id, Model model) {
 
@@ -78,11 +87,13 @@ public class ManageEmployeeDataController {
     }
 
     //  3. THE SAVE LOGIC (Handles the Form Submission)
+    // NEW LOCK: Only users with 'employee_edit' can submit data to the server
+    @PreAuthorize("hasAuthority('employee_edit')")
     @PostMapping("/admin/update-employee")
     public String updateEmployee(
             @ModelAttribute User userUpdates,
+            @ModelAttribute EmployeeProfile profileUpdates,
             RedirectAttributes redirectAttributes,
-            // THE FIX: Cleanly using the @DateTimeFormat annotation!
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dob,
             @RequestParam(required = false) String gender,
             @RequestParam(required = false) String aadharNo,
@@ -99,34 +110,36 @@ public class ManageEmployeeDataController {
         User existingUser = userRepository.findById(userUpdates.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userUpdates.getId()));
 
-        // 2. Update Professional Fields
+        // 2. Update Core User Fields (Auth & Identity)
         existingUser.setFullName(userUpdates.getFullName());
         existingUser.setEmail(userUpdates.getEmail());
-        existingUser.setDesignation(userUpdates.getDesignation());
-        existingUser.setExperience(userUpdates.getExperience());
-        existingUser.setJoiningDate(userUpdates.getJoiningDate());
-        existingUser.setBusinessUnit(userUpdates.getBusinessUnit());
-        existingUser.setAccountName(userUpdates.getAccountName());
-        existingUser.setProjectName(userUpdates.getProjectName());
-        existingUser.setProjectCode(userUpdates.getProjectCode());
-        existingUser.setCustomerName(userUpdates.getCustomerName());
-        existingUser.setTeamGroup(userUpdates.getTeamGroup());
-        existingUser.setVerticalName(userUpdates.getVerticalName());
-        existingUser.setDomainIndustry(userUpdates.getDomainIndustry());
-        existingUser.setReportingManager(userUpdates.getReportingManager());
-        existingUser.setProjectManager(userUpdates.getProjectManager());
-        existingUser.setBuHrContact(userUpdates.getBuHrContact());
-        existingUser.setWorkLocation(userUpdates.getWorkLocation());
-        existingUser.setCity(userUpdates.getCity());
-        existingUser.setCountry(userUpdates.getCountry());
-        existingUser.setMobileNumber(userUpdates.getMobileNumber());
 
-        // 3. Update Personal Fields
+        // 3. Update HR & Professional Fields
         EmployeeProfile profile = existingUser.getEmployeeProfile();
         if (profile == null) {
             profile = new EmployeeProfile();
             profile.setUser(existingUser);
         }
+
+        profile.setDesignation(profileUpdates.getDesignation());
+        profile.setExperience(profileUpdates.getExperience());
+        profile.setJoiningDate(profileUpdates.getJoiningDate());
+        profile.setBusinessUnit(profileUpdates.getBusinessUnit());
+        profile.setAccountName(profileUpdates.getAccountName());
+        profile.setProjectName(profileUpdates.getProjectName());
+        profile.setProjectCode(profileUpdates.getProjectCode());
+        profile.setCustomerName(profileUpdates.getCustomerName());
+        profile.setTeamGroup(profileUpdates.getTeamGroup());
+        profile.setVerticalName(profileUpdates.getVerticalName());
+        profile.setDomainIndustry(profileUpdates.getDomainIndustry());
+        profile.setReportingManager(profileUpdates.getReportingManager());
+        profile.setProjectManager(profileUpdates.getProjectManager());
+        profile.setBuHrContact(profileUpdates.getBuHrContact());
+        profile.setWorkLocation(profileUpdates.getWorkLocation());
+        profile.setCity(profileUpdates.getCity());
+        profile.setCountry(profileUpdates.getCountry());
+        profile.setMobileNumber(profileUpdates.getMobileNumber());
+
         profile.setDob(dob);
         profile.setGender(gender);
         profile.setAadharNo(aadharNo);

@@ -2,16 +2,22 @@ package com.example.admindashboard.controller;
 
 import com.example.admindashboard.dto.LeaveReportDTO;
 import com.example.admindashboard.model.LeaveRequest;
+import com.example.admindashboard.model.User;
 import com.example.admindashboard.repository.LeaveRequestRepository;
+import com.example.admindashboard.repository.UserRepository;
 import com.example.admindashboard.service.ReportExportService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+// NEW: Imports for Security and Principal
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -27,17 +33,27 @@ public class LeaveReportRestController {
     @Autowired
     private ReportExportService exportService;
 
-    // 1. Fetch JSON data for the frontend table
-    @GetMapping("/report-data")
-    public ResponseEntity<List<LeaveReportDTO>> getMonthlyLeaveData(@RequestParam int year, @RequestParam int month) {
+    // NEW: Inject UserRepository to determine user roles and hierarchy
+    @Autowired
+    private UserRepository userRepository;
 
-        // Calculate the first and last day of the selected month
+    // 1. Fetch JSON data for the frontend table
+    // LOCK: Restrict access to authorized reporting roles
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_ADMIN', 'ROLE_HR_EXECUTIVE', 'ROLE_MANAGER')")
+    @GetMapping("/report-data")
+    public ResponseEntity<List<LeaveReportDTO>> getMonthlyLeaveData(@RequestParam int year, @RequestParam int month, Principal principal) {
+
+        User currentUser = userRepository.findByUsername(principal.getName()).orElse(null);
+        boolean isManager = currentUser != null && currentUser.getRole() != null && "MANAGER".equalsIgnoreCase(currentUser.getRole().getRoleName());
+
         YearMonth yearMonth = YearMonth.of(year, month);
         LocalDate startDate = yearMonth.atDay(1);
         LocalDate endDate = yearMonth.atEndOfMonth();
 
-        // Fetch using the custom query we added to the repository last time
         List<LeaveRequest> leaves = leaveRepository.findByFromDateBetweenOrderByFromDateDesc(startDate, endDate);
+
+        // VISIBILITY: Filter leaves for Managers so they only see their team's data
+        leaves = filterLeavesByManager(leaves, isManager, currentUser);
 
         // Map to our safe DTO
         List<LeaveReportDTO> dtoList = leaves.stream().map(leave -> new LeaveReportDTO(
@@ -55,10 +71,19 @@ public class LeaveReportRestController {
     }
 
     // 2. Export to Excel
+    // LOCK: Restrict access to authorized reporting roles
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_ADMIN', 'ROLE_HR_EXECUTIVE', 'ROLE_MANAGER')")
     @GetMapping("/export/excel")
-    public void exportExcel(@RequestParam int year, @RequestParam int month, HttpServletResponse response) throws IOException {
+    public void exportExcel(@RequestParam int year, @RequestParam int month, Principal principal, HttpServletResponse response) throws IOException {
+
+        User currentUser = userRepository.findByUsername(principal.getName()).orElse(null);
+        boolean isManager = currentUser != null && currentUser.getRole() != null && "MANAGER".equalsIgnoreCase(currentUser.getRole().getRoleName());
+
         YearMonth yearMonth = YearMonth.of(year, month);
         List<LeaveRequest> leaves = leaveRepository.findByFromDateBetweenOrderByFromDateDesc(yearMonth.atDay(1), yearMonth.atEndOfMonth());
+
+        // VISIBILITY: Prevent Managers from downloading Excel data of other teams
+        leaves = filterLeavesByManager(leaves, isManager, currentUser);
 
         response.setContentType("application/octet-stream");
         String headerValue = String.format("attachment; filename=Leave_Report_%d_%02d.xlsx", year, month);
@@ -68,15 +93,38 @@ public class LeaveReportRestController {
     }
 
     // 3. Export to PDF
+    // LOCK: Restrict access to authorized reporting roles
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_ADMIN', 'ROLE_HR_EXECUTIVE', 'ROLE_MANAGER')")
     @GetMapping("/export/pdf")
-    public void exportPdf(@RequestParam int year, @RequestParam int month, HttpServletResponse response) throws IOException {
+    public void exportPdf(@RequestParam int year, @RequestParam int month, Principal principal, HttpServletResponse response) throws IOException {
+
+        User currentUser = userRepository.findByUsername(principal.getName()).orElse(null);
+        boolean isManager = currentUser != null && currentUser.getRole() != null && "MANAGER".equalsIgnoreCase(currentUser.getRole().getRoleName());
+
         YearMonth yearMonth = YearMonth.of(year, month);
         List<LeaveRequest> leaves = leaveRepository.findByFromDateBetweenOrderByFromDateDesc(yearMonth.atDay(1), yearMonth.atEndOfMonth());
+
+        // VISIBILITY: Prevent Managers from downloading PDF data of other teams
+        leaves = filterLeavesByManager(leaves, isManager, currentUser);
 
         response.setContentType("application/pdf");
         String headerValue = String.format("attachment; filename=Leave_Report_%d_%02d.pdf", year, month);
         response.setHeader("Content-Disposition", headerValue);
 
         exportService.exportLeaveReportToPdf(response, leaves);
+    }
+
+
+    // HELPER METHOD: Centralized Data Visibility Filter
+
+    private List<LeaveRequest> filterLeavesByManager(List<LeaveRequest> leaves, boolean isManager, User currentUser) {
+        if (!isManager || currentUser == null) {
+            return leaves;
+        }
+        return leaves.stream()
+                .filter(leave -> leave.getUser() != null
+                        && leave.getUser().getManager() != null
+                        && leave.getUser().getManager().getId().equals(currentUser.getId()))
+                .collect(Collectors.toList());
     }
 }

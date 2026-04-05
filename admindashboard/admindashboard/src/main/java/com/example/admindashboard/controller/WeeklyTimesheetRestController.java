@@ -19,7 +19,9 @@ import java.util.Map;
 import java.util.Optional;
 import com.example.admindashboard.repository.WeeklyTimesheetRepository;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/weekly-timesheet")
@@ -33,9 +35,6 @@ public class WeeklyTimesheetRestController {
 
     @Autowired
     private WeeklyTimesheetRepository timesheetRepository;
-
-    @Autowired
-    private WeeklyTimesheetRepository weeklyTimesheetRepository;
 
     @Autowired
     private EmailService emailService;
@@ -115,7 +114,7 @@ public class WeeklyTimesheetRestController {
         // Send "EMP001" to be displayed on the screen
         response.put("employeeId", currentUser.getUsername());
 
-        // Send their full name (Based on your repository, it looks like you use getFullName())
+        // Send their full name
         response.put("employeeName", currentUser.getFullName());
 
         return ResponseEntity.ok(response);
@@ -138,11 +137,16 @@ public class WeeklyTimesheetRestController {
     }
 
 
-    // EXPORT ENDPOINTS
+    // EXPORT ENDPOINTS (NOW SECURED AGAINST IDOR)
     @GetMapping("/export/pdf/{id}")
-    public ResponseEntity<byte[]> exportPdf(@PathVariable Long id) {
+    public ResponseEntity<byte[]> exportPdf(@PathVariable Long id, Principal principal) {
         WeeklyTimesheet timesheet = timesheetRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Timesheet not found"));
+
+        // CRITICAL SECURITY BLOCK: Ensure the logged-in user actually owns this timesheet!
+        if (timesheet.getUser() == null || !timesheet.getUser().getUsername().equals(principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
         byte[] pdfBytes = timesheetService.generatePdf(timesheet);
 
@@ -153,9 +157,14 @@ public class WeeklyTimesheetRestController {
     }
 
     @GetMapping("/export/excel/{id}")
-    public ResponseEntity<byte[]> exportExcel(@PathVariable Long id) {
+    public ResponseEntity<byte[]> exportExcel(@PathVariable Long id, Principal principal) {
         WeeklyTimesheet timesheet = timesheetRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Timesheet not found"));
+
+        // CRITICAL SECURITY BLOCK: Ensure the logged-in user actually owns this timesheet!
+        if (timesheet.getUser() == null || !timesheet.getUser().getUsername().equals(principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
         byte[] excelBytes = timesheetService.generateExcel(timesheet);
 

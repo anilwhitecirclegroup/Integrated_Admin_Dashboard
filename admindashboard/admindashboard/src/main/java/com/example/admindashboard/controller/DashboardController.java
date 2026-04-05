@@ -4,16 +4,23 @@ import com.example.admindashboard.model.LeaveRequest;
 import com.example.admindashboard.model.Meeting;
 import com.example.admindashboard.model.Timesheet;
 import com.example.admindashboard.model.User;
-import com.example.admindashboard.model.ServiceRequest; // Added correct import
+import com.example.admindashboard.model.ServiceRequest;
+import com.example.admindashboard.model.Role;
 import com.example.admindashboard.repository.LeaveRequestRepository;
 import com.example.admindashboard.repository.UserRepository;
-import com.example.admindashboard.repository.ServiceRequestRepository; // Added correct import
-import com.example.admindashboard.service.EmailService; // Added Email Service
+import com.example.admindashboard.repository.ServiceRequestRepository;
+import com.example.admindashboard.repository.RoleRepository;
+import com.example.admindashboard.service.AuditLogService;
+import com.example.admindashboard.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.example.admindashboard.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,9 +57,14 @@ public class DashboardController {
     @Autowired
     private ClientRepository clientRepository;
 
-    // INJECT THE EMAIL SERVICE
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private AuditLogService auditLogService;
 
     // --- 1. LOGIN PAGE MAPPINGS ---
 
@@ -70,22 +82,29 @@ public class DashboardController {
 
     @GetMapping("/default-redirect")
     public String defaultRedirect(HttpServletRequest request) {
-        if (request.isUserInRole("ADMIN")) {
+        if (request.isUserInRole("SUPER_ADMIN") || request.isUserInRole("HR_ADMIN")) {
             return "redirect:/admin/dashboard";
         } else if (request.isUserInRole("CLIENT")) {
             return "redirect:/client/dashboard";
-        } else if (request.isUserInRole("EMPLOYEE")) {
+        } else {
             return "redirect:/employee/dashboard";
         }
-        return "redirect:/login?error=true";
     }
 
     // --- PROTECTED ROUTES ---
 
+    // FIXED LOCK: Any user with the 'admin_dashboard_view' key can enter the portal
+    @PreAuthorize("hasAuthority('admin_dashboard_view')")
     @GetMapping("/admin/dashboard")
     public String showAdminDashboard(Model model) {
-        long totalEmployees = userRepository.countByRole("EMPLOYEE");
-        long totalClients = userRepository.countByRole("CLIENT");
+        long totalEmployees = userRepository.findAll().stream()
+                .filter(u -> u.getRole() != null && "EMPLOYEE".equalsIgnoreCase(u.getRole().getRoleName()))
+                .count();
+
+        long totalClients = userRepository.findAll().stream()
+                .filter(u -> u.getRole() != null && "CLIENT".equalsIgnoreCase(u.getRole().getRoleName()))
+                .count();
+
         model.addAttribute("empCount", totalEmployees);
         model.addAttribute("clientCount", totalClients);
         return "admin-dashboard";
@@ -97,7 +116,8 @@ public class DashboardController {
     @GetMapping("/employee/dashboard")
     public String showEmployeeDashboard() { return "employee-dashboard"; }
 
-    // --- EMPLOYEE PROFILE SECTION ---
+    // --- EMPLOYEE PROFILE SECTION (Self-Service - No locks needed) ---
+
     @GetMapping("/employee/profile")
     public String viewProfile(Model model, Principal principal) {
         String username = principal.getName();
@@ -137,17 +157,17 @@ public class DashboardController {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (mobileNumber != null) user.setMobileNumber(mobileNumber.trim());
-        if (city != null) user.setCity(city.trim());
-        if (country != null) user.setCountry(country.trim());
-        if (experience != null) user.setExperience(experience.trim());
-        if (joiningDate != null) user.setJoiningDate(joiningDate);
-
         EmployeeProfile existingProfile = user.getEmployeeProfile();
         if (existingProfile == null) {
             existingProfile = new EmployeeProfile();
             existingProfile.setUser(user);
         }
+
+        if (mobileNumber != null) existingProfile.setMobileNumber(mobileNumber.trim());
+        if (city != null) existingProfile.setCity(city.trim());
+        if (country != null) existingProfile.setCountry(country.trim());
+        if (experience != null) existingProfile.setExperience(experience.trim());
+        if (joiningDate != null) existingProfile.setJoiningDate(joiningDate);
 
         existingProfile.setDob(formProfile.getDob());
         existingProfile.setGender(formProfile.getGender());
@@ -193,8 +213,10 @@ public class DashboardController {
         return "redirect:/employee/profile";
     }
 
+    // --- VARIOUS EMPLOYEE PAGES ---
+
     @GetMapping("/conference-room")
-    public String showConferencePage(Model model, Principal principal) {
+    public String showConferencePage(Model model, Principal principal, Authentication authentication) {
         String currentUsername = principal.getName();
         User currentUser = userRepository.findByUsername(currentUsername).orElse(null);
 
@@ -204,14 +226,29 @@ public class DashboardController {
         List<Meeting> myMeetings = allUpcomingMeetings.stream().filter(meeting -> {
             if (meeting.getOrganizer().getUsername().equals(currentUsername)) return true;
             if (meeting.getSpecificEmployeeIds() != null && meeting.getSpecificEmployeeIds().contains(currentUsername)) return true;
-            if ("TEAM".equals(meeting.getParticipantType()) && currentUser != null && currentUser.getBusinessUnit() != null) {
-                if (currentUser.getBusinessUnit().equals(meeting.getOrganizer().getBusinessUnit())) return true;
+
+            EmployeeProfile myProfile = currentUser != null ? currentUser.getEmployeeProfile() : null;
+            EmployeeProfile organizerProfile = meeting.getOrganizer() != null ? meeting.getOrganizer().getEmployeeProfile() : null;
+
+            if ("TEAM".equals(meeting.getParticipantType()) && myProfile != null && myProfile.getBusinessUnit() != null) {
+                if (organizerProfile != null && myProfile.getBusinessUnit().equals(organizerProfile.getBusinessUnit())) {
+                    return true;
+                }
             }
             return false;
         }).toList();
 
+        // FIXED: Dynamic Routing Logic for the "Back" Button
+        String backUrl = "/employee/dashboard"; // Default for standard employees
+
+        if (authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("admin_dashboard_view"))) {
+            backUrl = "/admin/dashboard"; // Override for anyone with Admin access
+        }
+
         model.addAttribute("meetings", myMeetings);
         model.addAttribute("user", currentUser);
+        model.addAttribute("backUrl", backUrl); // Send the dynamic URL to the HTML page
 
         return "conference-room";
     }
@@ -239,9 +276,7 @@ public class DashboardController {
     }
 
     @GetMapping("/employee/my-timesheets")
-    public String showMyTimesheets() {
-        return "my-timesheets";
-    }
+    public String showMyTimesheets() { return "my-timesheets"; }
 
     @GetMapping("/email-signature")
     public String showEmailSignaturePage(Model model, Principal principal) {
@@ -285,11 +320,8 @@ public class DashboardController {
             String loginId = principal.getName();
             User currentUser = userRepository.findByUsername(loginId).orElse(new User());
             model.addAttribute("user", currentUser);
-
-            // FIXED: Removed the old whitecircle package path
             List<ServiceRequest> userRequests = serviceRequestRepository.findByEmployeeIdOrderBySubmissionDateDesc(loginId);
             model.addAttribute("myRequests", userRequests);
-
         } else {
             model.addAttribute("user", new User());
         }
@@ -302,11 +334,8 @@ public class DashboardController {
             String loginId = principal.getName();
             User currentUser = userRepository.findByUsername(loginId).orElse(new User());
             model.addAttribute("user", currentUser);
-
-            // FIXED: Removed the old whitecircle package path
             List<ServiceRequest> userRequests = serviceRequestRepository.findByEmployeeIdOrderBySubmissionDateDesc(loginId);
             model.addAttribute("myRequests", userRequests);
-
         } else {
             model.addAttribute("user", new User());
         }
@@ -319,11 +348,8 @@ public class DashboardController {
             String loginId = principal.getName();
             User currentUser = userRepository.findByUsername(loginId).orElse(new User());
             model.addAttribute("user", currentUser);
-
-            // FIXED: Removed the old whitecircle package path
             List<ServiceRequest> userRequests = serviceRequestRepository.findByEmployeeIdOrderBySubmissionDateDesc(loginId);
             model.addAttribute("myRequests", userRequests);
-
         } else {
             model.addAttribute("user", new User());
         }
@@ -339,36 +365,26 @@ public class DashboardController {
     @GetMapping("/holiday-list")
     public String showHolidayList() { return "holiday-list"; }
 
-    // -- CLIENT PORTAL PAGES --
-
     @GetMapping("/client/profile")
     public String showClientProfile() { return "client-profile"; }
 
-    // -- ADMIN PORTAL PAGE CONTROLLER--
+    // --- ADMIN & MANAGER PORTAL ROUTES (Secured via RBAC) ---
 
+    // LOCK: Need 'employee_create' permission to access or submit this form
+    @PreAuthorize("hasAuthority('employee_create')")
     @GetMapping("/admin/add-employee")
     public String showAddEmployeeForm(Model model) {
         model.addAttribute("user", new User());
         return "add-employee";
     }
 
+    @PreAuthorize("hasAuthority('employee_create')")
     @PostMapping("/admin/add-employee-submit")
     public String addEmployee(@ModelAttribute User user, Model model) {
-
         String rawUsername = user.getUsername() != null ? user.getUsername().trim() : "";
 
         if (!rawUsername.toUpperCase().startsWith("EMP")) {
             model.addAttribute("errorMessage", "Invalid ID Format! Employee IDs must start with 'EMP' (e.g., EMP101). Admin (ADM) IDs cannot be created here.");
-            return "add-employee";
-        }
-
-        if (user.getDesignation() == null || user.getDesignation().trim().isEmpty()) {
-            model.addAttribute("errorMessage", "Designation is a mandatory field.");
-            return "add-employee";
-        }
-
-        if (user.getMobileNumber() == null || user.getMobileNumber().trim().isEmpty()) {
-            model.addAttribute("errorMessage", "Mobile Number is a mandatory field.");
             return "add-employee";
         }
 
@@ -379,18 +395,24 @@ public class DashboardController {
 
         user.setUsername(rawUsername.toUpperCase());
         user.setPassword("{noop}welcome123");
-        user.setRole("EMPLOYEE");
-        userRepository.save(user);
 
+        Role empRole = roleRepository.findByRoleName("EMPLOYEE").orElse(null);
+        user.setRole(empRole);
+
+        userRepository.save(user);
         return "redirect:/admin/reports?type=employee";
     }
 
+    // FIXED LOCK: Approvals are strictly for leadership roles via permissions
+    @PreAuthorize("hasAnyAuthority('attendance_approve', 'attendance_edit')")
     @GetMapping("/admin/timesheet-approval")
     public String showTimesheetApprovalPage() { return "admin-timesheet-approval"; }
 
+    @PreAuthorize("hasAnyAuthority('attendance_approve', 'attendance_edit')")
     @GetMapping("/admin/attendance-regularization")
     public String showRegularizationPage() { return "admin-attendance-regularization"; }
 
+    @PreAuthorize("hasAnyAuthority('attendance_approve', 'attendance_edit')")
     @PostMapping("/admin/timesheets/approve/{id}")
     public String approveTimesheet(@PathVariable Long id, java.security.Principal principal) {
         Timesheet timesheet = timesheetRepository.findById(id)
@@ -406,9 +428,7 @@ public class DashboardController {
 
         timesheetRepository.save(timesheet);
 
-        // --- EMAIL TRIGGER START ---
         try {
-            // Note: If your simple 'Timesheet' model here contains a User object, this will seamlessly email them!
             if (timesheet.getUser() != null && timesheet.getUser().getEmail() != null) {
                 Map<String, Object> emailData = new HashMap<>();
                 emailData.put("empName", timesheet.getUser().getFullName());
@@ -422,16 +442,18 @@ public class DashboardController {
                 );
             }
         } catch (Exception e) {
-            System.err.println("⚠️ Warning: Could not trigger Timesheet Quick-Approve email: " + e.getMessage());
+            System.err.println("⚠️ Warning: Could not trigger Timesheet email: " + e.getMessage());
         }
-        // --- EMAIL TRIGGER END ---
 
         return "redirect:/admin/timesheet-approval";
     }
 
+    // LOCK: Client/Company configuration is secured by 'settings_manage_company'
+    @PreAuthorize("hasAuthority('settings_manage_company')")
     @GetMapping("/admin/add-client")
     public String showAddClientPage() { return "add-new-client"; }
 
+    @PreAuthorize("hasAuthority('settings_manage_company')")
     @PostMapping("/admin/save-client")
     public String saveClient(@ModelAttribute Client client, RedirectAttributes redirectAttributes) {
         clientRepository.save(client);
@@ -439,8 +461,10 @@ public class DashboardController {
         User clientUser = new User();
         clientUser.setUsername(client.getClientId());
         clientUser.setFullName(client.getContactPerson() + " (" + client.getCompanyName() + ")");
-        clientUser.setRole("CLIENT");
         clientUser.setPassword("{noop}welcome123");
+
+        Role clientRole = roleRepository.findByRoleName("CLIENT").orElse(null);
+        clientUser.setRole(clientRole);
 
         userRepository.save(clientUser);
 
@@ -450,15 +474,18 @@ public class DashboardController {
         return "redirect:/admin/dashboard";
     }
 
+    @PreAuthorize("hasAuthority('settings_manage_company')")
     @GetMapping("/admin/manage-clients")
     public String showManageClientsPage() { return "admin-manage-clients"; }
 
+    @PreAuthorize("hasAuthority('settings_manage_company')")
     @GetMapping("/api/admin/clients")
     @ResponseBody
     public ResponseEntity<List<Client>> getAllClients() {
         return ResponseEntity.ok(clientRepository.findAll());
     }
 
+    @PreAuthorize("hasAuthority('settings_manage_company')")
     @DeleteMapping("/api/admin/clients/{id}")
     @ResponseBody
     public ResponseEntity<?> deleteClient(@PathVariable Long id) {
@@ -473,12 +500,12 @@ public class DashboardController {
             if (userOpt.isPresent()) {
                 userRepository.delete(userOpt.get());
             }
-
             return ResponseEntity.ok("Client and login credentials deleted successfully.");
         }
         return ResponseEntity.notFound().build();
     }
 
+    @PreAuthorize("hasAuthority('settings_manage_company')")
     @PostMapping("/api/admin/clients/update")
     @ResponseBody
     public ResponseEntity<?> updateClient(@ModelAttribute Client updatedClient) {
@@ -505,21 +532,26 @@ public class DashboardController {
         return ResponseEntity.notFound().build();
     }
 
+    // LOCK: Employee Directory requires 'employee_view'
+    @PreAuthorize("hasAuthority('employee_view')")
     @GetMapping("/admin/staff")
     public String showStaffDirectory(Model model, @RequestParam(required = false) String keyword) {
-        List<User> staffList;
-
-        if (keyword != null && !keyword.isEmpty()) {
-            staffList = userRepository.findByRoleAndFullNameContainingIgnoreCase("EMPLOYEE", keyword);
-        } else {
-            staffList = userRepository.findByRoleOrderByUsernameAsc("EMPLOYEE");
-        }
+        List<User> staffList = userRepository.findAll().stream()
+                // FIXED: Show ALL internal staff by excluding only Clients and the Super Admin
+                .filter(u -> u.getRole() != null &&
+                        !"CLIENT".equalsIgnoreCase(u.getRole().getRoleName()) &&
+                        !"SUPER_ADMIN".equalsIgnoreCase(u.getRole().getRoleName()))
+                .filter(u -> keyword == null || keyword.isEmpty() || (u.getFullName() != null && u.getFullName().toLowerCase().contains(keyword.toLowerCase())))
+                .sorted(Comparator.comparing(User::getUsername, Comparator.nullsLast(String::compareToIgnoreCase)))
+                .collect(Collectors.toList());
 
         model.addAttribute("staffList", staffList);
         model.addAttribute("keyword", keyword);
         return "admin-staff";
     }
 
+    // LOCK: Editing an employee record requires 'employee_edit'
+    @PreAuthorize("hasAuthority('employee_edit')")
     @GetMapping("/admin/staff/edit/{id}")
     public String showEditEmployeeForm(@PathVariable("id") Long id, Model model) {
         User employee = userService.findById(id);
@@ -527,6 +559,7 @@ public class DashboardController {
         return "admin/edit-employee";
     }
 
+    @PreAuthorize("hasAuthority('employee_edit')")
     @PostMapping("/admin/staff/edit/{id}")
     public String updateEmployee(@PathVariable("id") Long id, @ModelAttribute("employee") User updatedEmployee, RedirectAttributes redirectAttributes) {
         userService.updateEmployeeProfessionalDetails(id, updatedEmployee);
@@ -534,9 +567,10 @@ public class DashboardController {
         return "redirect:/admin/staff";
     }
 
+    // FIXED LOCK: Helpdesk requires Asset or IT Permissions
+    @PreAuthorize("hasAnyAuthority('asset_assign', 'asset_view', 'settings_manage_roles')")
     @GetMapping("/admin-helpdesk-requests")
     public String viewAdminHelpdeskPortal(Model model) {
-        // FIXED: Removed the duplicate repository autowiring and pointing to the correct one
         List<ServiceRequest> allRequests = serviceRequestRepository.findAll();
 
         model.addAttribute("allRequests", allRequests);
@@ -550,6 +584,8 @@ public class DashboardController {
         return "admin-helpdesk-requests";
     }
 
+    // FIXED LOCK: Global search requires basic admin view rights so Finance/Recruiters can use it
+    @PreAuthorize("hasAnyAuthority('employee_view', 'admin_dashboard_view')")
     @GetMapping("/api/employees/search")
     @ResponseBody
     public ResponseEntity<List<Map<String, Object>>> globalSearch(@RequestParam("query") String query) {
@@ -563,15 +599,17 @@ public class DashboardController {
 
         List<User> employees = userRepository.searchByKeyword(keyword);
         for (User u : employees) {
-            if (!"CLIENT".equalsIgnoreCase(u.getRole())) {
+            if (u.getRole() != null && !"CLIENT".equalsIgnoreCase(u.getRole().getRoleName())) {
                 Map<String, Object> map = new HashMap<>();
+                EmployeeProfile profile = u.getEmployeeProfile();
+
                 map.put("dbId", u.getId());
                 map.put("fullName", u.getFullName());
                 map.put("identifier", u.getUsername());
-                map.put("designation", u.getDesignation() != null ? u.getDesignation() : "Employee");
-                map.put("department", u.getBusinessUnit() != null ? u.getBusinessUnit() : "General");
+                map.put("designation", (profile != null && profile.getDesignation() != null) ? profile.getDesignation() : "Employee");
+                map.put("department", (profile != null && profile.getBusinessUnit() != null) ? profile.getBusinessUnit() : "General");
                 map.put("email", u.getEmail() != null ? u.getEmail() : "N/A");
-                map.put("phone", u.getMobileNumber() != null ? u.getMobileNumber() : "N/A");
+                map.put("phone", (profile != null && profile.getMobileNumber() != null) ? profile.getMobileNumber() : "N/A");
                 map.put("role", "EMPLOYEE");
                 results.add(map);
             }
@@ -597,4 +635,78 @@ public class DashboardController {
 
         return ResponseEntity.ok(results);
     }
+
+
+    // ROLE MANAGEMENT MODULE (SUPER ADMIN ONLY)
+    @PreAuthorize("hasAuthority('settings_manage_roles')")
+    @GetMapping("/admin/manage-roles")
+    public String showManageRolesPage(Model model, @RequestParam(required = false) String search) {
+
+        // 1. Fetch all roles, but strictly filter out external and legacy roles
+        List<Role> allRoles = roleRepository.findAll().stream()
+                .filter(role -> !"CLIENT".equalsIgnoreCase(role.getRoleName()) &&
+                        !"ADMIN".equalsIgnoreCase(role.getRoleName()))
+                .collect(Collectors.toList());
+
+        // 2. Fetch users (with optional search filter)
+        List<User> usersList;
+        if (search != null && !search.trim().isEmpty()) {
+            usersList = userRepository.searchByKeyword(search.trim());
+        } else {
+            usersList = userRepository.findAll();
+        }
+
+        // FIXED: Security Filters
+        // 1. Hide ADM001 to prevent the SuperAdmin from locking themselves out.
+        // 2. Hide CLIENT accounts so external users cannot be given internal admin roles.
+        usersList = usersList.stream()
+                .filter(user -> !"ADM001".equalsIgnoreCase(user.getUsername()))
+                .filter(user -> user.getRole() == null || !"CLIENT".equalsIgnoreCase(user.getRole().getRoleName()))
+                .collect(Collectors.toList());
+
+        // Sort users alphabetically for a cleaner UI
+        usersList.sort(Comparator.comparing(User::getUsername, Comparator.nullsLast(String::compareToIgnoreCase)));
+
+        model.addAttribute("usersList", usersList);
+        model.addAttribute("allRoles", allRoles);
+        model.addAttribute("currentSearch", search);
+
+        return "admin-manage-roles";
+    }
+
+    @PreAuthorize("hasAuthority('settings_manage_roles')")
+    @PostMapping("/admin/update-role")
+    public String updateUserRole(@RequestParam("userId") Long userId,
+                                 @RequestParam("roleId") Long roleId,
+                                 RedirectAttributes redirectAttributes,
+                                 Principal principal) {
+
+        User userToUpdate = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid User ID"));
+
+        Role newRole = roleRepository.findById(roleId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Role ID"));
+
+        String oldRoleName = userToUpdate.getRole() != null ? userToUpdate.getRole().getRoleName() : "None";
+
+        // Apply the new role
+        userToUpdate.setRole(newRole);
+        userRepository.save(userToUpdate);
+
+        // ACTUAL AUDIT LOG TRIGGER
+        auditLogService.logAction(
+                principal.getName(),
+                "ROLE_CHANGE",
+                "SECURITY_MATRIX",
+                oldRoleName,
+                newRole.getRoleName() + " (Target: " + userToUpdate.getUsername() + ")"
+        );
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Successfully updated " + userToUpdate.getFullName() + "'s role to " + newRole.getRoleName() + "!");
+
+        return "redirect:/admin/manage-roles";
+    }
+
+
 }

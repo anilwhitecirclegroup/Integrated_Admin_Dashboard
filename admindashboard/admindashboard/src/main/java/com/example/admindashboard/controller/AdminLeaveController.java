@@ -1,10 +1,13 @@
 package com.example.admindashboard.controller;
 
 import com.example.admindashboard.model.LeaveRequest;
+import com.example.admindashboard.model.User;
 import com.example.admindashboard.repository.LeaveRequestRepository;
-import com.example.admindashboard.service.EmailService; // Import the Email Service
+import com.example.admindashboard.repository.UserRepository;
+import com.example.admindashboard.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +15,7 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class AdminLeaveController {
@@ -19,16 +23,24 @@ public class AdminLeaveController {
     @Autowired
     private LeaveRequestRepository leaveRequestRepository;
 
-    // 1. INJECT THE EMAIL SERVICE
+    @Autowired
+    private UserRepository userRepository;
+
     @Autowired
     private EmailService emailService;
 
-    // 2. LOAD THE ADMIN DASHBOARD PAGE
+    // 1. LOAD THE ADMIN DASHBOARD PAGE
+    // LOCK: User must have 'leave_view' permission
+    @PreAuthorize("hasAuthority('leave_view')")
     @GetMapping("/admin/leave-approvals")
-    public String showLeaveApprovals(Model model) {
-        List<LeaveRequest> pending = leaveRequestRepository.findByStatus("Pending");
-        List<LeaveRequest> approved = leaveRequestRepository.findByStatus("Approved");
-        List<LeaveRequest> rejected = leaveRequestRepository.findByStatus("Rejected");
+    public String showLeaveApprovals(Model model, Principal principal) {
+        User currentUser = userRepository.findByUsername(principal.getName()).orElse(null);
+        boolean isManager = currentUser != null && currentUser.getRole() != null && "MANAGER".equalsIgnoreCase(currentUser.getRole().getRoleName());
+
+        // Fetch and filter the data based on hierarchy rules
+        List<LeaveRequest> pending = filterLeavesByHierarchy(leaveRequestRepository.findByStatus("Pending"), isManager, currentUser);
+        List<LeaveRequest> approved = filterLeavesByHierarchy(leaveRequestRepository.findByStatus("Approved"), isManager, currentUser);
+        List<LeaveRequest> rejected = filterLeavesByHierarchy(leaveRequestRepository.findByStatus("Rejected"), isManager, currentUser);
 
         model.addAttribute("pendingLeaves", pending);
         model.addAttribute("approvedLeaves", approved);
@@ -37,25 +49,44 @@ public class AdminLeaveController {
         return "admin-leave-approvals";
     }
 
-    // 3. HANDLE APPROVAL (Called by JavaScript)
+    // HELPER METHOD: Applies the strict Data Visibility Rule (Point 4)
+    private List<LeaveRequest> filterLeavesByHierarchy(List<LeaveRequest> leaves, boolean isManager, User currentUser) {
+        if (!isManager || currentUser == null) {
+            return leaves; // Super Admin and HR Admin can see all leaves
+        }
+
+        // Managers only see leaves where the applicant's manager_id matches the Manager's ID
+        return leaves.stream()
+                .filter(leave -> leave.getUser() != null
+                        && leave.getUser().getManager() != null
+                        && leave.getUser().getManager().getId().equals(currentUser.getId()))
+                .collect(Collectors.toList());
+    }
+
+    // 2. HANDLE APPROVAL (Called by JavaScript)
+    // LOCK: User must have 'leave_approve' permission
+    @PreAuthorize("hasAuthority('leave_approve')")
     @PostMapping("/api/admin/leave/approve/{id}")
     @ResponseBody
     public ResponseEntity<String> approveLeave(@PathVariable Long id, Principal principal) {
         try {
+            User currentUser = userRepository.findByUsername(principal.getName()).orElseThrow();
+            boolean isManager = currentUser.getRole() != null && "MANAGER".equalsIgnoreCase(currentUser.getRole().getRoleName());
+
             LeaveRequest leave = leaveRequestRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid leave Id:" + id));
+
+            // CRITICAL SECURITY BLOCK: Prevent a Manager from approving leaves outside their team via API bypass
+            if (isManager && (leave.getUser().getManager() == null || !leave.getUser().getManager().getId().equals(currentUser.getId()))) {
+                return ResponseEntity.status(403).body("Error: 403 Forbidden. You are not authorized to approve leaves for employees outside your reporting hierarchy.");
+            }
 
             leave.setStatus("Approved");
             leaveRequestRepository.save(leave);
 
             // --- EMAIL TRIGGER START ---
             Map<String, Object> emailData = new HashMap<>();
-            // No admin comments needed for standard approval, but the map must be passed
-
-            // 1. Fix the missing name
             emailData.put("empName", leave.getUser().getFullName());
-
-            // 2. Add the new specific details
             emailData.put("specificType", leave.getLeaveType());
             emailData.put("submittedOn", leave.getCreatedAt());
             emailData.put("duration", leave.getFromDate() + " to " + leave.getToDate() + " (" + leave.getTotalDays() + " Days)");
@@ -63,8 +94,8 @@ public class AdminLeaveController {
             emailService.sendRequestStatusUpdateToEmployee(
                     leave.getUser().getEmail(),
                     leave.getUser().getFullName(),
-                    "Leave",     // The type of request
-                    "Approved",  // The status
+                    "Leave",
+                    "Approved",
                     emailData
             );
             // --- EMAIL TRIGGER END ---
@@ -76,7 +107,9 @@ public class AdminLeaveController {
         }
     }
 
-    // 4. HANDLE REJECTION & NOTES (Called by JS)
+    // 3. HANDLE REJECTION & NOTES (Called by JS)
+    // LOCK: User must have 'leave_approve' permission
+    @PreAuthorize("hasAuthority('leave_approve')")
     @PostMapping("/api/admin/leave/reject/{id}")
     @ResponseBody
     public ResponseEntity<String> rejectLeave(
@@ -85,28 +118,35 @@ public class AdminLeaveController {
             Principal principal) {
 
         try {
+            User currentUser = userRepository.findByUsername(principal.getName()).orElseThrow();
+            boolean isManager = currentUser.getRole() != null && "MANAGER".equalsIgnoreCase(currentUser.getRole().getRoleName());
+
             LeaveRequest leave = leaveRequestRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid leave Id:" + id));
 
+            // CRITICAL SECURITY BLOCK: Prevent a Manager from rejecting leaves outside their team via API bypass
+            if (isManager && (leave.getUser().getManager() == null || !leave.getUser().getManager().getId().equals(currentUser.getId()))) {
+                return ResponseEntity.status(403).body("Error: 403 Forbidden. You are not authorized to reject leaves for employees outside your reporting hierarchy.");
+            }
+
             leave.setStatus("Rejected");
-            leave.setAdminComments(note); // Save note to database
+            leave.setAdminComments(note);
 
             leaveRequestRepository.save(leave);
 
             // --- EMAIL TRIGGER START ---
             Map<String, Object> emailData = new HashMap<>();
-
             emailData.put("empName", leave.getUser().getFullName());
             emailData.put("specificType", leave.getLeaveType());
             emailData.put("submittedOn", leave.getCreatedAt());
             emailData.put("duration", leave.getFromDate() + " to " + leave.getToDate() + " (" + leave.getTotalDays() + " Days)");
-            emailData.put("adminComments", note); // The rejection reason
+            emailData.put("adminComments", note);
 
             emailService.sendRequestStatusUpdateToEmployee(
                     leave.getUser().getEmail(),
                     leave.getUser().getFullName(),
-                    "Leave",     // The type of request
-                    "Rejected",  // The status
+                    "Leave",
+                    "Rejected",
                     emailData
             );
             // --- EMAIL TRIGGER END ---

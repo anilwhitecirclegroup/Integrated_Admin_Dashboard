@@ -30,19 +30,19 @@ public class EmployeeApprovalsController {
     @Autowired
     private WeeklyTimesheetRepository timesheetRepo;
 
+    // SECURITY AUDIT PASSED: This is a self-service endpoint.
+    // Data is inherently isolated to the authenticated Principal. No @PreAuthorize required.
     @GetMapping("/my-approvals")
     public String viewMyApprovals(Principal principal, Model model) {
 
-        // 1. Get current employee
+        // 1. Get current employee securely from the session token
         String username = principal.getName();
         User currentUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 2. FETCH PENDING REQUESTS
+        // 2. FETCH PENDING REQUESTS (Strictly bound to currentUser)
         List<LeaveRequest> pendingLeaves = leaveRepo.findByUserAndStatusIgnoreCaseOrderByIdDesc(currentUser, "Pending");
         List<Attendance> pendingAttendances = attendanceRepo.findByUserAndApprovalStatusIgnoreCaseOrderByIdDesc(currentUser, "Pending");
-
-        // FIX: Using currentUser instead of employeeId
         List<WeeklyTimesheet> pendingTimesheets = timesheetRepo.findByUserAndStatusIgnoreCaseOrderByIdDesc(currentUser, "Submitted");
 
         model.addAttribute("pendingLeaves", pendingLeaves);
@@ -53,10 +53,9 @@ public class EmployeeApprovalsController {
         int totalPending = pendingLeaves.size() + pendingAttendances.size() + pendingTimesheets.size();
         model.addAttribute("totalPending", totalPending);
 
-        // 3. FETCH APPROVED REQUESTS
+        // 3. FETCH APPROVED REQUESTS (Strictly bound to currentUser)
         List<LeaveRequest> approvedLeaves = leaveRepo.findByUserAndStatusIgnoreCaseOrderByIdDesc(currentUser, "Approved");
         List<Attendance> approvedAttendances = attendanceRepo.findByUserAndApprovalStatusIgnoreCaseOrderByIdDesc(currentUser, "Approved");
-
         List<WeeklyTimesheet> approvedTimesheets = timesheetRepo.findByUserAndStatusIgnoreCaseOrderByIdDesc(currentUser, "Approved");
 
         model.addAttribute("approvedLeaves", approvedLeaves);
@@ -66,10 +65,9 @@ public class EmployeeApprovalsController {
         int totalApproved = approvedLeaves.size() + approvedAttendances.size() + approvedTimesheets.size();
         model.addAttribute("totalApproved", totalApproved);
 
-        // 4. FETCH REJECTED REQUESTS
+        // 4. FETCH REJECTED REQUESTS (Strictly bound to currentUser)
         List<LeaveRequest> deniedLeaves = leaveRepo.findByUserAndStatusIgnoreCaseOrderByIdDesc(currentUser, "Rejected");
         List<Attendance> deniedAttendances = attendanceRepo.findByUserAndApprovalStatusIgnoreCaseOrderByIdDesc(currentUser, "Rejected");
-
         List<WeeklyTimesheet> deniedTimesheets = timesheetRepo.findByUserAndStatusIgnoreCaseOrderByIdDesc(currentUser, "Rejected");
 
         model.addAttribute("deniedLeaves", deniedLeaves);

@@ -1,7 +1,6 @@
 package com.example.admindashboard.controller;
 
 import com.example.admindashboard.model.Attendance;
-import com.example.admindashboard.model.Timesheet;
 import com.example.admindashboard.model.User;
 import com.example.admindashboard.repository.AttendanceRepository;
 import com.example.admindashboard.repository.TimesheetRepository;
@@ -10,19 +9,25 @@ import com.example.admindashboard.service.ReportExportService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+// NEW: Import for RBAC Security Locks
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Controller
 public class ReportController {
@@ -39,20 +44,36 @@ public class ReportController {
     @Autowired
     private ReportExportService exportService;
 
-    // @Autowired private LeaveRepository leaveRepository;
-
+    // LOCK: Restrict access to authorized reporting roles
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_ADMIN', 'ROLE_HR_EXECUTIVE', 'ROLE_MANAGER', 'ROLE_FINANCE')")
     @GetMapping("/admin/timesheets/view")
-    public String showWeeklyTimesheetView(Model model) {
-        List<User> employees = userRepository.findByRoleOrderByUsernameAsc("EMPLOYEE");
+    public String showWeeklyTimesheetView(Model model, Principal principal) {
+        User currentUser = userRepository.findByUsername(principal.getName()).orElse(null);
+        boolean isManager = currentUser != null && currentUser.getRole() != null && "MANAGER".equalsIgnoreCase(currentUser.getRole().getRoleName());
+
+        // FIXED: Stream filter to prevent crash when checking role objects
+        List<User> employees = userRepository.findAll().stream()
+                .filter(u -> u.getRole() != null && "EMPLOYEE".equalsIgnoreCase(u.getRole().getRoleName()))
+                .sorted((u1, u2) -> u1.getUsername().compareToIgnoreCase(u2.getUsername()))
+                .collect(Collectors.toList());
+
+        // VISIBILITY: Managers only see their team members in the dropdown
+        employees = filterListByManager(employees, isManager, currentUser, u -> u);
         model.addAttribute("employees", employees);
 
-        // FIX: Change Timesheet to WeeklyTimesheet and use the new repository
         List<com.example.admindashboard.model.WeeklyTimesheet> allTimesheets = weeklyTimesheetRepository.findAll();
-        model.addAttribute("allTimesheets", allTimesheets != null ? allTimesheets : new ArrayList<>());
+        if (allTimesheets == null) allTimesheets = new ArrayList<>();
+
+        // VISIBILITY: Managers only see timesheets submitted by their team
+        allTimesheets = filterListByManager(allTimesheets, isManager, currentUser, ts -> ts.getUser());
+
+        model.addAttribute("allTimesheets", allTimesheets);
 
         return "admin/admin-weekly-timesheet-report";
     }
 
+    // LOCK: Restrict access to authorized reporting roles
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_ADMIN', 'ROLE_HR_EXECUTIVE', 'ROLE_MANAGER', 'ROLE_FINANCE')")
     @GetMapping("/admin/reports")
     public String showReportsDashboard(
             @RequestParam(defaultValue = "employee") String type,
@@ -62,13 +83,15 @@ public class ReportController {
             @RequestParam(required = false) LocalDate to,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
+            Principal principal,
             Model model) {
 
-        // If the user doesn't pick a date, we default to the current month.
+        User currentUser = userRepository.findByUsername(principal.getName()).orElse(null);
+        boolean isManager = currentUser != null && currentUser.getRole() != null && "MANAGER".equalsIgnoreCase(currentUser.getRole().getRoleName());
+
         if (from == null) from = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
         if (to == null) to = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
 
-        // 1. Add Common Attributes (So filters stick in UI)
         model.addAttribute("currentType", type);
         model.addAttribute("currentSearch", search);
         model.addAttribute("currentSortDir", sortDir);
@@ -78,17 +101,18 @@ public class ReportController {
 
         String keyword = (search != null) ? search : "";
 
-        // 2. LOGIC SWITCHER (Routes to the 4 separate pages)
         switch (type) {
             case "employee":
                 Sort sort = sortDir.equalsIgnoreCase("asc") ?
                         Sort.by("username").ascending() : Sort.by("username").descending();
                 Pageable empPageable = PageRequest.of(page, size, sort);
 
+                // Note: We leave the search queries intact but intercept the final Page to apply the hierarchy filter
                 Page<User> employeePage = (search == null || search.isEmpty()) ?
-                        userRepository.findByRole("EMPLOYEE", empPageable) :
+                        userRepository.findByRole_RoleName("EMPLOYEE", empPageable):
                         userRepository.searchEmployees(search, empPageable);
 
+                employeePage = filterPageByManager(employeePage, isManager, currentUser, u -> u);
                 model.addAttribute("dataPage", employeePage);
                 return "admin/employee-master-report";
 
@@ -99,19 +123,20 @@ public class ReportController {
                 Page<com.example.admindashboard.model.WeeklyTimesheet> timesheetPage =
                         weeklyTimesheetRepository.searchTimesheets(from, to, keyword, timePageable);
 
+                timesheetPage = filterPageByManager(timesheetPage, isManager, currentUser, ts -> ts.getUser());
                 model.addAttribute("dataPage", timesheetPage);
                 return "admin/timesheets-report";
 
-            /* --- REVISED ReportController.java (Attendance Case) --- */
             case "attendance":
                 Pageable attPageable = PageRequest.of(page, size, Sort.by("weekStartDate").descending());
                 keyword = (search != null) ? search : "";
 
-                // If no dates provided, use a wide range to see all processed history
                 String fromStr = (from != null) ? from.toString() : "1970-01-01";
                 String toStr = (to != null) ? to.toString() : "9999-12-31";
 
                 Page<Attendance> attendancePage = attendanceRepository.searchAttendance(fromStr, toStr, keyword, attPageable);
+
+                attendancePage = filterPageByManager(attendancePage, isManager, currentUser, att -> att.getUser());
                 model.addAttribute("dataPage", attendancePage);
                 return "admin/attendance-report";
 
@@ -123,15 +148,20 @@ public class ReportController {
         }
     }
 
+    // LOCK: Restrict access to authorized reporting roles
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_ADMIN', 'ROLE_HR_EXECUTIVE', 'ROLE_MANAGER', 'ROLE_FINANCE')")
     @GetMapping("/admin/reports/download")
     public void downloadReport(
             @RequestParam String type,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) LocalDate from,
             @RequestParam(required = false) LocalDate to,
+            Principal principal,
             HttpServletResponse response) throws IOException {
 
-        // Standardize Date Range
+        User currentUser = userRepository.findByUsername(principal.getName()).orElse(null);
+        boolean isManager = currentUser != null && currentUser.getRole() != null && "MANAGER".equalsIgnoreCase(currentUser.getRole().getRoleName());
+
         if (from == null) from = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
         if (to == null) to = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
 
@@ -143,31 +173,56 @@ public class ReportController {
             List<User> exportList;
             if (search != null && !search.isEmpty()) {
                 exportList = userRepository.findByFullNameContainingIgnoreCaseOrUsernameContainingIgnoreCase(search, search);
-                exportList = exportList.stream().filter(u -> "EMPLOYEE".equals(u.getRole())).toList();
+                // FIXED: Checking role objects properly
+                exportList = exportList.stream().filter(u -> u.getRole() != null && "EMPLOYEE".equalsIgnoreCase(u.getRole().getRoleName())).collect(Collectors.toList());
             } else {
-                exportList = userRepository.findByRoleOrderByUsernameAsc("EMPLOYEE");
+                // FIXED: Checking role objects properly
+                exportList = userRepository.findAll().stream()
+                        .filter(u -> u.getRole() != null && "EMPLOYEE".equalsIgnoreCase(u.getRole().getRoleName()))
+                        .sorted((u1, u2) -> u1.getUsername().compareToIgnoreCase(u2.getUsername()))
+                        .collect(Collectors.toList());
             }
+
+            exportList = filterListByManager(exportList, isManager, currentUser, u -> u);
             exportService.exportEmployeeReportToExcel(response, exportList);
         }
-
         else if ("timesheet".equals(type)) {
             List<com.example.admindashboard.model.WeeklyTimesheet> exportList;
             String keyword = (search != null) ? search : "";
 
             exportList = weeklyTimesheetRepository.findTimesheetsBySearchCriteria(from, to, keyword);
+            exportList = filterListByManager(exportList, isManager, currentUser, ts -> ts.getUser());
             exportService.exportTimesheetReportToExcel(response, exportList);
         }
-
         else if ("attendance".equals(type)) {
             List<Attendance> exportList;
             String keyword = (search != null) ? search : "";
 
-            // Convert LocalDate to String for the DB comparison
             String fromStr = (from != null) ? from.toString() : null;
             String toStr = (to != null) ? to.toString() : null;
 
             exportList = attendanceRepository.findAttendanceBySearchCriteria(fromStr, toStr, keyword);
+            exportList = filterListByManager(exportList, isManager, currentUser, att -> att.getUser());
             exportService.exportAttendanceReportToExcel(response, exportList);
         }
+    }
+
+    // HELPER METHODS: Centralized Data Visibility Filters (Point 4 of RBAC)
+
+    private <T> List<T> filterListByManager(List<T> list, boolean isManager, User currentUser, Function<T, User> userExtractor) {
+        if (!isManager || currentUser == null || list == null) return list;
+        return list.stream()
+                .filter(item -> {
+                    User u = userExtractor.apply(item);
+                    return u != null && u.getManager() != null && u.getManager().getId().equals(currentUser.getId());
+                })
+                .collect(Collectors.toList());
+    }
+
+    private <T> Page<T> filterPageByManager(Page<T> page, boolean isManager, User currentUser, Function<T, User> userExtractor) {
+        if (!isManager || currentUser == null || page == null) return page;
+        List<T> filteredList = filterListByManager(page.getContent(), isManager, currentUser, userExtractor);
+        // Wrap the filtered list back into a Page object so the Thymeleaf UI pagination doesn't break
+        return new PageImpl<>(filteredList, page.getPageable(), filteredList.size());
     }
 }
