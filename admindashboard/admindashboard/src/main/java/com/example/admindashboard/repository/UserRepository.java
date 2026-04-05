@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,38 +16,35 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // 1. AUTHENTICATION
     Optional<User> findByUsername(String username);
 
-    // 2.This is used by DashboardController to count Total Employees/Clients
-    long countByRole(String role);
+    // 2. Count by looking inside the Role object
+    long countByRole_RoleName(String roleName);
 
-    // 3. EXISTING LIST METHODS (For Dropdowns & Old Reports)
-    List<User> findByRole(String role);
+    // 3. EXISTING LIST METHODS (Updated to look inside Role object)
+    List<User> findByRole_RoleName(String roleName);
 
-    List<User> findByRoleOrderByUsernameAsc(String role);
+    List<User> findByRole_RoleNameOrderByUsernameAsc(String roleName);
 
-    // Used for the search bar in the simplified report view
-    List<User> findByRoleAndFullNameContainingIgnoreCase(String role, String keyword);
+    List<User> findByRole_RoleNameAndFullNameContainingIgnoreCase(String roleName, String keyword);
 
     List<User> findByFullNameContainingIgnoreCaseOrUsernameContainingIgnoreCase(String fullName, String username);
 
-    //  4. NEW PAGINATION METHODS (For the New Report Dashboard)
+    // 4. NEW PAGINATION METHODS (Updated for the new architecture)
+    Page<User> findByRole_RoleName(String roleName, Pageable pageable);
 
-    // Fetch page of employees (for the default view)
-    Page<User> findByRole(String role, Pageable pageable);
-
-    // Search for employees with Pagination (Custom Query)
-    @Query("SELECT u FROM User u WHERE u.role = 'EMPLOYEE' AND (" +
+    // FIXED: Query now checks u.role.roleName
+    @Query("SELECT u FROM User u WHERE u.role.roleName = 'EMPLOYEE' AND (" +
             "LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     Page<User> searchEmployees(@Param("keyword") String keyword, Pageable pageable);
 
-    @Query("SELECT u FROM User u WHERE " +
+    // FIXED: Safely JOINs EmployeeProfile so it doesn't crash when searching businessUnit
+    @Query("SELECT u FROM User u LEFT JOIN u.employeeProfile ep WHERE " +
             "LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-            "LOWER(u.businessUnit) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+            "LOWER(ep.businessUnit) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<User> searchByKeyword(@Param("keyword") String keyword);
 
-    //  5. BIRTHDAY WIDGET
-    // This method joins the User table with the EmployeeProfile table to find today's birthdays
+    // 5. BIRTHDAY WIDGET
     @Query("SELECT u FROM User u JOIN u.employeeProfile ep WHERE " +
             "EXTRACT(MONTH FROM ep.dob) = EXTRACT(MONTH FROM CURRENT_DATE) AND " +
             "EXTRACT(DAY FROM ep.dob) = EXTRACT(DAY FROM CURRENT_DATE)")
