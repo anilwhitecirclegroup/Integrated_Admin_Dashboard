@@ -6,6 +6,7 @@ import com.example.admindashboard.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,20 +28,31 @@ public class ManageEmployeeDataController {
     @Autowired
     private UserRepository userRepository;
 
-    //  1. THE LIST VIEW (With Search & Sort)
-    // NEW LOCK: Only users with 'employee_view' can access this page
+    //  1. THE LIST VIEW (With Search, Sort & Soft Delete Filter)
     @PreAuthorize("hasAuthority('employee_view')")
     @GetMapping("/admin/manage-employees")
     public String showManageEmployeesPage(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String sort,
+            Authentication authentication,
             Model model) {
 
-        // FIXED: Show ALL internal staff by excluding Clients and the Super Admin
+        boolean canDelete = false;
+        if (authentication != null) {
+            canDelete = authentication.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("SUPER_ADMIN") ||
+                            a.getAuthority().equals("HR_ADMIN") ||
+                            a.getAuthority().equals("ROLE_SUPER_ADMIN") ||
+                            a.getAuthority().equals("ROLE_HR_ADMIN"));
+        }
+        model.addAttribute("canDelete", canDelete);
+
+        // FILTER UPDATE: Exclude Super Admins, Clients, AND "INACTIVE" (Soft Deleted) users
         Stream<User> employeeStream = userRepository.findAll().stream()
                 .filter(user -> user.getRole() != null &&
                         !"CLIENT".equalsIgnoreCase(user.getRole().getRoleName()) &&
-                        !"SUPER_ADMIN".equalsIgnoreCase(user.getRole().getRoleName()));
+                        !"SUPER_ADMIN".equalsIgnoreCase(user.getRole().getRoleName()) &&
+                        !"INACTIVE".equalsIgnoreCase(user.getStatus())); // <--- HIDES DELETED USERS
 
         if (search != null && !search.trim().isEmpty()) {
             String lowerSearch = search.toLowerCase();
@@ -67,7 +79,6 @@ public class ManageEmployeeDataController {
     }
 
     //  2. THE EDIT VIEW (Full Page Form)
-    // NEW LOCK: Only users with 'employee_edit' can open the edit form
     @PreAuthorize("hasAuthority('employee_edit')")
     @GetMapping("/admin/manage-employees/edit/{id}")
     public String showEditEmployeePage(@PathVariable Long id, Model model) {
@@ -87,7 +98,6 @@ public class ManageEmployeeDataController {
     }
 
     //  3. THE SAVE LOGIC (Handles the Form Submission)
-    // NEW LOCK: Only users with 'employee_edit' can submit data to the server
     @PreAuthorize("hasAuthority('employee_edit')")
     @PostMapping("/admin/update-employee")
     public String updateEmployee(
@@ -106,15 +116,12 @@ public class ManageEmployeeDataController {
             @RequestParam(required = false) String relationWithEmployee,
             @RequestParam(required = false) String emergencyPhone
     ) {
-        // 1. Find the existing user
         User existingUser = userRepository.findById(userUpdates.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userUpdates.getId()));
 
-        // 2. Update Core User Fields (Auth & Identity)
         existingUser.setFullName(userUpdates.getFullName());
         existingUser.setEmail(userUpdates.getEmail());
 
-        // 3. Update HR & Professional Fields
         EmployeeProfile profile = existingUser.getEmployeeProfile();
         if (profile == null) {
             profile = new EmployeeProfile();
@@ -153,14 +160,42 @@ public class ManageEmployeeDataController {
         profile.setEmergencyPhone(emergencyPhone);
 
         existingUser.setEmployeeProfile(profile);
-
-        // 4. Save to the database
         userRepository.save(existingUser);
 
-        // 5. Add the Success Message Flash Attribute
         redirectAttributes.addFlashAttribute("successMessage", "Employee record for " + existingUser.getFullName() + " (ID: " + existingUser.getUsername() + ") has been updated successfully.");
+        return "redirect:/admin/manage-employees";
+    }
 
-        // 6. Redirect back to the main list
+    // 4. THE DELETE LOGIC (Soft Delete / Archive)
+    @PreAuthorize("hasAuthority('SUPER_ADMIN') or hasAuthority('HR_ADMIN') or hasAuthority('ROLE_SUPER_ADMIN') or hasAuthority('ROLE_HR_ADMIN')")
+    @PostMapping("/admin/delete-employee/{id}")
+    public String deleteEmployee(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            User userToDelete = userRepository.findById(id).orElse(null);
+
+            if (userToDelete != null) {
+                if (userToDelete.getRole() != null &&
+                        ("SUPER_ADMIN".equalsIgnoreCase(userToDelete.getRole().getRoleName()) ||
+                                "ROLE_SUPER_ADMIN".equalsIgnoreCase(userToDelete.getRole().getRoleName()))) {
+
+                    redirectAttributes.addFlashAttribute("errorMessage", "Action Denied: You cannot delete a Super Admin account.");
+                    return "redirect:/admin/manage-employees";
+                }
+
+                String deletedName = userToDelete.getFullName();
+
+                // SOFT DELETE: Change status to INACTIVE instead of deleting from DB
+                userToDelete.setStatus("INACTIVE");
+                userRepository.save(userToDelete);
+
+                redirectAttributes.addFlashAttribute("successMessage", "Employee record for " + deletedName + " has been successfully archived/deactivated.");
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "Employee not found.");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "System Error: Unable to archive employee. " + e.getMessage());
+        }
+
         return "redirect:/admin/manage-employees";
     }
 }
