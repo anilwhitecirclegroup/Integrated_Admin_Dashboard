@@ -24,7 +24,6 @@ public class AdminTimesheetController {
     @Autowired
     private WeeklyTimesheetRepository timesheetRepository;
 
-    // NEW: Inject UserRepository for role and hierarchy validation
     @Autowired
     private UserRepository userRepository;
 
@@ -32,8 +31,8 @@ public class AdminTimesheetController {
     private EmailService emailService;
 
     // 1. Fetch timesheets by status
-    // LOCK: Restrict access to authorized leadership roles
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_ADMIN', 'ROLE_MANAGER')")
+    // FIXED LOCK: Added ROLE_HR_EXECUTIVE to the permitted roles
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_ADMIN', 'ROLE_HR_EXECUTIVE', 'ROLE_MANAGER')")
     @GetMapping("/list")
     public ResponseEntity<List<WeeklyTimesheet>> getTimesheets(@RequestParam String status, Principal principal) {
 
@@ -55,8 +54,8 @@ public class AdminTimesheetController {
     }
 
     // 2. Approve or Reject
-    // LOCK: Restrict access to authorized leadership roles
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_ADMIN', 'ROLE_MANAGER')")
+    // FIXED LOCK: Added ROLE_HR_EXECUTIVE to the permitted roles
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_HR_ADMIN', 'ROLE_HR_EXECUTIVE', 'ROLE_MANAGER')")
     @PostMapping("/{id}/{status}")
     public ResponseEntity<?> updateStatus(
             @PathVariable Long id,

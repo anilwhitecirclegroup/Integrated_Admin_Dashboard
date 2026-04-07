@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-// NEW: Import for RBAC Security Locks
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,9 +24,11 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 public class ReportController {
@@ -51,20 +52,21 @@ public class ReportController {
         User currentUser = userRepository.findByUsername(principal.getName()).orElse(null);
         boolean isManager = currentUser != null && currentUser.getRole() != null && "MANAGER".equalsIgnoreCase(currentUser.getRole().getRoleName());
 
-        // FIXED: Stream filter to prevent crash when checking role objects
+        // FIXED: Show all staff (HR, Finance, Manager, Employee) EXCEPT Super Admin and Clients
         List<User> employees = userRepository.findAll().stream()
-                .filter(u -> u.getRole() != null && "EMPLOYEE".equalsIgnoreCase(u.getRole().getRoleName()))
+                .filter(u -> u.getRole() != null &&
+                        !"CLIENT".equalsIgnoreCase(u.getRole().getRoleName()) &&
+                        !"SUPER_ADMIN".equalsIgnoreCase(u.getRole().getRoleName()) &&
+                        !"INACTIVE".equalsIgnoreCase(u.getStatus()))
                 .sorted((u1, u2) -> u1.getUsername().compareToIgnoreCase(u2.getUsername()))
                 .collect(Collectors.toList());
 
-        // VISIBILITY: Managers only see their team members in the dropdown
         employees = filterListByManager(employees, isManager, currentUser, u -> u);
         model.addAttribute("employees", employees);
 
         List<com.example.admindashboard.model.WeeklyTimesheet> allTimesheets = weeklyTimesheetRepository.findAll();
         if (allTimesheets == null) allTimesheets = new ArrayList<>();
 
-        // VISIBILITY: Managers only see timesheets submitted by their team
         allTimesheets = filterListByManager(allTimesheets, isManager, currentUser, ts -> ts.getUser());
 
         model.addAttribute("allTimesheets", allTimesheets);
@@ -103,14 +105,36 @@ public class ReportController {
 
         switch (type) {
             case "employee":
-                Sort sort = sortDir.equalsIgnoreCase("asc") ?
-                        Sort.by("username").ascending() : Sort.by("username").descending();
-                Pageable empPageable = PageRequest.of(page, size, sort);
+                // FIXED: Stream approach to safely filter out Super Admins, Clients, and Inactive users
+                Stream<User> empStream = userRepository.findAll().stream()
+                        .filter(u -> u.getRole() != null &&
+                                !"CLIENT".equalsIgnoreCase(u.getRole().getRoleName()) &&
+                                !"SUPER_ADMIN".equalsIgnoreCase(u.getRole().getRoleName()) &&
+                                !"INACTIVE".equalsIgnoreCase(u.getStatus()));
 
-                // Note: We leave the search queries intact but intercept the final Page to apply the hierarchy filter
-                Page<User> employeePage = (search == null || search.isEmpty()) ?
-                        userRepository.findByRole_RoleName("EMPLOYEE", empPageable):
-                        userRepository.searchEmployees(search, empPageable);
+                if (search != null && !search.trim().isEmpty()) {
+                    String lowerSearch = search.toLowerCase();
+                    empStream = empStream.filter(u ->
+                            (u.getUsername() != null && u.getUsername().toLowerCase().contains(lowerSearch)) ||
+                                    (u.getFullName() != null && u.getFullName().toLowerCase().contains(lowerSearch))
+                    );
+                }
+
+                // Sorting
+                if (sortDir.equalsIgnoreCase("desc")) {
+                    empStream = empStream.sorted(Comparator.comparing(User::getUsername, Comparator.nullsLast(String::compareToIgnoreCase)).reversed());
+                } else {
+                    empStream = empStream.sorted(Comparator.comparing(User::getUsername, Comparator.nullsLast(String::compareToIgnoreCase)));
+                }
+
+                List<User> allFilteredUsers = empStream.collect(Collectors.toList());
+
+                // Manual Pagination to ensure accurate pages with the new filters
+                int start = Math.min(page * size, allFilteredUsers.size());
+                int end = Math.min((start + size), allFilteredUsers.size());
+                List<User> pageContent = allFilteredUsers.subList(start, end);
+
+                Page<User> employeePage = new PageImpl<>(pageContent, PageRequest.of(page, size), allFilteredUsers.size());
 
                 employeePage = filterPageByManager(employeePage, isManager, currentUser, u -> u);
                 model.addAttribute("dataPage", employeePage);
@@ -170,18 +194,24 @@ public class ReportController {
         response.setHeader("Content-Disposition", headerValue);
 
         if ("employee".equals(type)) {
-            List<User> exportList;
-            if (search != null && !search.isEmpty()) {
-                exportList = userRepository.findByFullNameContainingIgnoreCaseOrUsernameContainingIgnoreCase(search, search);
-                // FIXED: Checking role objects properly
-                exportList = exportList.stream().filter(u -> u.getRole() != null && "EMPLOYEE".equalsIgnoreCase(u.getRole().getRoleName())).collect(Collectors.toList());
-            } else {
-                // FIXED: Checking role objects properly
-                exportList = userRepository.findAll().stream()
-                        .filter(u -> u.getRole() != null && "EMPLOYEE".equalsIgnoreCase(u.getRole().getRoleName()))
-                        .sorted((u1, u2) -> u1.getUsername().compareToIgnoreCase(u2.getUsername()))
-                        .collect(Collectors.toList());
+            // FIXED: Apply the same multi-role filter to the Excel Export logic
+            Stream<User> exportStream = userRepository.findAll().stream()
+                    .filter(u -> u.getRole() != null &&
+                            !"CLIENT".equalsIgnoreCase(u.getRole().getRoleName()) &&
+                            !"SUPER_ADMIN".equalsIgnoreCase(u.getRole().getRoleName()) &&
+                            !"INACTIVE".equalsIgnoreCase(u.getStatus()));
+
+            if (search != null && !search.trim().isEmpty()) {
+                String lowerSearch = search.toLowerCase();
+                exportStream = exportStream.filter(u ->
+                        (u.getUsername() != null && u.getUsername().toLowerCase().contains(lowerSearch)) ||
+                                (u.getFullName() != null && u.getFullName().toLowerCase().contains(lowerSearch))
+                );
             }
+
+            List<User> exportList = exportStream
+                    .sorted((u1, u2) -> u1.getUsername().compareToIgnoreCase(u2.getUsername()))
+                    .collect(Collectors.toList());
 
             exportList = filterListByManager(exportList, isManager, currentUser, u -> u);
             exportService.exportEmployeeReportToExcel(response, exportList);
@@ -222,7 +252,6 @@ public class ReportController {
     private <T> Page<T> filterPageByManager(Page<T> page, boolean isManager, User currentUser, Function<T, User> userExtractor) {
         if (!isManager || currentUser == null || page == null) return page;
         List<T> filteredList = filterListByManager(page.getContent(), isManager, currentUser, userExtractor);
-        // Wrap the filtered list back into a Page object so the Thymeleaf UI pagination doesn't break
         return new PageImpl<>(filteredList, page.getPageable(), filteredList.size());
     }
 }
