@@ -97,16 +97,25 @@ public class DashboardController {
     @PreAuthorize("hasAuthority('admin_dashboard_view')")
     @GetMapping("/admin/dashboard")
     public String showAdminDashboard(Model model) {
+
+        // Count all internal staff (Super Admin, HR, Manager, Employee, etc.)
+        // EXCLUDES Clients and Soft-Deleted (INACTIVE) accounts
         long totalEmployees = userRepository.findAll().stream()
-                .filter(u -> u.getRole() != null && "EMPLOYEE".equalsIgnoreCase(u.getRole().getRoleName()))
+                .filter(u -> u.getRole() != null &&
+                        !"CLIENT".equalsIgnoreCase(u.getRole().getRoleName()) &&
+                        !"INACTIVE".equalsIgnoreCase(u.getStatus()))
                 .count();
 
+        // Count only Clients, EXCLUDING Soft-Deleted (INACTIVE) accounts
         long totalClients = userRepository.findAll().stream()
-                .filter(u -> u.getRole() != null && "CLIENT".equalsIgnoreCase(u.getRole().getRoleName()))
+                .filter(u -> u.getRole() != null &&
+                        "CLIENT".equalsIgnoreCase(u.getRole().getRoleName()) &&
+                        !"INACTIVE".equalsIgnoreCase(u.getStatus()))
                 .count();
 
         model.addAttribute("empCount", totalEmployees);
         model.addAttribute("clientCount", totalClients);
+
         return "admin-dashboard";
     }
 
@@ -367,6 +376,7 @@ public class DashboardController {
 
     @GetMapping("/client/profile")
     public String showClientProfile() { return "client-profile"; }
+
 
     // --- ADMIN & MANAGER PORTAL ROUTES (Secured via RBAC) ---
 
@@ -674,39 +684,119 @@ public class DashboardController {
         return "admin-manage-roles";
     }
 
-    @PreAuthorize("hasAuthority('settings_manage_roles')")
     @PostMapping("/admin/update-role")
     public String updateUserRole(@RequestParam("userId") Long userId,
                                  @RequestParam("roleId") Long roleId,
-                                 RedirectAttributes redirectAttributes,
-                                 Principal principal) {
+                                 @RequestParam(value = "designation", required = false) String designation,
+                                 RedirectAttributes redirectAttributes) {
 
-        User userToUpdate = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid User ID"));
+        User user = userRepository.findById(userId).orElse(null);
+        Role newRole = roleRepository.findById(roleId).orElse(null);
 
-        Role newRole = roleRepository.findById(roleId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Role ID"));
+        if (user != null && newRole != null) {
+            // 1. Update the System Role
+            user.setRole(newRole);
 
-        String oldRoleName = userToUpdate.getRole() != null ? userToUpdate.getRole().getRoleName() : "None";
+            // 2. Update Designation if the admin selected one from the new dropdown
+            if (user.getEmployeeProfile() != null && designation != null && !designation.trim().isEmpty()) {
+                user.getEmployeeProfile().setDesignation(designation);
+            }
 
-        // Apply the new role
-        userToUpdate.setRole(newRole);
-        userRepository.save(userToUpdate);
-
-        // ACTUAL AUDIT LOG TRIGGER
-        auditLogService.logAction(
-                principal.getName(),
-                "ROLE_CHANGE",
-                "SECURITY_MATRIX",
-                oldRoleName,
-                newRole.getRoleName() + " (Target: " + userToUpdate.getUsername() + ")"
-        );
-
-        redirectAttributes.addFlashAttribute("successMessage",
-                "Successfully updated " + userToUpdate.getFullName() + "'s role to " + newRole.getRoleName() + "!");
+            userRepository.save(user);
+            redirectAttributes.addFlashAttribute("successMessage", "Security clearance and designation updated for " + user.getFullName());
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error updating clearance. User or Role not found.");
+        }
 
         return "redirect:/admin/manage-roles";
     }
 
+
+    @GetMapping("/admin/profile")
+    public String viewAdminProfile(Principal principal, Model model) {
+        String username = principal.getName();
+        User currentUser = userService.findByUsername(username);
+
+        model.addAttribute("user", currentUser);
+        return "admin-profile";
+    }
+
+    @PostMapping("/admin/profile/update")
+    public String updateAdminProfile(
+            // Contact & Emergency
+            @RequestParam("fullName") String fullName,
+            @RequestParam("mobileNumber") String mobileNumber,
+            @RequestParam(value = "altMobile", required = false) String altMobile,
+            @RequestParam(value = "personalEmail", required = false) String personalEmail,
+            @RequestParam("permanentAddress") String permanentAddress,
+            @RequestParam(value = "workingAddress", required = false) String workingAddress,
+            @RequestParam(value = "city", required = false) String city,
+            @RequestParam(value = "country", required = false) String country,
+            @RequestParam("emergencyContactName") String emergencyContactName,
+            @RequestParam(value = "relationWithEmployee", required = false) String relationWithEmployee,
+            @RequestParam("emergencyPhone") String emergencyPhone,
+
+            // Newly Editable: Identity & Compliance
+            @RequestParam(value = "dob", required = false) @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd") java.time.LocalDate dob,
+            @RequestParam(value = "gender", required = false) String gender,
+            @RequestParam(value = "panNo", required = false) String panNo,
+            @RequestParam(value = "aadharNo", required = false) String aadharNo,
+
+            // Newly Editable: Education
+            @RequestParam(value = "qual1Title", required = false) String qual1Title,
+            @RequestParam(value = "qual1Inst", required = false) String qual1Inst,
+            @RequestParam(value = "qual1Year", required = false) String qual1Year,
+            @RequestParam(value = "qual2Title", required = false) String qual2Title,
+            @RequestParam(value = "qual2Inst", required = false) String qual2Inst,
+            @RequestParam(value = "qual2Year", required = false) String qual2Year,
+
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
+
+        String username = principal.getName();
+        User existingUser = userService.findByUsername(username);
+
+        existingUser.setFullName(fullName);
+
+        EmployeeProfile profile = existingUser.getEmployeeProfile();
+        if (profile == null) {
+            profile = new EmployeeProfile();
+            profile.setUser(existingUser);
+        }
+
+        // Map Contact Data
+        profile.setMobileNumber(mobileNumber);
+        profile.setAltMobile(altMobile);
+        profile.setPersonalEmail(personalEmail);
+        profile.setPermanentAddress(permanentAddress);
+        profile.setWorkingAddress(workingAddress);
+        profile.setCity(city);
+        profile.setCountry(country);
+
+        // Map Emergency Data
+        profile.setEmergencyContactName(emergencyContactName);
+        profile.setRelationWithEmployee(relationWithEmployee);
+        profile.setEmergencyPhone(emergencyPhone);
+
+        // Map Identity Data
+        profile.setDob(dob);
+        profile.setGender(gender);
+        profile.setPanNo(panNo);
+        profile.setAadharNo(aadharNo);
+
+        // Map Education Data
+        profile.setQual1Title(qual1Title);
+        profile.setQual1Inst(qual1Inst);
+        profile.setQual1Year(qual1Year);
+        profile.setQual2Title(qual2Title);
+        profile.setQual2Inst(qual2Inst);
+        profile.setQual2Year(qual2Year);
+
+        existingUser.setEmployeeProfile(profile);
+        userRepository.save(existingUser);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Profile updated successfully.");
+        return "redirect:/admin/profile";
+    }
 
 }

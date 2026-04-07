@@ -214,7 +214,7 @@
             background-color: #1e293b !important; border-color: #334155 !important;
         }
 
-        /* 2. Table Core Overrides - Doubling the ID (#roleTable#roleTable) to beat mobile.css */
+        /* 2. Table Core Overrides */
         .dark-mode #roleTable#roleTable, [data-bs-theme="dark"] #roleTable#roleTable,
         .dark-mode #roleTable#roleTable tr, [data-bs-theme="dark"] #roleTable#roleTable tr,
         .dark-mode #roleTable#roleTable td, [data-bs-theme="dark"] #roleTable#roleTable td,
@@ -355,6 +355,7 @@
                                 th:data-username="${user.username}"
                                 th:data-name="${user.fullName}"
                                 th:data-roleid="${user.role != null ? user.role.id : ''}"
+                                th:data-designation="${user.employeeProfile != null ? user.employeeProfile.designation : ''}"
                                 onclick="openRoleModal(this)">
                             <i class="fas fa-lock-open me-1"></i> Edit Clearance
                         </button>
@@ -392,7 +393,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label fw-bold text-dark mb-2">Assign New Role Matrix</label>
+                        <label class="form-label fw-bold text-dark mb-2">Assign New System Role Matrix</label>
                         <div class="position-relative">
                             <select class="form-select custom-role-select w-100" id="modalRoleId" name="roleId" required>
                                 <option value="" disabled selected>-- Select Security Role --</option>
@@ -401,6 +402,40 @@
                                         th:text="${role.roleName}">
                                 </option>
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label fw-bold text-dark mb-2">Update Job Designation (Optional)</label>
+                        <div class="position-relative">
+                            <select class="form-select custom-role-select w-100" id="modalDesignation" name="designation">
+                                <option value="">-- Keep Current Designation --</option>
+                                <optgroup label="Administration & HR">
+                                    <option value="Super Admin">Super Admin</option>
+                                    <option value="HR Director">HR Director</option>
+                                    <option value="HR Manager">HR Manager</option>
+                                    <option value="HR Executive">HR Executive</option>
+                                    <option value="Talent Acquisition">Talent Acquisition</option>
+                                </optgroup>
+                                <optgroup label="Engineering & Tech">
+                                    <option value="Engineering Manager">Engineering Manager</option>
+                                    <option value="Project Manager">Project Manager</option>
+                                    <option value="Senior Java Developer">Senior Java Developer</option>
+                                    <option value="Software Engineer">Software Engineer</option>
+                                    <option value="Frontend Developer">Frontend Developer</option>
+                                    <option value="Backend Developer">Backend Developer</option>
+                                    <option value="Testing Engineer">Testing Engineer</option>
+                                    <option value="Data Analyst">Data Analyst</option>
+                                    <option value="UI/UX Lead">UI/UX Lead</option>
+                                    <option value="DevOps Engineer">DevOps Engineer</option>
+                                </optgroup>
+                                <optgroup label="Finance & Operations">
+                                    <option value="Finance Manager">Finance Manager</option>
+                                    <option value="Accountant">Accountant</option>
+                                    <option value="Operations Lead">Operations Lead</option>
+                                </optgroup>
+                            </select>
+                            <div class="small text-muted mt-2"><i class="fas fa-info-circle me-1"></i>Leave blank to keep the employee's current job title.</div>
                         </div>
                     </div>
 
@@ -424,16 +459,31 @@
         const username = button.getAttribute('data-username');
         const name = button.getAttribute('data-name');
         const roleId = button.getAttribute('data-roleid');
+        const currentDesignation = button.getAttribute('data-designation');
 
         document.getElementById('modalUserId').value = userId;
         document.getElementById('modalUserName').innerText = name;
         document.getElementById('modalUserEmpId').innerText = username;
 
-        const selectElement = document.getElementById('modalRoleId');
+        // Set Role
+        const roleSelect = document.getElementById('modalRoleId');
         if(roleId) {
-            selectElement.value = roleId;
+            roleSelect.value = roleId;
         } else {
-            selectElement.value = "";
+            roleSelect.value = "";
+        }
+
+        // Set Designation (Pre-select if it matches a standard option)
+        const desigSelect = document.getElementById('modalDesignation');
+        desigSelect.value = ""; // Default to Keep Current
+
+        if (currentDesignation) {
+            for (let i = 0; i < desigSelect.options.length; i++) {
+                if (desigSelect.options[i].value === currentDesignation) {
+                    desigSelect.selectedIndex = i;
+                    break;
+                }
+            }
         }
 
         new bootstrap.Modal(document.getElementById('roleModal')).show();

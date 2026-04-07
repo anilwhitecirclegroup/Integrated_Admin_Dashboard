@@ -139,7 +139,12 @@
                             </div>
                             <div>
                                 <div class="fw-bold text-dark" th:text="${emp.fullName}">Name</div>
-                                <div class="small text-muted" th:text="${emp.username}">ID</div>
+                                <div class="small text-muted mb-1" th:text="${emp.username}">ID</div>
+                                <span class="badge bg-dark bg-opacity-10 text-dark border border-dark-subtle"
+                                      style="font-size: 0.6rem; letter-spacing: 0.5px;"
+                                      th:text="${emp.role != null ? emp.role.roleName : 'EMPLOYEE'}">
+                                      ROLE
+                                </span>
                             </div>
                         </div>
                     </td>
@@ -179,6 +184,7 @@
                                 data-bs-target="#employeeModal"
                                 th:data-name="${emp.fullName}"
                                 th:data-id="${emp.username}"
+                                th:data-sysrole="${emp.role != null ? emp.role.roleName : 'EMPLOYEE'}"
                                 th:data-role="${emp.employeeProfile != null and !#strings.isEmpty(emp.employeeProfile.designation) ? emp.employeeProfile.designation : 'Unassigned'}"
                                 th:data-email="${emp.email}"
                                 th:data-mobile="${emp.employeeProfile != null and !#strings.isEmpty(emp.employeeProfile.mobileNumber) ? emp.employeeProfile.mobileNumber : 'Not Available'}"
@@ -215,7 +221,10 @@
                     </div>
                     <div>
                         <h5 class="modal-title fw-bold mb-0" id="modalName">Employee Name</h5>
-                        <small class="opacity-75" id="modalId">EMP ID</small>
+                        <div class="d-flex align-items-center gap-2 mt-1">
+                            <small class="opacity-75" id="modalId">EMP ID</small>
+                            <span class="badge bg-white text-primary border px-2 py-1 shadow-sm" style="font-size: 0.65rem; letter-spacing: 0.5px;" id="modalSysRole">ROLE</span>
+                        </div>
                     </div>
                 </div>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -293,6 +302,7 @@
 
         const name = button.getAttribute('data-name');
         const id = button.getAttribute('data-id');
+        const sysrole = button.getAttribute('data-sysrole');
         const role = button.getAttribute('data-role');
         const email = button.getAttribute('data-email');
         const mobile = button.getAttribute('data-mobile');
@@ -305,6 +315,7 @@
 
         document.getElementById('modalName').textContent = name;
         document.getElementById('modalId').textContent = id;
+        document.getElementById('modalSysRole').textContent = sysrole;
         document.getElementById('modalRole').textContent = role;
         document.getElementById('modalEmail').textContent = email;
         document.getElementById('modalMobile').textContent = mobile;
