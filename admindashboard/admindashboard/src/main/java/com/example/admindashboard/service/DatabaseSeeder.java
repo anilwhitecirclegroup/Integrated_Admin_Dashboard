@@ -1,9 +1,7 @@
 package com.example.admindashboard.service;
 
-import com.example.admindashboard.model.EmployeeProfile;
-import com.example.admindashboard.model.Permission;
-import com.example.admindashboard.model.Role;
-import com.example.admindashboard.model.User;
+import com.example.admindashboard.model.*;
+import com.example.admindashboard.repository.ClientRepository;
 import com.example.admindashboard.repository.PermissionRepository;
 import com.example.admindashboard.repository.RoleRepository;
 import com.example.admindashboard.repository.UserRepository;
@@ -29,6 +27,9 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Autowired
     private PermissionRepository permissionRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
 
     // NEW: Injecting JdbcTemplate to fix the database constraint
     @Autowired
@@ -224,7 +225,8 @@ public class DatabaseSeeder implements CommandLineRunner {
             System.out.println("✅ Created Admin -> ID: ADM001 | Pass: admin123");
         }
 
-        // 2. SEED CLIENT ACCOUNT
+        // 2. SEED CLIENT ACCOUNT (CLI001)
+        User cli001User;
         if (userRepository.findByUsername("CLI001").isEmpty()) {
             User client = new User();
             client.setUsername("CLI001");
@@ -232,14 +234,27 @@ public class DatabaseSeeder implements CommandLineRunner {
             client.setEmail("client@acmecorp.com");
             client.setRole(clientRole);
             client.setPassword("{noop}welcome123");
+            cli001User = userRepository.save(client);
+            System.out.println("✅ Created Client User -> ID: CLI001 | Pass: welcome123");
+        } else {
+            cli001User = userRepository.findByUsername("CLI001").get();
+        }
 
-            EmployeeProfile clientProfile = new EmployeeProfile();
-            clientProfile.setJoiningDate(LocalDate.now());
-            clientProfile.setUser(client);
-            client.setEmployeeProfile(clientProfile);
+        // 2.5 ENSURE PROPER 'CLIENT' TABLE RECORD EXISTS FOR CLI001
+        if (clientRepository.findByUser_Username("CLI001").isEmpty()) {
+            Client clientRecord = new com.example.admindashboard.model.Client();
+            clientRecord.setUser(cli001User);
+            clientRecord.setClientId("CLI001");
+            clientRecord.setCompanyName("Acme Corporation");
+            clientRecord.setDomain("Manufacturing & Logistics");
+            clientRecord.setContactPerson("Acme Contact");
+            clientRecord.setOfficialEmail("client@acmecorp.com");
+            clientRecord.setPhoneNumber("+1-800-555-0199");
+            clientRecord.setAccountStatus("Active Contract");
+            clientRecord.setTeamLead("Rahul Verma");
 
-            userRepository.save(client);
-            System.out.println("✅ Created Client -> ID: CLI001 | Pass: welcome123");
+            clientRepository.save(clientRecord);
+            System.out.println("✅ Generated secure Client Table Profile for CLI001");
         }
 
         // ==========================================
