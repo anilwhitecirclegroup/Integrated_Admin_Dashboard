@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ongoing Task Details | WhiteCircle</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #1e3a8a;
+            --bs-accent: #2563eb;
+            --bs-success: #10b981;
+            --bg-color: #f4f7fb;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 60px; }
+
+        .feature-top-nav { background-color: #1e3264; height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .btn-exit-dashboard { background: transparent; border: 1px solid rgba(255, 255, 255, 0.4); color: white; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: var(--transition); }
+        .btn-exit-dashboard:hover { background: rgba(255, 255, 255, 0.15); border-color: white; color: white; transform: translateX(-2px); }
+
+        .content-container { max-width: 950px; margin: 40px auto; padding: 0 15px; }
+
+        /* --- UPGRADED STANDOUT TASK CARD --- */
+        .task-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-light);
+            border-left: 6px solid var(--bs-primary); /* Heavy anchor border */
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            margin-bottom: 35px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        .task-card:hover {
+            box-shadow: 0 16px 32px rgba(30, 58, 138, 0.1);
+            transform: translateY(-4px);
+            border-color: #cbd5e1;
+            border-left-color: var(--bs-accent);
+        }
+
+        .task-header {
+            padding: 16px 24px;
+            background: linear-gradient(to right, #f8fafc, #ffffff);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            /* --- UPGRADED SEPARATING LINE --- */
+            border-bottom: 2px solid #cbd5e1; /* Thicker and more visible slate color */
+            box-shadow: 0 4px 6px -4px rgba(30, 58, 138, 0.05); /* Subtle inner shadow for depth */
+        }
+        .task-body { padding: 24px; }
+
+        /* --- UPGRADED LIVE STEPPER WITH BLUE LINE --- */
+        .stepper-wrapper { display: flex; justify-content: space-between; margin-top: 25px; margin-bottom: 20px; position: relative; }
+
+        /* The Base Gray Line */
+        .stepper-wrapper::before { content: ''; position: absolute; top: 14px; left: 0; right: 0; height: 3px; background-color: #e2e8f0; z-index: 1; border-radius: 2px;}
+
+        /* The Dynamic Blue Fill Line */
+        .stepper-progress-line { position: absolute; top: 14px; left: 0; height: 3px; background-color: var(--bs-accent); z-index: 2; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 2px; box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);}
+
+        .step-item { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; width: 25%; }
+
+        .step-counter { width: 30px; height: 30px; border-radius: 50%; background-color: #f8fafc; border: 2px dashed #cbd5e1; display: flex; justify-content: center; align-items: center; font-weight: 700; font-size: 0.8rem; color: #94a3b8; transition: var(--transition); }
+        .step-name { margin-top: 8px; font-size: 0.7rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; transition: var(--transition); }
+
+        .step-item.completed .step-counter { background-color: var(--bs-primary); border: 2px solid var(--bs-primary); color: white; }
+        .step-item.completed .step-name { color: var(--bs-primary); }
+
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+        .step-item.active .step-counter { background-color: var(--bs-accent); border: 2px solid var(--bs-accent); color: white; animation: pulse-ring 2s infinite; }
+        .step-item.active .step-name { color: var(--text-dark); }
+
+        /* --- THICK GREEN ANIMATED PROGRESS BAR --- */
+        .progress-container { background-color: #e2e8f0; border-radius: 8px; height: 14px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+
+        @keyframes moveStripes {
+            0% { background-position: 0 0; }
+            100% { background-position: 30px 0; }
+        }
+        .progress-bar-animated-custom {
+            height: 100%;
+            border-radius: 8px;
+            background-image: linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.2) 75%, transparent 75%, transparent);
+            background-size: 30px 30px;
+            background-color: var(--bs-success); /* Changed to Green */
+            animation: moveStripes 2s linear infinite;
+            box-shadow: 0 2px 5px rgba(16, 185, 129, 0.4);
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .custom-badge { padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;}
+
+        /* --- HIGHLY INTERACTIVE ACCORDION BUTTON --- */
+        .accordion-wrapper { padding: 0 24px 20px 24px; }
+        .accordion-button {
+            padding: 14px 24px; font-size: 0.9rem;
+            background: linear-gradient(to right, #f8fafc, #eff6ff);
+            border: 1px solid #cbd5e1; border-radius: 10px !important;
+            color: var(--bs-primary) !important; transition: var(--transition);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .accordion-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(30, 58, 138, 0.1);
+            border-color: var(--bs-primary);
+        }
+        .accordion-button:not(.collapsed) { background: #eff6ff; box-shadow: none; border-color: var(--bs-primary); border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important;}
+        .accordion-button:focus { box-shadow: none; }
+
+        .accordion-button i.fa-layer-group { transition: transform 0.3s ease; }
+        .accordion-button:hover i.fa-layer-group { transform: scale(1.1) rotate(5deg); color: var(--bs-accent); }
+
+        .subtask-count-badge { font-size: 0.7rem; padding: 4px 10px; background-color: var(--bs-primary); color: white; border-radius: 20px; margin-left: auto; margin-right: 15px; box-shadow: 0 2px 4px rgba(30, 58, 138, 0.3); }
+
+        .accordion-body { padding: 20px; background-color: #fcfcfd; border: 1px solid var(--border-light); border-top: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
+
+        /* --- UPGRADED GRANULAR SUBTASKS --- */
+        .subtask-item {
+            background: white; border: 1px solid var(--border-light); border-left: 4px solid var(--border-light);
+            border-radius: 8px; padding: 14px 18px; margin-bottom: 12px;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: var(--transition); box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .subtask-item:last-child { margin-bottom: 0; }
+        .subtask-item:hover { border-right-color: #cbd5e1; border-top-color: #cbd5e1; border-bottom-color: #cbd5e1; transform: translateX(6px); box-shadow: 0 6px 12px rgba(0,0,0,0.06); }
+
+        .subtask-completed { border-left-color: var(--bs-success); }
+        .subtask-inprogress { border-left-color: var(--bs-accent); }
+        .subtask-pending { border-left-color: #cbd5e1; }
+
+        .subtask-icon { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; margin-right: 15px; flex-shrink: 0; }
+        .subtask-completed .subtask-icon { background-color: #dcfce7; color: #166534; }
+        .subtask-inprogress .subtask-icon { background-color: #eff6ff; color: #1d4ed8; }
+        .subtask-pending .subtask-icon { background-color: #f1f5f9; color: #64748b; }
+
+        .subtask-title { font-size: 0.95rem; font-weight: 600; color: #1e293b; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .subtask-status-text { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; margin-left: 15px; }
+    </style>
+</head>
+<body>
+
+<nav class="feature-top-nav">
+    <div class="d-flex align-items-center gap-3">
+        <div class="bg-white bg-opacity-10 rounded p-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+            <i class="fas fa-satellite-dish fs-6"></i>
+        </div>
+        <h4 class="fw-bold m-0 text-white" style="font-size: 1.4rem;">Ongoing Task Details</h4>
+    </div>
+    <a href="/client/dashboard" class="btn-exit-dashboard"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+</nav>
+
+<div class="content-container">
+
+    <div class="mb-5 text-center">
+        <h3 class="fw-bold text-dark m-0">Development Pipeline</h3>
+        <p class="text-muted mt-2 mx-auto" style="font-size: 0.95rem; max-width: 650px; line-height: 1.6;">
+            Track the exact execution phase and granular subtasks for your active tickets in real-time.
+        </p>
+    </div>
+
+    <div th:if="${#lists.isEmpty(tickets)}" class="text-center py-5">
+        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4 shadow-sm border" style="width: 80px; height: 80px;">
+            <i class="fas fa-check-double fs-2 text-muted opacity-50"></i>
+        </div>
+        <h5 class="fw-bold text-dark">No Active Tasks</h5>
+        <p class="text-muted">You currently do not have any tasks in the development pipeline.</p>
+        <a href="/client/submit-task" class="btn btn-primary mt-3 fw-bold px-4 py-2 shadow-sm rounded-pill"><i class="fas fa-plus me-2"></i> Submit New Task</a>
+    </div>
+
+    <th:block th:each="ticket : ${tickets}">
+        <div class="task-card">
+
+            <div class="task-header">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="custom-badge bg-primary bg-opacity-10 text-primary border border-primary-subtle" th:text="'#TCK-' + ${ticket.id}">#TCK-1</span>
+                    <span class="custom-badge bg-warning bg-opacity-10 text-warning border border-warning" th:if="${ticket.priority == 'Medium'}"><i class="fas fa-circle me-1" style="font-size: 0.4rem; vertical-align: middle;"></i>Medium</span>
+                    <span class="custom-badge bg-danger bg-opacity-10 text-danger border border-danger" th:if="${ticket.priority == 'High'}"><i class="fas fa-circle me-1" style="font-size: 0.4rem; vertical-align: middle;"></i>High</span>
+                    <span class="custom-badge bg-success bg-opacity-10 text-success border border-success" th:if="${ticket.priority == 'Low'}"><i class="fas fa-circle me-1" style="font-size: 0.4rem; vertical-align: middle;"></i>Low</span>
+                </div>
+                <div class="text-end d-flex align-items-center">
+                    <span class="small fw-bold text-muted me-2"><i class="fas fa-folder me-1 text-primary opacity-75"></i> Project:</span>
+                    <span class="fw-bold text-dark" style="font-size: 0.9rem;" th:text="${ticket.project != null ? ticket.project.projectName : 'Unassigned'}">Project Name</span>
+                </div>
+            </div>
+
+            <div class="task-body">
+                <h4 class="fw-bold text-dark mb-2" th:text="${ticket.title}">Task Title</h4>
+                <p class="text-muted small mb-3" th:text="${ticket.description}" style="line-height: 1.6; max-width: 85%;">Description goes here.</p>
+
+                <div class="stepper-wrapper">
+
+                    <div class="stepper-progress-line" th:style="'width: ' + (${ticket.status == 'Pending' || ticket.status == 'Open' ? 0 : (ticket.status == 'In Progress' || ticket.status == 'Development' ? 33 : (ticket.status == 'Resolved' ? 66 : 100))}) + '%;'"></div>
+
+                    <div th:classappend="${ticket.status != 'Pending' ? 'completed' : 'active'}" class="step-item">
+                        <div class="step-counter"><i class="fas fa-file-alt" th:if="${ticket.status != 'Pending'}"></i><span th:if="${ticket.status == 'Pending'}">1</span></div>
+                        <div class="step-name">Req. Analysis</div>
+                    </div>
+                    <div th:classappend="${(ticket.status == 'Resolved' || ticket.status == 'Completed') ? 'completed' : (ticket.status == 'In Progress' || ticket.status == 'Development' || ticket.status == 'Open' ? 'active' : '')}" class="step-item">
+                        <div class="step-counter"><i class="fas fa-code" th:if="${ticket.status == 'Resolved' || ticket.status == 'Completed'}"></i><span th:unless="${ticket.status == 'Resolved' || ticket.status == 'Completed'}">2</span></div>
+                        <div class="step-name">Development</div>
+                    </div>
+                    <div th:classappend="${(ticket.status == 'Completed') ? 'completed' : (ticket.status == 'Resolved' ? 'active' : '')}" class="step-item">
+                        <div class="step-counter"><i class="fas fa-bug" th:if="${ticket.status == 'Completed'}"></i><span th:unless="${ticket.status == 'Completed'}">3</span></div>
+                        <div class="step-name">QA & Testing</div>
+                    </div>
+                    <div th:classappend="${ticket.status == 'Completed' ? 'completed' : ''}" class="step-item">
+                        <div class="step-counter"><i class="fas fa-check" th:if="${ticket.status == 'Completed'}"></i><span th:unless="${ticket.status == 'Completed'}">4</span></div>
+                        <div class="step-name">Deployment</div>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-3 d-flex justify-content-between align-items-center">
+                    <div style="width: 40%; min-width: 250px;">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="custom-badge text-muted px-0">Overall Execution Progress</span>
+                            <span class="fw-bold text-success" style="font-size: 0.9rem;" th:text="${ticket.progressPercentage + '%'}">0%</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar-animated-custom" th:style="'width: ' + ${ticket.progressPercentage} + '%'"></div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <span class="custom-badge text-muted d-block mb-1 px-0">Target Deadline</span>
+                        <span class="fw-bold text-dark" style="font-size: 0.95rem;"><i class="far fa-calendar-alt text-accent me-1" style="color: var(--bs-accent);"></i> <span th:text="${ticket.deadline != null ? #temporals.format(ticket.deadline, 'MMM dd, yyyy') : 'Not Set'}">Oct 24</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-wrapper">
+                <div class="accordion accordion-flush" th:id="'accordion-' + ${ticket.id}">
+                    <div class="accordion-item border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold shadow-none" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapse-' + ${ticket.id}">
+                                <i class="fas fa-layer-group me-2 opacity-75"></i> View Granular Subtasks
+                                <span class="subtask-count-badge" th:text="${#lists.size(ticket.subtasks)} + ' Tasks'">0 Tasks</span>
+                            </button>
+                        </h2>
+                        <div th:id="'collapse-' + ${ticket.id}" class="accordion-collapse collapse" th:data-bs-parent="'#accordion-' + ${ticket.id}">
+                            <div class="accordion-body">
+
+                                <div class="d-flex flex-column">
+                                    <div th:if="${#lists.isEmpty(ticket.subtasks)}" class="text-center py-4 text-muted small border rounded bg-white shadow-sm">
+                                        <i class="fas fa-info-circle me-1 mb-2 fs-5"></i><br> No subtasks have been mapped out for this ticket yet.
+                                    </div>
+
+                                    <div th:each="subtask : ${ticket.subtasks}" class="subtask-item"
+                                         th:classappend="${subtask.status == 'Completed' ? 'subtask-completed' : (subtask.status == 'In Progress' ? 'subtask-inprogress' : 'subtask-pending')}">
+
+                                        <div class="d-flex align-items-center overflow-hidden">
+                                            <div class="subtask-icon">
+                                                <i class="fas fa-check" th:if="${subtask.status == 'Completed'}"></i>
+                                                <i class="fas fa-cog fa-spin" th:if="${subtask.status == 'In Progress'}"></i>
+                                                <i class="fas fa-clock" th:if="${subtask.status == 'Pending' || subtask.status == 'Open'}"></i>
+                                            </div>
+                                            <p class="subtask-title" th:text="${subtask.title}">Subtask Name</p>
+                                        </div>
+
+                                        <div class="subtask-status-text"
+                                             th:classappend="${subtask.status == 'Completed' ? 'text-success' : (subtask.status == 'In Progress' ? 'text-primary' : 'text-muted')}"
+                                             th:text="${subtask.status}">
+                                            STATUS
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </th:block>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

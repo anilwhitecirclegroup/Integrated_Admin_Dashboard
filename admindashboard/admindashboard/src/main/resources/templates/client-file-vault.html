@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>File Vault | WhiteCircle</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #1e3a8a;
+            --bs-accent: #2563eb;
+            --bg-color: #f4f7fb;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;
+            --transition: all 0.2s ease-in-out;
+        }
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 50px; }
+
+        /* --- HEADER --- */
+        .feature-top-nav { background-color: #1e3264; height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .btn-exit-dashboard { background: transparent; border: 1px solid rgba(255, 255, 255, 0.4); color: white; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: var(--transition); }
+        .btn-exit-dashboard:hover { background: rgba(255, 255, 255, 0.15); border-color: white; color: white; transform: translateX(-2px); }
+
+        .content-container { max-width: 1200px; margin: 30px auto; padding: 0 15px; }
+
+        /* --- STORAGE WIDGET --- */
+        .storage-widget { background: linear-gradient(135deg, var(--bs-primary), #3b82f6); border-radius: 12px; padding: 20px 25px; color: white; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.15); display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
+        .storage-bar-bg { background: rgba(255,255,255,0.2); height: 8px; border-radius: 10px; width: 250px; overflow: hidden; margin-top: 8px; }
+        .storage-bar-fill { background: #10b981; height: 100%; width: 12%; border-radius: 10px; }
+
+        /* --- UPLOAD ZONE --- */
+        .upload-zone { border: 2px dashed #94a3b8; border-radius: 12px; padding: 30px 20px; text-align: center; background-color: white; transition: var(--transition); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+        .upload-zone:hover { border-color: var(--bs-accent); background-color: #eff6ff; }
+        .upload-icon { width: 50px; height: 50px; background: #eff6ff; color: var(--bs-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 15px; }
+
+        /* --- SECTION HEADERS --- */
+        .section-title { font-size: 1.1rem; font-weight: 800; color: var(--text-dark); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-title i { color: var(--bs-primary); opacity: 0.8; }
+
+        /* --- FILE CARDS --- */
+        .file-card { background: var(--card-bg); border: 1px solid var(--border-light); border-radius: 10px; padding: 16px; display: flex; align-items: center; gap: 15px; transition: var(--transition); cursor: default; }
+        .file-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); border-color: #cbd5e1; }
+
+        .file-icon { width: 45px; height: 45px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
+        .icon-pdf { background: #fee2e2; color: #ef4444; }
+        .icon-zip { background: #fef3c7; color: #f59e0b; }
+        .icon-img { background: #e0e7ff; color: #6366f1; }
+        .icon-doc { background: #eff6ff; color: #3b82f6; }
+
+        .file-details { flex-grow: 1; min-width: 0; }
+        .file-name { font-size: 0.95rem; font-weight: 700; color: var(--text-dark); margin: 0 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .file-meta { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin: 0; display: flex; gap: 15px; }
+
+        .task-tag { background: #f1f5f9; border: 1px solid #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; color: #475569; display: inline-block; margin-top: 6px; }
+
+        .btn-download { width: 36px; height: 36px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; color: var(--text-muted); display: flex; align-items: center; justify-content: center; transition: var(--transition); text-decoration: none; }
+        .btn-download:hover { background: var(--bs-primary); color: white; border-color: var(--bs-primary); }
+
+        @media (max-width: 768px) {
+            .storage-widget { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .storage-bar-bg { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="feature-top-nav">
+    <div class="d-flex align-items-center gap-3">
+        <div class="bg-white bg-opacity-10 rounded p-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+            <i class="fas fa-cloud text-white fs-5"></i>
+        </div>
+        <h4 class="fw-bold m-0 text-white" style="font-size: 1.45rem;">File Vault</h4>
+    </div>
+    <a href="/client/dashboard" class="btn-exit-dashboard"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+</nav>
+
+<div class="content-container">
+
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-7">
+            <h3 class="fw-bold text-dark m-0">Project Assets & Documents</h3>
+            <p class="text-muted mt-1 mb-0" style="font-size: 0.95rem;">Centralized, secure storage for <strong class="text-dark" th:text="${activeProject}">Project Name</strong>.</p>
+        </div>
+        <div class="col-md-5 mt-3 mt-md-0">
+            <div class="storage-widget">
+                <div>
+                    <h6 class="fw-bold mb-1" style="font-size: 0.9rem;">Vault Capacity</h6>
+                    <div class="storage-bar-bg">
+                        <div class="storage-bar-fill"></div>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <h4 class="fw-bold m-0">0.6 GB</h4>
+                    <span style="font-size: 0.75rem; opacity: 0.8;">of 2 GB used</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+
+            <div class="mb-5">
+                <h5 class="section-title"><i class="fas fa-folder-open"></i> Official Project Documents</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="file-card">
+                            <div class="file-icon icon-pdf"><i class="fas fa-file-pdf"></i></div>
+                            <div class="file-details">
+                                <p class="file-name">Master_Service_Agreement.pdf</p>
+                                <p class="file-meta"><span>2.4 MB</span> <span><i class="far fa-calendar-alt"></i> Jan 10, 2026</span></p>
+                            </div>
+                            <a href="#" class="btn-download"><i class="fas fa-download"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="file-card">
+                            <div class="file-icon icon-pdf"><i class="fas fa-file-pdf"></i></div>
+                            <div class="file-details">
+                                <p class="file-name">Architecture_Blueprint_v2.pdf</p>
+                                <p class="file-meta"><span>4.1 MB</span> <span><i class="far fa-calendar-alt"></i> Feb 05, 2026</span></p>
+                            </div>
+                            <a href="#" class="btn-download"><i class="fas fa-download"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h5 class="section-title"><i class="fas fa-paperclip"></i> Uploaded Task Attachments</h5>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="file-card">
+                            <div class="file-icon icon-zip"><i class="fas fa-file-archive"></i></div>
+                            <div class="file-details">
+                                <p class="file-name">Stripe_API_Keys_Encrypted.zip</p>
+                                <p class="file-meta"><span>1.1 MB</span> <span><i class="far fa-calendar-alt"></i> Apr 09, 2026</span></p>
+                                <span class="task-tag"><i class="fas fa-link me-1"></i> Attached to: Integrate Stripe Payment API</span>
+                            </div>
+                            <a href="#" class="btn-download"><i class="fas fa-download"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="file-card">
+                            <div class="file-icon icon-img"><i class="fas fa-image"></i></div>
+                            <div class="file-details">
+                                <p class="file-name">Dashboard_Color_Palette_Ref.png</p>
+                                <p class="file-meta"><span>850 KB</span> <span><i class="far fa-calendar-alt"></i> Mar 22, 2026</span></p>
+                                <span class="task-tag"><i class="fas fa-link me-1"></i> Attached to: Design User Profile Dashboard</span>
+                            </div>
+                            <a href="#" class="btn-download"><i class="fas fa-download"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="file-card">
+                            <div class="file-icon icon-doc"><i class="fas fa-file-word"></i></div>
+                            <div class="file-details">
+                                <p class="file-name">Database_Schema_Requirements.docx</p>
+                                <p class="file-meta"><span>3.2 MB</span> <span><i class="far fa-calendar-alt"></i> Mar 15, 2026</span></p>
+                                <span class="task-tag"><i class="fas fa-link me-1"></i> Attached to: Database Schema Migration</span>
+                            </div>
+                            <a href="#" class="btn-download"><i class="fas fa-download"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+            <h5 class="section-title"><i class="fas fa-cloud-upload-alt"></i> Upload New Asset</h5>
+            <div style="height: 250px;">
+                <div class="upload-zone">
+                    <div class="upload-icon"><i class="fas fa-arrow-up"></i></div>
+                    <h6 class="fw-bold text-dark mb-2">Drag & Drop files here</h6>
+                    <p class="text-muted small mb-3">Support for PDF, ZIP, DOCX, and Images. Maximum file size: 30MB.</p>
+                    <button class="btn btn-primary fw-bold px-4" style="border-radius: 8px;">Browse Files</button>
+                </div>
+            </div>
+
+            <div class="mt-4 p-3 bg-white border rounded-3 shadow-sm">
+                <h6 class="fw-bold text-dark mb-2" style="font-size: 0.85rem;"><i class="fas fa-shield-alt text-success me-1"></i> Enterprise Security</h6>
+                <p class="text-muted m-0" style="font-size: 0.75rem; line-height: 1.5;">All files uploaded to the WhiteCircle Vault are encrypted at rest using AES-256 and restricted strictly to your assigned development team.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

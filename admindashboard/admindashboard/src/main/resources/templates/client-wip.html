@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle + ' | WhiteCircle'}">Work In Progress</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #1e3a8a;
+            --bs-accent: #2563eb;
+            --bg-color: #f1f5f9;
+            --text-dark: #0f172a;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 0; margin: 0;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+
+        /* Standard Header */
+        .feature-top-nav {
+            background-color: #1e3264;
+            height: 70px; display: flex; align-items: center;
+            justify-content: space-between; padding: 0 30px; color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;
+        }
+
+        .btn-exit-dashboard {
+            background: transparent; border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white; padding: 8px 18px; border-radius: 6px;
+            font-weight: 600; font-size: 0.85rem; text-decoration: none;
+            display: flex; align-items: center; gap: 8px; transition: var(--transition);
+        }
+        .btn-exit-dashboard:hover { background: rgba(255, 255, 255, 0.1); border-color: white; color: white; }
+
+        /* WIP Container */
+        .wip-container {
+            flex-grow: 1; display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+
+        .wip-card {
+            background: #ffffff; border: 1px solid #e2e8f0;
+            border-radius: 16px; padding: 50px; max-width: 500px;
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .wip-icon-wrapper {
+            width: 100px; height: 100px; background: #eff6ff;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 25px; color: var(--bs-accent); font-size: 2.5rem;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.15);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="feature-top-nav">
+    <div class="d-flex align-items-center gap-3">
+        <div class="bg-white bg-opacity-10 rounded p-2 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+            <i class="fas" th:classappend="${pageIcon ?: 'fa-tools'}"></i>
+        </div>
+        <h4 class="fw-bold m-0 text-white" style="font-size: 1.25rem;" th:text="${pageTitle ?: 'Feature Page'}">Feature Page</h4>
+    </div>
+    <a href="/client/dashboard" class="btn-exit-dashboard">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</nav>
+
+<div class="wip-container">
+    <div class="wip-card">
+        <div class="wip-icon-wrapper">
+            <i class="fas fa-hammer"></i>
+        </div>
+        <h3 class="fw-bold text-dark mb-3">Under Construction</h3>
+        <p class="text-muted mb-4" style="line-height: 1.6;">
+            The <strong th:text="${pageTitle}">this</strong> module is currently being developed as part of Phase 4. It will be available shortly.
+        </p>
+        <a href="/client/dashboard" class="btn btn-primary fw-bold px-4 py-2 rounded-pill shadow-sm" style="background: #2563eb; border: none;">
+            Return to Dashboard
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

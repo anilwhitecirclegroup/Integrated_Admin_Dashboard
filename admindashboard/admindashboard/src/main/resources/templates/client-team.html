@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Project Team | WhiteCircle</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #1e3a8a;
+            --bs-accent: #2563eb;
+            --bs-success: #10b981;
+            --bs-warning: #f59e0b;
+            --bg-color: #f4f7fb;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 50px; }
+
+        /* --- HEADER --- */
+        .feature-top-nav { background-color: #1e3264; height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .btn-exit-dashboard { background: transparent; border: 1px solid rgba(255, 255, 255, 0.4); color: white; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: var(--transition); }
+        .btn-exit-dashboard:hover { background: rgba(255, 255, 255, 0.15); border-color: white; color: white; transform: translateX(-2px); }
+
+        .content-container { max-width: 1100px; margin: 35px auto; padding: 0 15px; }
+
+        /* --- INTERACTIVE HIERARCHY MAP --- */
+        .hierarchy-card { background: var(--card-bg); border: 1px solid var(--border-light); border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-bottom: 40px; }
+        .hierarchy-flow { display: flex; justify-content: space-between; align-items: center; position: relative; padding: 20px 0; }
+
+        /* Dashed Line Connection */
+        .hierarchy-flow::before { content: ''; position: absolute; top: 40px; left: 10%; right: 10%; height: 2px; background-image: repeating-linear-gradient(90deg, #cbd5e1 0, #cbd5e1 6px, transparent 6px, transparent 12px); z-index: 0; }
+
+        .h-node { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; background: white; padding: 0 15px; transition: var(--transition); cursor: default; }
+
+        .h-icon { width: 55px; height: 55px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); transition: var(--transition); }
+        .h-node:hover .h-icon { transform: scale(1.15) translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+
+        .h-title { font-size: 0.85rem; font-weight: 800; color: var(--text-dark); text-transform: uppercase; letter-spacing: 0.5px; transition: var(--transition); }
+        .h-node:hover .h-title { color: var(--bs-accent); }
+
+        .h-desc { font-size: 0.75rem; color: var(--text-muted); text-align: center; max-width: 160px; margin-top: 6px; line-height: 1.5; }
+
+        .h-client .h-icon { background: #f8fafc; color: #475569; border: 1px solid #cbd5e1; }
+        .h-manager .h-icon { background: linear-gradient(135deg, #eff6ff, #dbeafe); color: var(--bs-accent); border: 1px solid #bfdbfe; }
+        .h-team .h-icon { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+        .h-qa .h-icon { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+
+        /* --- PREMIUM TEAM ROSTER CARDS --- */
+        .team-card {
+            background: var(--card-bg); border: 1px solid var(--border-light);
+            border-top: 4px solid var(--border-light); /* Default top border */
+            border-radius: 16px; padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: var(--transition);
+            text-align: center; height: 100%; position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        /* Card Hover Effects */
+        .team-card:hover { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(0,0,0,0.08); border-color: #cbd5e1; }
+
+        /* Role-Specific Top Borders */
+        .team-card.lead-card { border-top-color: var(--bs-primary); border-left: 1px solid #e0e7ff; border-right: 1px solid #e0e7ff; }
+        .team-card.lead-card:hover { border-color: var(--bs-accent); border-top-color: var(--bs-primary); }
+        .team-card.dev-card:hover { border-top-color: var(--bs-accent); }
+        .team-card.qa-card:hover { border-top-color: var(--bs-warning); }
+
+        /* Top Role Badge */
+        .role-badge { position: absolute; top: 15px; right: 15px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 12px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .role-manager { background: linear-gradient(to right, #eff6ff, #dbeafe); color: var(--bs-accent); border: 1px solid #bfdbfe; }
+        .role-dev { background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; }
+
+        /* Interactive Avatar */
+        .avatar-lg {
+            width: 85px; height: 85px; border-radius: 50%;
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; color: #475569; font-weight: 800;
+            margin-bottom: 18px; border: 4px solid white;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.06); position: relative;
+            transition: var(--transition);
+        }
+        .team-card:hover .avatar-lg { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); transform: scale(1.05); color: var(--bs-accent); }
+
+        /* Status Dot */
+        .status-dot { width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; position: absolute; bottom: 2px; right: 2px; }
+        .status-online { background-color: var(--bs-success); }
+        .status-busy { background-color: var(--bs-warning); }
+
+        .member-name { font-size: 1.15rem; font-weight: 800; color: var(--text-dark); margin-bottom: 3px; }
+        .member-designation { font-size: 0.85rem; font-weight: 700; color: var(--bs-accent); margin-bottom: 18px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .member-task { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 12px; font-size: 0.8rem; font-weight: 500; color: var(--text-muted); line-height: 1.5; margin-bottom: 25px; flex-grow: 1; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+        .team-card:hover .member-task { background: #ffffff; border-color: #94a3b8; color: #334155; }
+
+        /* Interactive Message Button */
+        .btn-message { background: linear-gradient(to right, #f8fafc, #ffffff); border: 1px solid var(--border-light); color: var(--text-dark); font-weight: 700; font-size: 0.85rem; padding: 10px 15px; border-radius: 10px; width: 100%; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-message:hover { background: var(--bs-primary); border-color: var(--bs-primary); color: white; box-shadow: 0 4px 10px rgba(30, 58, 138, 0.2); }
+        .btn-message i { transition: transform 0.3s ease; }
+        .btn-message:hover i { transform: translateX(3px) scale(1.1); }
+
+        @media (max-width: 768px) {
+            .hierarchy-flow { flex-direction: column; gap: 35px; }
+            .hierarchy-flow::before { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="feature-top-nav">
+    <div class="d-flex align-items-center gap-3">
+        <div class="bg-white bg-opacity-10 rounded p-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+            <i class="fas fa-users fs-5"></i>
+        </div>
+        <h4 class="fw-bold m-0 text-white" style="font-size: 1.45rem;">Project Team</h4>
+    </div>
+    <a href="/client/dashboard" class="btn-exit-dashboard"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+</nav>
+
+<div class="content-container">
+
+    <div class="mb-4">
+        <h3 class="fw-bold text-dark m-0">Assigned Development Team</h3>
+        <p class="text-muted mt-2 mb-0" style="font-size: 0.95rem;">Meet the dedicated professionals currently executing tasks for <strong class="text-dark" th:text="${activeProject}">Project Name</strong>.</p>
+    </div>
+
+    <div class="hierarchy-card">
+        <h6 class="fw-bold text-dark mb-4 border-bottom pb-3"><i class="fas fa-sitemap me-2 text-primary opacity-75"></i> Workflow Hierarchy</h6>
+
+        <div class="hierarchy-flow">
+            <div class="h-node h-client">
+                <div class="h-icon"><i class="fas fa-building"></i></div>
+                <div class="h-title">You (Client)</div>
+                <div class="h-desc">Provides requirements & approves milestones.</div>
+            </div>
+
+            <div class="h-node h-manager">
+                <div class="h-icon"><i class="fas fa-user-tie"></i></div>
+                <div class="h-title">Project Manager</div>
+                <div class="h-desc">Your main point of contact. Assigns tasks & timelines.</div>
+            </div>
+
+            <div class="h-node h-team">
+                <div class="h-icon"><i class="fas fa-laptop-code"></i></div>
+                <div class="h-title">Dev Team</div>
+                <div class="h-desc">Executes technical subtasks & UI development.</div>
+            </div>
+
+            <div class="h-node h-qa">
+                <div class="h-icon"><i class="fas fa-bug"></i></div>
+                <div class="h-title">QA Specialist</div>
+                <div class="h-desc">Ensures 100% bug-free delivery before deployment.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-3 col-md-6">
+            <div class="team-card lead-card">
+                <span class="role-badge role-manager">Team Lead</span>
+                <div class="avatar-lg">
+                    RV
+                    <div class="status-dot status-online"></div>
+                </div>
+                <h5 class="member-name">Rahul Verma</h5>
+                <div class="member-designation">Project Manager</div>
+
+                <div class="member-task">
+                    <span><i class="fas fa-tasks text-primary opacity-75 me-2"></i> Overseeing Sprint 2 deliverables & client comms.</span>
+                </div>
+
+                <button class="btn-message"><i class="far fa-envelope"></i> Message</button>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="team-card dev-card">
+                <span class="role-badge role-dev">Backend</span>
+                <div class="avatar-lg">
+                    OT
+                    <div class="status-dot status-busy"></div>
+                </div>
+                <h5 class="member-name">Om Tripathi</h5>
+                <div class="member-designation">Senior Java Dev</div>
+
+                <div class="member-task">
+                    <span><i class="fas fa-code text-primary opacity-75 me-2"></i> Integrating Stripe Payment Gateway Webhooks.</span>
+                </div>
+
+                <button class="btn-message"><i class="far fa-envelope"></i> Message</button>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="team-card dev-card">
+                <span class="role-badge role-dev">Frontend</span>
+                <div class="avatar-lg">
+                    SK
+                    <div class="status-dot status-online"></div>
+                </div>
+                <h5 class="member-name">Saumya Katare</h5>
+                <div class="member-designation">UI/UX Engineer</div>
+
+                <div class="member-task">
+                    <span><i class="fas fa-paint-brush text-primary opacity-75 me-2"></i> Designing User Profile Dashboard Mockups.</span>
+                </div>
+
+                <button class="btn-message"><i class="far fa-envelope"></i> Message</button>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="team-card qa-card">
+                <span class="role-badge role-dev">QA Testing</span>
+                <div class="avatar-lg">
+                    OS
+                    <div class="status-dot status-online"></div>
+                </div>
+                <h5 class="member-name">Om Singrore</h5>
+                <div class="member-designation">QA Specialist</div>
+
+                <div class="member-task">
+                    <span><i class="fas fa-shield-alt text-primary opacity-75 me-2"></i> Running end-to-end security scripts on staging.</span>
+                </div>
+
+                <button class="btn-message"><i class="far fa-envelope"></i> Message</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

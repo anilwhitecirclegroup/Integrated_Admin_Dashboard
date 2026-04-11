@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Financial Portal | WhiteCircle</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #1e3a8a;
+            --bs-accent: #2563eb;
+            --bs-success: #10b981;
+            --bs-warning: #f59e0b;
+            --bs-danger: #ef4444;
+            --bg-color: #f4f7fb;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;
+            --transition: all 0.2s ease-in-out;
+        }
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 30px; }
+
+        /* --- HEADER --- */
+        .feature-top-nav { background-color: #1e3264; height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .btn-exit-dashboard { background: transparent; border: 1px solid rgba(255, 255, 255, 0.4); color: white; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: var(--transition); }
+        .btn-exit-dashboard:hover { background: rgba(255, 255, 255, 0.15); border-color: white; color: white; transform: translateX(-2px); }
+
+        .content-container { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
+
+        /* --- COMPACT ALERT BANNER --- */
+        .reminder-banner { background: linear-gradient(to right, #fffbeb, #fef3c7); border: 1px solid #fde68a; border-left: 4px solid var(--bs-warning); border-radius: 8px; padding: 12px 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .reminder-icon { width: 32px; height: 32px; border-radius: 50%; background-color: #fef08a; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+
+        /* --- COMPACT KPI CARDS --- */
+        .finance-kpi-card { background: var(--card-bg); border: 1px solid var(--border-light); border-radius: 12px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: var(--transition); display: flex; flex-direction: column; justify-content: center; height: 100%; position: relative; overflow: hidden; }
+        .finance-kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.05); border-color: #cbd5e1; }
+
+        .kpi-header { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
+        .kpi-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+
+        .kpi-title { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+        .kpi-value { font-size: 1.6rem; font-weight: 800; color: var(--text-dark); margin: 0; line-height: 1.2; }
+
+        .kpi-total .kpi-icon { background: #eff6ff; color: var(--bs-accent); }
+        .kpi-paid .kpi-icon { background: #dcfce7; color: var(--bs-success); }
+        .kpi-pending .kpi-icon { background: #fee2e2; color: var(--bs-danger); }
+        .kpi-pending { border-bottom: 4px solid var(--bs-danger); }
+
+        /* Animated Progress Bar */
+        .finance-progress-bg { background-color: #f1f5f9; border-radius: 6px; height: 6px; overflow: hidden; margin-top: 12px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
+        @keyframes fillProgress { from { width: 0; } }
+        .finance-progress-bar { background: linear-gradient(90deg, var(--bs-success), #34d399); height: 100%; border-radius: 6px; animation: fillProgress 1s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+        .custom-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* --- TIGHTER DATA TABLE --- */
+        .ledger-card { background: var(--card-bg); border: 1px solid var(--border-light); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); overflow: hidden; margin-top: 20px; }
+        .ledger-header { padding: 15px 20px; border-bottom: 1px solid var(--border-light); background: linear-gradient(to right, #f8fafc, #ffffff); display: flex; justify-content: space-between; align-items: center; }
+
+        .table-custom { margin: 0; width: 100%; border-collapse: separate; border-spacing: 0; }
+        .table-custom th { padding: 12px 20px; font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; background-color: #f8fafc; border-bottom: 1px solid var(--border-light); }
+        .table-custom td { padding: 12px 20px; font-size: 0.85rem; font-weight: 600; color: var(--text-dark); border-bottom: 1px solid var(--border-light); vertical-align: middle; transition: background-color 0.2s; }
+        .table-custom tr:last-child td { border-bottom: none; }
+        .table-custom tr:hover td { background-color: #eff6ff; cursor: default; }
+
+        .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-paid { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .badge-pending { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
+        .btn-download { background: #f8fafc; color: var(--text-muted); border: 1px solid var(--border-light); padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; transition: var(--transition); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-download:hover { background: #e2e8f0; color: var(--text-dark); border-color: #cbd5e1; }
+
+        .btn-pay-now { transition: all 0.2s; }
+        .btn-pay-now:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2); }
+    </style>
+</head>
+<body>
+
+<nav class="feature-top-nav">
+    <div class="d-flex align-items-center gap-3">
+        <div class="bg-white bg-opacity-10 rounded p-2 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
+            <i class="fas fa-file-invoice-dollar fs-6"></i>
+        </div>
+        <h4 class="fw-bold m-0 text-white" style="font-size: 1.55rem;">Financial Portal</h4>
+    </div>
+    <a href="/client/dashboard" class="btn-exit-dashboard"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+</nav>
+
+<div class="content-container">
+
+    <div th:if="${showReminder}" class="reminder-banner">
+        <div class="reminder-icon"><i class="fas fa-bell"></i></div>
+        <div class="flex-grow-1">
+            <h6 class="fw-bold text-dark mb-0" style="font-size: 0.9rem;">Payment Reminder</h6>
+            <p class="m-0 text-muted" style="font-size: 0.8rem;">Your billing cycle ends soon. Ensure uninterrupted service by clearing dues before <strong class="text-dark" th:text="${#temporals.format(nextDueDate, 'MMM dd, yyyy')}">Date</strong>.</p>
+        </div>
+        <button class="btn btn-warning btn-sm fw-bold px-3 shadow-sm border border-warning" style="border-radius: 6px;">Pay Now</button>
+    </div>
+
+    <div class="mb-3">
+        <h4 class="fw-bold text-dark m-0">Billing Overview</h4>
+        <p class="text-muted mt-1 mb-0" style="font-size: 0.85rem;">Secure financial ledger for <span class="fw-bold text-dark" th:text="${clientName}">Client Name</span>.</p>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="finance-kpi-card kpi-total">
+                <div class="kpi-header">
+                    <div>
+                        <div class="kpi-title">Total Project Cost</div>
+                        <div class="kpi-value" th:text="${totalCost}">$0.00</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fas fa-wallet"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="finance-kpi-card kpi-paid">
+                <div class="kpi-header mb-1">
+                    <div>
+                        <div class="kpi-title">Paid Amount</div>
+                        <div class="kpi-value" th:text="${paidAmount}">$0.00</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fas fa-check-circle"></i></div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-1">
+                    <div class="finance-progress-bg flex-grow-1 me-2 mt-0">
+                        <div class="finance-progress-bar" th:style="'width: ' + ${progressPercentage} + '%'"></div>
+                    </div>
+                    <span class="custom-badge bg-success bg-opacity-10 text-success border border-success border-opacity-25" th:text="${progressPercentage} + '%'">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="finance-kpi-card kpi-pending">
+                <div class="kpi-header">
+                    <div>
+                        <div class="kpi-title">Pending Amount</div>
+                        <div class="kpi-value" th:text="${pendingAmount}">$0.00</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fas fa-hourglass-half"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ledger-card">
+        <div class="ledger-header">
+            <h6 class="fw-bold text-dark m-0"><i class="fas fa-history me-2 text-primary opacity-75"></i> Transaction Ledger</h6>
+            <button class="btn btn-sm btn-light border fw-bold text-muted" style="font-size: 0.75rem;"><i class="fas fa-download me-1"></i> Export CSV</button>
+        </div>
+        <div class="table-responsive">
+            <table class="table-custom">
+                <thead>
+                <tr>
+                    <th>Invoice ID</th>
+                    <th>Date Issued</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th class="text-end">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="text-primary fw-bold">#INV-2026-041</td>
+                    <td>Apr 01, 2026</td>
+                    <td>Monthly Retainer - April</td>
+                    <td>$4,500.00</td>
+                    <td><span class="status-badge badge-pending">Pending</span></td>
+                    <td class="text-end"><button class="btn btn-primary btn-sm fw-bold px-3 btn-pay-now" style="border-radius: 6px; font-size: 0.75rem;">Pay Now</button></td>
+                </tr>
+                <tr>
+                    <td class="text-primary fw-bold">#INV-2026-032</td>
+                    <td>Mar 15, 2026</td>
+                    <td>Milestone 2: Backend API Completion</td>
+                    <td>$5,000.00</td>
+                    <td><span class="status-badge badge-paid">Paid</span></td>
+                    <td class="text-end"><a href="#" class="btn-download"><i class="fas fa-file-pdf text-danger"></i> Receipt</a></td>
+                </tr>
+                <tr>
+                    <td class="text-primary fw-bold">#INV-2026-015</td>
+                    <td>Jan 10, 2026</td>
+                    <td>Project Kickoff & Advance</td>
+                    <td>$3,000.00</td>
+                    <td><span class="status-badge badge-paid">Paid</span></td>
+                    <td class="text-end"><a href="#" class="btn-download"><i class="fas fa-file-pdf text-danger"></i> Receipt</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
