@@ -7,9 +7,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional; // <-- Added this import
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
+
+    // --- NEW: Spring Data JPA will automatically traverse the User object! ---
+    Optional<Client> findByUser_Username(String username);
 
     @Query("SELECT c FROM Client c WHERE " +
             "LOWER(c.companyName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +

@@ -1,5 +1,6 @@
 package com.example.admindashboard.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,6 +10,13 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // --- NEW: LINK TO AUTHENTICATION USER ---
+    // This creates a 'user_id' column in the clients table
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
 
     // Company Profile
     @Column(nullable = false, unique = true)
@@ -32,7 +40,7 @@ public class Client {
 
     // Internal Allocation
     private String assignedTeam;
-    private String projectManager;
+    private String teamLead;
     private String assignedEmployee;
 
     // Billing & Location
@@ -46,6 +54,10 @@ public class Client {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    // --- NEW: USER GETTER AND SETTER ---
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
     public String getClientId() { return clientId; }
     public void setClientId(String clientId) { this.clientId = clientId; }
@@ -71,8 +83,8 @@ public class Client {
     public String getAssignedTeam() { return assignedTeam; }
     public void setAssignedTeam(String assignedTeam) { this.assignedTeam = assignedTeam; }
 
-    public String getProjectManager() { return projectManager; }
-    public void setProjectManager(String projectManager) { this.projectManager = projectManager; }
+    public String getTeamLead() { return teamLead; }
+    public void setTeamLead(String teamLead) { this.teamLead = teamLead; }
 
     public String getAssignedEmployee() { return assignedEmployee; }
     public void setAssignedEmployee(String assignedEmployee) { this.assignedEmployee = assignedEmployee; }

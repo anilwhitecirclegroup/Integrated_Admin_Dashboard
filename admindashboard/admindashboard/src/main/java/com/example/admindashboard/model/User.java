@@ -40,6 +40,11 @@ public class User {
     @JsonIgnore
     private EmployeeProfile employeeProfile;
 
+    // This connects the authentication User table to the Client business details
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Client clientProfile;
+
     // GETTERS AND SETTERS
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -70,4 +75,10 @@ public class User {
 
     public EmployeeProfile getEmployeeProfile() { return employeeProfile; }
     public void setEmployeeProfile(EmployeeProfile employeeProfile) { this.employeeProfile = employeeProfile; }
+
+    // --- NEW: CLIENT PROFILE GETTERS/SETTERS ---
+    public Client getClientProfile() { return clientProfile; }
+    public void setClientProfile(Client clientProfile) { this.clientProfile = clientProfile;}
+
+
 }

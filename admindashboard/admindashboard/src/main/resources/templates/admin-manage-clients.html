@@ -78,7 +78,7 @@
         .form-control:focus, .form-select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); background-color: white; }
         .readonly-input { background-color: #e2e8f0 !important; color: #64748b; cursor: not-allowed; }
 
-        /*  PREMIUM SWEETALERT2 STYLING */
+        /* PREMIUM SWEETALERT2 STYLING */
         div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
         .swal2-popup {
             border-radius: 20px !important;
@@ -435,11 +435,11 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Project Manager</label>
-                                    <input type="text" class="form-control" name="projectManager" id="edit-projectManager">
+                                    <label class="form-label">Team Lead</label>
+                                    <input type="text" class="form-control" name="teamLead" id="edit-teamLead">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Lead Assigned Employee</label>
+                                    <label class="form-label">Primary Assigned Employee</label>
                                     <input type="text" class="form-control" name="assignedEmployee" id="edit-assignedEmployee">
                                 </div>
                             </div>
@@ -556,8 +556,8 @@
                             </td>
                             <td>
                                 <div class="fw-bold text-dark"><i class="fas fa-users me-1 text-primary opacity-75"></i> ${client.assignedTeam || 'Team Not Assigned'}</div>
-                                <div class="text-muted small mt-1"><span class="fw-bold opacity-75">PM:</span> ${client.projectManager || 'N/A'}</div>
-                                <div class="text-muted small"><span class="fw-bold opacity-75">Lead:</span> ${client.assignedEmployee || 'N/A'}</div>
+                                <div class="text-muted small mt-1"><span class="fw-bold opacity-75">Team Lead:</span> ${client.teamLead || 'N/A'}</div>
+                                <div class="text-muted small"><span class="fw-bold opacity-75">Primary Emp:</span> ${client.assignedEmployee || 'N/A'}</div>
                             </td>
                             <td>
                                 <span class="status-badge ${badgeClass} shadow-sm"><i class="fas fa-circle me-1" style="font-size: 0.5rem; vertical-align: middle;"></i> ${client.accountStatus || 'Active'}</span>
@@ -582,7 +582,6 @@
         const client = globalClients.find(c => c.id === id);
         if(!client) return;
 
-        // Ensure "Edit" from inside the view modal calls the new Page View function
         document.getElementById('btnLaunchEditFromView').setAttribute('onclick', `openEditPage(${client.id})`);
 
         document.getElementById('viewModalContent').innerHTML = `
@@ -605,8 +604,8 @@
                     <div class="bg-white p-3 rounded-3 shadow-sm h-100 border border-light">
                         <h6 class="fw-bold text-primary mb-3 border-bottom pb-2"><i class="fas fa-sitemap me-2"></i>Allocation</h6>
                         <div class="detail-label">Department</div><div class="detail-value">${client.assignedTeam || 'None'}</div>
-                        <div class="detail-label">Project Manager</div><div class="detail-value">${client.projectManager || 'None'}</div>
-                        <div class="detail-label">Lead Dev</div><div class="detail-value mb-0">${client.assignedEmployee || 'None'}</div>
+                        <div class="detail-label">Team Lead</div><div class="detail-value">${client.teamLead || 'None'}</div>
+                        <div class="detail-label">Primary Employee</div><div class="detail-value mb-0">${client.assignedEmployee || 'None'}</div>
                     </div>
                 </div>
                 <div class="col-12">
@@ -621,15 +620,12 @@
         viewModal.show();
     }
 
-    // SWAPPING THE VIEWS
     function openEditPage(id) {
         const client = globalClients.find(c => c.id === id);
         if(!client) return;
 
-        // Hide the view modal if it was open
         viewModal.hide();
 
-        // Auto-fill all inputs
         document.getElementById('edit-id').value = client.id;
         document.getElementById('edit-clientId').value = client.clientId;
         document.getElementById('edit-companyName').value = client.companyName;
@@ -641,27 +637,24 @@
         document.getElementById('edit-phoneNumber').value = client.phoneNumber;
 
         document.getElementById('edit-assignedTeam').value = client.assignedTeam || '';
-        document.getElementById('edit-projectManager').value = client.projectManager || '';
+        document.getElementById('edit-teamLead').value = client.teamLead || '';
         document.getElementById('edit-assignedEmployee').value = client.assignedEmployee || '';
 
         document.getElementById('edit-billingAddress').value = client.billingAddress || '';
         document.getElementById('edit-city').value = client.city || '';
         document.getElementById('edit-country').value = client.country || '';
 
-        // The Switch: Hide the List, Show the Edit Form
         document.getElementById('listView').style.display = 'none';
         document.getElementById('editView').style.display = 'block';
-        window.scrollTo(0, 0); // Scroll back to the top of the page
+        window.scrollTo(0, 0);
     }
 
     function closeEditPage() {
-        // The Switch: Hide the Edit Form, Show the List
         document.getElementById('editView').style.display = 'none';
         document.getElementById('listView').style.display = 'block';
         window.scrollTo(0, 0);
     }
 
-    //  UPGRADED EDIT SUBMISSION
     async function submitEditForm() {
         const formElement = document.getElementById('editClientForm');
 
@@ -672,7 +665,6 @@
 
         const formData = new FormData(formElement);
 
-        // 1. Sleek Loading State
         Swal.fire({
             title: 'Saving Changes...',
             text: 'Syncing client portfolio data...',
@@ -688,15 +680,13 @@
                 body: formData
             });
 
-            // Visibility Delay (Ensures the loading animation is seen)
             const elapsedTime = Date.now() - startTime;
             if (elapsedTime < 1000) await new Promise(r => setTimeout(r, 1000 - elapsedTime));
 
             if(res.ok) {
-                closeEditPage(); // Switch view back to table
-                loadClients();   // Refresh table data
+                closeEditPage();
+                loadClients();
 
-                // 2. Success Modal
                 Swal.fire({
                     icon: 'success',
                     title: 'Update Successful!',
@@ -719,9 +709,7 @@
         }
     }
 
-    //  UPGRADED DELETE LOGIC
     async function deleteClient(id, companyName) {
-        // 1. High-Stakes Warning Modal
         const result = await Swal.fire({
             title: 'Delete Client?',
             html: `Are you sure you want to remove <b>${companyName}</b>? <br><br>This permanently deletes their profile and revokes login access.`,
@@ -729,12 +717,11 @@
             showCancelButton: true,
             confirmButtonText: 'Yes, Delete',
             cancelButtonText: 'Cancel',
-            customClass: { confirmButton: 'swal2-danger-btn' }, // Makes the confirm button RED
+            customClass: { confirmButton: 'swal2-danger-btn' },
             reverseButtons: true
         });
 
         if (result.isConfirmed) {
-            // 2. Loading State
             Swal.fire({
                 title: 'Deleting...',
                 allowOutsideClick: false,
@@ -744,7 +731,6 @@
             try {
                 const res = await fetch(`/api/admin/clients/${id}`, { method: 'DELETE' });
                 if(res.ok) {
-                    // 3. Auto-closing Success Toast
                     Swal.fire({
                         icon: 'success',
                         title: 'Deleted!',
@@ -752,7 +738,7 @@
                         timer: 2000,
                         showConfirmButton: false
                     });
-                    loadClients(); // Refresh the table
+                    loadClients();
                 } else {
                     throw new Error('Deletion failed');
                 }

@@ -23,7 +23,7 @@
             height: 85px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding: 0; /* Overrides default bootstrap padding to allow exact height */
+            padding: 0;
         }
 
         .btn-dashboard-back {
@@ -37,11 +37,9 @@
             transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        /* Header Text */
         .page-title { font-size: 1.75rem; font-weight: 700; color: #0f172a; margin-top: 25px; margin-bottom: 5px; text-align: center; }
         .page-subtitle { font-size: 0.9rem; color: #64748b; text-align: center; margin-bottom: 30px; }
 
-        /* Form Section Cards */
         .form-section-card {
             background: white; border: 1px solid #e2e8f0; border-radius: 8px;
             overflow: hidden; height: 100%; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
@@ -51,7 +49,6 @@
             font-weight: 600; font-size: 0.95rem; display: flex; align-items: center;
         }
 
-        /* Inputs & Labels */
         .form-label { font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 6px; }
         .form-control, .form-select {
             border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 15px; font-size: 0.9rem; transition: all 0.2s;
@@ -61,7 +58,6 @@
             border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); background-color: white;
         }
 
-        /* Submit Button Area */
         .submit-container {
             background: white; border: 1px solid #e2e8f0; border-radius: 8px;
             padding: 20px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
@@ -73,11 +69,9 @@
         }
         .btn-submit:hover { background-color: var(--bs-primary-dark); transform: translateY(-2px); box-shadow: 0 8px 15px rgba(30, 58, 138, 0.2); }
 
-        /* Modal Customizations */
         .modal-confirm-icon { font-size: 3.5rem; color: #f59e0b; margin-bottom: 15px; }
         .modal-success-icon { font-size: 3.5rem; color: #10b981; margin-bottom: 15px; }
 
-        /* PREMIUM SWEETALERT2 STYLING */
         div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
         .swal2-popup {
             border-radius: 20px !important;
@@ -100,7 +94,6 @@
     </style>
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/mobile-responsive.css" rel="stylesheet">
-
     <link href="/css/dark-mode.css" rel="stylesheet">
     <script src="/js/theme-engine.js"></script>
 </head>
@@ -202,8 +195,8 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Project Manager</label>
-                                <input type="text" class="form-control" name="projectManager">
+                                <label class="form-label">Team Lead</label>
+                                <input type="text" class="form-control" name="teamLead">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Primary Assigned Employee</label>
@@ -255,17 +248,14 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    //  SMART VALIDATION & SUBMISSION ENGINE
     async function confirmClientCreation() {
         const form = document.getElementById('clientForm');
 
-        // 1. NATIVE BROWSER VALIDATION
         if (!form.checkValidity()) {
             form.reportValidity();
             return;
         }
 
-        // 2. DASHING CONFIRMATION MODAL
         const confirmResult = await Swal.fire({
             title: 'Onboard New Client?',
             html: 'Are you sure you want to onboard this client?<br><br><small>This will automatically generate their system login credentials.</small>',
@@ -280,7 +270,6 @@
 
         if (!confirmResult.isConfirmed) return;
 
-        // 3. LOADING STATE
         Swal.fire({
             title: 'Creating Profile...',
             text: 'Setting up client workspace and generating credentials...',
@@ -292,25 +281,22 @@
         const startTime = Date.now();
 
         try {
-            // 4. SUBMIT TO BACKEND
             const response = await fetch(form.action, {
                 method: 'POST',
                 body: formData
             });
 
-            // Visibility Delay (Ensures the loading animation is seen)
             const elapsedTime = Date.now() - startTime;
             if (elapsedTime < 1200) await new Promise(r => setTimeout(r, 1200 - elapsedTime));
 
             if (response.ok) {
-                // 5. ULTIMATE SUCCESS MODAL (With Choices)
                 const finalAction = await Swal.fire({
                     icon: 'success',
                     title: 'Client Onboarded!',
                     text: 'The client profile and system login credentials have been successfully created.',
                     showCancelButton: true,
                     confirmButtonColor: '#1e3a8a',
-                    cancelButtonColor: '#10b981', // Emerald green for "Add Another"
+                    cancelButtonColor: '#10b981',
                     confirmButtonText: 'Back to Dashboard',
                     cancelButtonText: 'Add Another Client',
                     reverseButtons: true
@@ -319,7 +305,6 @@
                 if (finalAction.isConfirmed) {
                     window.location.href = '/admin/dashboard';
                 } else {
-                    // Reset form and scroll to top
                     form.reset();
                     window.scrollTo(0, 0);
                 }
