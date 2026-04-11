@@ -1,15 +1,7 @@
 package com.example.admindashboard.controller;
 
-import com.example.admindashboard.model.LeaveRequest;
-import com.example.admindashboard.model.Meeting;
-import com.example.admindashboard.model.Timesheet;
-import com.example.admindashboard.model.User;
-import com.example.admindashboard.model.ServiceRequest;
-import com.example.admindashboard.model.Role;
-import com.example.admindashboard.repository.LeaveRequestRepository;
-import com.example.admindashboard.repository.UserRepository;
-import com.example.admindashboard.repository.ServiceRequestRepository;
-import com.example.admindashboard.repository.RoleRepository;
+import com.example.admindashboard.model.*;
+import com.example.admindashboard.repository.*;
 import com.example.admindashboard.service.AuditLogService;
 import com.example.admindashboard.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.example.admindashboard.repository.TimesheetRepository;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import com.example.admindashboard.model.EmployeeProfile;
-import com.example.admindashboard.model.Client;
-import com.example.admindashboard.repository.ClientRepository;
 
 @Controller
 public class DashboardController {
@@ -65,6 +53,9 @@ public class DashboardController {
 
     @Autowired
     private AuditLogService auditLogService;
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     // --- 1. LOGIN PAGE MAPPINGS ---
 
@@ -106,12 +97,9 @@ public class DashboardController {
                         !"INACTIVE".equalsIgnoreCase(u.getStatus()))
                 .count();
 
-        // Count only Clients, EXCLUDING Soft-Deleted (INACTIVE) accounts
-        long totalClients = userRepository.findAll().stream()
-                .filter(u -> u.getRole() != null &&
-                        "CLIENT".equalsIgnoreCase(u.getRole().getRoleName()) &&
-                        !"INACTIVE".equalsIgnoreCase(u.getStatus()))
-                .count();
+        // FIX: Count directly from the Client repository to perfectly match the Client Directory page.
+        // This ignores any old, orphaned "User" test accounts (like CLI001) that don't have a real company profile.
+        long totalClients = clientRepository.count();
 
         model.addAttribute("empCount", totalEmployees);
         model.addAttribute("clientCount", totalClients);
@@ -120,7 +108,19 @@ public class DashboardController {
     }
 
     @GetMapping("/client/dashboard")
-    public String showClientDashboard() { return "client-dashboard"; }
+    public String showClientDashboard(Model model, Principal principal) {
+
+        // 1. Get the currently logged-in user
+        User loggedInUser = userRepository.findByUsername(principal.getName()).orElseThrow();
+
+        // 2. Fetch the projects specifically assigned to this client
+        List<Project> clientProjects = projectRepository.findByClientId(loggedInUser.getId());
+
+        // 3. Attach the projects to the model so the Modal can see them
+        model.addAttribute("clientProjects", clientProjects);
+
+        return "client-dashboard";
+    }
 
     @GetMapping("/employee/dashboard")
     public String showEmployeeDashboard() { return "employee-dashboard"; }
@@ -374,9 +374,6 @@ public class DashboardController {
     @GetMapping("/holiday-list")
     public String showHolidayList() { return "holiday-list"; }
 
-    @GetMapping("/client/profile")
-    public String showClientProfile() { return "client-profile"; }
-
 
     // --- ADMIN & MANAGER PORTAL ROUTES (Secured via RBAC) ---
 
@@ -466,20 +463,28 @@ public class DashboardController {
     @PreAuthorize("hasAuthority('settings_manage_company')")
     @PostMapping("/admin/save-client")
     public String saveClient(@ModelAttribute Client client, RedirectAttributes redirectAttributes) {
-        clientRepository.save(client);
 
+        // 1. Create the Authentication User Account FIRST
         User clientUser = new User();
         clientUser.setUsername(client.getClientId());
         clientUser.setFullName(client.getContactPerson() + " (" + client.getCompanyName() + ")");
-        clientUser.setPassword("{noop}welcome123");
+
+        // Fixed: Matches the success message password exactly
+        clientUser.setPassword("{noop}client123");
 
         Role clientRole = roleRepository.findByRoleName("CLIENT").orElse(null);
         clientUser.setRole(clientRole);
 
+        // 2. Link the entities together (Bidirectional Mapping)
+        client.setUser(clientUser);
+        clientUser.setClientProfile(client);
+
+        // 3. Save to database. Saving the User will cascade and save the Client properly linked!
         userRepository.save(clientUser);
+        clientRepository.save(client); // Ensures the Client table gets the foreign key updated
 
         redirectAttributes.addFlashAttribute("successMessage",
-                "Client " + client.getCompanyName() + " successfully onboarded! Login ID: " + client.getClientId() + " | Temp Password: Welcome@123");
+                "Client " + client.getCompanyName() + " successfully onboarded! Login ID: " + client.getClientId() + " | Temp Password: client123");
 
         return "redirect:/admin/dashboard";
     }
@@ -503,14 +508,17 @@ public class DashboardController {
 
         if (clientOpt.isPresent()) {
             Client client = clientOpt.get();
-            String loginId = client.getClientId();
+            User associatedUser = client.getUser(); // Get the dynamically linked user
+
+            // Delete the client profile first
             clientRepository.delete(client);
 
-            Optional<User> userOpt = userRepository.findByUsername(loginId);
-            if (userOpt.isPresent()) {
-                userRepository.delete(userOpt.get());
+            // Delete the login credentials so they can't log in anymore
+            if (associatedUser != null) {
+                userRepository.delete(associatedUser);
             }
-            return ResponseEntity.ok("Client and login credentials deleted successfully.");
+
+            return ResponseEntity.ok("Client profile and login credentials deleted successfully.");
         }
         return ResponseEntity.notFound().build();
     }
@@ -530,11 +538,18 @@ public class DashboardController {
             existing.setOfficialEmail(updatedClient.getOfficialEmail());
             existing.setPhoneNumber(updatedClient.getPhoneNumber());
             existing.setAssignedTeam(updatedClient.getAssignedTeam());
-            existing.setProjectManager(updatedClient.getProjectManager());
+            existing.setTeamLead(updatedClient.getTeamLead());
             existing.setAssignedEmployee(updatedClient.getAssignedEmployee());
             existing.setBillingAddress(updatedClient.getBillingAddress());
             existing.setCity(updatedClient.getCity());
             existing.setCountry(updatedClient.getCountry());
+
+            // Sync changes with the User table
+            User associatedUser = existing.getUser();
+            if (associatedUser != null) {
+                associatedUser.setFullName(existing.getContactPerson() + " (" + existing.getCompanyName() + ")");
+                userRepository.save(associatedUser);
+            }
 
             clientRepository.save(existing);
             return ResponseEntity.ok("Client updated successfully.");

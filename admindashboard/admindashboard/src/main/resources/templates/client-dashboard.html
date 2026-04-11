@@ -3,596 +3,846 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Client Portal - WhiteCircle</title>
+    <title>Client Command Center | WhiteCircle</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
+            /* Navy Blue Theme */
             --bs-primary: #1e3a8a;
-            --bg-color: #f3f4f6;
+            --bs-primary-dark: #172554;
+            --bs-accent: #2563eb;
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
-            --text-color: #334155;
+            --text-dark: #0f172a;
             --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            --smooth-curve: cubic-bezier(0.25, 0.8, 0.25, 1);
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 4px 15px -3px rgba(0,0,0,0.05);
+            --shadow-hover: 0 12px 30px -5px rgba(30, 58, 138, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
-            padding-top: 95px;
-            padding-left: 120px; /* DESKTOP PADDING */
-            padding-right: 10px;
-            transition: background-color 0.4s ease, color 0.4s ease;
+            color: var(--text-dark);
+            padding-top: 110px;
+            padding-left: 140px; /* Accommodating wider sidebar */
+            padding-right: 20px;
+            padding-bottom: 30px;
         }
 
-        .top-nav-bar {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-            background: var(--card-bg);
-            height: 80px;
+        /* --- 1. TOP NAVIGATION --- */
+        .top-nav {
+            position: fixed; top: 0; left: 0; right: 0; height: 90px;
+            background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
+            border-bottom: 1px solid var(--bs-primary-dark);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px;
-            border-bottom: 1px solid var(--border-color);
-            box-shadow: var(--shadow);
-            transition: background-color 0.4s ease, border-color 0.4s ease;
+            padding: 0 30px; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
 
-        .brand-section {
-            display: flex; align-items: center;
-            color: var(--bs-primary); font-weight: 900; font-size: 1.6rem;
-            letter-spacing: -0.5px;
-        }
-
-        /*  2. SIDEBAR NAVIGATION (Desktop)  */
-        .side-nav-bar {
-            position: fixed;
-            left: 15px;
-            top: 90px;
-            bottom: 15px;
-            width: 90px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 17px;
+        .brand-logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: #ffffff;
+            letter-spacing: 1.5px;
+            word-spacing: 4px;
             display: flex;
-            flex-direction: column; /* Vertical Stack */
             align-items: center;
-            padding: 20px 0;
-            box-shadow: var(--shadow);
-            z-index: 999;
-            justify-content: space-between; /* Spreads Top Group and Logout */
-            transition: background-color 0.4s ease, border-color 0.4s ease;
+            gap: 15px;
         }
 
-        /* Helper Class for Icon Grouping */
-        .nav-group {
+        .profile-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.25);
+            padding: 6px 20px 6px 8px;
+            border-radius: 50px;
             display: flex;
-            flex-direction: column; /* Desktop: Vertical */
             align-items: center;
-            width: 100%;
-        }
-
-        .nav-icon {
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            width: 45px; height: 45px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s var(--smooth-curve);
-            margin-bottom: 10px;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
-        }
-        .nav-icon:hover, .nav-icon.active {
-            background-color: #eff6ff; color: var(--bs-primary);
-        }
-
-        /* Navy Blue Border Utility */
-        .border-navy { border: 2px solid var(--bs-primary) !important; }
-
-        /* --- DASHBOARD CARDS --- */
-        .client-hero, .kpi-card, .timeline-card, .updates-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow);
-            transition: transform 0.4s var(--smooth-curve), box-shadow 0.4s var(--smooth-curve);
-            will-change: transform, box-shadow;
-            transform: translateZ(0);
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
         }
 
-        .client-info h2 { color: var(--text-color); }
-        .client-info p { color: var(--text-muted); }
-        .kpi-title { color: var(--text-muted); }
-        .pay-val { color: var(--text-color); }
-        .step-label { color: var(--text-muted); }
-        .update-content h6 { color: var(--text-color); }
-        .update-content p { color: var(--text-muted); }
-
-        .hover-card:hover {
-            transform: translateY(-8px) translateZ(0);
-            box-shadow: 0 20px 40px rgba(30, 58, 138, 0.12) !important;
-            border-color: #cbd5e1;
+        .profile-btn:hover {
+            background: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2), 0 0 15px rgba(255,255,255,0.1);
+            color: #ffffff;
         }
 
-        /* Animation */
-        @keyframes shake {
+        .profile-btn:active {
+            transform: translateY(1px) scale(0.96);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .profile-avatar {
+            width: 42px;
+            height: 42px;
+            background: #ffffff;
+            color: var(--bs-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-btn:hover .profile-avatar {
+            transform: scale(1.05);
+        }
+
+        /* --- 2. SIDE NAVIGATION --- */
+        .side-nav {
+            position: fixed; left: 20px; top: 110px; bottom: 20px;
+            width: 100px;
+            background: var(--card-bg); border: 1px solid var(--border-light); border-radius: 20px;
+            display: flex; flex-direction: column; align-items: center; padding: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); z-index: 999; justify-content: space-between;
+        }
+
+        .nav-item {
+            color: var(--text-muted); font-size: 1.4rem;
+            width: 55px; height: 55px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 14px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none; margin-bottom: 15px;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .nav-item.active {
+            background: var(--bs-primary);
+            color: #ffffff;
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.25);
+        }
+
+        .nav-item:hover:not(.active) {
+            background: #dbeafe;
+            color: var(--bs-accent);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+        }
+
+        @keyframes iconShake {
             0% { transform: rotate(0deg); }
-            25% { transform: rotate(-15deg); }
-            50% { transform: rotate(15deg); }
-            75% { transform: rotate(-5deg); }
+            25% { transform: rotate(-12deg); }
+            50% { transform: rotate(12deg); }
+            75% { transform: rotate(-6deg); }
             100% { transform: rotate(0deg); }
         }
-        .nav-icon:hover i {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        .nav-item:hover i {
+            animation: iconShake 0.4s ease-in-out;
+        }
+
+        .nav-logout { color: #ef4444; opacity: 0.8; }
+        .nav-logout:hover {
+            background: #fee2e2 !important;
+            color: #dc2626 !important;
+            opacity: 1;
+            box-shadow: 0 8px 18px rgba(220, 38, 38, 0.25) !important;
+        }
+
+        /* --- 3. DASHBOARD CARDS & SEPARATING LINES --- */
+        .dash-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(30, 58, 138, 0.15);
+            border-radius: 16px; padding: 18px; /* COMPACTED: Reduced from 24px */
+            box-shadow: var(--shadow-soft); height: 100%; transition: var(--transition); position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+        /* ADDED: Lift & Shadow on Main Cards */
+        .dash-card:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(30, 58, 138, 0.12); border-color: var(--bs-primary); }
+
+        .card-header-section {
+            border-bottom: 3px solid #0f172a; /* THICK, DARK SEPARATING LINE */
+            padding-bottom: 12px; margin-bottom: 15px; /* Compacted */
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        /* BOLDER, WIDER HEADER TEXT */
+        .card-title-label { font-size: 1.1rem; font-weight: 850; color: #000000; text-transform: uppercase; letter-spacing: 1.2px; display: flex; align-items: center; gap: 8px; margin: 0;}
+
+        /* --- BUTTON UI/UX ENHANCEMENTS --- */
+        .feature-btn {
+            transition: var(--transition); cursor: pointer; text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .feature-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(30, 58, 138, 0.15); }
+        .feature-btn:active { transform: translateY(1px) scale(0.98); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+        /* --- ACTION CENTER GRID --- */
+        .action-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .action-btn {
+            background: #f8fafc; border: 1px solid var(--bs-primary);
+            border-radius: 12px; padding: 12px; text-align: left; display: flex; align-items: center; gap: 12px;
+            color: var(--text-dark); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02); /* Base Shadow */
+            text-decoration: none !important; /* FIXED: Forces links to never have underlines */
+        }
+        .action-btn:hover { background: var(--bs-primary); color: #ffffff !important; transform: translateY(-4px); box-shadow: 0 10px 20px rgba(30, 58, 138, 0.2); }
+        .action-btn:active { transform: translateY(2px) scale(0.97); box-shadow: 0 2px 4px rgba(30, 58, 138, 0.1); }
+        .action-btn:hover .text-muted { color: #e2e8f0 !important; }
+        .action-btn:hover .action-icon { background: rgba(255,255,255,0.2); color: #ffffff;}
+
+        .action-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: var(--transition);}
+
+        .icon-blue { background: #eff6ff; color: #2563eb; }
+        .icon-purple { background: #faf5ff; color: #9333ea; }
+        .icon-orange { background: #fff7ed; color: #ea580c; }
+        .icon-green { background: #f0fdf4; color: #16a34a; }
+
+        /* --- PROGRESS CIRCLE (Compacted to save vertical space) --- */
+        .progress-ring { width: 110px; height: 110px; border-radius: 50%; background: conic-gradient(var(--bs-primary) 75%, #f1f5f9 0); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+        .progress-ring-inner { width: 85px; height: 85px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+
+        /* --- SECURE PAYMENT CARD --- */
+        .secure-card { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+        .lock-icon-bg { position: absolute; right: -15px; bottom: -15px; font-size: 9rem; color: rgba(30, 58, 138, 0.04); transform: rotate(-15deg); pointer-events: none; }
+
+        /* --- SQUARICAL CARDS (Row 3) --- */
+        .squarical-card { min-height: 400px; }
+
+        /* --- CALENDAR GRID (Tighter to fit 3-column layout) --- */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .cal-header { text-align: center; font-size: 0.6rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
+        .cal-day {
+            padding: 4px 2px; border-radius: 6px; border: 1px solid var(--border-light);
+            text-align: center; font-weight: 700; font-size: 0.7rem; background: white;
+            height: 42px; display: flex; flex-direction: column; justify-content: flex-start;
+        }
+        .cal-work { border-bottom: 3px solid #10b981; }
+        .cal-leave { background: #fef2f2; border-color: #fecaca; color: #ef4444; }
+        .cal-holiday { background: #fffbeb; border-color: #fde68a; color: #d97706; }
+        .cal-event-text { font-size: 0.5rem; font-weight: 700; margin-top: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 1px;}
+
+        /* Star Rating */
+        .star-rating i { font-size: 1.8rem; color: #e2e8f0; cursor: pointer; transition: 0.2s; margin: 0 4px; }
+        .star-rating i:hover, .star-rating i.active { color: #fbbf24; transform: scale(1.15); }
+
+        /* --- SHINY NAVY BUTTON UPGRADE --- */
+        .btn-shiny-navy {
+            background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark) 100%);
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.2);
+            z-index: 1;
+        }
+        /* The Shining Sweep Effect */
+        .btn-shiny-navy::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transform: skewX(-20deg);
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+        .btn-shiny-navy:hover {
+            color: #ffffff !important;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(30, 58, 138, 0.3);
+        }
+        .btn-shiny-navy:hover::before {
+            left: 150%; /* Moves the shine across the button */
+        }
+        .btn-shiny-navy:active {
+            transform: translateY(1px) scale(0.97);
+            box-shadow: 0 2px 8px rgba(30, 58, 138, 0.15);
+        }
+
+        /* --- CUSTOM HEADER LINK --- */
+        .link-hover-underline {
+            font-size: 0.85 rem;
+            font-weight: 850;
+            color: var(--bs-accent);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+        }
+        .link-hover-underline:hover {
+            text-decoration: underline;
+            transform: translateY(-2px);
             color: var(--bs-primary);
         }
 
-        /*  COMPONENT STYLES  */
-        .card-header-fixed {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 20px; min-height: 25px;
+        /* --- SHINY LIGHT BUTTON UPGRADE --- */
+        .btn-shiny-light {
+            background: #ffffff;
+            color: var(--bs-accent); /* Vibrant blue text */
+            border: 1.5px solid var(--bs-accent); /* Crisp blue outline */
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.05);
+            z-index: 1;
         }
 
-        .review-score-container { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .big-score { font-size: 3rem; font-weight: 800; color: var(--bs-primary); line-height: 1; }
-        .review-stars-box { display: flex; flex-direction: column; }
-
-        .quote-box {
-            background-color: #f8fafc; border-left: 4px solid var(--bs-primary);
-            padding: 12px 15px; border-radius: 0 8px 8px 0;
-            font-style: italic; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;
+        .btn-shiny-light::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            /* Subtle blue shine when resting */
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.15), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.6s ease, background 0.4s ease;
+            z-index: -1;
         }
 
-        /*  FEEDBACK MODAL  */
-        .feedback-modal .modal-content {
-            border: none; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;
-        }
-        .feedback-header {
-            background: var(--bs-primary); color: white; padding: 25px 30px; text-align: center; position: relative;
-        }
-        .milestone-badge {
-            background: rgba(255,255,255,0.2); color: white; padding: 5px 15px;
-            border-radius: 30px; font-size: 0.75rem; font-weight: 600; display: inline-block; margin-bottom: 10px;
-        }
-        .star-rating-lg { display: flex; justify-content: center; gap: 15px; margin: 25px 0 10px; }
-        .star-rating-lg i {
-            font-size: 2.5rem; color: #e2e8f0; cursor: pointer; transition: transform 0.2s, color 0.2s;
-        }
-        .star-rating-lg i.active, .star-rating-lg i:hover { color: #fbbf24; transform: scale(1.2); }
-
-        .feedback-tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
-        .feedback-tag {
-            border: 1px solid var(--border-color); background: #f8fafc; color: var(--text-muted);
-            padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; font-weight: 500;
-        }
-        .feedback-tag:hover { background: #e2e8f0; transform: translateY(-2px); }
-        .feedback-tag.selected {
-            background: #eff6ff; border-color: var(--bs-primary); color: var(--bs-primary); font-weight: 600;
-        }
-        .modal-footer-custom {
-            padding: 20px 30px; background: #f8fafc; border-top: 1px solid var(--border-color);
-            display: flex; justify-content: space-between; align-items: center;
+        .btn-shiny-light:hover {
+            background: var(--bs-accent); /* Smoothly fills with blue */
+            color: #ffffff !important; /* Text turns crisp white */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 22px rgba(37, 99, 235, 0.25); /* Glowing shadow */
+            border-color: var(--bs-accent);
         }
 
-        /* ==========================================================================
-           MOBILE RESPONSIVENESS PATCH (Applies ONLY to Screens < 991px)
-           ========================================================================== */
+        .btn-shiny-light:hover::before {
+            /* Turns into a bright white shine crossing the new blue background */
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+            left: 150%;
+        }
+
+        .btn-shiny-light:active {
+            transform: translateY(1px) scale(0.97);
+            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.15);
+        }
+
+         /* -- CSS for Task Breakdown Modal Card-- */
+        .bd-modal-content { border-radius: 16px; border: none; box-shadow: 0 15px 50px rgba(0,0,0,0.15); overflow: hidden; }
+        .bd-header { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); color: white; padding: 24px; border: none; }
+        .bd-header .btn-close { filter: invert(1) grayscale(100%) brightness(200%); opacity: 0.8; transition: opacity 0.2s; }
+        .bd-header .btn-close:hover { opacity: 1; }
+
+        .bd-item { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 12px; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .bd-item:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.06); border-color: #cbd5e1; }
+
+        .bd-icon-box { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+        .bd-icon-success { background: #dcfce7; color: #166534; }
+        .bd-icon-primary { background: #eff6ff; color: #1d4ed8; }
+        .bd-icon-pending { background: #f1f5f9; color: #64748b; }
+
+        .bd-progress-bg { background-color: #f1f5f9; border-radius: 8px; height: 8px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
+        .bd-progress-bar { height: 100%; border-radius: 8px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .bd-bar-animated {
+            background-image: linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.2) 75%, transparent 75%, transparent);
+            background-size: 20px 20px;
+            animation: moveStripes 2s linear infinite;
+        }
+
+        .bd-footer { background: #f8fafc; border-top: 2px dashed #cbd5e1; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* --- PREMIUM FEEDBACK MODAL STYLES --- */
+        .feedback-modal-content { border-radius: 20px; border: none; box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden; }
+        .feedback-header { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 25px 30px; border: none; }
+        .feedback-header .btn-close { filter: invert(1) grayscale(100%) brightness(200%); opacity: 0.8; transition: opacity 0.2s; }
+        .feedback-header .btn-close:hover { opacity: 1; transform: rotate(90deg); transition: transform 0.3s ease; }
+
+        .feedback-section-title { font-size: 0.8rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+
+        /* Interactive Stars */
+        .star-rating-group { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 8px; }
+        .star-rating-group input { display: none; }
+        .star-rating-group label { color: #e2e8f0; font-size: 2rem; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .star-rating-group label:hover,
+        .star-rating-group label:hover ~ label,
+        .star-rating-group input:checked ~ label { color: #fbbf24; text-shadow: 0 0 10px rgba(251, 191, 36, 0.5); transform: scale(1.15); }
+
+        /* Smaller Stars for Sub-metrics */
+        .star-sm label { font-size: 1.4rem; gap: 4px; }
+
+        .custom-textarea { border: 1px solid #cbd5e1; border-radius: 12px; padding: 15px; font-size: 0.95rem; resize: none; background-color: #f8fafc; transition: all 0.3s ease; }
+        .custom-textarea:focus { background-color: white; border-color: var(--bs-accent); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); outline: none; }
+
         @media (max-width: 991px) {
-
-            /* 1. RESET BODY PADDING & SCROLLING */
-            html, body {
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                padding-bottom: 80px !important; /* Space for bottom nav */
-                overflow-x: hidden !important;
-                width: 100% !important;
-            }
-
-            /* 2. TRANSFORM SIDEBAR TO BOTTOM APP BAR */
-            .side-nav-bar {
-                top: auto !important;
-                bottom: 0 !important;
-                left: 0 !important;
-                width: 100% !important;
-                height: 60px !important;
-                border-radius: 0 !important;
-                flex-direction: row !important; /* Mobile: Horizontal Bar */
-                justify-content: space-around !important;
-                align-items: center !important;
-                background: #fff !important;
-                border: none !important;
-                border-top: 1px solid #e2e8f0 !important;
-                box-shadow: 0 -4px 10px rgba(0,0,0,0.05) !important;
-                padding: 0 10px !important;
-            }
-
-            /* 3. FIX FOR ICONS: Horizontal Grouping */
-            .nav-group {
-                flex-direction: row !important; /* Mobile: Icons side-by-side */
-                width: auto !important;
-                gap: 20px;
-            }
-
-            .nav-icon {
-                margin-bottom: 0 !important;
-                width: 100% !important;
-                border-radius: 0 !important;
-            }
-
-            /* 4. FIX TOP NAVIGATION */
-            .top-nav-bar {
-                padding: 0 15px !important;
-                justify-content: space-between !important;
-                height: 70px !important;
-            }
-            .brand-section img { height: 35px !important; margin-right: 10px !important; }
-            .brand-section { font-size: 1.1rem !important; }
-
-            /* 5. HERO SECTION FIX (Split Layout for Mobile) */
-            .client-hero {
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                gap: 12px !important;
-                height: auto !important;
-                padding: 20px !important;
-            }
-            .client-hero > div:last-child {
-                width: 100% !important;
-                display: flex !important;
-                justify-content: space-between !important;
-                align-items: center !important;
-                padding-top: 12px;
-                border-top: 1px solid #f1f5f9;
-                margin-top: 5px;
-            }
-            .client-hero .d-flex.gap-3 { gap: 10px !important; }
-
-            /* 6. FORCE STACKING OF CARDS (Fix Scattering) */
-            .row {
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-            }
-            .col-md-4, .col-lg-8, .col-lg-4 {
-                width: 100% !important;
-                margin-bottom: 15px !important;
-            }
-
-            /* 7. CONTAINER WIDTH FIX */
-            .container, .container-fluid, .row > div {
-                padding-left: 15px !important;
-                padding-right: 15px !important;
-                max-width: 100% !important;
-            }
-
-            /* 8. HIDE DESKTOP ELEMENTS */
-            .d-none-mobile { display: none !important; }
-
-            /* 9. TIMELINE SCROLLING */
-            .timeline-card .d-flex.position-relative {
-                overflow-x: auto;
-                padding-bottom: 10px;
-            }
-            .step-label { font-size: 0.6rem !important; }
+            body { padding-left: 15px; padding-bottom: 80px; }
+            .side-nav { top: auto; bottom: 0; left: 0; right: 0; width: 100%; height: 60px; flex-direction: row; border-radius: 0; padding: 0 15px; z-index: 1001; }
+            .nav-item { margin-bottom: 0; width: 40px; height: 40px;}
+            .action-grid { grid-template-columns: 1fr; }
+            .squarical-card { min-height: auto; }
         }
     </style>
-
 </head>
 <body>
 
-<nav class="top-nav-bar">
-    <div class="brand-section">
-        <img src="/images/wcg-logo.jpg" alt="Logo" height="60" class="me-4" style="border-radius: 6px;">
-        WHITECIRCLE
+<nav class="top-nav">
+    <div class="brand-logo">
+        <img src="/images/wcg-logo.jpg" alt="Logo" onerror="this.style.display='none'" height="70" class="rounded shadow-sm">
+        WHITECIRCLE CLIENT DASHBOARD
     </div>
 
-    <div class="d-flex align-items-center gap-3">
-        <div class="text-end d-none d-md-block lh-1">
-            <div class="fw-bold" style="color: var(--text-color)">Switch to Dark Mode</div>
+    <a href="/client/profile" class="profile-btn">
+        <div class="profile-avatar"><i class="fas fa-user-circle"></i></div>
+        <div class="d-none d-md-block fw-bold text-white" style="font-size: 0.98rem; letter-spacing: 0.6px;">
+            My Profile
         </div>
-
-        <button class="theme-toggle btn btn-light rounded-circle" onclick="toggleTheme()">
-            <i class="fas fa-moon" id="theme-icon"></i>
-        </button>
-    </div>
+    </a>
 </nav>
 
-<div class="side-nav-bar">
-    <div class="nav-group">
-        <a href="/client/dashboard" class="nav-icon active" title="Home">
-            <i class="fas fa-home"></i>
+<div class="side-nav">
+    <div class="w-100 d-flex flex-md-column justify-content-start align-items-center h-100">
+
+        <a href="/client/dashboard" class="nav-item active" title="Command Center Dashboard">
+            <i class="fas fa-border-all"></i>
         </a>
-        <a href="/client/profile" class="nav-icon" title="My Profile">
-            <i class="fas fa-user"></i>
+
+        <a href="#" class="nav-item" title="Projects & File Vault">
+            <i class="fas fa-folder-open"></i>
         </a>
-    </div>
-    <div class="nav-group">
-        <a href="/" class="nav-icon logout" title="Logout">
-            <i class="fas fa-sign-out-alt"></i>
+
+        <a href="#" class="nav-item" title="Billing & Invoices">
+            <i class="fas fa-file-invoice-dollar"></i>
         </a>
+
+        <a href="#" class="nav-item" title="Support Helpdesk">
+            <i class="fas fa-headset"></i>
+        </a>
+
+        <div class="mt-md-auto">
+            <a href="/logout" class="nav-item nav-logout" title="Secure Logout">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
     </div>
 </div>
 
-<div class="container-fluid mt-2">
+<div class="container-fluid" style="max-width: 1400px;">
 
-    <div class="client-hero hover-card py-3 px-4 rounded-4 mb-4 d-flex justify-content-between align-items-center">
-        <div class="client-info">
-            <h4 class="fw-bold mb-1">Project Dashboard</h4>
-            <p class="mb-0">Overview of <strong class="text-dark">"E-Commerce App Revamp"</strong></p>
-        </div>
+    <div class="row g-3 mb-3">
 
-        <div class="d-flex align-items-center gap-4 w-auto">
-            <div class="border-start border-2 h-100 d-none d-md-block" style="height: 40px;"></div>
-            <div class="d-flex align-items-center gap-3">
-                <div class="text-end lh-1">
-                    <div class="small text-muted">Project Manager</div>
-                    <div class="fw-bold text-dark" style="font-size: 0.9rem;">Amit Verma</div>
+        <div class="col-xl-7 col-lg-7">
+            <div class="dash-card">
+                <div class="card-header-section mb-3 pb-2">
+                    <h5 class="card-title-label"> Project Action Center</h5>
                 </div>
-                <div class="bg-light rounded-circle border d-flex align-items-center justify-content-center text-primary fw-bold"
-                     style="width: 40px; height: 40px; font-size: 0.85rem;">AV</div>
-            </div>
-            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill ms-2">
-                <i class="fas fa-circle me-2 small"></i>Active
-            </span>
-        </div>
-    </div>
 
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="kpi-card hover-card border-navy p-3 rounded-4 h-100 d-flex flex-column">
-                <div class="card-header-fixed mb-2">
-                    <span class="kpi-title fw-bold small text-uppercase" style="font-size: 0.75rem;">Completion Status</span>
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex flex-column gap-2">
+                        <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;" th:text="${project != null ? project.projectName : 'E-Commerce Platform Development'}">Project Name</h6>
+                        <span class="badge bg-success bg-opacity-10 text-success px-2 py-1 border border-success-subtle rounded-pill" style="width: fit-content; font-size: 0.65rem;">Active Phase</span>
+                    </div>
+
+                    <div class="text-muted text-end" style="font-size: 0.75rem; line-height: 1.4;">
+                        <i class="fas fa-user-tie me-1"></i> Manager:<br>
+                        <strong class="text-dark" th:text="${managerName ?: 'Assigning...'}">John Doe</strong>
+                    </div>
                 </div>
-                <div class="d-flex align-items-end mb-2">
-                    <span class="display-6 fw-bold text-primary me-2">75%</span>
-                </div>
-                <div class="progress mb-3" style="height: 8px; border-radius: 4px;">
-                    <div class="progress-bar" role="progressbar" style="width: 75%; background-color: #1e3a8a; border-radius: 6px;"></div>
-                </div>
-                <div class="mt-auto pt-2 border-top">
-                    <div class="d-flex justify-content-between text-start">
+
+                <div class="action-grid mt-2">
+                    <a href="/client/submit-task" class="action-btn feature-btn" style="text-decoration: none;">
+                        <div class="action-icon icon-purple"><i class="fas fa-plus"></i></div>
                         <div>
-                            <div class="small text-muted fw-bold" style="font-size: 0.7rem;">NEXT MILESTONE</div>
-                            <div class="text-dark small mt-1">UAT Sign-off</div>
+                            <h6 class="fw-bold mb-0" style="font-size: 0.95rem;">Submit Task</h6>
+                            <span class="text-muted" style="font-size: 0.75rem;">Generate new ticket.</span>
                         </div>
-                        <div class="text-end">
-                            <div class="small text-muted fw-bold" style="font-size: 0.7rem;">DUE DATE</div>
-                            <div class="text-danger fw-bold small mt-1">Feb 10, 2026</div>
+                    </a>
+
+                    <a href="/client/tickets" class="action-btn feature-btn" style="text-decoration: none;">
+                        <div class="action-icon icon-purple"><i class="fas fa-ticket-alt"></i></div>
+                        <div>
+                            <h6 class="fw-bold mb-0" style="font-size: 0.95rem;">Active Tickets</h6>
+                            <span class="text-muted" style="font-size: 0.75rem;">Track task progress.</span>
                         </div>
-                    </div>
+                    </a>
+
+                    <a href="/client/file-vault" class="action-btn feature-btn">
+                        <div class="action-icon icon-orange"><i class="fas fa-cloud-upload-alt"></i></div>
+                        <div>
+                            <h6 class="fw-bold mb-0" style="font-size: 0.95rem;">File Vault</h6>
+                            <span class="text-muted" style="font-size: 0.75rem;">Project documents.</span>
+                        </div>
+                    </a>
+
+                    <a href="/client/team" class="action-btn feature-btn">
+                        <div class="action-icon icon-green"><i class="fas fa-users"></i></div>
+                        <div>
+                            <h6 class="fw-bold mb-0" style="font-size: 0.95rem;">Project Team</h6>
+                            <span class="text-muted" style="font-size: 0.75rem;">View developers.</span>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="kpi-card hover-card border-navy p-3 rounded-4 h-100 d-flex flex-column">
-                <div class="card-header-fixed mb-2">
-                    <span class="kpi-title fw-bold small text-uppercase" style="font-size: 0.75rem;">Payment Status</span>
-                    <span class="badge bg-success bg-opacity-10 text-success" style="font-size: 0.7rem;">Paid</span>
-                </div>
-                <div class="flex-grow-1">
-                    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-                        <span class="text-muted small fw-bold">Total Budget</span>
-                        <span class="pay-val fw-bold fs-5">₹ 5,00,000</span>
+        <div class="col-xl-5 col-lg-5">
+            <div class="dash-card secure-card">
+                <i class="fas fa-lock lock-icon-bg"></i>
+                <div class="position-relative z-1 d-flex flex-column h-100">
+                    <div class="card-header-section mb-3 pb-2">
+                        <h5 class="card-title-label"> PAYMENTS & FINANCIALS</h5>
                     </div>
-                    <div class="d-flex justify-content-between small mb-1">
-                        <span class="text-muted">Paid Amount</span> <span class="pay-val fw-bold text-success">₹ 3,50,000</span>
-                    </div>
-                    <div class="progress mb-2" style="height: 5px;">
-                        <div class="progress-bar bg-success" style="width: 70%"></div>
-                    </div>
-                    <div class="d-flex justify-content-between small mb-1">
-                        <span class="text-muted">Pending</span> <span class="pay-val fw-bold text-danger">₹ 1,50,000</span>
-                    </div>
-                    <div class="progress" style="height: 5px;">
-                        <div class="progress-bar bg-danger" style="width: 30%"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="kpi-card hover-card border-navy p-3 rounded-4 h-100 d-flex flex-column">
-                <div class="card-header-fixed mb-2">
-                    <span class="kpi-title fw-bold small text-uppercase" style="font-size: 0.75rem;">Client Satisfaction</span>
-                    <span class="badge bg-warning bg-opacity-10 text-warning text-dark" style="font-size: 0.7rem;">Verified</span>
-                </div>
-                <div class="review-score-container mb-3" style="gap: 10px;">
-                    <div class="big-score" style="font-size: 2.5rem;">4.0</div>
-                    <div class="review-stars-box">
-                        <div class="text-warning mb-1" style="font-size: 1rem;">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                    <p class="text-muted mb-2 pe-md-3" style="font-size: 0.85rem; line-height: 1.5;">Detailed financial ledgers, project costs, and pending invoices are managed securely in your dedicated finance portal.</p>
+
+                    <div class="mt-auto bg-white p-2 rounded-3 border mb-3 shadow-sm transition-all hover-lift">
+                        <div class="row g-2">
+                            <div class="col-6 border-end">
+                                <div class="text-muted text-uppercase fw-bold" style="font-size: 0.65rem; letter-spacing: 0.5px;">Client Reference</div>
+                                <div class="fw-bold text-dark" style="font-size: 0.85rem;">WCG-2026-04</div>
+                            </div>
+                            <div class="col-6 ps-3">
+                                <div class="text-muted text-uppercase fw-bold" style="font-size: 0.65rem; letter-spacing: 0.5px;">Contract Type</div>
+                                <div class="fw-bold text-primary" style="font-size: 0.85rem;">Milestone Based</div>
+                            </div>
+                            <div class="col-12 mt-1 pt-1 border-top">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-muted fw-bold" style="font-size: 0.75rem;">Next Milestone Due:</span>
+                                    <span class="badge bg-warning bg-opacity-10 text-dark border border-warning-subtle fw-bold">UAT Sign-off</span>
+                                </div>
+                            </div>
                         </div>
-                        <small class="text-muted" style="font-size: 0.7rem;">Based on 4 Milestones</small>
                     </div>
-                </div>
-                <div class="quote-box py-2 px-3 mb-3" style="font-size: 0.85rem;">
-                    <i class="fas fa-quote-left me-2 opacity-50"></i>
-                    Great progress on the UI phase. The team is very responsive.
-                </div>
-                <div class="mt-auto">
-                    <button class="btn btn-sm btn-outline-primary w-100 rounded-pill fw-bold"
-                            data-bs-toggle="modal" data-bs-target="#ratingModal">
-                        <i class="fas fa-pen me-2"></i>Write a Review
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="row g-4">
-        <div class="col-lg-8">
-            <div class="timeline-card p-4 rounded-4 h-100 hover-card" style="min-height: 300px;">
-                <h5 class="fw-bold mb-4" style="color: var(--bs-primary)"><i class="fas fa-stream me-2"></i>Project Status</h5>
-
-                <div class="d-flex justify-content-between position-relative mt-4" style="min-width: 300px;">
-                    <div class="position-absolute top-50 start-0 w-100 translate-middle-y" style="height: 2px; background: var(--border-color); z-index: 0;"></div>
-
-                    <div class="text-center position-relative z-1">
-                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2 shadow-sm" style="width: 35px; height: 35px;"><i class="fas fa-check"></i></div>
-                        <div class="step-label small fw-bold text-success">Planning</div>
-                    </div>
-                    <div class="text-center position-relative z-1">
-                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2 shadow-sm" style="width: 35px; height: 35px;"><i class="fas fa-check"></i></div>
-                        <div class="step-label small fw-bold text-success">Development</div>
-                    </div>
-                    <div class="text-center position-relative z-1">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2 shadow-sm" style="width: 35px; height: 35px; box-shadow: 0 0 0 4px #bfdbfe !important;">3</div>
-                        <div class="step-label small fw-bold text-primary">Testing</div>
-                    </div>
-                    <div class="text-center position-relative z-1">
-                        <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2 shadow-sm" style="width: 35px; height: 35px;">4</div>
-                        <div class="step-label small text-muted">Deployment</div>
-                    </div>
+                    <a href="/client/payments" class="btn-shiny-navy fw-bold px-4 py-2 rounded-pill w-100 d-flex justify-content-between align-items-center text-decoration-none" style="font-size: 1.0rem;">
+                        Access Payment Dashboard
+                    </a>
                 </div>
-
-                <div class="alert alert-primary mt-4 mb-0 d-flex align-items-center border-0 bg-primary bg-opacity-10 text-primary">
-                    <i class="fas fa-info-circle fs-4 me-3"></i>
-                    <div class="small">
-                        <strong>Current Stage: UAT (User Acceptance Testing)</strong><br>
-                        The QA team is verifying the payment gateway integration.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="updates-card rounded-4 h-100 overflow-hidden hover-card" style="min-height: 300px;">
-                <div class="p-3 text-white fw-bold d-flex justify-content-between align-items-center" style="background: var(--bs-primary)">
-                    <span><i class="fas fa-history me-2"></i>Recent Activity</span>
-                    <small class="opacity-75">Live Feed</small>
-                </div>
-                <ul class="list-unstyled m-0">
-                    <li class="p-3 border-bottom d-flex gap-3" style="border-color: var(--border-color) !important;">
-                        <div class="text-center p-2 rounded bg-light border" style="min-width: 50px; height: fit-content;">
-                            <div class="fw-bold small text-dark">01</div><div class="text-muted" style="font-size: 0.6rem;">FEB</div>
-                        </div>
-                        <div class="update-content">
-                            <h6 class="mb-1 small fw-bold">Milestone 3 Payment Received</h6>
-                            <p class="mb-0 small">Invoice #INV-209 cleared via Bank Transfer.</p>
-                        </div>
-                    </li>
-                    <li class="p-3 d-flex gap-3">
-                        <div class="text-center p-2 rounded bg-light border" style="min-width: 50px; height: fit-content;">
-                            <div class="fw-bold small text-dark">30</div><div class="text-muted" style="font-size: 0.6rem;">JAN</div>
-                        </div>
-                        <div class="update-content">
-                            <h6 class="mb-1 small fw-bold">Beta Module Released</h6>
-                            <p class="mb-0 small">Deployed to staging server for review.</p>
-                        </div>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>
-</div>
 
-<div class="modal fade feedback-modal" id="ratingModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+    <div class="row g-3 mb-3">
 
-            <div class="feedback-header">
-                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="milestone-badge">MILESTONE 3: UAT PHASE</div>
-                <h4 class="fw-bold mb-1">Rate Your Experience</h4>
-                <p class="mb-0 opacity-75 small">Help us improve our delivery quality.</p>
-            </div>
-
-            <div class="modal-body px-4 pb-4">
-
-                <div class="star-rating-lg" id="starContainer">
-                    <i class="far fa-star" data-value="1" onclick="setRating(1)"></i>
-                    <i class="far fa-star" data-value="2" onclick="setRating(2)"></i>
-                    <i class="far fa-star" data-value="3" onclick="setRating(3)"></i>
-                    <i class="far fa-star" data-value="4" onclick="setRating(4)"></i>
-                    <i class="far fa-star" data-value="5" onclick="setRating(5)"></i>
-                </div>
-                <div class="text-center small text-muted mb-4 fw-bold" id="ratingLabel">Tap a star to rate</div>
-
-                <label class="small fw-bold text-muted mb-2 d-block">What went well? (Select all that apply)</label>
-                <div class="feedback-tags">
-                    <div class="feedback-tag" onclick="toggleTag(this)">⚡ Fast Delivery</div>
-                    <div class="feedback-tag" onclick="toggleTag(this)">🎨 Great Design</div>
-                    <div class="feedback-tag" onclick="toggleTag(this)">🐞 Bug Free</div>
-                    <div class="feedback-tag" onclick="toggleTag(this)">💬 Good Communication</div>
-                    <div class="feedback-tag" onclick="toggleTag(this)">🔧 Technical Expertise</div>
+        <div class="col-xl-7 col-lg-7">
+            <div class="dash-card">
+                <div class="card-header-section mb-3 pb-2">
+                    <h5 class="card-title-label"> Ongoing Task Details</h5>
+                    <a href="/client/ongoing-tasks" class="link-hover-underline">View Detailed Page <i class="fas fa-arrow-right ms-1"></i></a>
                 </div>
 
-                <label class="small fw-bold text-muted mb-2">Additional Comments</label>
-                <textarea class="form-control bg-light border-0" rows="3" placeholder="Tell us more about your experience..." style="resize: none;"></textarea>
-            </div>
+                <div class="d-flex flex-column h-100 justify-content-center">
+                    <div class="d-flex align-items-center gap-3 mb-3 bg-light p-2 rounded-3 border">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fs-4 shadow-sm" style="width: 45px; height: 45px;">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted fw-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 1px;">Current Phase</span>
+                            <h6 class="fw-bold text-primary m-0">Backend Development</h6>
+                        </div>
+                    </div>
 
-            <div class="modal-footer-custom">
-                <button type="button" class="btn btn-light text-muted fw-bold border-0" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary px-4 rounded-pill fw-bold shadow-sm" onclick="submitFeedback()">
-                    Submit Review <i class="fas fa-paper-plane ms-2"></i>
+                    <h6 class="fw-bold text-dark mb-2" style="font-size: 0.85rem;">Currently in execution:</h6>
+
+                    <div class="d-flex align-items-start gap-2 mb-2 border-bottom pb-2">
+                        <div class="text-warning mt-1"><i class="fas fa-circle" style="font-size: 0.5rem;"></i></div>
+                        <div>
+                            <h6 class="fw-bold mb-0" style="font-size: 0.85rem;">Integrate Stripe Payment API</h6>
+                            <div class="text-muted" style="font-size: 0.75rem;">Assigned to backend team. Expected by Friday.</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start gap-2">
+                        <div class="text-warning mt-1"><i class="fas fa-circle" style="font-size: 0.5rem;"></i></div>
+                        <div>
+                            <h6 class="fw-bold mb-0" style="font-size: 0.85rem;">Database Schema Migration</h6>
+                            <div class="text-muted" style="font-size: 0.75rem;">Running testing scripts on staging server.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-5 col-lg-5">
+            <div class="dash-card text-center d-flex flex-column">
+                <div class="card-header-section mb-3 pb-2">
+                    <h5 class="card-title-label mx-auto"><i class="fas fa-chart-pie text-primary fs-5"></i> Overall Progress</h5>
+                </div>
+
+                <div class="flex-grow-1 d-flex flex-column justify-content-center pt-1">
+                    <div class="progress-ring">
+                        <div class="progress-ring-inner">
+                            <h3 class="fw-bold text-dark m-0">75%</h3>
+                            <span class="text-muted" style="font-size: 0.6rem; font-weight: 800;">COMPLETED</span>
+                        </div>
+                    </div>
+                    <p class="text-muted fw-bold mb-0 px-3" style="font-size: 0.75rem; line-height: 1.4;">Progress is automatically calculated from subtasks.</p>
+                </div>
+
+                <button class="btn-shiny-light fw-bold w-100 py-2 mt-3 rounded-pill" style="font-size: 0.85rem;" data-bs-toggle="modal" data-bs-target="#breakdownModal">
+                    <i class="fas fa-list-ul me-2"></i> View Breakdown
                 </button>
             </div>
         </div>
     </div>
+
+    <div class="row g-3" id="calendar">
+
+        <div class="col-xl-4 col-lg-6">
+            <div class="dash-card squarical-card">
+                <div class="card-header-section mb-3 pb-2">
+                    <h6 class="card-title-label"><i class="fas fa-calendar-alt text-primary fs-5"></i> Project Timeline</h6>
+                    <div class="d-flex gap-2 d-none d-xl-flex">
+                        <span class="badge bg-light text-dark border px-1"><i class="fas fa-circle text-success me-1"></i> Work</span>
+                        <span class="badge bg-light text-dark border px-1"><i class="fas fa-circle text-danger me-1"></i> Leave</span>
+                        <span class="badge bg-light text-dark border px-1"><i class="fas fa-circle text-warning me-1"></i> Holiday</span>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold mb-2" style="font-size: 0.9rem;">April 2026</h6>
+                <div class="calendar-grid flex-grow-1">
+                    <div class="cal-header">Sun</div><div class="cal-header">Mon</div><div class="cal-header">Tue</div>
+                    <div class="cal-header">Wed</div><div class="cal-header">Thu</div><div class="cal-header">Fri</div><div class="cal-header">Sat</div>
+
+                    <div class="cal-day text-muted opacity-50 border-0">29</div>
+                    <div class="cal-day text-muted opacity-50 border-0">30</div>
+                    <div class="cal-day text-muted opacity-50 border-0">31</div>
+                    <div class="cal-day cal-work">1<div class="cal-event-text text-muted">Dev</div></div>
+                    <div class="cal-day cal-work">2<div class="cal-event-text text-muted">Dev</div></div>
+                    <div class="cal-day cal-work">3<div class="cal-event-text text-muted">Sync</div></div>
+                    <div class="cal-day cal-work">4<div class="cal-event-text text-muted">-</div></div> <div class="cal-day text-muted bg-light">5</div>
+                    <div class="cal-day cal-work">6<div class="cal-event-text text-muted">Dev</div></div>
+                    <div class="cal-day cal-leave">7<div class="cal-event-text">PM Away</div></div>
+                    <div class="cal-day cal-work">8<div class="cal-event-text text-muted">Test</div></div>
+                    <div class="cal-day cal-work">9<div class="cal-event-text text-muted">QA</div></div>
+                    <div class="cal-day cal-holiday">10<div class="cal-event-text">Holiday</div></div>
+                    <div class="cal-day cal-work">11<div class="cal-event-text text-muted">-</div></div> <div class="cal-day text-muted bg-light">12</div>
+                    <div class="cal-day cal-work">13<div class="cal-event-text text-muted">Bug Fix</div></div>
+                    <div class="cal-day cal-work">14<div class="cal-event-text text-muted">Bug Fix</div></div>
+                    <div class="cal-day cal-work">15<div class="cal-event-text text-primary fw-bold">UAT</div></div>
+                    <div class="cal-day cal-work">16<div class="cal-event-text text-muted">Review</div></div>
+                    <div class="cal-day cal-work">17<div class="cal-event-text text-muted">Deploy</div></div>
+                    <div class="cal-day cal-work">18<div class="cal-event-text text-muted">-</div></div> <div class="cal-day text-muted bg-light">19</div>
+                    <div class="cal-day cal-work">20<div class="cal-event-text text-muted">Live</div></div>
+                    <div class="cal-day cal-work">21<div class="cal-event-text text-muted">-</div></div>
+                    <div class="cal-day cal-work">22<div class="cal-event-text text-muted">-</div></div>
+                    <div class="cal-day cal-work">23<div class="cal-event-text text-muted">-</div></div>
+                    <div class="cal-day cal-work">24<div class="cal-event-text text-muted">-</div></div>
+                    <div class="cal-day cal-work">25<div class="cal-event-text text-muted">-</div></div> <div class="cal-day text-muted bg-light">26</div>
+                    <div class="cal-day cal-work">27</div>
+                    <div class="cal-day cal-work">28</div>
+                    <div class="cal-day cal-work">29</div>
+                    <div class="cal-day cal-work">30</div>
+                    <div class="cal-day text-muted opacity-50 border-0">1</div>
+                    <div class="cal-day text-muted opacity-50 border-0">2</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-lg-6">
+            <div class="dash-card squarical-card d-flex flex-column">
+                <div class="card-header-section mb-3 pb-2">
+                    <h6 class="card-title-label"><i class="fas fa-star text-warning fs-5"></i> Client Satisfaction</h6>
+                </div>
+
+                <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center px-2">
+                    <h5 class="fw-bold mb-3">Rate Your Experience</h5>
+                    <p class="text-muted mb-4" style="font-size: 0.85rem; line-height: 1.6;">Your feedback directly impacts our team's performance and helps us improve our delivery quality.</p>
+
+                    <div class="bg-light border border-secondary border-opacity-10 rounded-4 p-4 w-100 mb-4 shadow-sm">
+                        <div class="d-flex justify-content-center gap-2">
+                            <i class="far fa-star text-muted star-rating"></i>
+                            <i class="far fa-star text-muted star-rating"></i>
+                            <i class="far fa-star text-muted star-rating"></i>
+                            <i class="far fa-star text-muted star-rating"></i>
+                            <i class="far fa-star text-muted star-rating"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-warning fw-bold py-2 px-4 rounded-pill feature-btn shadow-sm mx-auto" style="font-size: 0.9rem;" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+                    Submit Feedback <i class="fas fa-paper-plane ms-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-lg-12">
+            <div class="dash-card squarical-card d-flex flex-column">
+                <div class="card-header-section mb-3 pb-2">
+                    <h6 class="card-title-label"><i class="fas fa-rocket text-primary fs-5"></i> Dashboard Features</h6>
+                </div>
+
+                <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center px-3 opacity-75">
+                    <div class="bg-light border rounded-circle d-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                        <i class="fas fa-tools text-muted fs-2"></i>
+                    </div>
+                    <h6 class="fw-bold text-dark mb-2">More Tools Coming Soon</h6>
+                    <p class="text-muted small">We are continuously upgrading the Client Command Center. New analytics and reporting features will appear here shortly.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="breakdownModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="bd-modal-content modal-content">
+
+            <div class="modal-header bd-header">
+                <div>
+                    <h5 class="fw-bold mb-1" style="letter-spacing: 0.5px;">Task Breakdown Calculation</h5>
+                    <p class="m-0 text-white-50" style="font-size: 0.85rem;">Progress is dynamically calculated from subtasks.</p>
+                </div>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4 bg-light">
+
+                <div class="bd-item">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bd-icon-box bd-icon-success me-3">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25" style="font-size: 0.65rem;">Completed</span>
+                                <span class="fw-bold text-dark small">30%</span>
+                            </div>
+                            <h6 class="fw-bold text-dark m-0" style="font-size: 0.95rem;">UI/UX Design Phase</h6>
+                        </div>
+                    </div>
+                    <div class="bd-progress-bg">
+                        <div class="bd-progress-bar bg-success" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="bd-item">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bd-icon-box bd-icon-primary me-3">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25" style="font-size: 0.65rem;">In Progress</span>
+                                <span class="fw-bold text-primary small">45%</span>
+                            </div>
+                            <h6 class="fw-bold text-dark m-0" style="font-size: 0.95rem;">Backend API Development</h6>
+                        </div>
+                    </div>
+                    <div class="bd-progress-bg">
+                        <div class="bd-progress-bar bg-primary bd-bar-animated" style="width: 45%"></div>
+                    </div>
+                </div>
+
+                <div class="bd-item mb-0">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bd-icon-box bd-icon-pending me-3">
+                            <i class="fas fa-shield-halved"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25" style="font-size: 0.65rem;">Pending</span>
+                                <span class="fw-bold text-muted small">0%</span>
+                            </div>
+                            <h6 class="fw-bold text-muted m-0" style="font-size: 0.95rem;">QA & Security Testing</h6>
+                        </div>
+                    </div>
+                    <div class="bd-progress-bg">
+                        <div class="bd-progress-bar bg-secondary" style="width: 0%"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="bd-footer">
+                <div>
+                    <span class="fw-bold text-muted text-uppercase d-block" style="font-size: 0.7rem; letter-spacing: 1px;">Total Project Score</span>
+                    <span class="text-dark small fw-medium">Aggregated across all phases</span>
+                </div>
+                <h3 class="fw-bold m-0" style="color: #1e3a8a; font-size: 2rem;">75%</h3>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg"> <div class="modal-content feedback-modal-content">
+
+        <form th:action="@{/client/submit-feedback}" method="POST">
+
+            <div class="modal-header feedback-header py-3 px-4">
+                <div>
+                    <h5 class="fw-bold mb-1"><i class="fas fa-star me-2 text-warning"></i> Rate Your Experience</h5>
+                    <p class="m-0 text-white-50" style="font-size: 0.85rem;">Your insights drive our enterprise quality standards.</p>
+                </div>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <div class="row g-4">
+
+                    <div class="col-md-6 d-flex flex-column">
+                        <div class="mb-4">
+                            <label class="feedback-section-title">Select Project</label>
+                            <select name="projectId" class="form-select border-light fw-medium shadow-sm" style="border-radius: 8px; padding: 10px;" required>
+                                <option value="" disabled selected>Select the project...</option>
+                                <option th:each="project : ${clientProjects}" th:value="${project.id}" th:text="${project.projectName}">Project Name</option>
+                            </select>
+                        </div>
+
+                        <div class="text-center p-3 rounded-3 border flex-grow-1 d-flex flex-column justify-content-center" style="background-color: #fafbfd;">
+                            <h6 class="fw-bold text-dark mb-2">Overall Satisfaction</h6>
+                            <div class="star-rating-group justify-content-center">
+                                <input type="radio" id="star5" name="overallRating" value="5" required /><label for="star5" class="fas fa-star"></label>
+                                <input type="radio" id="star4" name="overallRating" value="4" /><label for="star4" class="fas fa-star"></label>
+                                <input type="radio" id="star3" name="overallRating" value="3" /><label for="star3" class="fas fa-star"></label>
+                                <input type="radio" id="star2" name="overallRating" value="2" /><label for="star2" class="fas fa-star"></label>
+                                <input type="radio" id="star1" name="overallRating" value="1" /><label for="star1" class="fas fa-star"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between mb-3">
+                            <div>
+                                <label class="feedback-section-title mb-1">Communication</label>
+                                <div class="star-rating-group star-sm justify-content-start">
+                                    <input type="radio" id="comm5" name="communicationRating" value="5" required /><label for="comm5" class="fas fa-star"></label>
+                                    <input type="radio" id="comm4" name="communicationRating" value="4" /><label for="comm4" class="fas fa-star"></label>
+                                    <input type="radio" id="comm3" name="communicationRating" value="3" /><label for="comm3" class="fas fa-star"></label>
+                                    <input type="radio" id="comm2" name="communicationRating" value="2" /><label for="comm2" class="fas fa-star"></label>
+                                    <input type="radio" id="comm1" name="communicationRating" value="1" /><label for="comm1" class="fas fa-star"></label>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="feedback-section-title mb-1">Quality</label>
+                                <div class="star-rating-group star-sm justify-content-start">
+                                    <input type="radio" id="qual5" name="qualityRating" value="5" required /><label for="qual5" class="fas fa-star"></label>
+                                    <input type="radio" id="qual4" name="qualityRating" value="4" /><label for="qual4" class="fas fa-star"></label>
+                                    <input type="radio" id="qual3" name="qualityRating" value="3" /><label for="qual3" class="fas fa-star"></label>
+                                    <input type="radio" id="qual2" name="qualityRating" value="2" /><label for="qual2" class="fas fa-star"></label>
+                                    <input type="radio" id="qual1" name="qualityRating" value="1" /><label for="qual1" class="fas fa-star"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="feedback-section-title">Additional Comments</label>
+                            <textarea name="comments" class="form-control custom-textarea w-100" rows="3" placeholder="What did we do well? Where can we improve?"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer border-0 px-4 pb-4 pt-0 justify-content-end bg-white">
+                <button type="button" class="btn btn-light fw-bold px-4 me-2 border" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-warning fw-bold px-4 text-dark" style="border-radius: 8px;">
+                    Submit Feedback <i class="fas fa-paper-plane ms-2"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // 1. Star Rating Logic
-    function setRating(n) {
-        const stars = document.querySelectorAll('#starContainer i');
-        const labels = ["Poor", "Fair", "Good", "Very Good", "Excellent!"];
-
-        stars.forEach((star, index) => {
-            if (index < n) {
-                star.classList.remove('far');
-                star.classList.add('fas', 'active');
-            } else {
-                star.classList.remove('fas', 'active');
-                star.classList.add('far');
-            }
-        });
-
-        // Update Text Label below stars
-        const label = document.getElementById('ratingLabel');
-        if(label) {
-            label.innerText = labels[n-1];
-            label.style.color = "#1e3a8a";
-        }
-    }
-
-    // 2. Tag Toggle Logic (Clicking the chips)
-    function toggleTag(element) {
-        element.classList.toggle('selected');
-    }
-
-    // 3. Submit Button Animation
-    function submitFeedback() {
-        const btn = document.querySelector('.modal-footer-custom .btn-primary');
-        const originalText = btn.innerHTML;
-
-        btn.innerHTML = '<i class="fas fa-check me-2"></i>Sent!';
-        btn.classList.remove('btn-primary');
-        btn.classList.add('btn-success');
-
-        setTimeout(() => {
-            // Close modal after 1.5 seconds
-            var modalEl = document.getElementById('ratingModal');
-            var modal = bootstrap.Modal.getInstance(modalEl);
-            modal.hide();
-
-            // Reset button
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.classList.add('btn-primary');
-                btn.classList.remove('btn-success');
-            }, 500);
-        }, 1500);
-    }
-
-    // Theme Toggle Function
-    function toggleTheme() {
-        // Placeholder for theme logic if needed
-        console.log("Theme toggled");
-    }
-</script>
 </body>
 </html>
