@@ -119,6 +119,17 @@ public class DashboardController {
         // 3. Attach the projects to the model so the Modal can see them
         model.addAttribute("clientProjects", clientProjects);
 
+        // Fetch the Client profile using the logged-in user
+        Client client = clientRepository.findByUser_Username(principal.getName()).orElse(null);
+
+        // Extract the Team Lead name securely
+        String teamLeadName = "Assigning...";
+        if (client != null && client.getTeamLead() != null && !client.getTeamLead().trim().isEmpty()) {
+            teamLeadName = client.getTeamLead();
+        }
+        // Add it to the model so the HTML can display it
+        model.addAttribute("teamLeadName", teamLeadName);
+
         return "client-dashboard";
     }
 
