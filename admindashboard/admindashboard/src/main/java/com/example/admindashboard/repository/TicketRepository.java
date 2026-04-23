@@ -10,4 +10,7 @@ import java.util.List;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByProjectId(Long projectId);
     List<Ticket> findByStatus(String status);
+
+    // Fetches all tickets assigned to a specific developer
+    List<Ticket> findByAssignedTo_Id(Long developerId);
 }
