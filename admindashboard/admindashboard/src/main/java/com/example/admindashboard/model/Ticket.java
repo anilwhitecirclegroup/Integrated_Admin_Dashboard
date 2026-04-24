@@ -77,6 +77,22 @@ public class Ticket {
         this.updatedAt = LocalDateTime.now();
     }
 
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    @OrderBy("createdAt DESC")
+    private java.util.List<TimeLog> timeLogs;
+
+    // NEW: Bidirectional mapping to fetch the audit trail automatically
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    @OrderBy("updatedAt DESC") // Ensures the newest updates appear at the top
+    private List<TaskUpdateLog> updateLogs;
+
+    public List<TaskUpdateLog> getUpdateLogs() { return updateLogs; }
+    public void setUpdateLogs(List<TaskUpdateLog> updateLogs) { this.updateLogs = updateLogs; }
+
+    // NEW: Time Tracking Field
+    @Column(name = "total_time_tracked", columnDefinition = "BIGINT DEFAULT 0")
+    private Long totalTimeTracked = 0L; // Stores total time in seconds
+
     // --- GETTERS AND SETTERS ---
 
     public Long getId() { return id; }
@@ -122,5 +138,8 @@ public class Ticket {
 
     public User getAssignedTo() { return assignedTo; }
     public void setAssignedTo(User assignedTo) { this.assignedTo = assignedTo; }
+
+    public Long getTotalTimeTracked() {return totalTimeTracked == null ? 0L : totalTimeTracked;}
+    public void setTotalTimeTracked(Long totalTimeTracked) {this.totalTimeTracked = totalTimeTracked;}
 
 }
