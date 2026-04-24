@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Feedback Hub | WhiteCircle</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #1e3a8a;
+            --bs-accent: #2563eb;
+            --bg-color: #f4f7fb;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 50px; }
+
+        /* --- HEADER & ANIMATIONS --- */
+        .manager-nav { background-color: #1e3264; height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .btn-exit-dashboard { background: transparent; border: 1px solid rgba(255, 255, 255, 0.4); color: white; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: var(--transition); }
+        .btn-exit-dashboard:hover { background: rgba(255, 255, 255, 0.15); border-color: white; color: white; transform: translateX(-2px); }
+
+        @keyframes pulse-star {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        .header-star-icon { animation: pulse-star 2.5s infinite ease-in-out; }
+
+        /* --- UPGRADED METRICS CARDS --- */
+        .metric-card { background: white; border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 15px; transition: var(--transition); position: relative; overflow: hidden; }
+        .metric-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.06); }
+        .metric-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; }
+        .mc-total::before { background-color: var(--bs-accent); }
+        .mc-avg::before { background-color: #d97706; }
+        .mc-excellent::before { background-color: #16a34a; }
+
+        .metric-icon { width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .m-total { background: #eff6ff; color: var(--bs-accent); }
+        .m-avg { background: #fffbeb; color: #d97706; }
+        .m-excellent { background: #f0fdf4; color: #16a34a; }
+
+        /* --- UPGRADED FEEDBACK CARDS --- */
+        .review-card { background: white; border: 1px solid var(--border-light); border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: var(--transition); height: 100%; display: flex; flex-direction: column; position: relative; z-index: 1; }
+        .review-card:hover { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(30, 58, 138, 0.08); border-color: #bfdbfe; z-index: 2; }
+
+        .star-rating i { font-size: 0.95rem; margin-right: 2px; }
+        .star-filled { color: #f59e0b; text-shadow: 0 1px 2px rgba(245, 158, 11, 0.3); }
+        .star-empty { color: #e2e8f0; }
+
+        .sub-rating-box { background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 8px; padding: 12px 15px; flex-grow: 1; transition: var(--transition); }
+        .sub-rating-box:hover { background: #ffffff; border-color: #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transform: translateY(-2px); }
+        .sub-rating-title { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.5px; }
+
+        .comment-box { background: linear-gradient(to right, #f8fafc, #ffffff); border-left: 4px solid var(--bs-primary); padding: 18px 20px; border-radius: 0 12px 12px 0; font-size: 0.9rem; color: #334155; font-style: italic; margin-top: 15px; line-height: 1.6; position: relative; transition: var(--transition); }
+        .comment-box:hover { border-left-color: var(--bs-accent); background: linear-gradient(to right, #eff6ff, #ffffff); }
+    </style>
+</head>
+<body>
+
+<nav class="manager-nav">
+    <div class="d-flex align-items-center gap-3">
+        <div class="bg-white bg-opacity-10 rounded p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+            <i class="fas fa-star fs-6 text-warning header-star-icon"></i>
+        </div>
+        <h5 class="fw-bold m-0 text-white">Client Feedback Hub</h5>
+    </div>
+
+    <div class="d-flex align-items-center gap-4">
+        <a href="/admin/dashboard" class="btn-exit-dashboard"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
+</nav>
+
+<div class="container-fluid" style="max-width: 1400px; margin-top: 30px;">
+
+    <div class="mb-4">
+        <h4 class="fw-bold text-dark m-0">Quality Assurance & Reviews</h4>
+        <p class="text-muted mt-1" style="font-size: 0.9rem;">Monitor client satisfaction, track project quality, and review submitted feedback.</p>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="metric-card mc-total">
+                <div class="metric-icon m-total"><i class="fas fa-comments"></i></div>
+                <div>
+                    <h6 class="text-muted fw-bold mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Total Reviews Submitted</h6>
+                    <h3 class="fw-bold m-0 text-dark" th:text="${totalReviews}">0</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="metric-card mc-avg">
+                <div class="metric-icon m-avg"><i class="fas fa-star"></i></div>
+                <div>
+                    <h6 class="text-muted fw-bold mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Average Overall Rating</h6>
+                    <h3 class="fw-bold m-0 text-dark" th:text="${avgRating} + ' / 5.0'">0.0 / 5.0</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="metric-card mc-excellent">
+                <div class="metric-icon m-excellent"><i class="fas fa-award"></i></div>
+                <div>
+                    <h6 class="text-muted fw-bold mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Perfect 5-Star Ratings</h6>
+                    <h3 class="fw-bold m-0 text-dark" th:text="${fiveStarCount}">0</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-6" th:each="fb : ${feedbacks}">
+            <div class="review-card">
+
+                <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+                    <div>
+                        <h5 class="fw-bold text-primary mb-1">
+                            <i class="fas fa-building me-2 opacity-75"></i>
+                            <span th:if="${fb.project != null and fb.project.client != null and #strings.contains(fb.project.client.fullName, '(')}"
+                                  th:text="${#strings.trim(#strings.substringBefore(#strings.substringAfter(fb.project.client.fullName, '('), ')'))}">Company Name</span>
+                            <span th:unless="${fb.project != null and fb.project.client != null and #strings.contains(fb.project.client.fullName, '(')}"
+                                  th:text="${fb.project != null and fb.project.client != null ? fb.project.client.fullName : 'Unknown Client'}">Client Name</span>
+                        </h5>
+
+                        <div class="text-muted fw-bold mb-2" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                            <i class="fas fa-user-tie me-1 opacity-75"></i>
+                            <span th:if="${fb.project != null and fb.project.client != null and #strings.contains(fb.project.client.fullName, '(')}"
+                                  th:text="${#strings.trim(#strings.substringBefore(fb.project.client.fullName, '('))}">Contact Person</span>
+                            <span th:unless="${fb.project != null and fb.project.client != null and #strings.contains(fb.project.client.fullName, '(')}"
+                                  th:text="'Primary Contact'">Contact Person</span>
+                        </div>
+
+                        <div class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle px-2 py-1 mt-1" style="font-size: 0.75rem; font-weight: 700;">
+                            <i class="fas fa-project-diagram me-1"></i>
+                            <span th:text="${fb.project != null ? fb.project.projectName : 'Unknown Project'}">Project Name</span>
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <div class="star-rating mb-2" style="font-size: 1.1rem;">
+                            <i class="fas fa-star" th:each="i : ${#numbers.sequence(1, 5)}" th:classappend="${i <= fb.overallRating ? 'star-filled' : 'star-empty'}"></i>
+                        </div>
+                        <span class="badge bg-light text-muted border" style="font-size: 0.7rem;" th:text="${fb.submittedAt != null ? #temporals.format(fb.submittedAt, 'MMM dd, yyyy') : 'No Date'}">Date</span>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mb-2">
+                    <div class="sub-rating-box">
+                        <div class="sub-rating-title">Communication</div>
+                        <div class="star-rating">
+                            <i class="fas fa-star" th:each="i : ${#numbers.sequence(1, 5)}" th:classappend="${i <= fb.communicationRating ? 'star-filled' : 'star-empty'}"></i>
+                        </div>
+                    </div>
+                    <div class="sub-rating-box">
+                        <div class="sub-rating-title">Deliverable Quality</div>
+                        <div class="star-rating">
+                            <i class="fas fa-star" th:each="i : ${#numbers.sequence(1, 5)}" th:classappend="${i <= fb.qualityRating ? 'star-filled' : 'star-empty'}"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment-box mt-auto">
+                    <i class="fas fa-quote-left text-primary opacity-25 fs-4 mb-2 d-block"></i>
+                    <span th:text="${fb.comments != null and !fb.comments.isEmpty() ? fb.comments : 'No written feedback provided.'}">Client comments go here...</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-12" th:if="${#lists.isEmpty(feedbacks)}">
+            <div class="text-center py-5 bg-white border rounded-3 mt-2">
+                <i class="fas fa-comment-slash fs-1 text-muted mb-3 opacity-25"></i>
+                <h5 class="fw-bold text-dark">No Feedback Received Yet</h5>
+                <p class="text-muted">When clients submit their project reviews, they will appear here.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
