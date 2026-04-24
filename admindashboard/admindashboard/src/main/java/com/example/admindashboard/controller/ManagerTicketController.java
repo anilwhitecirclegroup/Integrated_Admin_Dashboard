@@ -45,6 +45,24 @@ public class ManagerTicketController {
             model.addAttribute("managerName", manager.getFullName());
         }
 
+        // Calculate Dynamic Metrics for the UI Cards
+        long unassignedCount = allTickets.stream()
+                .filter(t -> "Open".equals(t.getStatus()) || t.getStatus() == null)
+                .count();
+
+        long activeCount = allTickets.stream()
+                .filter(t -> "Development".equals(t.getStatus()))
+                .count();
+
+        long completedCount = allTickets.stream()
+                .filter(t -> "Completed".equals(t.getStatus()))
+                .count();
+
+        // Add them to the Model
+        model.addAttribute("unassignedCount", unassignedCount);
+        model.addAttribute("activeCount", activeCount);
+        model.addAttribute("completedCount", completedCount);
+
         // Updated to match your new file name
         return "admin-manage-client-tickets";
     }
