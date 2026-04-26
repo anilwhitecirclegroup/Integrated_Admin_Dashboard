@@ -943,12 +943,55 @@
 
         <div class="col-lg-4 h-100">
             <div class="parallel-col">
-                <div class="widget-card" style="flex: 1;">
-                    <div class="widget-header"><span>TICKET STATUS</span></div>
-                    <div class="widget-body d-flex align-items-center justify-content-center">
-                        <div class="text-center"><p class="text-muted mb-0">No Ticket Available</p></div>
+
+                <div class="widget-card d-flex flex-column" style="flex: 1; height: 100%;">
+                    <div class="widget-header d-flex justify-content-between align-items-center pb-2 border-bottom mb-2">
+        <span class="fw-bold text-dark" style="font-size: 0.9rem; letter-spacing: 0.5px;">
+            <i class="fas fa-ticket-alt text-primary me-2"></i> TICKET STATUS
+        </span>
+                        <a href="/tickets" class="text-primary text-decoration-none" style="font-size: 0.8rem; font-weight: 700;">View All</a>
+                    </div>
+
+                    <div class="widget-body flex-grow-1 d-flex flex-column" th:classappend="${#lists.isEmpty(recentTickets)} ? 'justify-content-center' : 'justify-content-start'" style="overflow-y: auto;">
+
+                        <div class="text-center py-4" th:if="${#lists.isEmpty(recentTickets)}">
+                            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-inbox text-muted fs-5"></i>
+                            </div>
+                            <p class="text-dark fw-bold mb-0" style="font-size: 0.9rem;">No Active Tickets</p>
+                            <span class="text-muted" style="font-size: 0.8rem;">You haven't raised any requests yet.</span>
+                        </div>
+
+                        <div class="d-flex flex-column gap-2" th:if="${not #lists.isEmpty(recentTickets)}">
+
+                            <div th:each="ticket : ${recentTickets}" class="d-flex justify-content-between align-items-center py-2 px-3 border rounded-3 bg-light" style="border-color: #e2e8f0 !important; transition: all 0.2s ease;">
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center text-white shadow-sm"
+                                         th:classappend="${ticket.type == 'HARDWARE' ? 'bg-danger' : (ticket.type == 'INCIDENT' ? 'bg-warning text-dark' : 'bg-primary')}"
+                                         style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                        <i class="fas" th:classappend="${ticket.type == 'HARDWARE' ? 'fa-laptop' : (ticket.type == 'INCIDENT' ? 'fa-exclamation-triangle' : 'fa-cube')}"></i>
+                                    </div>
+
+                                    <div>
+                                        <div class="fw-bold text-dark mb-0" style="font-size: 0.85rem;" th:text="${ticket.ticketId}">#TCK-101</div>
+                                        <div class="text-muted fw-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.5px;" th:text="${ticket.category ?: ticket.type}">Category</div>
+                                    </div>
+                                </div>
+
+                                <div>
+                    <span class="badge rounded-pill shadow-sm"
+                          th:classappend="${ticket.status == 'Closed' or ticket.status == 'Completed' or ticket.status == 'Resolved' ? 'bg-success' : (ticket.status == 'Open' or ticket.status == 'In Progress' ? 'bg-primary' : 'bg-secondary')}"
+                          style="font-size: 0.65rem; padding: 4px 10px;"
+                          th:text="${ticket.status}">Status</span>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
                 </div>
+
                 <div class="widget-card p-0 border-0" style="flex: 1; overflow: hidden;">
                     <div class="milestone-banner">
                         <div>
