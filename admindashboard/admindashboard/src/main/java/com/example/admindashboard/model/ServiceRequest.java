@@ -16,6 +16,10 @@ public class ServiceRequest {
     private String employeeId;
     private String employeeName;
 
+    // NEW FIELDS: Contact Information
+    private String employeeEmail;
+    private String employeePhone;
+
     // NEW FIELDS: For Admin Clarity
     private String department;
     private String managerName;
@@ -24,7 +28,9 @@ public class ServiceRequest {
     private String category; // e.g., Software License, RAM Upgrade, VPN Issue
     private String priority;
     private LocalDate submissionDate;
-    private String status = "Pending Approval";
+
+    // UPDATED: Default status is now strictly "Open"
+    private String status = "Open";
 
     // Dynamic fields from modals
     private String detailItem;
@@ -62,6 +68,12 @@ public class ServiceRequest {
 
     public String getEmployeeName() { return employeeName; }
     public void setEmployeeName(String employeeName) { this.employeeName = employeeName; }
+
+    public String getEmployeeEmail() { return employeeEmail; }
+    public void setEmployeeEmail(String employeeEmail) { this.employeeEmail = employeeEmail; }
+
+    public String getEmployeePhone() { return employeePhone; }
+    public void setEmployeePhone(String employeePhone) { this.employeePhone = employeePhone; }
 
     public String getDepartment() { return department; }
     public void setDepartment(String department) { this.department = department; }
