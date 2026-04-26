@@ -11,4 +11,7 @@ public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, 
     // Custom query method used by your controller
     List<ServiceRequest> findByEmployeeIdOrderBySubmissionDateDesc(String employeeId);
 
+    // NEW: Fetches only the 3 most recent tickets for the dashboard widget
+    List<ServiceRequest> findTop3ByEmployeeIdOrderBySubmissionDateDesc(String employeeId);
+
 }

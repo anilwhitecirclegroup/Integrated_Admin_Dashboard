@@ -32,31 +32,57 @@ public class RequestApiController {
     private UserRepository userRepository;
 
     @Autowired
+    private com.example.admindashboard.repository.EmployeeProfileRepository employeeProfileRepository;
+
+    @Autowired
     private EmailService emailService;
 
     // SELF-SERVICE: Any authenticated user can submit a ticket. No strict RBAC lock needed.
     @PostMapping("/submit")
     public ResponseEntity<?> submitRequest(@RequestBody ServiceRequest request) {
-        // 1. Set the date and save the ticket to the database
+
+        String employeeEmail = "no-reply@whitecircle.com";
+        String employeeName = request.getEmployeeName();
+
+        // 1. NEW: Fetch current user to attach contact details to the ticket BEFORE saving
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
+            Optional<User> currentUserOpt = userRepository.findByUsername(authentication.getName());
+            if (currentUserOpt.isPresent()) {
+                User user = currentUserOpt.get();
+                employeeEmail = user.getEmail();
+
+                if (employeeName == null || employeeName.isEmpty()) {
+                    employeeName = user.getFullName();
+                    request.setEmployeeName(employeeName);
+                }
+
+                // Inject contact details into the ticket database row
+                request.setEmployeeEmail(employeeEmail);
+
+                // NEW: Fetch EmployeeProfile to get the mobile number
+                try {
+                    // Assuming your User's username is their Employee ID (e.g. EMP187)
+                    com.example.admindashboard.model.EmployeeProfile profile =
+                            employeeProfileRepository.findByUser_Username(user.getUsername()).orElse(null);
+
+                    if (profile != null && profile.getMobileNumber() != null) {
+                        request.setEmployeePhone(profile.getMobileNumber());
+                    } else {
+                        request.setEmployeePhone("No Phone Provided");
+                    }
+                } catch (Exception e) {
+                    request.setEmployeePhone("No Phone Provided");
+                }
+            }
+        }
+
+        // 2. Set the date and save the ticket to the database
         request.setSubmissionDate(LocalDate.now());
         ServiceRequest savedRequest = repository.save(request);
 
-        // 2. NEW: ASYNC EMAIL TRIGGER FOR IT TICKETS
+        // 3. ASYNC EMAIL TRIGGER FOR IT TICKETS
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String employeeEmail = "no-reply@whitecircle.com";
-            String employeeName = savedRequest.getEmployeeName();
-
-            if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
-                Optional<User> currentUserOpt = userRepository.findByUsername(authentication.getName());
-                if (currentUserOpt.isPresent()) {
-                    employeeEmail = currentUserOpt.get().getEmail();
-                    if (employeeName == null || employeeName.isEmpty()) {
-                        employeeName = currentUserOpt.get().getFullName();
-                    }
-                }
-            }
-
             Map<String, Object> emailData = new HashMap<>();
             emailData.put("empName", employeeName);
             emailData.put("ticketId", savedRequest.getTicketId() != null ? savedRequest.getTicketId() : "TKT-NEW");
