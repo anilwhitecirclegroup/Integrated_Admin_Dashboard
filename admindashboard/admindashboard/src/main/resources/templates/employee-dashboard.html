@@ -871,9 +871,10 @@
                     <div class="d-flex align-items-center">
                         <i class="fas fa-th me-2"></i>Applications
                     </div>
-                    <a href="#" class="small fw-bold">View All</a>
+                    <a href="#expandedApps" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="expandedApps" class="small fw-bold text-white text-decoration-none" id="viewAllAppsBtn">View All</a>
                 </div>
                 <div class="widget-body">
+
                     <div class="row g-2">
                         <div class="col-md-6">
                             <a href="/my-whitecircle" class="app-btn">
@@ -905,7 +906,31 @@
                                 <span class="app-text">My Assigned Tasks</span>
                             </a>
                         </div>
+                        <div class="col-md-6">
+                            <a href="#" class="app-btn">
+                                <i class="fas fa-gift text-primary me-2 fs-5"></i>
+                                <span class="app-text">My Thanks</span>
+                            </a>
+                        </div>
                     </div>
+
+                    <div class="collapse mt-2" id="expandedApps">
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <a href="#" class="app-btn">
+                                    <i class="fas fa-notes-medical text-primary me-2 fs-5"></i>
+                                    <span class="app-text">My Mediclaim</span>
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="#" class="app-btn">
+                                    <i class="fas fa-car text-primary me-2 fs-5"></i>
+                                    <span class="app-text">My Rides</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -946,9 +971,9 @@
 
                 <div class="widget-card d-flex flex-column" style="flex: 1; height: 100%;">
                     <div class="widget-header d-flex justify-content-between align-items-center pb-2 border-bottom mb-2">
-        <span class="fw-bold text-dark" style="font-size: 0.9rem; letter-spacing: 0.5px;">
-            <i class="fas fa-ticket-alt text-primary me-2"></i> TICKET STATUS
-        </span>
+                        <span class="fw-bold text-dark" style="font-size: 0.9rem; letter-spacing: 0.5px;">
+                            <i class="fas fa-ticket-alt text-primary me-2"></i> TICKET STATUS
+                        </span>
                         <a href="/tickets" class="text-primary text-decoration-none" style="font-size: 0.8rem; font-weight: 700;">View All</a>
                     </div>
 
@@ -963,7 +988,6 @@
                         </div>
 
                         <div class="d-flex flex-column gap-2" th:if="${not #lists.isEmpty(recentTickets)}">
-
                             <div th:each="ticket : ${recentTickets}" class="d-flex justify-content-between align-items-center py-2 px-3 border rounded-3 bg-light" style="border-color: #e2e8f0 !important; transition: all 0.2s ease;">
 
                                 <div class="d-flex align-items-center gap-2">
@@ -980,12 +1004,12 @@
                                 </div>
 
                                 <div>
-                    <span class="badge rounded-pill shadow-sm"
-                          th:classappend="${ticket.status == 'Closed' or ticket.status == 'Completed' or ticket.status == 'Resolved' ? 'bg-success' : (ticket.status == 'Open' or ticket.status == 'In Progress' ? 'bg-primary' : 'bg-secondary')}"
-                          style="font-size: 0.65rem; padding: 4px 10px;"
-                          th:text="${ticket.status}">Status</span>
+                                    <span class="badge rounded-pill shadow-sm"
+                                          th:classappend="${ticket.status == 'Closed' or ticket.status == 'Resolved' ? 'bg-success' : (ticket.status == 'In Progress' ? 'bg-primary' : (ticket.status == 'Open' ? 'bg-danger' : 'bg-secondary'))}"
+                                          style="font-size: 0.65rem; padding: 4px 10px;"
+                                          th:text="${ticket.status}">Status
+                                    </span>
                                 </div>
-
                             </div>
 
                         </div>
@@ -1445,6 +1469,20 @@
         container.innerHTML = `<small class="text-danger">Syncing...</small>`;
     }
 }
+
+    document.addEventListener("DOMContentLoaded", function() {
+                const expandedApps = document.getElementById('expandedApps');
+                const viewAllAppsBtn = document.getElementById('viewAllAppsBtn');
+
+                if(expandedApps && viewAllAppsBtn) {
+                    expandedApps.addEventListener('show.bs.collapse', function () {
+                        viewAllAppsBtn.innerText = 'View Less';
+                    });
+                    expandedApps.addEventListener('hide.bs.collapse', function () {
+                        viewAllAppsBtn.innerText = 'View All';
+                    });
+                }
+            });
 
 </script>
 </body>
