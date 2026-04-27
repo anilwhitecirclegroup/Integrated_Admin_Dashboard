@@ -488,9 +488,9 @@
             <div class="d-flex gap-2">
                 <select id="statusFilter" class="form-select form-select-sm border-0 rounded-pill px-3 shadow-sm" style="width: 150px;" onchange="filterMyRequests()">
                     <option value="All">All Statuses</option>
-                    <option value="Pending Approval">Pending</option>
-                    <option value="Approved">Approved</option>
-                    <option value="Denied">Denied</option>
+                    <option value="Open">Open</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Closed">Closed</option>
                 </select>
             </div>
         </div>
@@ -523,7 +523,7 @@
 
                     <td>
                             <span class="status-badge"
-                                  th:classappend="${req.status == 'Pending Approval' ? 'bg-pending' : (req.status == 'Approved' or req.status == 'Resolved' ? 'bg-active' : (req.status == 'Denied' ? 'bg-danger text-white' : 'bg-secondary text-white'))}"
+                                  th:classappend="${req.status == 'Open' ? 'bg-pending' : (req.status == 'Closed' or req.status == 'Resolved' ? 'bg-active' : 'bg-primary text-white')}"
                                   th:text="${req.status}">Status</span>
                     </td>
 
@@ -837,7 +837,7 @@
             location: locVal,
             priority: priorityValue,
             justification: textarea.value,
-            status: "Pending Approval"
+            status: "Open"
         };
 
         const confirmResult = await Swal.fire({
@@ -909,7 +909,9 @@
 
         rows.forEach(row => {
             const rowStatus = row.getAttribute('data-status');
-            if (filterValue === 'All' || rowStatus === filterValue || (filterValue === 'Pending Approval' && rowStatus === 'Pending')) {
+
+            // UPDATED: Cleaned up the filter logic to match exact statuses
+            if (filterValue === 'All' || rowStatus === filterValue) {
                 row.style.display = '';
                 visibleCount++;
             } else {
@@ -955,22 +957,22 @@
                 statusBadge.textContent = data.status;
                 statusBadge.className = 'badge px-3 py-2 ';
 
-                if (data.status === 'Pending Approval' || data.status === 'Pending') {
+                // UPDATED: Modal Status Colors mapped to the new workflow
+                if (data.status === 'Open') {
                     statusBadge.style.backgroundColor = '#fef3c7';
                     statusBadge.style.color = '#b45309';
                     statusBadge.style.border = '1px solid #fde68a';
-                } else if (data.status === 'Approved' || data.status === 'Resolved') {
+                } else if (data.status === 'Closed' || data.status === 'Resolved') {
                     statusBadge.style.backgroundColor = '#dcfce7';
                     statusBadge.style.color = '#166534';
                     statusBadge.style.border = '1px solid #bbf7d0';
-                } else if (data.status === 'Denied') {
-                    statusBadge.style.backgroundColor = '#fee2e2';
-                    statusBadge.style.color = '#dc2626';
-                    statusBadge.style.border = '1px solid #fecaca';
-                } else {
+                } else if (data.status === 'In Progress') {
                     statusBadge.style.backgroundColor = '#e0e7ff';
                     statusBadge.style.color = '#4338ca';
                     statusBadge.style.border = '1px solid #c7d2fe';
+                } else {
+                    statusBadge.style.backgroundColor = '#f1f5f9';
+                    statusBadge.style.color = '#64748b';
                 }
 
                 const detailsModal = new bootstrap.Modal(document.getElementById('viewMyRequestModal'));

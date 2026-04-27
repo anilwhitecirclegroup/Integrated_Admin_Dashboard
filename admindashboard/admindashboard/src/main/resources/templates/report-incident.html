@@ -338,7 +338,8 @@
                     <select id="statusFilter" class="form-select form-select-sm border-0 rounded-pill px-3 shadow-sm" style="width: 140px;" onchange="filterIncidents()">
                         <option value="All">All Statuses</option>
                         <option value="Open">Open</option>
-                        <option value="Resolved">Resolved</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Closed">Closed</option>
                     </select>
                 </div>
 
@@ -347,7 +348,7 @@
                     <div th:each="req : ${myRequests}" th:if="${req.type == 'INCIDENT'}"
                          class="feed-item incident-row flex-column align-items-stretch"
                          th:data-status="${req.status}"
-                         th:classappend="${req.status == 'Resolved' ? 'opacity-75' : (req.status == 'In Progress' ? 'border-start border-4 border-info' : '')}">
+                         th:classappend="${req.status == 'Closed' or req.status == 'Resolved' ? 'opacity-75' : (req.status == 'In Progress' ? 'border-start border-4 border-warning' : 'border-start border-4 border-danger')}">
 
                         <div class="d-flex gap-3 align-items-start w-100">
 
@@ -358,12 +359,12 @@
                             <div class="feed-content w-100">
                                 <div class="d-flex justify-content-between align-items-start mb-1">
                                     <h6 class="fw-bold text-dark m-0"
-                                        th:classappend="${req.status == 'Resolved' ? 'text-decoration-line-through' : ''}"
+                                        th:classappend="${req.status == 'Closed' or req.status == 'Resolved' ? 'text-decoration-line-through' : ''}"
                                         style="font-size: 0.9rem;"
                                         th:text="${req.detailItem}">Incident Subject</h6>
 
                                     <span class="status-pill"
-                                          th:classappend="${req.status == 'Open' ? 'pill-open' : (req.status == 'Resolved' ? 'pill-resolved' : 'pill-progress')}"
+                                          th:classappend="${req.status == 'Open' ? 'pill-open' : (req.status == 'Closed' or req.status == 'Resolved' ? 'pill-resolved' : 'pill-progress')}"
                                           th:text="${req.status}">Status</span>
                                 </div>
 
@@ -551,7 +552,8 @@
             rows.forEach(row => {
                 const rowStatus = row.getAttribute('data-status');
 
-                if (filterValue === 'All' || rowStatus === filterValue) {
+                // Allows the new "Closed" filter to also show legacy "Resolved" tickets
+                if (filterValue === 'All' || rowStatus === filterValue || (filterValue === 'Closed' && rowStatus === 'Resolved')) {
                     row.style.display = 'flex';
                     visibleCount++;
                 } else {
