@@ -137,13 +137,11 @@ public class DashboardController {
     public String showEmployeeDashboard(org.springframework.ui.Model model, java.security.Principal principal) {
 
         // Fetch the current user's ID (Assuming the username serves as the employeeId)
-        // Note: If you need to fetch the User object first to get a specific employeeId,
-        // you can do: String employeeId = userRepository.findByUsername(principal.getName()).getEmployeeId();
         String currentUserId = principal.getName();
 
         // Fetch their 3 most recent tickets
         java.util.List<com.example.admindashboard.model.ServiceRequest> recentTickets =
-                serviceRequestRepository.findTop3ByEmployeeIdOrderBySubmissionDateDesc(currentUserId);
+                serviceRequestRepository.findTop3ByEmployeeIdOrderByIdDesc(currentUserId);
 
         // Send the tickets to the HTML page
         model.addAttribute("recentTickets", recentTickets);

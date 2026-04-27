@@ -14,4 +14,7 @@ public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, 
     // NEW: Fetches only the 3 most recent tickets for the dashboard widget
     List<ServiceRequest> findTop3ByEmployeeIdOrderBySubmissionDateDesc(String employeeId);
 
+    // UPDATED: Sorts by ID Descending to guarantee the absolute newest tickets are fetched first
+    List<ServiceRequest> findTop3ByEmployeeIdOrderByIdDesc(String employeeId);
+
 }
