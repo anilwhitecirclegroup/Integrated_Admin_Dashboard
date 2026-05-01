@@ -86,6 +86,12 @@ public class Ticket {
     @OrderBy("updatedAt DESC") // Ensures the newest updates appear at the top
     private List<TaskUpdateLog> updateLogs;
 
+    @Column(name = "current_assignee_id")
+    private String currentAssigneeId;
+
+    @Column(name = "workflow_state")
+    private String workflowState = "UNASSIGNED";
+
     public List<TaskUpdateLog> getUpdateLogs() { return updateLogs; }
     public void setUpdateLogs(List<TaskUpdateLog> updateLogs) { this.updateLogs = updateLogs; }
 
@@ -125,6 +131,12 @@ public class Ticket {
 
     public Set<User> getAssignedMembers() { return assignedMembers; }
     public void setAssignedMembers(Set<User> assignedMembers) { this.assignedMembers = assignedMembers; }
+
+    public String getCurrentAssigneeId() { return currentAssigneeId; }
+    public void setCurrentAssigneeId(String currentAssigneeId) { this.currentAssigneeId = currentAssigneeId; }
+
+    public String getWorkflowState() { return workflowState; }
+    public void setWorkflowState(String workflowState) { this.workflowState = workflowState; }
 
     // Helper methods for managing assignments easily
     public void addAssignedMember(User user) { this.assignedMembers.add(user); }

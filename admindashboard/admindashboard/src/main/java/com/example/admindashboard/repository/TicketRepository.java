@@ -13,4 +13,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     // Fetches all tickets assigned to a specific developer
     List<Ticket> findByAssignedTo_Id(Long developerId);
+
+    // Add this inside your TicketRepository interface
+    List<Ticket> findByWorkflowStateIsNullOrWorkflowStateOrderByIdDesc(String workflowState);
 }
