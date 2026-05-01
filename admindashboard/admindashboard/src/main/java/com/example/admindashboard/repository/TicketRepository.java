@@ -16,4 +16,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     // Add this inside your TicketRepository interface
     List<Ticket> findByWorkflowStateIsNullOrWorkflowStateOrderByIdDesc(String workflowState);
+
+    // Finds tickets assigned to a specific manager that are in a specific state
+    List<Ticket> findByCurrentAssigneeIdAndWorkflowStateOrderByIdDesc(String currentAssigneeId, String workflowState);
 }

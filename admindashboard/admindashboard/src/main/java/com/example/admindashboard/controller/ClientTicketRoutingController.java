@@ -1,7 +1,7 @@
 package com.example.admindashboard.controller;
 
-import com.example.admindashboard.model.ServiceRequest;
-import com.example.admindashboard.service.ServiceRequestRoutingService;
+import com.example.admindashboard.model.Ticket;
+import com.example.admindashboard.service.ClientTicketRoutingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,41 +16,34 @@ import java.util.Map;
 public class ClientTicketRoutingController {
 
     @Autowired
-    private ServiceRequestRoutingService routingService;
+    private ClientTicketRoutingService routingService;
 
     // =========================================================================
-    // 1. DYNAMIC INBOX: Fetches tickets based on the logged-in user's role
+    // 1. DYNAMIC INBOX: Fetches client tickets based on role
     // =========================================================================
     @GetMapping("/inbox")
-    public ResponseEntity<List<ServiceRequest>> getMyInbox(Principal principal) {
-        // The principal automatically holds the currently logged-in user's ID/Username
+    public ResponseEntity<List<Ticket>> getMyInbox(Principal principal) {
         String username = principal.getName();
-
-        // Let our smart service figure out what this specific user is allowed to see
-        List<ServiceRequest> inbox = routingService.getInboxForUser(username);
-
+        List<Ticket> inbox = routingService.getInboxForUser(username);
         return ResponseEntity.ok(inbox);
     }
 
     // =========================================================================
-    // 2. TICKET HAND-OFF: Moves the ticket down the hierarchy
+    // 2. TICKET HAND-OFF: Moves the client ticket down the hierarchy
     // =========================================================================
     @PostMapping("/assign")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_DELIVERY_MANAGER', 'ROLE_PROJECT_MANAGER', 'ROLE_TEAM_LEAD')")
     public ResponseEntity<?> assignTicket(@RequestBody Map<String, Object> payload) {
         try {
-            // Extract the assignment details from the frontend JSON payload
             Long ticketId = Long.valueOf(payload.get("ticketId").toString());
             String targetUsername = payload.get("targetUsername").toString();
             String targetRole = payload.get("targetRole").toString();
 
-            // Execute the hand-off!
-            ServiceRequest updatedTicket = routingService.routeTicket(ticketId, targetUsername, targetRole);
+            Ticket updatedTicket = routingService.routeTicket(ticketId, targetUsername, targetRole);
 
             return ResponseEntity.ok(updatedTicket);
 
         } catch (Exception e) {
-            // If the target user doesn't exist, or they pass a bad role, catch it safely
             return ResponseEntity.badRequest().body("Error routing ticket: " + e.getMessage());
         }
     }
