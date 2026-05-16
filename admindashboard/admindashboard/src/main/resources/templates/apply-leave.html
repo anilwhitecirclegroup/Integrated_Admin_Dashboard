@@ -391,7 +391,7 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Leave Type <span class="text-danger">*</span></label>
-                                <select class="form-select" id="leaveType" required>
+                                <select class="form-select" id="leaveType" onchange="calculateDays()" required>
                                     <option selected disabled>Select Type...</option>
                                     <option value="Casual">Casual Leave (CL)</option>
                                     <option value="Sick">Sick Leave (SL)</option>
@@ -604,13 +604,37 @@
 
     // 2. Calculate Total Days automatically
     function calculateDays() {
-        const start = new Date(document.getElementById('fromDate').value);
-        const end = new Date(document.getElementById('toDate').value);
+        const leaveType = document.getElementById('leaveType').value;
+        const startInput = document.getElementById('fromDate');
+        const endInput = document.getElementById('toDate');
         const totalInput = document.getElementById('totalDays');
 
-        if (start && end && end >= start) {
+        const start = new Date(startInput.value);
+        const end = new Date(endInput.value);
+
+        if (startInput.value && endInput.value && end >= start) {
             const diffTime = Math.abs(end - start);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+            // --- NEW: DYNAMIC BALANCE RESTRICTION ---
+            if (leaveType && leaveType !== 'Select Type...' && leaveType !== 'WFH') {
+                const availableBalance = window.availableLeaveBalances[leaveType] || 0;
+
+                if (diffDays > availableBalance) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Limit Exceeded',
+                        text: `You only have ${availableBalance} ${leaveType} leave(s) remaining. You cannot select ${diffDays} days.`,
+                        confirmButtonColor: '#1e3a8a'
+                    });
+
+                    // Instantly wipe the invalid end date and reset the counter
+                    endInput.value = '';
+                    totalInput.value = "0";
+                    return;
+                }
+            }
+
             totalInput.value = diffDays;
         } else {
             totalInput.value = "0";
@@ -626,7 +650,7 @@
         const totalDays = document.getElementById("totalDays").value;
         const reason = document.getElementById("leaveReason").value;
 
-        // Validation Warning
+        // Validation Warning: Missing Fields
         if (!leaveType || leaveType === "Select Type..." || !leaveMode || leaveMode === "Select Mode..." || !fromDate || !toDate || !reason) {
             Swal.fire({
                 icon: 'warning',
@@ -635,6 +659,34 @@
                 confirmButtonColor: '#1e3a8a'
             });
             return;
+        }
+
+        const requestedDays = parseFloat(totalDays) || 0;
+
+        // Validation Warning: 0 Days
+        if (requestedDays <= 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Invalid Dates',
+                text: 'Total days must be at least 1.',
+                confirmButtonColor: '#1e3a8a'
+            });
+            return;
+        }
+
+        // --- NEW: VALIDATION WARNING FOR INSUFFICIENT BALANCE ---
+        // We skip this check for Work From Home (WFH) since it doesn't usually pull from balance pools
+        if (leaveType !== 'WFH') {
+            const availableBalance = window.availableLeaveBalances[leaveType] || 0;
+            if (requestedDays > availableBalance) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Insufficient Balance',
+                    text: `You requested ${requestedDays} days, but you only have ${availableBalance} ${leaveType} leave(s) remaining.`,
+                    confirmButtonColor: '#1e3a8a'
+                });
+                return; // Stop the submission!
+            }
         }
 
         // Beautiful Confirmation Modal
@@ -874,6 +926,11 @@
                 data.Sick.left = data.Sick.total - (data.Sick.used || 0);
             }
 
+            // --- NEW: STORE BALANCES GLOBALLY FOR VALIDATION ---
+            if (data.Casual) window.availableLeaveBalances.Casual = data.Casual.left;
+            if (data.Sick) window.availableLeaveBalances.Sick = data.Sick.left;
+            if (data.Earned) window.availableLeaveBalances.Earned = data.Earned.left;
+
             const clPercent = (data.Casual.used / data.Casual.total) * 100;
             const slPercent = (data.Sick.used / data.Sick.total) * 100;
             const elPercent = (data.Earned.used / data.Earned.total) * 100;
@@ -896,9 +953,31 @@
         }
     }
 
+    window.availableLeaveBalances = { Casual: 0, Sick: 0, Earned: 0, WFH: 365 };
     document.addEventListener("DOMContentLoaded", function() {
         fetchRecentLeaves();
         fetchLeaveBalance();
+
+        // --- NEW: DATE RESTRICTION LOGIC ---
+        const today = new Date().toISOString().split('T')[0];
+        const fromDate = document.getElementById('fromDate');
+        const toDate = document.getElementById('toDate');
+
+        if (fromDate && toDate) {
+            // Prevent selecting dates in the past
+            fromDate.setAttribute('min', today);
+            toDate.setAttribute('min', today);
+
+            // Automatically update the "To Date" minimum whenever "From Date" changes
+            fromDate.addEventListener('change', function() {
+                toDate.setAttribute('min', this.value);
+                // Reset 'To Date' if it's currently earlier than the new 'From Date'
+                if (toDate.value && toDate.value < this.value) {
+                    toDate.value = this.value;
+                    calculateDays();
+                }
+            });
+        }
     });
 </script>
 
