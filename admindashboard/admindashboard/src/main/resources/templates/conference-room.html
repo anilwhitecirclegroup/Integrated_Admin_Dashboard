@@ -688,6 +688,13 @@
         }
     });
 
+    // NEW: Prevent booking past dates by setting the minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    const meetingDateInput = document.getElementById('meetingDate');
+    if (meetingDateInput) {
+        meetingDateInput.setAttribute('min', today);
+    }
+
     // Assuming your Meeting Mode dropdown has the ID 'meetingMode'
     document.getElementById('meetingMode').addEventListener('change', function() {
         var linkContainer = document.getElementById('meetingLinkContainer');

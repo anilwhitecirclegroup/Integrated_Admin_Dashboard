@@ -1,4 +1,4 @@
-package com.example.admindashboard.config;
+package com.example.admindashboard.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
