@@ -652,6 +652,21 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
+
+        // --- NEW: Calculate the Current ISO 8601 Week (e.g., "2026-W20") ---
+        function getCurrentISOWeek() {
+            const d = new Date();
+            const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            const dayNum = date.getUTCDay() || 7;
+            date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+            const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+            const weekStr = weekNo < 10 ? '0' + weekNo : weekNo;
+            return `${date.getUTCFullYear()}-W${weekStr}`;
+        }
+
+        const currentWeekStr = getCurrentISOWeek();
+
         // Fix for standard Date inputs
         document.querySelectorAll('input[type="date"]').forEach(function(input) {
             if (!input.getAttribute('max')) {
@@ -659,11 +674,13 @@
             }
         });
 
-        // Fix for Week inputs
+        // --- UPDATED: Fix for Week inputs + Past Week Restriction ---
         document.querySelectorAll('input[type="week"]').forEach(function(input) {
             if (!input.getAttribute('max')) {
                 input.setAttribute('max', '9999-W52');
             }
+            // Instantly blocks any week prior to the current one!
+            input.setAttribute('min', currentWeekStr);
         });
 
         // Fix for Month inputs
