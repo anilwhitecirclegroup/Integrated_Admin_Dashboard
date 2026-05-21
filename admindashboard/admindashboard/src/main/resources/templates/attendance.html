@@ -349,6 +349,15 @@
 <script>
     const holidays = { "26-01": "Republic Day", "15-08": "Independence Day", "02-10": "Gandhi Jayanti" };
 
+    function validateHours(input) {
+        let val = parseFloat(input.value);
+        if (val < 0) {
+            input.value = 0; // Prevent negative hours
+        } else if (val > 24) {
+            input.value = 24; // Cap at 24 hours per day
+        }
+    }
+
     function updateTableDates() {
         const weekInput = document.getElementById('weekInput');
         const tableBody = document.getElementById('timesheetBody');
@@ -383,7 +392,9 @@
                 <tr class="${rowCls}" id="row-${i}">
                     <td class="fw-bold">${day} <span class="text-muted small ms-1">${dStr}</span></td>
                     <td class="align-middle planned-val">${pVal}</td>
-                    <td><input type="number" class="tbl-input rec-hours" step="0.1" value="${pVal}" ${isWE || isH ? 'readonly' : ''} style="width: 80px;" oninput="calculateTotal()"></td>
+                    <td>
+                        <input type="number" class="tbl-input rec-hours" step="0.1" min="0" max="24" value="${pVal}" ${isWE || isH ? 'readonly' : ''} style="width: 80px;" oninput="validateHours(this); calculateTotal()">
+                    </td>
                     <td>${isH || isWE ? `<input class="tbl-input readonly-cell" value="${isH ? 'Holiday' : 'Weekend'}" readonly>` :
                         `<select class="tbl-input status-select" onchange="updateRowLogic(${i})">
                             <option value="Present">Present</option><option value="Present (Late)">Present (Late)</option>
@@ -653,7 +664,7 @@
 
     document.addEventListener("DOMContentLoaded", function() {
 
-        // --- NEW: Calculate the Current ISO 8601 Week (e.g., "2026-W20") ---
+        // --- Calculate the Current ISO 8601 Week (e.g., "2026-W20") ---
         function getCurrentISOWeek() {
             const d = new Date();
             const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -674,13 +685,28 @@
             }
         });
 
-        // --- UPDATED: Fix for Week inputs + Past Week Restriction ---
+        // --- UPDATED: STRICT CURRENT WEEK LOCK ---
         document.querySelectorAll('input[type="week"]').forEach(function(input) {
-            if (!input.getAttribute('max')) {
-                input.setAttribute('max', '9999-W52');
-            }
-            // Instantly blocks any week prior to the current one!
+
+            // 1. UI BLOCK: Set both min and max to the current week
             input.setAttribute('min', currentWeekStr);
+            input.setAttribute('max', currentWeekStr);
+
+            // 2. MANUAL TYPING CHECK: Instantly revert if they try to type a different week
+            input.addEventListener('blur', function() {
+                if (this.value && this.value !== currentWeekStr) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Invalid Week',
+                        text: 'Attendance can only be logged for the current active week.',
+                        confirmButtonColor: '#1e3a8a'
+                    });
+
+                    // Instantly revert to current week and reload table
+                    this.value = currentWeekStr;
+                    updateTableDates();
+                }
+            });
         });
 
         // Fix for Month inputs
