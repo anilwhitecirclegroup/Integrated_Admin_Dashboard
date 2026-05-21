@@ -325,6 +325,11 @@ public class DashboardController {
     @GetMapping("/my-whitecircle")
     public String showMyWhiteCircle() { return "my-whitecircle"; }
 
+    @GetMapping("/coming-soon")
+    public String comingSoonPage() {
+        return "work-in-progress"; // Work In Progress page for static cards
+    }
+
     @GetMapping("/employee/erp-timesheet")
     public String showErpAndTimesheet() { return "erp-and-timesheet"; }
 
