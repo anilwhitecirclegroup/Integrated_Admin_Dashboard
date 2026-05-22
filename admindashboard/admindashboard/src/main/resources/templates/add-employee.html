@@ -343,7 +343,7 @@
                         <div class="row g-3">
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" name="mobileNumber" class="form-control" id="mobileNumber" placeholder="Mobile Number" required th:value="${user?.employeeProfile?.mobileNumber}">
+                                    <input type="tel" name="mobileNumber" class="form-control" id="mobileNumber" placeholder="Mobile Number" pattern="[0-9]{10}" maxlength="10" required th:value="${user?.employeeProfile?.mobileNumber}">
                                     <label for="mobileNumber">Mobile Number *</label>
                                 </div>
                             </div>
