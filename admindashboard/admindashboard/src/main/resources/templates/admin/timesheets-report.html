@@ -188,6 +188,7 @@
                             <span class="badge rounded-pill fw-bold"
                                   th:classappend="${sheet.status == 'APPROVED' ? 'bg-success bg-opacity-10 text-success' : (sheet.status == 'SUBMITTED' ? 'bg-primary bg-opacity-10 text-primary' : (sheet.status == 'REJECTED' ? 'bg-danger bg-opacity-10 text-danger' : 'bg-warning bg-opacity-10 text-warning'))}"
                                   th:text="${sheet.status != null ? sheet.status : 'DRAFT'}">Status</span>
+							 	
                         </td>
                         <td class="text-end pe-4">
                             <button class="btn btn-action btn-sm"
