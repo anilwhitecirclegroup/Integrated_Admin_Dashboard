@@ -17,15 +17,13 @@ target/
 # =========================
 # Spring Boot local config / secrets
 # =========================
+src/main/resources/application.properties
 src/main/resources/application-local.properties
 src/main/resources/application-dev.properties
 src/main/resources/application-prod.properties
 .env
 *.env
 
-# If your team wants application.properties in Git,
-# then DO NOT ignore it. Instead create:
-# application-example.properties
 
 # =========================
 # Eclipse / STS
@@ -87,3 +85,8 @@ Thumbs.db
 *.temp
 *.swp
 *.swo
+*.swo
+
+# Environment files
+.env
+*.env

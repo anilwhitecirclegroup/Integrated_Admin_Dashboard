@@ -94,6 +94,28 @@ public class AttendanceService {
 
         String weekStartDateStr = (String) data.get("weekStartDate");
         LocalDate weekStartDate = LocalDate.parse(weekStartDateStr);
+        
+        // duplicate-check for submission
+        String weekEndDateStr = weekStartDate.plusDays(6).toString();
+
+        List<Attendance> existingWeeklyAttendance =
+                attendanceRepository.findByUserAndWeekStartDateAndWeekEndDate(user,weekStartDate.toString(),weekEndDateStr );
+
+        Attendance attendance;
+
+        if (!existingWeeklyAttendance.isEmpty()) {
+            attendance = existingWeeklyAttendance.get(0);
+
+            if (!"Draft".equalsIgnoreCase(attendance.getApprovalStatus())) {
+                throw new RuntimeException("You have already submitted an attendance regularization request for this week.");
+            }
+        } else {
+            attendance = new Attendance();
+            attendance.setUser(user);
+            attendance.setWeekStartDate(weekStartDate.toString());
+            attendance.setWeekEndDate(weekEndDateStr);
+            attendance.setApprovalStatus("Draft");
+        }
 
         double totalHours = 0.0;
         int presentDays = 0;
@@ -119,10 +141,6 @@ public class AttendanceService {
             }
         }
 
-        Attendance attendance = new Attendance();
-        attendance.setUser(user);
-        attendance.setWeekStartDate(weekStartDate.toString());
-        attendance.setWeekEndDate(weekStartDate.plusDays(6).toString());
         attendance.setTotalHours(String.valueOf(totalHours));
         attendance.setPresentDays(presentDays);
         attendance.setAbsentDays(absentDays);
