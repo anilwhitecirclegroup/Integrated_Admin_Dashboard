@@ -396,7 +396,7 @@
                                     <option value="Casual">Casual Leave (CL)</option>
                                     <option value="Sick">Sick Leave (SL)</option>
                                     <option value="Earned">Earned Leave (EL)</option>
-                                    <option value="WFH">Work From Home (WFH)</option>
+                                    
                                 </select>
                             </div>
                             <div class="col-md-6">
@@ -973,7 +973,7 @@
 
             if (data.Sick) {
                 data.Sick.total = 20;
-                data.Sick.left = data.Sick.total - (data.Sick.used || 0);
+                data.Sick.left = Math.max(0, data.Sick.total - (data.Sick.used || 0));
             }
 
             // --- NEW: STORE BALANCES GLOBALLY FOR VALIDATION ---
