@@ -313,12 +313,16 @@
                     <div class="section-header"><i class="fas fa-user-cog me-2"></i> PERSONAL DETAILS</div>
                     <div class="section-body">
                         <div class="row g-3">
+
                             <div class="col-md-6">
                                 <div class="info-box">
                                     <label class="info-label">Mobile Number</label>
                                     <div class="info-value">
                                         <span class="info-value-text" th:text="${user.employeeProfile?.mobileNumber}"></span>
-                                        <input type="text" name="mobileNumber" class="editable-field" th:value="${user.employeeProfile?.mobileNumber}">
+                                        <input type="text" name="mobileNumber" class="editable-field"
+                                               th:value="${user.employeeProfile?.mobileNumber}"
+                                               pattern="\d{10}" maxlength="10"
+                                               title="Mobile number must be exactly 10 digits">
                                     </div>
                                 </div>
                             </div>
@@ -416,14 +420,36 @@
                         <div class="row g-3 mb-4">
                             <div class="col-md-4"><div class="info-box"><label class="info-label">Degree / Course</label><div class="info-value"><span class="info-value-text" th:text="${user.employeeProfile?.qual1Title}"></span><input type="text" name="qual1Title" class="editable-field" th:value="${user.employeeProfile?.qual1Title}"></div></div></div>
                             <div class="col-md-5"><div class="info-box"><label class="info-label">University / Board</label><div class="info-value"><span class="info-value-text" th:text="${user.employeeProfile?.qual1Inst}"></span><input type="text" name="qual1Inst" class="editable-field" th:value="${user.employeeProfile?.qual1Inst}"></div></div></div>
-                            <div class="col-md-3"><div class="info-box"><label class="info-label">Passing Year</label><div class="info-value"><span class="info-value-text" th:text="${user.employeeProfile?.qual1Year}"></span><input type="text" name="qual1Year" class="editable-field" th:value="${user.employeeProfile?.qual1Year}"></div></div></div>
+                            <div class="col-md-3">
+                                <div class="info-box">
+                                    <label class="info-label">Passing Year</label>
+                                    <div class="info-value">
+                                        <span class="info-value-text" th:text="${user.employeeProfile?.qual1Year}"></span>
+                                        <input type="text" name="qual1Year" class="editable-field"
+                                               th:value="${user.employeeProfile?.qual1Year}"
+                                               pattern="^(19|20)\d{2}$" maxlength="4"
+                                               title="Please enter a valid 4-digit year (e.g., 2024)">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <h6 class="text-primary mb-3" style="font-size: 0.85rem; font-weight: 600;">Secondary Qualification</h6>
                         <div class="row g-3">
                             <div class="col-md-4"><div class="info-box"><label class="info-label">Degree / Course</label><div class="info-value"><span class="info-value-text" th:text="${user.employeeProfile?.qual2Title}"></span><input type="text" name="qual2Title" class="editable-field" th:value="${user.employeeProfile?.qual2Title}"></div></div></div>
                             <div class="col-md-5"><div class="info-box"><label class="info-label">University / Board</label><div class="info-value"><span class="info-value-text" th:text="${user.employeeProfile?.qual2Inst}"></span><input type="text" name="qual2Inst" class="editable-field" th:value="${user.employeeProfile?.qual2Inst}"></div></div></div>
-                            <div class="col-md-3"><div class="info-box"><label class="info-label">Passing Year</label><div class="info-value"><span class="info-value-text" th:text="${user.employeeProfile?.qual2Year}"></span><input type="text" name="qual2Year" class="editable-field" th:value="${user.employeeProfile?.qual2Year}"></div></div></div>
+                            <div class="col-md-3">
+                                <div class="info-box">
+                                    <label class="info-label">Passing Year</label>
+                                    <div class="info-value">
+                                        <span class="info-value-text" th:text="${user.employeeProfile?.qual2Year}"></span>
+                                        <input type="text" name="qual2Year" class="editable-field"
+                                               th:value="${user.employeeProfile?.qual2Year}"
+                                               pattern="^(19|20)\d{2}$" maxlength="4"
+                                               title="Please enter a valid 4-digit year (e.g., 2018)">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -489,32 +515,45 @@
                 <div class="section-card border-danger editable-card">
                     <div class="section-header bg-danger"><i class="fas fa-ambulance me-2"></i> EMERGENCY CONTACT DETAILS</div>
                     <div class="section-body">
+
                         <div class="info-box mb-3">
                             <label class="info-label">Emergency Contact Person</label>
                             <div class="info-value">
                                 <span class="info-value-text" th:text="${user.employeeProfile?.emergencyContactName}"></span>
-                                <input type="text" name="emergencyContactName" class="editable-field" th:value="${user.employeeProfile?.emergencyContactName}">
+                                <input type="text" name="emergencyContactName" class="editable-field"
+                                       th:value="${user.employeeProfile?.emergencyContactName}"
+                                       pattern="[A-Za-z\s]+"
+                                       title="Please use only letters and spaces (e.g., John Doe)">
                             </div>
                         </div>
                         <div class="info-box mb-3">
                             <label class="info-label">Relation with Employee</label>
                             <div class="info-value">
                                 <span class="info-value-text" th:text="${user.employeeProfile?.relationWithEmployee}"></span>
-                                <input type="text" name="relationWithEmployee" class="editable-field" th:value="${user.employeeProfile?.relationWithEmployee}">
+                                <input type="text" name="relationWithEmployee" class="editable-field"
+                                       th:value="${user.employeeProfile?.relationWithEmployee}"
+                                       pattern="[A-Za-z\s]+"
+                                       title="Please use only letters and spaces (e.g., Father, Spouse, Sister)">
                             </div>
                         </div>
                         <div class="info-box mb-3">
                             <label class="info-label">Emergency Phone</label>
                             <div class="info-value">
                                 <span class="info-value-text" th:text="${user.employeeProfile?.emergencyPhone}"></span>
-                                <input type="text" name="emergencyPhone" class="editable-field" th:value="${user.employeeProfile?.emergencyPhone}">
+                                <input type="text" name="emergencyPhone" class="editable-field"
+                                       th:value="${user.employeeProfile?.emergencyPhone}"
+                                       pattern="\d{10}" maxlength="10"
+                                       title="Phone number must be exactly 10 digits">
                             </div>
                         </div>
                         <div class="info-box">
                             <label class="info-label">Alternate Mobile No.</label>
                             <div class="info-value">
                                 <span class="info-value-text" th:text="${user.employeeProfile?.altMobile}"></span>
-                                <input type="text" name="altMobile" class="editable-field" th:value="${user.employeeProfile?.altMobile}">
+                                <input type="text" name="altMobile" class="editable-field"
+                                       th:value="${user.employeeProfile?.altMobile}"
+                                       pattern="\d{10}" maxlength="10"
+                                       title="Phone number must be exactly 10 digits">
                             </div>
                         </div>
                     </div>

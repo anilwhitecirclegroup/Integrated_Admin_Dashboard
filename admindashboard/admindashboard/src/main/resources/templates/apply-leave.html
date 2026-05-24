@@ -391,12 +391,12 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Leave Type <span class="text-danger">*</span></label>
-                                <select class="form-select" id="leaveType" required>
+                                <select class="form-select" id="leaveType" onchange="calculateDays()" required>
                                     <option selected disabled>Select Type...</option>
                                     <option value="Casual">Casual Leave (CL)</option>
                                     <option value="Sick">Sick Leave (SL)</option>
                                     <option value="Earned">Earned Leave (EL)</option>
-                                    <option value="WFH">Work From Home (WFH)</option>
+                                    
                                 </select>
                             </div>
                             <div class="col-md-6">
@@ -602,15 +602,66 @@
         }
     }
 
-    // 2. Calculate Total Days automatically
+    // 2. Calculate Total Days automatically (Upgraded with Overlap Check)
     function calculateDays() {
-        const start = new Date(document.getElementById('fromDate').value);
-        const end = new Date(document.getElementById('toDate').value);
+        const leaveType = document.getElementById('leaveType').value;
+        const startInput = document.getElementById('fromDate');
+        const endInput = document.getElementById('toDate');
         const totalInput = document.getElementById('totalDays');
 
-        if (start && end && end >= start) {
+        const start = new Date(startInput.value);
+        const end = new Date(endInput.value);
+
+        if (startInput.value && endInput.value && end >= start) {
             const diffTime = Math.abs(end - start);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+            // --- NEW: DUPLICATE LEAVE OVERLAP CHECK ---
+            if (window.recentLeavesData && window.recentLeavesData.length > 0) {
+                const isDuplicate = window.recentLeavesData.some(leave => {
+                    // Ignore leaves that were previously rejected
+                    if (leave.status === 'REJECTED') return false;
+
+                    const existingStart = new Date(leave.fromDate);
+                    const existingEnd = new Date(leave.toDate);
+
+                    // Standard date overlap formula: (Start A <= End B) and (End A >= Start B)
+                    return (start <= existingEnd && end >= existingStart);
+                });
+
+                if (isDuplicate) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Duplicate Leave Detected',
+                        text: 'Duplicate leave detected, you can not apply leave for day/s you have already applied.',
+                        confirmButtonColor: '#1e3a8a'
+                    });
+
+                    // Instantly wipe the invalid end date and reset the counter
+                    endInput.value = '';
+                    totalInput.value = "0";
+                    return;
+                }
+            }
+
+            // --- DYNAMIC BALANCE RESTRICTION ---
+            if (leaveType && leaveType !== 'Select Type...' && leaveType !== 'WFH') {
+                const availableBalance = window.availableLeaveBalances[leaveType] || 0;
+
+                if (diffDays > availableBalance) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Limit Exceeded',
+                        text: `You only have ${availableBalance} ${leaveType} leave(s) remaining. You cannot select ${diffDays} days.`,
+                        confirmButtonColor: '#1e3a8a'
+                    });
+
+                    endInput.value = '';
+                    totalInput.value = "0";
+                    return;
+                }
+            }
+
             totalInput.value = diffDays;
         } else {
             totalInput.value = "0";
@@ -626,7 +677,7 @@
         const totalDays = document.getElementById("totalDays").value;
         const reason = document.getElementById("leaveReason").value;
 
-        // Validation Warning
+        // Validation Warning: Missing Fields
         if (!leaveType || leaveType === "Select Type..." || !leaveMode || leaveMode === "Select Mode..." || !fromDate || !toDate || !reason) {
             Swal.fire({
                 icon: 'warning',
@@ -635,6 +686,57 @@
                 confirmButtonColor: '#1e3a8a'
             });
             return;
+        }
+
+        const requestedDays = parseFloat(totalDays) || 0;
+
+        // Validation Warning: 0 Days
+        if (requestedDays <= 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Invalid Dates',
+                text: 'Total days must be at least 1.',
+                confirmButtonColor: '#1e3a8a'
+            });
+            return;
+        }
+
+        // --- DUPLICATE LEAVE CHECK (FINAL SAFETY NET) ---
+        if (window.recentLeavesData && window.recentLeavesData.length > 0) {
+            const reqStart = new Date(fromDate);
+            const reqEnd = new Date(toDate);
+
+            const isDuplicate = window.recentLeavesData.some(leave => {
+                if (leave.status === 'REJECTED') return false;
+                const existingStart = new Date(leave.fromDate);
+                const existingEnd = new Date(leave.toDate);
+                return (reqStart <= existingEnd && reqEnd >= existingStart);
+            });
+
+            if (isDuplicate) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Duplicate Leave Detected',
+                    text: 'Duplicate leave detected, you can not apply leave for day/s you have already applied.',
+                    confirmButtonColor: '#1e3a8a'
+                });
+                return; // Hard stop on submission
+            }
+        }
+
+        // ---VALIDATION WARNING FOR INSUFFICIENT BALANCE ---
+        // We skip this check for Work From Home (WFH) since it doesn't usually pull from balance pools
+        if (leaveType !== 'WFH') {
+            const availableBalance = window.availableLeaveBalances[leaveType] || 0;
+            if (requestedDays > availableBalance) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Insufficient Balance',
+                    text: `You requested ${requestedDays} days, but you only have ${availableBalance} ${leaveType} leave(s) remaining.`,
+                    confirmButtonColor: '#1e3a8a'
+                });
+                return; // Stop the submission!
+            }
         }
 
         // Beautiful Confirmation Modal
@@ -871,8 +973,13 @@
 
             if (data.Sick) {
                 data.Sick.total = 20;
-                data.Sick.left = data.Sick.total - (data.Sick.used || 0);
+                data.Sick.left = Math.max(0, data.Sick.total - (data.Sick.used || 0));
             }
+
+            // --- NEW: STORE BALANCES GLOBALLY FOR VALIDATION ---
+            if (data.Casual) window.availableLeaveBalances.Casual = data.Casual.left;
+            if (data.Sick) window.availableLeaveBalances.Sick = data.Sick.left;
+            if (data.Earned) window.availableLeaveBalances.Earned = data.Earned.left;
 
             const clPercent = (data.Casual.used / data.Casual.total) * 100;
             const slPercent = (data.Sick.used / data.Sick.total) * 100;
@@ -896,9 +1003,79 @@
         }
     }
 
+
+    window.availableLeaveBalances = { Casual: 0, Sick: 0, Earned: 0, WFH: 365 };
     document.addEventListener("DOMContentLoaded", function() {
         fetchRecentLeaves();
         fetchLeaveBalance();
+
+        // --- STRICT DATE RESTRICTION LOGIC ---
+        const today = new Date().toISOString().split('T')[0];
+        const fromDate = document.getElementById('fromDate');
+        const toDate = document.getElementById('toDate');
+
+        if (fromDate && toDate) {
+
+            // 1. UI BLOCK: Grey out past dates on the calendar popup
+            fromDate.setAttribute('min', today);
+            toDate.setAttribute('min', today);
+
+            // 2. LOGIC BLOCK: Auto-update "To Date" minimum when "From Date" changes via popup
+            fromDate.addEventListener('change', function() {
+                toDate.setAttribute('min', this.value);
+                if (toDate.value && toDate.value < this.value) {
+                    toDate.value = this.value;
+                    calculateDays();
+                }
+            });
+
+            // 3. MANUAL TYPING CHECK: "From Date"
+            fromDate.addEventListener('blur', function() {
+                if (this.value && this.value.length === 10) {
+                    if (this.value < today) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Invalid Start Date',
+                            text: 'You cannot request leave for dates in the past.',
+                            confirmButtonColor: '#1e3a8a'
+                        });
+                        this.value = ''; // Wipe invalid entry
+                        calculateDays(); // Reset total days to 0
+                    }
+                }
+            });
+
+            // 4. MANUAL TYPING CHECK: "To Date"
+            toDate.addEventListener('blur', function() {
+                if (this.value && this.value.length === 10) {
+
+                    // Cannot be in the past
+                    if (this.value < today) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Invalid End Date',
+                            text: 'You cannot request leave for dates in the past.',
+                            confirmButtonColor: '#1e3a8a'
+                        });
+                        this.value = '';
+                        calculateDays();
+                        return;
+                    }
+
+                    // Cannot be earlier than the From Date
+                    if (fromDate.value && this.value < fromDate.value) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Invalid Range',
+                            text: 'The End Date cannot be earlier than the Start Date.',
+                            confirmButtonColor: '#1e3a8a'
+                        });
+                        this.value = '';
+                        calculateDays();
+                    }
+                }
+            });
+        }
     });
 </script>
 

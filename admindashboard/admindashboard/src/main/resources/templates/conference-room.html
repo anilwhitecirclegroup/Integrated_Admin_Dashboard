@@ -586,18 +586,31 @@
 
     async function submitMeeting() {
         const currentMode = document.getElementById("meetingMode").value;
+        const meetingLinkInput = document.getElementById("meetingLink") ? document.getElementById("meetingLink").value.trim() : "";
         let platformOrRoomValue = currentMode === 'Online' ?
             document.getElementById("platform").value :
             document.getElementById("roomName").value;
+
+        // --- NEW STRICT URL VALIDATION ---
+        // Basic regex to ensure the text looks like a valid link (contains dots, no spaces in domain, etc.)
+        const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+
+        if (currentMode === 'Online') {
+            if (!meetingLinkInput) {
+                Swal.fire({ icon: 'warning', title: 'Missing Link', text: 'Please provide a meeting link for the online meeting.', confirmButtonColor: '#1e3a8a' });
+                return;
+            }
+            if (!urlRegex.test(meetingLinkInput)) {
+                Swal.fire({ icon: 'error', title: 'Invalid Link', text: 'Please enter a valid URL (e.g., https://zoom.us/j/...).', confirmButtonColor: '#1e3a8a' });
+                return;
+            }
+        }
 
         const payload = {
             meetingTitle: document.getElementById("meetingTitle").value,
             meetingMode: currentMode,
             platform: platformOrRoomValue,
-
-            // NEW: Grab the link from the input field
-            meetingLink: document.getElementById("meetingLink") ? document.getElementById("meetingLink").value : "",
-
+            meetingLink: meetingLinkInput,
             participantType: document.getElementById("participantType").value,
             specificEmployeeIds: document.getElementById("specificEmployeeIds").value,
             startTime: document.getElementById("startTime").value,
@@ -607,13 +620,31 @@
 
         // 1. Sleek Warning if fields are missing
         if (!payload.meetingTitle || !payload.meetingDate || !payload.startTime || !payload.endTime || !payload.participantType) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Missing Details',
-                text: 'Please fill out all required fields before confirming.',
-                confirmButtonColor: '#1e3a8a'
-            });
+            Swal.fire({ icon: 'warning', title: 'Missing Details', text: 'Please fill out all required fields before confirming.', confirmButtonColor: '#1e3a8a' });
             return;
+        }
+
+        // --- TIME VALIDATION CHECK ---
+        const [startHours, startMins] = payload.startTime.split(':').map(Number);
+        const [endHours, endMins] = payload.endTime.split(':').map(Number);
+        const totalStart = (startHours * 60) + startMins;
+        const totalEnd = (endHours * 60) + endMins;
+
+        if (totalEnd <= totalStart || (totalEnd - totalStart) > 480) {
+            Swal.fire({ icon: 'error', title: 'Invalid Duration', text: 'Please ensure your end time is after your start time and does not exceed 8 hours.', confirmButtonColor: '#1e3a8a' });
+            return;
+        }
+
+        // ---PAST TIME TODAY CHECK ---
+        const todayStr = new Date().toISOString().split('T')[0];
+        if (payload.meetingDate === todayStr) {
+            const now = new Date();
+            const currentTotalMins = (now.getHours() * 60) + now.getMinutes();
+
+            if (totalStart < currentTotalMins) {
+                Swal.fire({ icon: 'error', title: 'Time Passed', text: 'You cannot schedule a meeting for a time that has already passed today.', confirmButtonColor: '#1e3a8a' });
+                return;
+            }
         }
 
         // 2. Beautiful Center Confirmation Modal
@@ -687,6 +718,92 @@
             dateInput.setAttribute('max', '9999-12-31');
         }
     });
+
+    // NEW: Prevent booking past dates by setting the minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    const meetingDateInput = document.getElementById('meetingDate');
+
+    if (meetingDateInput) {
+        // 1. Blocks past dates on the calendar popup UI
+        meetingDateInput.setAttribute('min', today);
+
+        // 2. EXTRA VALIDATION: Catches manual keyboard typing safely
+        // Changed to 'blur' so it waits until the user finishes typing and leaves the field
+        meetingDateInput.addEventListener('blur', function() {
+
+            // Only run the check if the box isn't empty AND the full 10-character date (YYYY-MM-DD) is typed
+            if (this.value && this.value.length === 10) {
+
+                if (this.value < today) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Invalid Date',
+                        text: 'You cannot schedule a meeting in the past. Please select a valid date.',
+                        confirmButtonColor: '#1e3a8a'
+                    });
+
+                    // Instantly wipe the invalid entry from the input box
+                    this.value = '';
+                }
+            }
+        });
+    }
+
+    // --- REAL-TIME TIME VALIDATION (Start vs End, 8-Hour Limit & Past Time Check) ---
+    const startTimeInput = document.getElementById('startTime');
+    const endTimeInput = document.getElementById('endTime');
+    const formDateInput = document.getElementById('meetingDate');
+
+    function validateTimes() {
+        if (startTimeInput.value) {
+            const [startH, startM] = startTimeInput.value.split(':').map(Number);
+            const startTotalMins = (startH * 60) + startM;
+
+            const todayDateStr = new Date().toISOString().split('T')[0];
+            if (formDateInput && formDateInput.value === todayDateStr) {
+                const now = new Date();
+                const currentTotalMins = (now.getHours() * 60) + now.getMinutes();
+
+                if (startTotalMins < currentTotalMins) {
+                    Swal.fire({ icon: 'warning', title: 'Invalid Start Time', text: 'You cannot schedule a meeting for a time that has already passed today.', confirmButtonColor: '#1e3a8a' });
+                    startTimeInput.value = ''; // Wipe invalid start time
+                    return false;
+                }
+            }
+
+            // Existing logic: Check End vs Start time
+            if (endTimeInput.value) {
+                const [endH, endM] = endTimeInput.value.split(':').map(Number);
+                const endTotalMins = (endH * 60) + endM;
+
+                if (endTotalMins <= startTotalMins) {
+                    Swal.fire({ icon: 'warning', title: 'Invalid Time', text: 'The meeting end time must be after the start time.', confirmButtonColor: '#1e3a8a' });
+                    endTimeInput.value = '';
+                    return false;
+                }
+
+                if ((endTotalMins - startTotalMins) > 480) {
+                    Swal.fire({ icon: 'warning', title: 'Limit Exceeded', text: 'A single meeting cannot exceed 8 hours of duration.', confirmButtonColor: '#1e3a8a' });
+                    endTimeInput.value = '';
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // Trigger checks on blur
+    endTimeInput.addEventListener('blur', validateTimes);
+    startTimeInput.addEventListener('blur', validateTimes);
+
+    // Also re-validate if they change the date to "Today" AFTER filling in the times
+    if (formDateInput) {
+        formDateInput.addEventListener('blur', function() {
+            if (this.value && this.value.length === 10) {
+                validateTimes();
+            }
+        });
+    }
 
     // Assuming your Meeting Mode dropdown has the ID 'meetingMode'
     document.getElementById('meetingMode').addEventListener('change', function() {

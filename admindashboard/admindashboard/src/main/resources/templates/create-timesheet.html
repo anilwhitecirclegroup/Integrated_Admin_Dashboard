@@ -1035,11 +1035,17 @@
         const saturday = new Date(sunday);
         saturday.setDate(sunday.getDate() + 6);
 
+        // Calculate string format for the current week's Sunday
+        const sundayStr = formatDate(sunday);
+
         if (startDateInput) {
             startDateInput.setAttribute('max', todayStr);
 
+            // --- NEW: Block all past weeks natively on the calendar ---
+            startDateInput.setAttribute('min', sundayStr);
+
             // 2. SET DATES TO CURRENT WEEK ON PAGE LOAD
-            startDateInput.value = formatDate(sunday);
+            startDateInput.value = sundayStr;
 
             if (endDateInput) {
                 endDateInput.value = formatDate(saturday);
@@ -1054,9 +1060,18 @@
                 if (this.value) {
                     const fromDate = new Date(this.value);
 
+                    // Extra Validation: Prevent manual typing of past dates
+                    if (fromDate < sunday) {
+                        Swal.fire({icon: 'warning', title: 'Invalid Date', text: 'You cannot create a timesheet for past weeks.', confirmButtonColor: '#1e3a8a'});
+                        this.value = sundayStr;
+                        if (endDateInput) endDateInput.value = formatDate(saturday);
+                        return;
+                    }
+
+                    // Extra Validation: Prevent manual typing of future dates
                     if (fromDate > today) {
                         Swal.fire({icon: 'warning', title: 'Invalid Date', text: 'You cannot create a timesheet for future dates.', confirmButtonColor: '#1e3a8a'});
-                        this.value = formatDate(sunday); // Reset to current week
+                        this.value = sundayStr;
                         if (endDateInput) endDateInput.value = formatDate(saturday);
                         return;
                     }
@@ -1076,7 +1091,10 @@
                 if(!startDateInput.value) return Swal.fire({icon: 'warning', title: 'Missing Date', text: 'Please select a valid start date first.', confirmButtonColor: '#1e3a8a'});
 
                 const startDate = new Date(startDateInput.value);
+
+                // Final safety checks before loading
                 if (startDate > today) return Swal.fire({icon: 'warning', title: 'Future Week', text: 'Cannot load future weeks.', confirmButtonColor: '#1e3a8a'});
+                if (startDate < sunday) return Swal.fire({icon: 'warning', title: 'Past Week', text: 'Cannot load past weeks.', confirmButtonColor: '#1e3a8a'});
 
                 const dayHeaders = document.querySelectorAll('.timecard-table th.col-day');
                 const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

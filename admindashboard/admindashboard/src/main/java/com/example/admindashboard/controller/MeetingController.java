@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/meetings")
@@ -38,7 +40,34 @@ public class MeetingController {
             // 2. Attach the organizer to the meeting
             meeting.setOrganizer(organizer);
 
-            // 3. Save to the PostgreSQL database
+         // 3. Validate specific employee IDs before saving meeting
+            if (meeting.getSpecificEmployeeIds() != null && !meeting.getSpecificEmployeeIds().trim().isEmpty()) {
+
+                String[] invitedIds = meeting.getSpecificEmployeeIds().split(",");
+                List<String> invalidEmployeeIds = new ArrayList<>();
+
+                for (String empId : invitedIds) {
+                    String cleanedEmpId = empId.trim();
+
+                    if (cleanedEmpId.isEmpty()) {
+                        continue;
+                    }
+
+                    boolean employeeExists = userRepository.findByUsername(cleanedEmpId).isPresent();
+
+                    if (!employeeExists) {
+                    	invalidEmployeeIds.add(cleanedEmpId);
+                    }
+                }
+
+                if (!invalidEmployeeIds.isEmpty()) {
+                    return ResponseEntity.badRequest().body(
+                            "Invalid Employee ID(s): " + String.join(", ", invalidEmployeeIds)
+                    );
+                }
+            }
+
+            // 4. Save to the PostgreSQL database only after validation passes
             Meeting savedMeeting = meetingRepository.save(meeting);
 
             // --- ASYNC EMAIL TRIGGER START ---
