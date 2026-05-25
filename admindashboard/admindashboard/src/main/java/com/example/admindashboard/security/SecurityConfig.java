@@ -34,18 +34,43 @@ public class SecurityConfig {
                         .loginProcessingUrl("/perform_login")
                         .successHandler((request, response, authentication) -> {
 
-                            // FIXED: Smart routing based on GRANULAR PERMISSIONS
                             String authorities = authentication.getAuthorities().toString();
+                            // Get which portal user selected during login
+                            String portalType = request.getParameter("portalType");
 
-                            // If the user has the master key to view the admin portal, send them there
+                            boolean isClient = authorities.contains("ROLE_CLIENT");
+
+                            // PORTAL VALIDATION
+                            // Client trying Employee Portal
+                            if ("employee".equalsIgnoreCase(portalType) && isClient) {
+
+                                request.getSession().setAttribute(
+                                        "SPRING_SECURITY_LAST_EXCEPTION",
+                                        new RuntimeException("Client users cannot login through Employee Portal.")
+                                );
+
+                                response.sendRedirect("/login?error=true");
+                                return;
+                            }
+
+                            // Employee/Admin trying Client Portal
+                            if ("client".equalsIgnoreCase(portalType) && !isClient) {
+
+                                request.getSession().setAttribute(
+                                        "SPRING_SECURITY_LAST_EXCEPTION",
+                                        new RuntimeException("Employee users cannot login through Client Portal.")
+                                );
+                                response.sendRedirect("/login?error=true");
+                                return;
+                            }
+
+                            // NORMAL ROLE-BASED ROUTING
                             if (authorities.contains("admin_dashboard_view")) {
                                 response.sendRedirect("/admin/dashboard");
                             }
-                            // Client portal routing
-                            else if (authorities.contains("ROLE_CLIENT")) {
+                            else if (isClient) {
                                 response.sendRedirect("/client/dashboard");
                             }
-                            // Default fallback for standard employees
                             else {
                                 response.sendRedirect("/employee/dashboard");
                             }

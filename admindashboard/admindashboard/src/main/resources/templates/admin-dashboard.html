@@ -465,9 +465,9 @@
                     <a href="/admin/manage-roles" class="feature-btn text-decoration-none text-dark" sec:authorize="hasAuthority('settings_manage_roles')">
                         <i class="fas fa-user-shield"></i><span>Manage Roles</span>
                     </a>
-                    <a href="#" class="feature-btn text-decoration-none text-dark" sec:authorize="hasAuthority('employee_view')">
-                        <i class="fas fa-sitemap"></i><span>Manage Accessibility</span>
-                    </a>
+					<a href="#" class="feature-btn text-decoration-none text-dark" sec:authorize="hasAuthority('settings_manage_roles')">
+					    <i class="fas fa-sitemap"></i><span>Manage Accessibility</span>
+					</a>
                 </div>
             </div>
         </div>
@@ -539,9 +539,9 @@
                     <a href="/admin/attendance-regularization" class="feature-btn" sec:authorize="hasAuthority('attendance_approve')">
                         <i class="fas fa-user-check"></i><span>Attendance Regularization</span>
                     </a>
-                    <a href="#" class="feature-btn" sec:authorize="hasAnyAuthority('payroll_view', 'payroll_generate')">
-                        <i class="fas fa-file-invoice-dollar"></i><span>Manage Payroll</span>
-                    </a>
+					<a href="/payroll" class="feature-btn" sec:authorize="hasAnyAuthority('payroll_view', 'payroll_generate')">
+					    <i class="fas fa-file-invoice-dollar"></i><span>Manage Payroll</span>
+					</a>
                     <a href="/admin/add-client" class="feature-btn" sec:authorize="hasAuthority('settings_manage_company')">
                         <i class="fas fa-user-tie"></i><span>Add New Client</span>
                     </a>

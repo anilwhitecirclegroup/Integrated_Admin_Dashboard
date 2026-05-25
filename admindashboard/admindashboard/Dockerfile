@@ -1,20 +1,23 @@
-# 1. Use an official Java runtime
+# Use Java 17
 FROM eclipse-temurin:17-jdk-alpine
 
-# 2. Set working folder
+# Set working directory
 WORKDIR /app
 
-# 3. Copy only the necessary source files
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-COPY src ./src
+# Copy from nested folder
+COPY admindashboard/admindashboard/.mvn .mvn
+COPY admindashboard/admindashboard/mvnw ./
+COPY admindashboard/admindashboard/pom.xml ./
+COPY admindashboard/admindashboard/src ./src
 
-# Give execution permission to the Maven Wrapper
+# Give permission
 RUN chmod +x mvnw
 
-# 4. Build the app (skipping tests to save time)
+# Build app
 RUN ./mvnw clean package -DskipTests
 
-# 5. Run the built jar file
-# (Note: This finds any jar file in target folder)
-CMD ["java", "-jar", "target/admindashboard-0.0.1-SNAPSHOT.jar"]
+# Expose port
+EXPOSE 8080
+
+# Run app
+CMD ["sh", "-c", "java -jar target/admindashboard-0.0.1-SNAPSHOT.jar --server.port=${PORT}"]
