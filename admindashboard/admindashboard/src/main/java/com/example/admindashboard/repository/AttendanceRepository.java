@@ -16,6 +16,13 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     // Find today's attendance for a specific user (to prevent double check-in)
     Optional<Attendance> findByUserAndDate(User user, LocalDate date);
+    
+    // Prevent duplicate weekly attendance regularization request
+    List<Attendance> findByUserAndWeekStartDateAndWeekEndDate(
+            User user,
+            String weekStartDate,
+            String weekEndDate
+    );
 
     // The "IgnoreCase" automatically fixes the Pending vs PENDING bug
     List<Attendance> findByStatusIgnoreCase(String status);

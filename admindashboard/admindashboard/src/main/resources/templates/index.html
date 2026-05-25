@@ -186,7 +186,7 @@
                  style="background-color: #fff5f5; border-left: 4px solid #dc3545 !important; border-radius: 8px;">
                 <i class="fas fa-exclamation-circle me-2" style="color: #dc3545;"></i>
                 <div style="color: #a94442; font-size: 0.85rem; font-weight: 500;">
-                    Invalid username or password. Please try again.
+                    Invalid credentials or unauthorized portal access.
                 </div>
             </div>
 
@@ -207,6 +207,7 @@
 
                     <div id="employee-form-section">
                         <form action="/perform_login" method="post">
+                            <input type="hidden" name="portalType" value="employee">
                             <div class="mb-3">
                                 <label class="form-label fw-bold small text-dark">User ID</label>
                                 <div class="input-group">
@@ -237,6 +238,7 @@
 
                     <div id="client-form-section" style="display: none;">
                         <form action="/perform_login" method="post">
+                            <input type="hidden" name="portalType" value="client">
                             <div class="mb-3">
                                 <label class="form-label small fw-bold text-dark">Client ID</label>
                                 <div class="input-group">

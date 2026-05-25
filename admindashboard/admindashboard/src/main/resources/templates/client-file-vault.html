@@ -177,12 +177,22 @@
         <div class="col-lg-4">
             <h5 class="section-title"><i class="fas fa-cloud-upload-alt"></i> Upload New Asset</h5>
             <div style="height: 250px;">
-                <div class="upload-zone">
-                    <div class="upload-icon"><i class="fas fa-arrow-up"></i></div>
-                    <h6 class="fw-bold text-dark mb-2">Drag & Drop files here</h6>
-                    <p class="text-muted small mb-3">Support for PDF, ZIP, DOCX, and Images. Maximum file size: 30MB.</p>
-                    <button class="btn btn-primary fw-bold px-4" style="border-radius: 8px;">Browse Files</button>
+
+                <input type="file" id="hiddenFileInput" class="d-none" multiple accept=".pdf,.zip,.docx,.png,.jpg,.jpeg">
+
+                <div class="upload-zone" id="dropZone">
+                    <div class="upload-icon" id="uploadIcon"><i class="fas fa-arrow-up"></i></div>
+                    <h6 class="fw-bold text-dark mb-2" id="uploadText">Drag & Drop files here</h6>
+                    <p class="text-muted small mb-3" id="uploadSubText">Support for PDF, ZIP, DOCX, and Images. Maximum file size: 30MB.</p>
+
+                    <button type="button" id="mainUploadBtn" class="btn btn-primary fw-bold px-4" style="border-radius: 8px;">Browse Files</button>
+
+                    <div id="fileActions" class="d-none mt-3 gap-2 justify-content-center w-100">
+                        <button type="button" id="btnReplace" class="btn btn-sm btn-outline-secondary rounded-pill px-3 fw-bold"><i class="fas fa-sync-alt me-1"></i> Replace</button>
+                        <button type="button" id="btnRemove" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold"><i class="fas fa-trash-alt me-1"></i> Remove</button>
+                    </div>
                 </div>
+
             </div>
 
             <div class="mt-4 p-3 bg-white border rounded-3 shadow-sm">
@@ -195,5 +205,141 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('hiddenFileInput');
+        const uploadText = document.getElementById('uploadText');
+        const uploadSubText = document.getElementById('uploadSubText');
+        const uploadIcon = document.getElementById('uploadIcon');
+        const mainBtn = document.getElementById('mainUploadBtn');
+        const fileActions = document.getElementById('fileActions');
+        const btnReplace = document.getElementById('btnReplace');
+        const btnRemove = document.getElementById('btnRemove');
+
+        let isFileReady = false;
+
+        // Smart Click: Only open browser if no file is currently staged
+        dropZone.addEventListener('click', function() {
+            if (!isFileReady) fileInput.click();
+        });
+
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Highlight drop zone (Only if empty)
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => {
+                if(!isFileReady) {
+                    dropZone.style.borderColor = '#2563eb';
+                    dropZone.style.backgroundColor = '#eff6ff';
+                }
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => {
+                if(!isFileReady) {
+                    dropZone.style.borderColor = '#94a3b8';
+                    dropZone.style.backgroundColor = 'white';
+                }
+            }, false);
+        });
+
+        // Handle dropped files
+        dropZone.addEventListener('drop', function(e) {
+            handleFiles(e.dataTransfer.files);
+        }, false);
+
+        // Handle selected files via Browse button
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+        });
+
+        // Core UI Update Logic
+        function handleFiles(files) {
+            if (files.length > 0) {
+                isFileReady = true;
+                const fileName = files[0].name;
+                const fileSize = (files[0].size / (1024 * 1024)).toFixed(2); // Convert to MB
+
+                // Change UI to success state
+                dropZone.style.borderColor = '#10b981'; // Green border
+                dropZone.style.backgroundColor = '#f0fdf4'; // Light green BG
+                dropZone.style.cursor = 'default';
+
+                uploadIcon.innerHTML = '<i class="fas fa-check text-success"></i>';
+                uploadIcon.style.backgroundColor = '#dcfce7';
+
+                uploadText.textContent = "Ready to Upload";
+                uploadText.className = "fw-bold text-success mb-1";
+                uploadSubText.innerHTML = `<strong>${fileName}</strong><br>Size: ${fileSize} MB`;
+
+                // Update Main Button to Upload
+                mainBtn.textContent = "Upload File";
+                mainBtn.className = "btn btn-success fw-bold px-4";
+
+                // Show Action Buttons (Replace/Remove)
+                fileActions.classList.remove('d-none');
+                fileActions.classList.add('d-flex');
+
+                // Fake Upload Trigger
+                mainBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    alert("Backend integration pending. File: " + fileName + " is uploaded.");
+                    resetUI();
+                }
+            }
+        }
+
+        // Action Buttons Logic
+        btnReplace.onclick = function(e) {
+            e.stopPropagation(); // Prevents dropZone from catching the click
+            fileInput.click();
+        };
+
+        btnRemove.onclick = function(e) {
+            e.stopPropagation();
+            resetUI();
+        };
+
+        // Reset everything back to default
+        function resetUI() {
+            isFileReady = false;
+            fileInput.value = '';
+
+            // Restore visual state
+            dropZone.style.borderColor = '#94a3b8';
+            dropZone.style.backgroundColor = 'white';
+            dropZone.style.cursor = 'pointer';
+
+            uploadIcon.innerHTML = '<i class="fas fa-arrow-up"></i>';
+            uploadIcon.style.backgroundColor = '#eff6ff';
+
+            uploadText.textContent = "Drag & Drop files here";
+            uploadText.className = "fw-bold text-dark mb-2";
+            uploadSubText.textContent = "Support for PDF, ZIP, DOCX, and Images. Maximum file size: 30MB.";
+
+            mainBtn.textContent = "Browse Files";
+            mainBtn.className = "btn btn-primary fw-bold px-4";
+            mainBtn.onclick = null;
+
+            // Hide Action Buttons
+            fileActions.classList.remove('d-flex');
+            fileActions.classList.add('d-none');
+        }
+    });
+</script>
+
 </body>
 </html>
