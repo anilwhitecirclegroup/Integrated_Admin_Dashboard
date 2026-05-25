@@ -15,13 +15,24 @@ public class LeaveLedger {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+	@Column(name = "days")
+	private Double days;
+
     @ManyToOne
     @JoinColumn(name = "leave_type_id", nullable = false)
     private LeaveTypeMaster leaveType;
 
     private String transactionType;
 
-    private Double credit = 0.0;
+    public Double getDays() {
+		return days;
+	}
+
+	public void setDays(Double days) {
+		this.days = days;
+	}
+
+	private Double credit = 0.0;
 
     private Double debit = 0.0;
 
@@ -41,6 +52,10 @@ public class LeaveLedger {
     private String status = "APPROVED";
 
     private LocalDateTime transactionDate;
+
+	@ManyToOne
+	@JoinColumn(name = "employee_id", nullable = false)
+	private User employee;
 
     @PrePersist
     protected void onCreate() {
@@ -149,5 +164,12 @@ public class LeaveLedger {
 
 	public void setTransactionDate(LocalDateTime transactionDate) {
 		this.transactionDate = transactionDate;
+	}
+	public User getEmployee() {
+    return employee;
+	}
+
+	public void setEmployee(User employee) {
+		this.employee = employee;
 	}
 }
