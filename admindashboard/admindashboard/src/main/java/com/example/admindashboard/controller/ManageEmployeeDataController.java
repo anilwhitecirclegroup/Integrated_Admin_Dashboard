@@ -118,6 +118,18 @@ public class ManageEmployeeDataController {
     ) {
         User existingUser = userRepository.findById(userUpdates.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userUpdates.getId()));
+        String email = userUpdates.getEmail();
+
+        if (email != null &&
+            !email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+
+            redirectAttributes.addFlashAttribute(
+                "errorMessage",
+                "Invalid email format"
+            );
+
+            return "redirect:/admin/manage-employees/edit/" + userUpdates.getId();
+        }
 
         existingUser.setFullName(userUpdates.getFullName());
         existingUser.setEmail(userUpdates.getEmail());

@@ -429,7 +429,7 @@
             // Override Sick Leave Total to 20
             if (data.Sick) {
                 data.Sick.total = 20;
-                data.Sick.left = data.Sick.total - (data.Sick.used || 0);
+				data.Sick.left = Math.max(0, data.Sick.total - (data.Sick.used || 0));
             }
 
             // Calculations
