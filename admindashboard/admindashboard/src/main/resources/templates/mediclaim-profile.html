@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mediclaim Profile | WhiteCircle Health</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --med-primary: #1E88E5; --bg-color: #f4f7fb; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); padding: 100px 20px; }
+
+        .container { max-width: 1000px; }
+        .glass-panel { background: rgba(255,255,255,0.9); border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+
+        /* 3D Flip Card */
+        .card-container { width: 320px; height: 200px; perspective: 1000px; margin: 0 auto; }
+        .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s; transform-style: preserve-3d; cursor: pointer; }
+        .card-container:hover .card-inner { transform: rotateY(180deg); }
+        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 15px; padding: 20px; color: white; }
+        .front { background: linear-gradient(135deg, #1E88E5, #1565C0); }
+        .back { background: #334155; transform: rotateY(180deg); }
+
+        /* Profile Info */
+        .info-card { border-left: 4px solid var(--med-primary); padding-left: 15px; margin-bottom: 20px; }
+        .label { font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase; }
+        .value { font-weight: 700; font-size: 1rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold"><i class="fas fa-user-circle text-primary me-2"></i> Employee Mediclaim Profile</h3>
+        <a href="/employee/mediclaim/portal" class="btn btn-outline-primary rounded-pill">Back to Dashboard</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="glass-panel h-100">
+                <h5 class="fw-bold mb-4">Personal Information</h5>
+                <div class="info-card"><div class="label">Full Name</div><div class="value">Om Tripathi</div></div>
+                <div class="info-card"><div class="label">Employee ID</div><div class="value">EMP114</div></div>
+                <div class="info-card"><div class="label">Designation</div><div class="value">Marketing Lead</div></div>
+                <div class="info-card"><div class="label">Business Unit</div><div class="value">Bhopal</div></div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="glass-panel h-100 d-flex flex-column align-items-center justify-content-center">
+                <h5 class="fw-bold mb-4 w-100 text-start">Digital Insurance Card</h5>
+                <div class="card-container mb-3">
+                    <div class="card-inner">
+                        <div class="front">
+                            <h6 class="fw-bold">WhiteCircle Health</h6>
+                            <p class="small">Policy: WCG-2026-MED</p>
+                            <h5 class="mt-4">Om Tripathi</h5>
+                        </div>
+                        <div class="back d-flex align-items-center justify-content-center">
+                            <i class="fas fa-qrcode fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-sm rounded-pill px-4 mt-3"><i class="fas fa-download me-2"></i> Download Card</button>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="glass-panel">
+                <h5 class="fw-bold mb-4">Registered Dependents</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <i class="fas fa-user-friends text-primary"></i> <span class="fw-bold">Khusi Tripathi</span>
+                            <div class="small text-muted">Spouse • Covered</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <i class="fas fa-child text-primary"></i> <span class="fw-bold">Aarav Tripathi</span>
+                            <div class="small text-muted">Child • Covered</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

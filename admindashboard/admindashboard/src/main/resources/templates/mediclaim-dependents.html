@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Dependents | WhiteCircle Health</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --med-primary: #1E88E5;
+            --med-primary-dark: #1565C0;
+            --med-green: #43A047;
+            --med-red: #E53935;
+            --bg-color: #f4f7fb;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.6);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding-top: 100px;
+            padding-bottom: 50px;
+            background-image: radial-gradient(circle at 10% 0%, rgba(30, 136, 229, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 100%, rgba(67, 160, 71, 0.04) 0%, transparent 40%);
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        /* --- TOP NAV --- */
+        .med-nav {
+            position: fixed; top: 0; left: 0; right: 0; height: 80px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 40px; z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
+        }
+        .brand-logo { font-weight: 800; font-size: 1.4rem; color: var(--med-primary); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px;}
+
+        /* --- LAYOUT GRID --- */
+        .page-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-section { margin-bottom: 30px; }
+        .header-section h3 { font-weight: 800; letter-spacing: -0.5px; }
+
+        .split-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+        }
+
+        /* --- ANIMATIONS --- */
+        .slide-in-left { animation: slideInLeft 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .slide-in-right { animation: slideInRight 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; animation-delay: 0.1s; opacity: 0; }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* --- PANELS --- */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.04);
+            height: fit-content;
+        }
+
+        .panel-title { font-weight: 800; font-size: 1.15rem; color: var(--text-dark); margin-bottom: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; }
+
+        /* --- FORM ELEMENTS --- */
+        .form-label { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-control, .form-select {
+            border-radius: 12px; border: 1px solid #cbd5e1; padding: 12px 15px; font-weight: 500; background: #f8fafc; transition: all 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus { border-color: var(--med-primary); box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.1); background: #ffffff; }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--med-primary) 0%, var(--med-primary-dark) 100%);
+            color: white; border: none; border-radius: 12px; padding: 14px; font-weight: 700; width: 100%;
+            transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(30, 136, 229, 0.2);
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(30, 136, 229, 0.3); color: white; }
+
+        /* --- CUSTOM TOGGLE SWITCH --- */
+        .toggle-wrapper { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; }
+        .toggle-label { font-weight: 700; color: var(--text-dark); margin: 0; }
+        .toggle-subtext { font-size: 0.75rem; color: var(--text-muted); margin: 0; }
+
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+        input:checked + .slider { background-color: var(--med-green); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* --- DEPENDENT LIST --- */
+        .dependent-list { display: flex; flex-direction: column; gap: 15px; }
+        .dependent-card {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px;
+            display: flex; align-items: center; gap: 20px; transition: all 0.3s ease;
+        }
+        .dependent-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-color: var(--med-primary); }
+
+        /* Auto-Avatar */
+        .avatar-circle {
+            width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; font-weight: 800; color: white; flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .dep-info { flex-grow: 1; }
+        .dep-name { font-weight: 800; font-size: 1.1rem; color: var(--text-dark); margin: 0 0 5px 0; }
+        .dep-meta { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; margin: 0; }
+
+        .badge-status {
+            padding: 8px 16px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .status-covered { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .status-not-covered { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+
+        @media (max-width: 991px) {
+            .split-grid { grid-template-columns: 1fr; }
+            .slide-in-right { animation: slideInLeft 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; } /* Unified animation on mobile */
+        }
+    </style>
+</head>
+<body>
+
+<nav class="med-nav">
+    <div class="brand-logo">
+        <i class="fas fa-shield-heart fs-3"></i> WhiteCircle Health
+    </div>
+    <div class="d-flex align-items-center gap-4">
+        <a href="/employee/mediclaim/portal" class="btn btn-light border btn-sm fw-bold rounded-pill px-3 shadow-sm">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+</nav>
+
+<div class="page-container">
+    <div class="header-section fade-in-scroll">
+        <h3>Family & Dependents</h3>
+        <p class="text-muted">Manage your family floater coverage and register new dependents.</p>
+    </div>
+
+    <div class="split-grid">
+        <div class="glass-panel slide-in-left">
+            <div class="panel-title">Add New Dependent</div>
+
+            <form id="dependentForm">
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="depName" placeholder="e.g. Om Tripathi" required>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Relationship</label>
+                        <select class="form-select" id="depRelation" required>
+                            <option value="" disabled selected>Select...</option>
+                            <option value="Spouse">Spouse</option>
+                            <option value="Child">Child</option>
+                            <option value="Parent">Parent</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="depDob" required>
+                    </div>
+                </div>
+
+                <div class="toggle-wrapper mb-4 mt-2">
+                    <div>
+                        <p class="toggle-label">Include in Insurance Cover</p>
+                        <p class="toggle-subtext">Add to active family floater policy</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="depCovered" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-user-plus me-2"></i> Register Dependent
+                </button>
+            </form>
+        </div>
+
+        <div class="glass-panel slide-in-right">
+            <div class="panel-title d-flex justify-content-between align-items-center">
+                <span>Registered Family Members</span>
+                <span class="badge bg-primary rounded-pill" id="depCount">2</span>
+            </div>
+
+            <div class="dependent-list" id="dependentList">
+                <div class="dependent-card">
+                    <div class="avatar-circle" data-name="Khusi Tripathi"></div>
+                    <div class="dep-info">
+                        <h4 class="dep-name">Khusi Tripathi</h4>
+                        <p class="dep-meta"><i class="fas fa-venus me-1"></i> Spouse • Born: 12 Aug 1995</p>
+                    </div>
+                    <div class="badge-status status-covered"><i class="fas fa-shield-alt me-1"></i> Covered</div>
+                </div>
+
+                <div class="dependent-card">
+                    <div class="avatar-circle" data-name="Aarav Tripathi"></div>
+                    <div class="dep-info">
+                        <h4 class="dep-name">Aarav Tripathi</h4>
+                        <p class="dep-meta"><i class="fas fa-child me-1"></i> Child • Born: 05 May 2022</p>
+                    </div>
+                    <div class="badge-status status-covered"><i class="fas fa-shield-alt me-1"></i> Covered</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        // --- 1. AVATAR AUTO-GENERATOR ---
+        // Array of professional colors for avatars
+        const colors = ['#1E88E5', '#43A047', '#FB8C00', '#8E24AA', '#E53935', '#00ACC1'];
+
+        function generateAvatars() {
+            const avatars = document.querySelectorAll('.avatar-circle');
+            avatars.forEach(avatar => {
+                if(!avatar.innerHTML) {
+                    const name = avatar.getAttribute('data-name');
+                    const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
+                    // Assign random color based on name length to keep it consistent
+                    const colorIndex = name.length % colors.length;
+
+                    avatar.innerHTML = initials;
+                    avatar.style.background = `linear-gradient(135deg, ${colors[colorIndex]}, #111)`;
+                }
+            });
+        }
+
+        // Run on load
+        generateAvatars();
+
+        // --- 2. FORM SUBMISSION LOGIC ---
+        const form = document.getElementById('dependentForm');
+        const list = document.getElementById('dependentList');
+        const countBadge = document.getElementById('depCount');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Get Values
+            const name = document.getElementById('depName').value;
+            const relation = document.getElementById('depRelation').value;
+            const dob = document.getElementById('depDob').value;
+            const isCovered = document.getElementById('depCovered').checked;
+
+            // Format Date
+            const dateObj = new Date(dob);
+            const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+            // Determine Status UI
+            const statusClass = isCovered ? 'status-covered' : 'status-not-covered';
+            const statusText = isCovered ? '<i class="fas fa-shield-alt me-1"></i> Covered' : '<i class="fas fa-times-circle me-1"></i> Not Covered';
+            const icon = relation === 'Child' ? 'fa-child' : (relation === 'Spouse' ? 'fa-user-friends' : 'fa-user-tie');
+
+            // Build New Card HTML
+            const newCard = document.createElement('div');
+            newCard.className = 'dependent-card slide-in-right'; // Use slide-in animation for new additions
+            newCard.innerHTML = `
+                <div class="avatar-circle" data-name="${name}"></div>
+                <div class="dep-info">
+                    <h4 class="dep-name">${name}</h4>
+                    <p class="dep-meta"><i class="fas ${icon} me-1"></i> ${relation} • Born: ${formattedDate}</p>
+                </div>
+                <div class="badge-status ${statusClass}">${statusText}</div>
+            `;
+
+            // Append to list, regenerate avatars, update count, and reset form
+            list.appendChild(newCard);
+            generateAvatars();
+
+            const currentCount = parseInt(countBadge.innerText);
+            countBadge.innerText = currentCount + 1;
+
+            form.reset();
+            document.getElementById('depCovered').checked = true; // Reset toggle
+        });
+    });
+</script>
+</body>
+</html>
