@@ -16,6 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.example.admindashboard.model.EmployeeLeaveWallet;
+import com.example.admindashboard.model.LeaveLedger;
+import com.example.admindashboard.model.LeaveTypeMaster;
+import com.example.admindashboard.repository.EmployeeLeaveWalletRepository;
+import com.example.admindashboard.repository.LeaveLedgerRepository;
+import com.example.admindashboard.repository.LeaveTypeMasterRepository;
 
 @Controller
 public class AdminLeaveController {
@@ -28,6 +34,15 @@ public class AdminLeaveController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private EmployeeLeaveWalletRepository walletRepository;
+
+    @Autowired
+    private LeaveTypeMasterRepository leaveTypeRepository;
+
+    @Autowired
+    private LeaveLedgerRepository leaveLedgerRepository;
 
     // 1. LOAD THE ADMIN DASHBOARD PAGE
     // LOCK: User must have 'leave_view' permission
@@ -80,9 +95,94 @@ public class AdminLeaveController {
             if (isManager && (leave.getUser().getManager() == null || !leave.getUser().getManager().getId().equals(currentUser.getId()))) {
                 return ResponseEntity.status(403).body("Error: 403 Forbidden. You are not authorized to approve leaves for employees outside your reporting hierarchy.");
             }
-
+            
+            if ("Approved".equalsIgnoreCase(leave.getStatus())) {
+                return ResponseEntity.badRequest()
+                        .body("Leave already approved.");
+            }
             leave.setStatus("Approved");
-            leaveRequestRepository.save(leave);
+            String leaveCode;
+
+            switch (leave.getLeaveType()) {
+
+                case "Casual":
+                    leaveCode = "CL";
+                    break;
+
+                case "Sick":
+                    leaveCode = "SL";
+                    break;
+
+                case "Earned":
+                    leaveCode = "EL";
+                    break;
+
+                default:
+                    return ResponseEntity.badRequest()
+                            .body("Invalid leave type.");
+            }
+
+            LeaveTypeMaster leaveTypeMaster =
+                    leaveTypeRepository
+                            .findByLeaveCode(leaveCode)
+                            .orElseThrow(() ->
+                                    new RuntimeException(
+                                            "Leave type not found"
+                                    ));
+
+            EmployeeLeaveWallet wallet =
+                    walletRepository
+                            .findByUserAndLeaveType(
+                                    leave.getUser(),
+                                    leaveTypeMaster
+                            )
+                            .orElseThrow(() ->
+                                    new RuntimeException(
+                                            "Employee wallet not found"
+                                    ));
+
+            double requestedDays =
+                    leave.getTotalDays();
+
+            if (wallet.getAvailableBalance() < requestedDays) {
+
+                return ResponseEntity.badRequest()
+                        .body("Insufficient leave balance.");
+            }
+
+            // Deduct Balance
+            wallet.setAvailableBalance(
+                    wallet.getAvailableBalance()
+                            - requestedDays
+            );
+
+            wallet.setUsedBalance(
+                    wallet.getUsedBalance()
+                            + requestedDays
+            );
+
+            walletRepository.save(wallet);
+
+            // Create Ledger Entry
+            LeaveLedger ledger = new LeaveLedger();
+
+            ledger.setEmployee(leave.getUser());
+
+            ledger.setLeaveType(leaveTypeMaster);
+
+            ledger.setTransactionType("DEBIT");
+
+            ledger.setDays(requestedDays);
+
+            ledger.setReferenceType("LEAVE_APPROVAL");
+
+            ledger.setReferenceId(leave.getId());
+
+            ledger.setRemarks(
+                    "Leave approved by admin/manager"
+            );
+
+            leaveLedgerRepository.save(ledger);
 
             // --- EMAIL TRIGGER START ---
             Map<String, Object> emailData = new HashMap<>();
