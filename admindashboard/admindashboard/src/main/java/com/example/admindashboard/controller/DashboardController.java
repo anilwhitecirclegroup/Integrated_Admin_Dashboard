@@ -351,6 +351,20 @@ public class DashboardController {
 
     @GetMapping("/tickets")
     public String showTicketsPage() { return "tickets"; }
+    @GetMapping("/ticket-dashboard")
+    public String showTicketDashboard(Model model, Principal principal) {
+        if (principal != null) {
+            String loginId = principal.getName();
+            User currentUser = userRepository.findByUsername(loginId).orElse(new User());
+            model.addAttribute("user", currentUser);
+            
+            List<ServiceRequest> userRequests = serviceRequestRepository.findByEmployeeIdOrderBySubmissionDateDesc(loginId);
+            model.addAttribute("myRequests", userRequests);
+        } else {
+            model.addAttribute("user", new User());
+        }
+        return "ticket-dashboard";
+    }
 
     @GetMapping("/service-requests")
     public String showServiceRequests(Model model, Principal principal) {
