@@ -14,7 +14,6 @@
             --med-primary: #1E88E5;
             --med-primary-dark: #1565C0;
             --med-green: #43A047;
-            --med-red: #E53935;
             --bg-color: #f4f7fb;
             --text-dark: #0f172a;
             --text-muted: #64748b;
@@ -22,145 +21,69 @@
             --glass-border: rgba(255, 255, 255, 0.6);
         }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            padding-top: 100px;
-            padding-bottom: 50px;
-            background-image: radial-gradient(circle at 10% 0%, rgba(30, 136, 229, 0.05) 0%, transparent 40%),
-                              radial-gradient(circle at 90% 100%, rgba(67, 160, 71, 0.04) 0%, transparent 40%);
-            background-attachment: fixed;
-            overflow-x: hidden;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-dark); padding-top: 100px; padding-bottom: 50px; overflow-x: hidden; }
 
-        /* --- TOP NAV --- */
-        .med-nav {
-            position: fixed; top: 0; left: 0; right: 0; height: 80px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 40px; z-index: 1000;
-            border-bottom: 1px solid var(--glass-border);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
-        }
-        .brand-logo { font-weight: 800; font-size: 1.4rem; color: var(--med-primary); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px;}
+        .med-nav { position: fixed; top: 0; left: 0; right: 0; height: 80px; background: var(--glass-bg); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; z-index: 1000; border-bottom: 1px solid var(--glass-border); }
+        .brand-logo { font-weight: 800; font-size: 1.4rem; color: var(--med-primary); display: flex; align-items: center; gap: 12px; }
 
-        /* --- LAYOUT GRID --- */
-        .page-container {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
+        .page-container { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
         .header-section { margin-bottom: 30px; }
-        .header-section h3 { font-weight: 800; letter-spacing: -0.5px; }
+        .header-section h3 { font-weight: 800; }
 
-        .split-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 30px;
-        }
+        .split-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; }
 
-        /* --- ANIMATIONS --- */
-        .slide-in-left { animation: slideInLeft 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .slide-in-right { animation: slideInRight 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; animation-delay: 0.1s; opacity: 0; }
+        .slide-in-left { animation: slideInLeft 0.6s forwards; }
+        .slide-in-right { animation: slideInRight 0.6s forwards; opacity: 0; }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
 
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-40px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(40px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
+        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.04); height: fit-content; }
+        .panel-title { font-weight: 800; font-size: 1.15rem; margin-bottom: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; }
 
-        /* --- PANELS --- */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.04);
-            height: fit-content;
-        }
-
-        .panel-title { font-weight: 800; font-size: 1.15rem; color: var(--text-dark); margin-bottom: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; }
-
-        /* --- FORM ELEMENTS --- */
-        .form-label { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-control, .form-select {
-            border-radius: 12px; border: 1px solid #cbd5e1; padding: 12px 15px; font-weight: 500; background: #f8fafc; transition: all 0.3s ease;
-        }
+        .form-label { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; }
+        .form-control, .form-select { border-radius: 12px; border: 1px solid #cbd5e1; padding: 12px 15px; font-weight: 500; background: #f8fafc; }
         .form-control:focus, .form-select:focus { border-color: var(--med-primary); box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.1); background: #ffffff; }
 
-        .btn-submit {
-            background: linear-gradient(135deg, var(--med-primary) 0%, var(--med-primary-dark) 100%);
-            color: white; border: none; border-radius: 12px; padding: 14px; font-weight: 700; width: 100%;
-            transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(30, 136, 229, 0.2);
-        }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(30, 136, 229, 0.3); color: white; }
+        .btn-submit { background: linear-gradient(135deg, var(--med-primary) 0%, var(--med-primary-dark) 100%); color: white; border: none; border-radius: 12px; padding: 14px; font-weight: 700; width: 100%; transition: all 0.3s; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(30, 136, 229, 0.3); }
 
-        /* --- CUSTOM TOGGLE SWITCH --- */
         .toggle-wrapper { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; }
-        .toggle-label { font-weight: 700; color: var(--text-dark); margin: 0; }
+        .toggle-label { font-weight: 700; margin: 0; }
         .toggle-subtext { font-size: 0.75rem; color: var(--text-muted); margin: 0; }
-
         .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--med-green); }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        /* --- DEPENDENT LIST --- */
         .dependent-list { display: flex; flex-direction: column; gap: 15px; }
-        .dependent-card {
-            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px;
-            display: flex; align-items: center; gap: 20px; transition: all 0.3s ease;
-        }
+        .dependent-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 20px; transition: all 0.3s; }
         .dependent-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-color: var(--med-primary); }
 
-        /* Auto-Avatar */
-        .avatar-circle {
-            width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center;
-            font-size: 1.3rem; font-weight: 800; color: white; flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
+        .avatar-circle { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 800; color: white; flex-shrink: 0; }
         .dep-info { flex-grow: 1; }
-        .dep-name { font-weight: 800; font-size: 1.1rem; color: var(--text-dark); margin: 0 0 5px 0; }
+        .dep-name { font-weight: 800; font-size: 1.1rem; margin: 0 0 5px 0; }
         .dep-meta { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; margin: 0; }
 
-        .badge-status {
-            padding: 8px 16px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;
-        }
+        .badge-status { padding: 8px 16px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; }
         .status-covered { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
         .status-not-covered { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
 
-        @media (max-width: 991px) {
-            .split-grid { grid-template-columns: 1fr; }
-            .slide-in-right { animation: slideInLeft 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; } /* Unified animation on mobile */
-        }
+        @media (max-width: 991px) { .split-grid { grid-template-columns: 1fr; } .slide-in-right { animation: slideInLeft 0.6s forwards; } }
     </style>
 </head>
 <body>
 
 <nav class="med-nav">
-    <div class="brand-logo">
-        <i class="fas fa-shield-heart fs-3"></i> WhiteCircle Health
-    </div>
+    <div class="brand-logo"><i class="fas fa-shield-heart fs-3"></i> WhiteCircle Health</div>
     <div class="d-flex align-items-center gap-4">
-        <a href="/employee/mediclaim/portal" class="btn btn-light border btn-sm fw-bold rounded-pill px-3 shadow-sm">
-            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
-        </a>
+        <a href="/employee/mediclaim/portal" class="btn btn-light border btn-sm fw-bold rounded-pill px-3 shadow-sm"><i class="fas fa-arrow-left me-1"></i> Back to Dashboard</a>
     </div>
 </nav>
 
 <div class="page-container">
-    <div class="header-section fade-in-scroll">
+    <div class="header-section">
         <h3>Family & Dependents</h3>
         <p class="text-muted">Manage your family floater coverage and register new dependents.</p>
     </div>
@@ -169,16 +92,16 @@
         <div class="glass-panel slide-in-left">
             <div class="panel-title">Add New Dependent</div>
 
-            <form id="dependentForm">
+            <form id="dependentForm" th:action="@{/employee/mediclaim/dependents/add}" method="post">
                 <div class="mb-3">
                     <label class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="depName" placeholder="e.g. Om Tripathi" required>
+                    <input type="text" class="form-control" name="fullName" placeholder="Name of Dependent " required>
                 </div>
 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Relationship</label>
-                        <select class="form-select" id="depRelation" required>
+                        <select class="form-select" name="relationship" required>
                             <option value="" disabled selected>Select...</option>
                             <option value="Spouse">Spouse</option>
                             <option value="Child">Child</option>
@@ -187,7 +110,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Date of Birth</label>
-                        <input type="date" class="form-control" id="depDob" required>
+                        <input type="date" class="form-control" name="dob" id="dobInput" required>
                     </div>
                 </div>
 
@@ -197,41 +120,74 @@
                         <p class="toggle-subtext">Add to active family floater policy</p>
                     </div>
                     <label class="switch">
-                        <input type="checkbox" id="depCovered" checked>
+                        <input type="checkbox" name="isCovered" checked>
                         <span class="slider"></span>
                     </label>
                 </div>
 
-                <button type="submit" class="btn-submit">
-                    <i class="fas fa-user-plus me-2"></i> Register Dependent
-                </button>
+                <button type="submit" class="btn-submit"><i class="fas fa-user-plus me-2"></i> Register Dependent</button>
             </form>
         </div>
 
         <div class="glass-panel slide-in-right">
             <div class="panel-title d-flex justify-content-between align-items-center">
                 <span>Registered Family Members</span>
-                <span class="badge bg-primary rounded-pill" id="depCount">2</span>
+                <span class="badge bg-primary rounded-pill" th:text="${dependents != null ? dependents.size() : 0}">0</span>
             </div>
 
-            <div class="dependent-list" id="dependentList">
-                <div class="dependent-card">
-                    <div class="avatar-circle" data-name="Khusi Tripathi"></div>
-                    <div class="dep-info">
-                        <h4 class="dep-name">Khusi Tripathi</h4>
-                        <p class="dep-meta"><i class="fas fa-venus me-1"></i> Spouse • Born: 12 Aug 1995</p>
-                    </div>
-                    <div class="badge-status status-covered"><i class="fas fa-shield-alt me-1"></i> Covered</div>
+            <div class="dependent-list">
+
+                <div th:if="${dependents == null or dependents.empty}" class="alert alert-light border text-center py-4">
+                    <i class="fas fa-users text-muted fs-3 mb-2 d-block"></i>
+                    <span class="text-muted fw-bold">No dependents added yet.</span>
                 </div>
 
-                <div class="dependent-card">
-                    <div class="avatar-circle" data-name="Aarav Tripathi"></div>
+                <div class="dependent-card" th:each="dep : ${dependents}">
+                    <div class="avatar-circle" th:data-name="${dep.fullName}"></div>
                     <div class="dep-info">
-                        <h4 class="dep-name">Aarav Tripathi</h4>
-                        <p class="dep-meta"><i class="fas fa-child me-1"></i> Child • Born: 05 May 2022</p>
+                        <h4 class="dep-name" th:text="${dep.fullName}">Name</h4>
+                        <p class="dep-meta">
+                            <i class="fas me-1" th:classappend="${dep.relationship == 'Spouse' ? 'fa-user-friends' : (dep.relationship == 'Child' ? 'fa-child' : 'fa-user')}"></i>
+                            <span th:text="${dep.relationship}">Relationship</span> • Born: <span th:text="${#temporals.format(dep.dob, 'dd MMM yyyy')}">Date</span>
+                        </p>
                     </div>
-                    <div class="badge-status status-covered"><i class="fas fa-shield-alt me-1"></i> Covered</div>
+                    <div class="badge-status"
+                         th:classappend="${dep.covered ? 'status-covered' : 'status-not-covered'}"
+                         th:utext="${dep.covered ? '<i class=''fas fa-shield-alt me-1''></i> Covered' : '<i class=''fas fa-times-circle me-1''></i> Not Covered'}">
+                    </div>
                 </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-light border-bottom-0">
+                <h5 class="modal-title fw-bold">Confirm Registration</h5>
+            </div>
+            <div class="modal-body py-4 text-center">
+                <p class="fs-5 mb-0">Are you sure you want to add this dependent to your profile?</p>
+                <p class="text-muted small mt-2">This information will be submitted to the HRMS system.</p>
+            </div>
+            <div class="modal-footer border-top-0 d-flex justify-content-center">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" id="cancelConfirmBtn">Cancel</button>
+                <button type="button" class="btn btn-primary rounded-pill px-4" id="proceedRegisterBtn">Confirm & Register</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow text-center p-4">
+            <div class="modal-body py-4">
+                <i class="fas fa-check-circle text-success mb-3" style="font-size: 4rem;"></i>
+                <h4 class="fw-bold text-dark">Success!</h4>
+                <p class="text-muted mb-4">Dependent successfully registered to your profile.</p>
+                <button type="button" class="btn btn-success rounded-pill px-5" id="closeSuccessBtn">Done</button>
             </div>
         </div>
     </div>
@@ -241,73 +197,77 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        // --- 1. AVATAR AUTO-GENERATOR ---
-        // Array of professional colors for avatars
+        // 1. DATE VALIDATION: Restrict future dates & cap the year limits
+        const dobInput = document.getElementById('dobInput');
+        if(dobInput) {
+            // Get today's date in YYYY-MM-DD format
+            const today = new Date().toISOString().split('T')[0];
+            dobInput.setAttribute('max', today); // Automatically blocks future dates and years > 9999
+        }
+
+        // 2. AUTO-AVATAR GENERATOR
         const colors = ['#1E88E5', '#43A047', '#FB8C00', '#8E24AA', '#E53935', '#00ACC1'];
-
-        function generateAvatars() {
-            const avatars = document.querySelectorAll('.avatar-circle');
-            avatars.forEach(avatar => {
-                if(!avatar.innerHTML) {
-                    const name = avatar.getAttribute('data-name');
+        document.querySelectorAll('.avatar-circle').forEach(avatar => {
+            if(!avatar.innerHTML) {
+                const name = avatar.getAttribute('data-name');
+                if(name) {
                     const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-
-                    // Assign random color based on name length to keep it consistent
                     const colorIndex = name.length % colors.length;
-
                     avatar.innerHTML = initials;
                     avatar.style.background = `linear-gradient(135deg, ${colors[colorIndex]}, #111)`;
                 }
-            });
-        }
+            }
+        });
 
-        // Run on load
-        generateAvatars();
-
-        // --- 2. FORM SUBMISSION LOGIC ---
+        // 3. MODAL & FORM LOGIC
         const form = document.getElementById('dependentForm');
-        const list = document.getElementById('dependentList');
-        const countBadge = document.getElementById('depCount');
+        const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
 
+        // Intercept form submission
         form.addEventListener('submit', function(e) {
-            e.preventDefault();
+            e.preventDefault(); // Stop normal redirect
 
-            // Get Values
-            const name = document.getElementById('depName').value;
-            const relation = document.getElementById('depRelation').value;
-            const dob = document.getElementById('depDob').value;
-            const isCovered = document.getElementById('depCovered').checked;
+            // Validate form natively before showing modal
+            if(form.checkValidity()) {
+                confirmationModal.show();
+            } else {
+                form.reportValidity();
+            }
+        });
 
-            // Format Date
-            const dateObj = new Date(dob);
-            const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        // Cancel Button Logic - Hides modal AND resets the form details
+        document.getElementById('cancelConfirmBtn').addEventListener('click', function() {
+            confirmationModal.hide();
+            form.reset(); // Clears all form values as requested
+        });
 
-            // Determine Status UI
-            const statusClass = isCovered ? 'status-covered' : 'status-not-covered';
-            const statusText = isCovered ? '<i class="fas fa-shield-alt me-1"></i> Covered' : '<i class="fas fa-times-circle me-1"></i> Not Covered';
-            const icon = relation === 'Child' ? 'fa-child' : (relation === 'Spouse' ? 'fa-user-friends' : 'fa-user-tie');
+        // Proceed Button Logic - Send data via Fetch API
+        document.getElementById('proceedRegisterBtn').addEventListener('click', function() {
+            confirmationModal.hide();
 
-            // Build New Card HTML
-            const newCard = document.createElement('div');
-            newCard.className = 'dependent-card slide-in-right'; // Use slide-in animation for new additions
-            newCard.innerHTML = `
-                <div class="avatar-circle" data-name="${name}"></div>
-                <div class="dep-info">
-                    <h4 class="dep-name">${name}</h4>
-                    <p class="dep-meta"><i class="fas ${icon} me-1"></i> ${relation} • Born: ${formattedDate}</p>
-                </div>
-                <div class="badge-status ${statusClass}">${statusText}</div>
-            `;
+            // Format form data for Spring Boot processing
+            const formData = new URLSearchParams(new FormData(form));
 
-            // Append to list, regenerate avatars, update count, and reset form
-            list.appendChild(newCard);
-            generateAvatars();
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).then(response => {
+                if (response.ok) {
+                    successModal.show();
+                } else {
+                    alert("Error processing request. Please try again.");
+                }
+            }).catch(error => {
+                console.error("Error:", error);
+            });
+        });
 
-            const currentCount = parseInt(countBadge.innerText);
-            countBadge.innerText = currentCount + 1;
-
-            form.reset();
-            document.getElementById('depCovered').checked = true; // Reset toggle
+        // Close Success Modal & Refresh page to show new dynamic data
+        document.getElementById('closeSuccessBtn').addEventListener('click', function() {
+            successModal.hide();
+            window.location.reload();
         });
     });
 </script>

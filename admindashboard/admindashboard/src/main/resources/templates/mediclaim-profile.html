@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Mediclaim Profile | WhiteCircle Health</title>
@@ -40,10 +40,22 @@
         <div class="col-md-6">
             <div class="glass-panel h-100">
                 <h5 class="fw-bold mb-4">Personal Information</h5>
-                <div class="info-card"><div class="label">Full Name</div><div class="value">Om Tripathi</div></div>
-                <div class="info-card"><div class="label">Employee ID</div><div class="value">EMP114</div></div>
-                <div class="info-card"><div class="label">Designation</div><div class="value">Marketing Lead</div></div>
-                <div class="info-card"><div class="label">Business Unit</div><div class="value">Bhopal</div></div>
+                <div class="info-card">
+                    <div class="label">Full Name</div>
+                    <div class="value" th:text="${user != null ? user.fullName : 'N/A'}">Employee Name</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">Employee ID</div>
+                    <div class="value" th:text="${user != null ? user.username : 'N/A'}">EMP114</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">Designation</div>
+                    <div class="value" th:text="${profile != null ? profile.designation : 'Not Updated'}">Designation</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">Business Unit</div>
+                    <div class="value" th:text="${profile != null ? profile.businessUnit : 'Not Updated'}">Business Unit</div>
+                </div>
             </div>
         </div>
 
@@ -54,32 +66,38 @@
                     <div class="card-inner">
                         <div class="front">
                             <h6 class="fw-bold">WhiteCircle Health</h6>
-                            <p class="small">Policy: WCG-2026-MED</p>
-                            <h5 class="mt-4">Om Tripathi</h5>
+                            <p class="small" th:text="${policy != null ? 'Policy: ' + policy.policyNumber : 'Policy: Pending Approval'}">Policy: WCG-2026-MED</p>
+                            <h5 class="mt-4" th:text="${user != null ? user.fullName : 'Employee'}">Om Tripathi</h5>
                         </div>
                         <div class="back d-flex align-items-center justify-content-center">
                             <i class="fas fa-qrcode fa-3x"></i>
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary btn-sm rounded-pill px-4 mt-3"><i class="fas fa-download me-2"></i> Download Card</button>
+                <button class="btn btn-primary btn-sm rounded-pill px-4 mt-3" th:disabled="${policy == null}"><i class="fas fa-download me-2"></i> Download Card</button>
             </div>
         </div>
 
         <div class="col-12">
             <div class="glass-panel">
                 <h5 class="fw-bold mb-4">Registered Dependents</h5>
+
+                <div th:if="${dependents == null or dependents.empty}" class="alert alert-light border">
+                    <i class="fas fa-info-circle text-muted me-2"></i> No dependents registered yet.
+                </div>
+
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="p-3 border rounded-3 bg-light">
-                            <i class="fas fa-user-friends text-primary"></i> <span class="fw-bold">Khusi Tripathi</span>
-                            <div class="small text-muted">Spouse • Covered</div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="p-3 border rounded-3 bg-light">
-                            <i class="fas fa-child text-primary"></i> <span class="fw-bold">Aarav Tripathi</span>
-                            <div class="small text-muted">Child • Covered</div>
+                    <div class="col-md-4 mb-3" th:each="dependent : ${dependents}">
+                        <div class="p-3 border rounded-3 bg-light h-100">
+                            <i class="fas text-primary"
+                               th:classappend="${dependent.relationship == 'Spouse' ? 'fa-user-friends' : (dependent.relationship == 'Child' ? 'fa-child' : 'fa-user')}"></i>
+
+                            <span class="fw-bold ms-1" th:text="${dependent.fullName}">Dependent Name</span>
+
+                            <div class="small text-muted mt-1"
+                                 th:text="${dependent.relationship + ' • ' + (dependent.isCovered ? 'Covered' : 'Not Covered')}">
+                                Relationship • Status
+                            </div>
                         </div>
                     </div>
                 </div>

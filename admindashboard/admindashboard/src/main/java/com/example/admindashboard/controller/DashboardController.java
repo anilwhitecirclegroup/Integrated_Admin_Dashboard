@@ -428,7 +428,16 @@ public class DashboardController {
             model.addAttribute("errorMessage", "Employee ID '" + rawUsername + "' already exists. Please use a different ID.");
             return "add-employee";
         }
-
+        String email = user.getEmail();
+        if (email != null &&
+        	    !email.matches(
+        	    "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+	        	 model.addAttribute(
+	        		        "errorMessage",
+	        		        "Invalid email format");
+	
+	        		    return "add-employee";
+        }
         user.setUsername(rawUsername.toUpperCase());
         user.setPassword("{noop}welcome123");
 

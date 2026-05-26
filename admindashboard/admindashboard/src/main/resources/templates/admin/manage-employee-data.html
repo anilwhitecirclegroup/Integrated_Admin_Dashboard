@@ -305,7 +305,8 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-sm">Official Email</label>
-                            <input type="email" class="form-control" name="email" th:value="${emp.email}" required>
+                            <input type="email" class="form-control" name="email" th:value="${emp.email}" required> <small th:if="${errorMessage}" class="text-danger fw-semibold">	<span th:text="${errorMessage}">Invalid email format</span>  </small>
+							           
                         </div>
                         <div class="col-md-4">
                             <label class="form-label-sm">Designation</label>
