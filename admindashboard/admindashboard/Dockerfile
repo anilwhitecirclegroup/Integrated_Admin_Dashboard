@@ -1,14 +1,14 @@
-# Use Java 17
-FROM eclipse-temurin:17-jdk-alpine
+# Upgraded to Java 21 to match your team's Spring Boot configuration
+FROM eclipse-temurin:21-jdk-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Copy from nested folder
-COPY admindashboard/admindashboard/.mvn .mvn
-COPY admindashboard/admindashboard/mvnw ./
-COPY admindashboard/admindashboard/pom.xml ./
-COPY admindashboard/admindashboard/src ./src
+# Fixed paths: Copy directly from the current folder
+COPY .mvn .mvn
+COPY mvnw ./
+COPY pom.xml ./
+COPY src ./src
 
 # Give permission
 RUN chmod +x mvnw
