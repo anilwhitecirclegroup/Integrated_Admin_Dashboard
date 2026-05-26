@@ -1,0 +1,20 @@
+.payroll-select{
+    height:58px;
+
+    border:1.5px solid #D3D3D3;
+
+    border-radius:16px;
+
+    background:#FAFAFA;
+
+    padding:0 18px;
+
+    font-size:18px;
+    font-weight:500;
+
+    outline:none;
+}
+
+.payroll-select:focus{
+    border-color:var(--primary-blue);
+}

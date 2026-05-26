@@ -1,0 +1,54 @@
+.payroll-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:72px;
+    align-items:start;
+    justify-content:space-between;
+    margin-top:60px;
+}
+
+.payroll-select-group{
+    display:flex;
+    gap:16px;
+}
+
+.payroll-action{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
+
+
+.payroll-grid-bottom{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(280px,1fr));
+
+    gap:72px;
+
+    margin-top:56px;
+
+    width:100%;
+    max-width:900px;
+}
+
+.payroll-grid-bottom .payroll-card:last-child{
+    padding-top:6px;
+}
+
+@media (max-width:1400px){
+
+    .payroll-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media (max-width:992px){
+
+    .payroll-grid,
+    .payroll-grid-bottom{
+        grid-template-columns:1fr;
+    }
+
+}

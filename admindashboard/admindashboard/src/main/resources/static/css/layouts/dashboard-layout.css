@@ -1,0 +1,13 @@
+.app-layout{
+    display:flex;
+    min-height:100vh;
+}
+
+.main-content{
+    margin-left:var(--sidebar-width);
+    width:calc(100% - var(--sidebar-width));
+    padding:48px 52px;
+    background:var(--background);
+    min-height:100vh;
+    overflow-x:hidden;
+}

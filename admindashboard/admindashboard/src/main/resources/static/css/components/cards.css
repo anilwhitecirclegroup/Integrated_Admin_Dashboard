@@ -1,0 +1,24 @@
+.payroll-card{
+    display:flex;
+    flex-direction:column;
+
+    gap:22px;
+
+}
+
+.payroll-card-header{
+    display:flex;
+    align-items:center;
+
+    gap:20px;
+}
+
+.payroll-card-header i{
+    font-size:48px;
+    color:var(--primary-blue);
+}
+
+.payroll-card-title{
+    font-size:28px;
+    font-weight:700;
+}

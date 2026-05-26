@@ -1,0 +1,49 @@
+.primary-btn{
+    height:58px;
+    padding:0 24px;
+
+    min-width:200px;
+
+    background:var(--primary-blue);
+    color:white;
+
+    border:none;
+
+    border-radius:16px;
+    width:fit-content;
+    font-size:18px;
+    font-weight:600;
+
+    transition:var(--transition);
+
+    cursor:pointer;
+}
+
+.primary-btn:hover{
+    opacity:0.92;
+}
+
+.small-btn{
+    min-width:180px;
+}
+
+.icon-btn{
+    width:72px;
+    height:58px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:#DCDCDC;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+}
+
+.icon-btn i{
+    font-size:24px;
+}
