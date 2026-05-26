@@ -14,6 +14,7 @@
             --med-primary: #1E88E5;
             --med-green: #43A047;
             --med-orange: #FB8C00;
+            --med-red: #E53935;
             --bg-color: #f4f7fb;
             --text-dark: #0f172a;
             --text-muted: #64748b;
@@ -58,13 +59,17 @@
         <i class="fas fa-arrow-left me-1"></i>Back to Dashboard</a>
 </nav>
 
-<div class="container">
+<div class="container" th:if="${activeClaim != null}">
     <div class="claim-header">
         <div>
-            <h2 class="fw-bold mb-1">Claim #CLM-2026-8942</h2>
-            <span class="text-muted fw-medium"><i class="fas fa-hospital me-1"></i> Apollo Hospitals</span>
+            <h2 class="fw-bold mb-1" th:text="'Claim #CLM-' + ${#temporals.format(activeClaim.submissionDate, 'yyyy')} + '-' + ${#numbers.formatInteger(activeClaim.id, 4)}">Claim #CLM-0000</h2>
+            <span class="text-muted fw-medium"><i class="fas fa-hospital me-1"></i> <span th:text="${activeClaim.hospitalName}">Hospital Name</span></span>
         </div>
-        <span class="badge bg-warning text-dark fs-6 px-3 py-2 rounded-pill">In Progress</span>
+        <span class="badge fs-6 px-3 py-2 rounded-pill"
+              th:classappend="${activeClaim.status == 'Pending' ? 'bg-warning text-dark' :
+                              (activeClaim.status == 'Approved' or activeClaim.status == 'Settled' ? 'bg-success text-white' :
+                              'bg-danger text-white')}"
+              th:text="${activeClaim.status}">Status</span>
     </div>
 
     <div class="row g-4">
@@ -72,12 +77,20 @@
             <div class="glass-panel">
                 <div class="panel-title">Tracking Timeline</div>
                 <div class="timeline">
-                    <div class="timeline-step"><div class="step-dot completed"><i class="fas fa-check"></i></div>
-                        <div class="step-title">Submitted</div><div class="step-date">May 20, 10:30 AM</div></div>
-                    <div class="timeline-step"><div class="step-dot completed"><i class="fas fa-check"></i></div>
-                        <div class="step-title">HR Review</div><div class="step-date">May 21, 02:15 PM</div></div>
-                    <div class="timeline-step"><div class="step-dot active"><i class="fas fa-hourglass-half text-white"></i></div>
-                        <div class="step-title text-orange">TPA Review (Active)</div></div>
+                    <div class="timeline-step">
+                        <div class="step-dot completed"><i class="fas fa-check"></i></div>
+                        <div class="step-title">Submitted</div>
+                        <div class="step-date" th:text="${#temporals.format(activeClaim.submissionDate, 'dd MMM yyyy')}">Date</div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="step-dot active"><i class="fas fa-hourglass-half text-white"></i></div>
+                        <div class="step-title text-warning fw-bold">HR Review (Active)</div>
+                        <div class="step-date">Pending Admin Action</div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="step-dot"><i class="fas fa-minus text-white"></i></div>
+                        <div class="step-title text-muted">TPA Processing</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,26 +98,55 @@
         <div class="col-md-6">
             <div class="glass-panel">
                 <div class="panel-title">Claim Details</div>
-                <div class="info-row"><span class="info-label">Hospital</span><span class="info-value">Apollo Hospitals</span></div>
-                <div class="info-row"><span class="info-label">Diagnosis</span><span class="info-value">Viral Fever</span></div>
-                <div class="info-row"><span class="info-label">Amount</span><span class="info-value text-primary">₹15,500</span></div>
-                <div class="mt-3 bg-light p-3 rounded small text-muted"><em>"Claim undergoing standard medical review process."</em></div>
+                <div class="info-row"><span class="info-label text-muted fw-bold">Hospital</span><span class="info-value fw-bold text-dark" th:text="${activeClaim.hospitalName}">Hospital Name</span></div>
+                <div class="info-row"><span class="info-label text-muted fw-bold">Diagnosis</span><span class="info-value fw-bold text-dark" th:text="${activeClaim.diagnosis}">Diagnosis</span></div>
+                <div class="info-row"><span class="info-label text-muted fw-bold">Type</span><span class="info-value fw-bold text-dark" th:text="${activeClaim.claimType}">Type</span></div>
+                <div class="info-row"><span class="info-label text-muted fw-bold">Amount</span><span class="info-value text-primary fw-bold fs-5" th:text="'₹' + ${activeClaim.claimAmount}">₹0</span></div>
+
+                <div class="mt-4 bg-light p-3 rounded small text-muted border">
+                    <i class="fas fa-info-circle me-1"></i> <em th:text="${activeClaim.remarks != null and activeClaim.remarks != '' ? activeClaim.remarks : 'No additional remarks provided.'}">Remarks</em>
+                </div>
             </div>
         </div>
 
         <div class="col-12 mt-2">
             <div class="glass-panel">
-                <div class="panel-title">Claim History & Settled Claims</div>
-                <table class="history-table">
-                    <thead><tr><th>ID</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+                <div class="panel-title">Your Claim History</div>
+
+                <div th:if="${allClaims == null or allClaims.empty}" class="alert alert-light text-center border">
+                    <span class="text-muted fw-bold">No claim history found.</span>
+                </div>
+
+                <table class="history-table" th:if="${allClaims != null and !allClaims.empty}">
+                    <thead><tr><th>ID</th><th>Date</th><th>Type</th><th>Amount</th><th>Status</th></tr></thead>
                     <tbody>
-                    <tr><td>CLM-2025-1102</td><td>12 Jan 2025</td><td>₹4,200</td><td><span class="text-success fw-bold"><i class="fas fa-check-circle"></i> Settled</span></td></tr>
-                    <tr><td>CLM-2024-0981</td><td>05 Aug 2024</td><td>₹8,900</td><td><span class="text-success fw-bold"><i class="fas fa-check-circle"></i> Settled</span></td></tr>
+                    <tr th:each="claim : ${allClaims}">
+                        <td th:text="'CLM-' + ${#temporals.format(claim.submissionDate, 'yyyy')} + '-' + ${#numbers.formatInteger(claim.id, 4)}">ID</td>
+                        <td th:text="${#temporals.format(claim.submissionDate, 'dd MMM yyyy')}">Date</td>
+                        <td th:text="${claim.claimType}">Type</td>
+                        <td th:text="'₹' + ${claim.claimAmount}">Amount</td>
+                        <td>
+                                <span class="fw-bold"
+                                      th:classappend="${claim.status == 'Pending' ? 'text-warning' :
+                                                      (claim.status == 'Approved' or claim.status == 'Settled' ? 'text-success' :
+                                                      'text-danger')}">
+                                    <i class="fas" th:classappend="${claim.status == 'Pending' ? 'fa-clock' : (claim.status == 'Approved' or claim.status == 'Settled' ? 'fa-check-circle' : 'fa-times-circle')}"></i>
+                                    <span th:text="${claim.status}">Status</span>
+                                </span>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+</div>
+
+<div class="container text-center mt-5 pt-5" th:if="${activeClaim == null}">
+    <i class="fas fa-exclamation-triangle text-warning mb-3" style="font-size: 4rem;"></i>
+    <h3 class="fw-bold">Claim Not Found</h3>
+    <p class="text-muted">The requested claim details could not be found or you do not have permission to view them.</p>
+    <a href="/employee/mediclaim/portal" class="btn btn-primary rounded-pill mt-3 px-4">Return to Dashboard</a>
 </div>
 
 </body>
