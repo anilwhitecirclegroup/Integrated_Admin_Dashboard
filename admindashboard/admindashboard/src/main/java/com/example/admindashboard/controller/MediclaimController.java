@@ -12,6 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import com.example.admindashboard.model.Mediclaim;
+import com.example.admindashboard.repository.MediclaimRepository;
+import org.springframework.web.multipart.MultipartFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 import java.security.Principal;
 import java.util.List;
@@ -34,11 +41,34 @@ public class MediclaimController {
     @Autowired
     private MediclaimDependentRepository dependentRepository;
 
+    @Autowired
+    private MediclaimRepository mediclaimRepository;
+
     @GetMapping("/auth")
     public String mediclaimAuth() { return "mediclaim-login"; }
 
     @GetMapping("/portal")
-    public String mediclaimPortal() { return "mediclaim-dashboard"; }
+    public String mediclaimPortal(Principal principal, Model model) {
+        if (principal == null) {
+            return "redirect:/employee/mediclaim/auth";
+        }
+
+        Optional<User> userOpt = userRepository.findByUsername(principal.getName());
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            model.addAttribute("user", user);
+
+            // Fetch all claims for the user, ordered by newest first
+            List<Mediclaim> claims = mediclaimRepository.findByUserOrderBySubmissionDateDesc(user);
+            model.addAttribute("claims", claims);
+
+            // Calculate how many claims are currently "Pending" for the badge
+            long pendingCount = claims.stream().filter(c -> "Pending".equals(c.getStatus())).count();
+            model.addAttribute("pendingCount", pendingCount);
+        }
+
+        return "mediclaim-dashboard";
+    }
 
     @GetMapping("/policy")
     public String mediclaimPolicy() { return "mediclaim-policy"; }
@@ -46,8 +76,30 @@ public class MediclaimController {
     @GetMapping("/claim")
     public String mediclaimClaim() { return "mediclaim-claim"; }
 
+    // 4. UPDATE THIS GET MAPPING FOR TRACKING
     @GetMapping("/track/{claimId}")
-    public String mediclaimTrack(@PathVariable String claimId) { return "mediclaim-track"; }
+    public String mediclaimTrack(@PathVariable Long claimId, Principal principal, Model model) {
+        if (principal == null) {
+            return "redirect:/employee/mediclaim/auth";
+        }
+
+        Optional<User> userOpt = userRepository.findByUsername(principal.getName());
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+
+            // 1. Fetch the specific active claim by ID
+            Optional<Mediclaim> activeClaimOpt = mediclaimRepository.findById(claimId);
+            if (activeClaimOpt.isPresent()) {
+                model.addAttribute("activeClaim", activeClaimOpt.get());
+            }
+
+            // 2. Fetch all claims for the history table
+            List<Mediclaim> allClaims = mediclaimRepository.findByUserOrderBySubmissionDateDesc(user);
+            model.addAttribute("allClaims", allClaims);
+        }
+
+        return "mediclaim-track";
+    }
 
     @GetMapping("/notifications")
     public String mediclaimNotifications() { return "mediclaim-notifications"; }
@@ -161,5 +213,68 @@ public class MediclaimController {
         // Refresh the page to show the newly added dependent
         return "redirect:/employee/mediclaim/dependents";
     }
+
+    // 3. ADD THIS POST MAPPING FOR CLAIM SUBMISSION
+    @PostMapping("/claim/submit")
+    @ResponseBody
+    public ResponseEntity<String> submitClaim(
+            @RequestParam("hospitalName") String hospitalName,
+            @RequestParam("city") String city,
+            @RequestParam("claimType") String claimType,
+            @RequestParam("diagnosis") String diagnosis,
+            @RequestParam("dateOfAdmission") String dateOfAdmission,
+            @RequestParam("dateOfDischarge") String dateOfDischarge,
+            @RequestParam("totalBill") Double totalBill,
+            @RequestParam("claimAmount") Double claimAmount,
+            @RequestParam(value = "remarks", required = false) String remarks,
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            Principal principal) {
+
+        if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+
+        Optional<User> userOpt = userRepository.findByUsername(principal.getName());
+        if (userOpt.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
+
+        try {
+            Mediclaim claim = new Mediclaim();
+            claim.setUser(userOpt.get());
+            claim.setHospitalName(hospitalName);
+            claim.setCity(city);
+            claim.setClaimType(claimType);
+            claim.setDiagnosis(diagnosis);
+
+            // Convert Strings to LocalDate
+            claim.setDateOfAdmission(java.time.LocalDate.parse(dateOfAdmission));
+            claim.setDateOfDischarge(java.time.LocalDate.parse(dateOfDischarge));
+
+            claim.setTotalBill(totalBill);
+            claim.setClaimAmount(claimAmount);
+            claim.setRemarks(remarks);
+
+            // Handle the file upload (Saves to a local 'uploads' directory)
+            if (file != null && !file.isEmpty()) {
+                // Generate a unique filename to prevent overwriting
+                String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+                Path uploadPath = Paths.get("uploads/");
+
+                // Create directory if it doesn't exist
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                // Save the file and attach the filename to the database record
+                Files.copy(file.getInputStream(), uploadPath.resolve(fileName));
+                claim.setDocumentFilename(fileName);
+            }
+
+            mediclaimRepository.save(claim);
+            return ResponseEntity.ok("Claim submitted successfully!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to submit claim");
+        }
+    }
+
 
 }

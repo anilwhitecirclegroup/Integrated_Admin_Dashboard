@@ -15,7 +15,6 @@
             --med-primary-dark: #1565C0;
             --med-green: #43A047;
             --med-orange: #FB8C00;
-            --med-red: #E53935;
             --bg-color: #f4f7fb;
             --text-dark: #0f172a;
             --text-muted: #64748b;
@@ -23,165 +22,66 @@
             --glass-border: rgba(255, 255, 255, 0.6);
         }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            padding-top: 100px;
-            padding-bottom: 50px;
-            background-image: radial-gradient(circle at 10% 0%, rgba(30, 136, 229, 0.05) 0%, transparent 40%),
-                              radial-gradient(circle at 90% 100%, rgba(67, 160, 71, 0.04) 0%, transparent 40%);
-            background-attachment: fixed;
-            min-height: 100vh;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-dark); padding-top: 100px; padding-bottom: 50px; background-attachment: fixed; min-height: 100vh; }
+        .med-nav { position: fixed; top: 0; left: 0; right: 0; height: 80px; background: var(--glass-bg); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; z-index: 1000; border-bottom: 1px solid var(--glass-border); box-shadow: 0 4px 30px rgba(0,0,0,0.03); }
+        .brand-logo { font-weight: 800; font-size: 1.4rem; color: var(--med-primary); display: flex; align-items: center; gap: 12px; }
 
-        /* --- TOP NAV --- */
-        .med-nav {
-            position: fixed; top: 0; left: 0; right: 0; height: 80px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 40px; z-index: 1000;
-            border-bottom: 1px solid var(--glass-border);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
-        }
-        .brand-logo { font-weight: 800; font-size: 1.4rem; color: var(--med-primary); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px;}
-
-        /* --- LAYOUT --- */
-        .page-container {
-            max-width: 900px;
-            margin: 0 auto;
-            opacity: 0;
-            animation: fadeIn 0.6s ease forwards;
-        }
-
+        .page-container { max-width: 900px; margin: 0 auto; opacity: 0; animation: fadeIn 0.6s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- GLASS PANEL FOR WIZARD --- */
-        .wizard-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.04);
-            position: relative;
-        }
-
-        /* --- HEADER & AUTO-SAVE --- */
+        .wizard-panel { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.04); }
         .wizard-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
-        .wizard-title h3 { font-weight: 800; letter-spacing: -0.5px; margin: 0;}
+        .wizard-title h3 { font-weight: 800; margin: 0;}
         .wizard-title p { color: var(--text-muted); margin: 0; font-size: 0.95rem; }
 
-        .auto-save-indicator {
-            font-size: 0.8rem; font-weight: 600; color: var(--text-muted);
-            display: flex; align-items: center; gap: 6px;
-            background: #f1f5f9; padding: 6px 12px; border-radius: 50px;
-            transition: all 0.3s ease;
-        }
+        .auto-save-indicator { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 6px; background: #f1f5f9; padding: 6px 12px; border-radius: 50px; transition: all 0.3s ease; }
         .auto-save-indicator.saving { color: var(--med-orange); background: rgba(251, 140, 0, 0.1); }
         .auto-save-indicator.saved { color: var(--med-green); background: rgba(67, 160, 71, 0.1); }
 
-        /* --- PROGRESS BAR ANIMATION --- */
-        .stepper-wrapper {
-            display: flex; justify-content: space-between; position: relative; margin-bottom: 40px;
-        }
-        .stepper-wrapper::before {
-            content: ''; position: absolute; top: 15px; left: 0; width: 100%; height: 4px;
-            background: #e2e8f0; z-index: 0; border-radius: 4px;
-        }
-        .stepper-progress {
-            position: absolute; top: 15px; left: 0; height: 4px; background: var(--med-primary);
-            z-index: 1; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 4px; width: 0%;
-        }
-
+        .stepper-wrapper { display: flex; justify-content: space-between; position: relative; margin-bottom: 40px; }
+        .stepper-wrapper::before { content: ''; position: absolute; top: 15px; left: 0; width: 100%; height: 4px; background: #e2e8f0; z-index: 0; border-radius: 4px; }
+        .stepper-progress { position: absolute; top: 15px; left: 0; height: 4px; background: var(--med-primary); z-index: 1; transition: width 0.4s; border-radius: 4px; width: 0%; }
         .step-item { position: relative; z-index: 2; text-align: center; width: 20%; display: flex; flex-direction: column; align-items: center; }
-
-        .step-circle {
-            width: 34px; height: 34px; border-radius: 50%; background: #ffffff;
-            border: 3px solid #e2e8f0; display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 0.85rem; color: var(--text-muted); transition: all 0.4s ease;
-        }
-
+        .step-circle { width: 34px; height: 34px; border-radius: 50%; background: #ffffff; border: 3px solid #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: var(--text-muted); transition: all 0.4s ease; }
         .step-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-top: 8px; text-transform: uppercase; transition: all 0.3s ease; }
-
         .step-item.active .step-circle { border-color: var(--med-primary); color: var(--med-primary); box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.15); }
         .step-item.active .step-label { color: var(--med-primary); font-weight: 800; }
-
         .step-item.completed .step-circle { background: var(--med-primary); border-color: var(--med-primary); color: white; }
         .step-item.completed .step-label { color: var(--text-dark); }
 
-        /* --- FORM STEPS & TRANSITIONS --- */
         .form-step { display: none; opacity: 0; transform: translateX(20px); transition: all 0.4s ease; }
         .form-step.active { display: block; opacity: 1; transform: translateX(0); }
-
-        .form-label { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-control, .form-select {
-            border-radius: 12px; border: 1px solid #cbd5e1; padding: 14px 15px; font-weight: 500; background: #f8fafc; transition: all 0.3s ease;
-        }
+        .form-label { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; }
+        .form-control, .form-select { border-radius: 12px; border: 1px solid #cbd5e1; padding: 14px 15px; font-weight: 500; background: #f8fafc; transition: all 0.3s ease; }
         .form-control:focus, .form-select:focus { border-color: var(--med-primary); box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.1); background: #ffffff; outline: none; }
 
-        /* --- DRAG & DROP ZONE --- */
-        .upload-zone {
-            border: 2px dashed #cbd5e1; border-radius: 16px; padding: 40px 20px;
-            text-align: center; background: #f8fafc; transition: all 0.3s ease; cursor: pointer;
-        }
+        .upload-zone { border: 2px dashed #cbd5e1; border-radius: 16px; padding: 40px 20px; text-align: center; background: #f8fafc; transition: all 0.3s; cursor: pointer; }
         .upload-zone:hover { border-color: var(--med-primary); background: #eff6ff; }
-        .upload-zone.dragover { border-color: var(--med-primary); background: #eff6ff; transform: scale(1.02); }
         .upload-zone.success { border-color: var(--med-green); background: #f0fdf4; border-style: solid; }
+        .upload-icon { width: 60px; height: 60px; background: white; color: var(--med-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .upload-zone.success .upload-icon { background: var(--med-green); color: white; }
 
-        .upload-icon {
-            width: 60px; height: 60px; background: white; color: var(--med-primary);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; margin: 0 auto 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-        }
-        .upload-zone.success .upload-icon { background: var(--med-green); color: white; animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-
-        .file-preview { display: none; margin-top: 15px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; align-items: center; gap: 15px; text-align: left; }
+        .file-preview { display: none; margin-top: 15px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; align-items: center; gap: 15px; }
         .file-preview.active { display: flex; }
 
-        /* --- REVIEW SUMMARY --- */
         .summary-box { background: #f8fafc; border-radius: 16px; padding: 20px; border: 1px solid #e2e8f0; margin-bottom: 15px; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px; }
         .summary-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .summary-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; }
         .summary-value { color: var(--text-dark); font-weight: 700; font-size: 0.95rem; }
 
-        /* --- NAVIGATION BUTTONS --- */
         .wizard-footer { display: flex; justify-content: space-between; margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 25px; }
-
-        .btn-wizard {
-            padding: 12px 24px; border-radius: 12px; font-weight: 700; transition: all 0.3s ease; border: none; display: flex; align-items: center; gap: 8px;
-        }
+        .btn-wizard { padding: 12px 24px; border-radius: 12px; font-weight: 700; transition: all 0.3s ease; border: none; display: flex; align-items: center; gap: 8px; }
         .btn-prev { background: #f1f5f9; color: var(--text-muted); }
-        .btn-prev:hover { background: #e2e8f0; color: var(--text-dark); transform: translateX(-2px); }
-
-        .btn-next { background: var(--med-primary); color: white; box-shadow: 0 4px 15px rgba(30, 136, 229, 0.2); }
-        .btn-next:hover { background: var(--med-primary-dark); transform: scale(1.02) translateY(-2px); box-shadow: 0 8px 20px rgba(30, 136, 229, 0.3); color: white;}
-
-        .btn-submit { background: var(--med-green); color: white; box-shadow: 0 4px 15px rgba(67, 160, 71, 0.2); }
-        .btn-submit:hover { background: #388e3c; transform: scale(1.02) translateY(-2px); box-shadow: 0 8px 20px rgba(67, 160, 71, 0.3); color: white;}
-
+        .btn-next { background: var(--med-primary); color: white; }
+        .btn-submit { background: var(--med-green); color: white; }
     </style>
 </head>
 <body>
 
 <nav class="med-nav">
-    <div class="brand-logo">
-        <i class="fas fa-shield-heart fs-3"></i> WhiteCircle Health
-    </div>
-    <div>
-        <a href="/employee/mediclaim/portal" class="btn btn-light border btn-sm fw-bold rounded-pill px-3 shadow-sm">
-            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
-        </a>
-    </div>
+    <div class="brand-logo"><i class="fas fa-shield-heart fs-3"></i> WhiteCircle Health</div>
+    <div><a href="/employee/mediclaim/portal" class="btn btn-light border btn-sm fw-bold rounded-pill px-3 shadow-sm"><i class="fas fa-arrow-left me-1"></i> Back to Dashboard</a></div>
 </nav>
 
 <div class="page-container">
@@ -199,45 +99,28 @@
 
         <div class="stepper-wrapper">
             <div class="stepper-progress" id="stepperProgress"></div>
-
-            <div class="step-item active" data-step="1">
-                <div class="step-circle"><i class="fas fa-hospital-alt"></i></div>
-                <div class="step-label">Hospital</div>
-            </div>
-            <div class="step-item" data-step="2">
-                <div class="step-circle"><i class="fas fa-bed"></i></div>
-                <div class="step-label">Admission</div>
-            </div>
-            <div class="step-item" data-step="3">
-                <div class="step-circle"><i class="fas fa-file-invoice-dollar"></i></div>
-                <div class="step-label">Details</div>
-            </div>
-            <div class="step-item" data-step="4">
-                <div class="step-circle"><i class="fas fa-cloud-upload-alt"></i></div>
-                <div class="step-label">Uploads</div>
-            </div>
-            <div class="step-item" data-step="5">
-                <div class="step-circle"><i class="fas fa-check-double"></i></div>
-                <div class="step-label">Review</div>
-            </div>
+            <div class="step-item active" data-step="1"><div class="step-circle"><i class="fas fa-hospital-alt"></i></div><div class="step-label">Hospital</div></div>
+            <div class="step-item" data-step="2"><div class="step-circle"><i class="fas fa-bed"></i></div><div class="step-label">Admission</div></div>
+            <div class="step-item" data-step="3"><div class="step-circle"><i class="fas fa-file-invoice-dollar"></i></div><div class="step-label">Details</div></div>
+            <div class="step-item" data-step="4"><div class="step-circle"><i class="fas fa-cloud-upload-alt"></i></div><div class="step-label">Uploads</div></div>
+            <div class="step-item" data-step="5"><div class="step-circle"><i class="fas fa-check-double"></i></div><div class="step-label">Review</div></div>
         </div>
 
         <form id="claimWizardForm">
-
             <div class="form-step active" id="step1">
                 <h5 class="fw-bold mb-4 text-dark">Hospital Information</h5>
                 <div class="mb-3">
                     <label class="form-label">Hospital Name</label>
-                    <input type="text" class="form-control auto-save" id="hospName" placeholder="e.g. Apollo Hospitals" required>
+                    <input type="text" name="hospitalName" class="form-control auto-save" id="hospName" placeholder="e.g. Apollo Hospitals" required>
                 </div>
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label class="form-label">City</label>
-                        <input type="text" class="form-control auto-save" id="hospCity" placeholder="e.g. Mumbai" required>
+                        <input type="text" name="city" class="form-control auto-save" id="hospCity" placeholder="e.g. Mumbai" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Claim Type</label>
-                        <select class="form-select auto-save" id="claimType" required>
+                        <select name="claimType" class="form-select auto-save" id="claimType" required>
                             <option value="Reimbursement" selected>Reimbursement</option>
                             <option value="Cashless">Cashless</option>
                         </select>
@@ -249,16 +132,16 @@
                 <h5 class="fw-bold mb-4 text-dark">Admission Details</h5>
                 <div class="mb-3">
                     <label class="form-label">Diagnosis / Reason for Admission</label>
-                    <input type="text" class="form-control auto-save" id="diagnosis" placeholder="e.g. Viral Fever" required>
+                    <input type="text" name="diagnosis" class="form-control auto-save" id="diagnosis" placeholder="e.g. Viral Fever" required>
                 </div>
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Date of Admission</label>
-                        <input type="date" class="form-control auto-save" id="dateAdmin" required>
+                        <input type="date" name="dateOfAdmission" class="form-control auto-save" id="dateAdmin" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Date of Discharge</label>
-                        <input type="date" class="form-control auto-save" id="dateDischarge" required>
+                        <input type="date" name="dateOfDischarge" class="form-control auto-save" id="dateDischarge" required>
                     </div>
                 </div>
             </div>
@@ -268,16 +151,16 @@
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Total Hospital Bill (₹)</label>
-                        <input type="number" class="form-control auto-save" id="totalBill" placeholder="0.00" required>
+                        <input type="number" name="totalBill" class="form-control auto-save" id="totalBill" placeholder="0.00" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Amount Claimed (₹)</label>
-                        <input type="number" class="form-control auto-save" id="claimAmount" placeholder="0.00" required>
+                        <input type="number" name="claimAmount" class="form-control auto-save" id="claimAmount" placeholder="0.00" required>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Additional Remarks (Optional)</label>
-                    <textarea class="form-control auto-save" id="remarks" rows="2" placeholder="Any specific notes for the TPA..."></textarea>
+                    <textarea name="remarks" class="form-control auto-save" id="remarks" rows="2" placeholder="Any specific notes for the TPA..."></textarea>
                 </div>
             </div>
 
@@ -285,7 +168,7 @@
                 <h5 class="fw-bold mb-4 text-dark">Document Uploads</h5>
                 <p class="text-muted small mb-3">Please upload all discharge summaries, final bills, and pharmacy receipts in a single PDF or ZIP file.</p>
 
-                <input type="file" id="hiddenFileInput" class="d-none" accept=".pdf,.zip,.jpg,.jpeg">
+                <input type="file" name="file" id="hiddenFileInput" class="d-none" accept=".pdf,.zip,.jpg,.jpeg">
 
                 <div class="upload-zone" id="dropZone">
                     <div class="upload-icon" id="uploadIcon"><i class="fas fa-cloud-upload-alt"></i></div>
@@ -307,29 +190,14 @@
                 <h5 class="fw-bold mb-4 text-dark">Review Claim Summary</h5>
 
                 <div class="summary-box">
-                    <div class="summary-row">
-                        <span class="summary-label">Hospital</span>
-                        <span class="summary-value" id="sumHosp">-</span>
-                    </div>
-                    <div class="summary-row">
-                        <span class="summary-label">Diagnosis</span>
-                        <span class="summary-value" id="sumDiag">-</span>
-                    </div>
-                    <div class="summary-row">
-                        <span class="summary-label">Dates</span>
-                        <span class="summary-value" id="sumDates">-</span>
-                    </div>
+                    <div class="summary-row"><span class="summary-label">Hospital</span><span class="summary-value" id="sumHosp">-</span></div>
+                    <div class="summary-row"><span class="summary-label">Diagnosis</span><span class="summary-value" id="sumDiag">-</span></div>
+                    <div class="summary-row"><span class="summary-label">Dates</span><span class="summary-value" id="sumDates">-</span></div>
                 </div>
 
                 <div class="summary-box bg-primary bg-opacity-10 border-primary border-opacity-25">
-                    <div class="summary-row">
-                        <span class="summary-label text-primary">Claim Type</span>
-                        <span class="summary-value text-primary" id="sumType">-</span>
-                    </div>
-                    <div class="summary-row">
-                        <span class="summary-label text-primary">Claim Amount</span>
-                        <span class="summary-value text-primary fs-5" id="sumAmount">₹0</span>
-                    </div>
+                    <div class="summary-row"><span class="summary-label text-primary">Claim Type</span><span class="summary-value text-primary" id="sumType">-</span></div>
+                    <div class="summary-row"><span class="summary-label text-primary">Claim Amount</span><span class="summary-value text-primary fs-5" id="sumAmount">₹0</span></div>
                 </div>
 
                 <div class="form-check mt-4">
@@ -347,8 +215,39 @@
                     <button type="button" class="btn-wizard btn-submit d-none" id="btnSubmit">Submit Claim <i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
-
         </form>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-light border-bottom-0">
+                <h5 class="modal-title fw-bold">Confirm Submission</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-4 text-center">
+                <p class="fs-5 mb-0">Are you sure you want to submit this claim?</p>
+                <p class="text-muted small mt-2">Make sure all details and documents are correctly attached.</p>
+            </div>
+            <div class="modal-footer border-top-0 d-flex justify-content-center">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary rounded-pill px-4" id="confirmSubmitBtn">Confirm & Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow text-center p-4">
+            <div class="modal-body py-4">
+                <i class="fas fa-check-circle text-success mb-3" style="font-size: 4.5rem;"></i>
+                <h4 class="fw-bold text-dark mb-2">Claim Submitted!</h4>
+                <p class="text-muted mb-4">Your reimbursement request has been successfully registered and is pending review.</p>
+                <button type="button" class="btn btn-success rounded-pill px-5 fw-bold" id="closeSuccessBtn">Go to Dashboard</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -356,56 +255,42 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        // --- WIZARD LOGIC ---
         let currentStep = 1;
         const totalSteps = 5;
-
         const steps = document.querySelectorAll('.form-step');
         const stepItems = document.querySelectorAll('.step-item');
         const progressLine = document.getElementById('stepperProgress');
-
         const btnPrev = document.getElementById('btnPrev');
         const btnNext = document.getElementById('btnNext');
         const btnSubmit = document.getElementById('btnSubmit');
 
         function updateWizardUI() {
-            // Update Forms
             steps.forEach((step, index) => {
-                if(index + 1 === currentStep) {
-                    step.classList.add('active');
-                } else {
-                    step.classList.remove('active');
-                }
+                step.classList.toggle('active', index + 1 === currentStep);
             });
 
-            // Update Progress Nodes
             stepItems.forEach((item, index) => {
                 const stepNum = index + 1;
                 item.classList.remove('active', 'completed');
                 if(stepNum === currentStep) item.classList.add('active');
                 if(stepNum < currentStep) item.classList.add('completed');
 
-                // Change completed icons to checkmarks
                 const icon = item.querySelector('i');
                 if(stepNum < currentStep) {
                     icon.className = 'fas fa-check';
                 } else {
-                    // Restore original icons if moving backwards
                     const icons = ['fa-hospital-alt', 'fa-bed', 'fa-file-invoice-dollar', 'fa-cloud-upload-alt', 'fa-check-double'];
                     icon.className = `fas ${icons[index]}`;
                 }
             });
 
-            // Update Progress Bar Line
-            const progressPercent = ((currentStep - 1) / (totalSteps - 1)) * 100;
-            progressLine.style.width = `${progressPercent}%`;
+            progressLine.style.width = `${((currentStep - 1) / (totalSteps - 1)) * 100}%`;
 
-            // Update Buttons
             btnPrev.classList.toggle('d-none', currentStep === 1);
             if(currentStep === totalSteps) {
                 btnNext.classList.add('d-none');
                 btnSubmit.classList.remove('d-none');
-                populateSummary(); // Populate step 5 data
+                populateSummary();
             } else {
                 btnNext.classList.remove('d-none');
                 btnSubmit.classList.add('d-none');
@@ -413,7 +298,6 @@
         }
 
         btnNext.addEventListener('click', () => {
-            // Basic HTML5 validation before moving forward
             const currentFormStep = steps[currentStep - 1];
             const inputs = currentFormStep.querySelectorAll('input[required], select[required]');
             let isValid = true;
@@ -423,7 +307,6 @@
                     isValid = false;
                 }
             });
-
             if(isValid && currentStep < totalSteps) {
                 currentStep++;
                 updateWizardUI();
@@ -447,16 +330,13 @@
             document.getElementById('sumAmount').innerText = '₹' + (document.getElementById('claimAmount').value || '0');
         }
 
-        // --- AUTO-SAVE SIMULATION ---
+        // Auto-save UI
         const saveIndicator = document.getElementById('autoSaveIndicator');
-        const autoSaveInputs = document.querySelectorAll('.auto-save');
         let saveTimeout;
-
-        autoSaveInputs.forEach(input => {
+        document.querySelectorAll('.auto-save').forEach(input => {
             input.addEventListener('input', () => {
                 saveIndicator.className = 'auto-save-indicator saving';
                 saveIndicator.innerHTML = '<span class="spinner-border spinner-border-sm" style="width: 10px; height: 10px; margin-right:4px;"></span> Saving...';
-
                 clearTimeout(saveTimeout);
                 saveTimeout = setTimeout(() => {
                     saveIndicator.className = 'auto-save-indicator saved';
@@ -465,13 +345,12 @@
             });
         });
 
-        // --- DRAG AND DROP LOGIC ---
+        // Drag & Drop
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('hiddenFileInput');
         const filePreview = document.getElementById('filePreview');
 
         dropZone.addEventListener('click', () => fileInput.click());
-
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(evt => {
             dropZone.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); });
         });
@@ -480,20 +359,18 @@
         dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
         dropZone.addEventListener('drop', (e) => {
             dropZone.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
             handleFile(e.dataTransfer.files[0]);
         });
+
         fileInput.addEventListener('change', function() { handleFile(this.files[0]); });
 
         function handleFile(file) {
             if(!file) return;
-
-            // Success UI Animation
             dropZone.classList.add('success');
             document.getElementById('uploadIcon').innerHTML = '<i class="fas fa-check"></i>';
             document.getElementById('uploadTitle').innerText = 'File Attached Successfully';
             document.getElementById('uploadSub').innerText = 'Ready for review';
-
-            // Show Preview Box
             document.getElementById('previewName').innerText = file.name;
             document.getElementById('previewSize').innerText = (file.size / (1024*1024)).toFixed(2) + ' MB';
             filePreview.classList.add('active');
@@ -508,17 +385,63 @@
             filePreview.classList.remove('active');
         });
 
-        // --- FINAL SUBMIT ---
+        // Modal Instances
+        const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+
+        // Open Confirmation Modal on Submit Click
         document.getElementById('btnSubmit').addEventListener('click', function(e) {
-            if(document.getElementById('termsCheck').checked) {
-                alert("Simulating backend submission. Claim successfully registered!");
-                window.location.href = '/employee/mediclaim/portal';
+            const termsCheck = document.getElementById('termsCheck');
+
+            if(termsCheck.checked) {
+                confirmationModal.show();
             } else {
-                document.getElementById('termsCheck').reportValidity();
+                termsCheck.reportValidity();
             }
         });
 
-        // Initialize UI
+        // AJAX FINAL SUBMIT LOGIC from Modal Confirm Button
+        document.getElementById('confirmSubmitBtn').addEventListener('click', function(e) {
+            const btn = this;
+            const originalText = btn.innerHTML;
+
+            // Loading state on the modal button
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+            btn.disabled = true;
+
+            const form = document.getElementById('claimWizardForm');
+            const formData = new FormData(form);
+
+            fetch('/employee/mediclaim/claim/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+
+                if (response.ok) {
+                    confirmationModal.hide();
+                    successModal.show();
+                } else {
+                    alert("Error submitting claim. Please check your data and try again.");
+                    confirmationModal.hide();
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("A network error occurred.");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                confirmationModal.hide();
+            });
+        });
+
+        // Redirect on Success Modal Close
+        document.getElementById('closeSuccessBtn').addEventListener('click', function() {
+            window.location.href = '/employee/mediclaim/portal';
+        });
+
         updateWizardUI();
     });
 </script>
