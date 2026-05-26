@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - My WhiteCircle</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e5e7eb;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .split-screen-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* --- LEFT COLUMN: BRAND IMAGE BANNER --- */
+        .left-banner-side {
+            flex: 1;
+            background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
+                        url('/images/login-application.jpeg'); /* Maps seamlessly to your asset structures */
+            background-size: cover;
+            background-position: center;
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .left-banner-side {
+                display: block;
+            }
+        }
+
+        /* --- RIGHT COLUMN: LOGIN REGISTRATION --- */
+        .right-login-side {
+            width: 100%;
+            background-color: #dcdcdc; /* Mockup exact gray background match */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 40px;
+        }
+
+        @media (min-width: 768px) {
+            .right-login-side {
+                width: 45%;
+                flex-shrink: 0;
+            }
+        }
+
+        /* Circular Interactive Back Button */
+        .btn-circular-back {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            width: 46px;
+            height: 46px;
+            background-color: #0066ff;
+            color: #ffffff !important;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            text-decoration: none;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 4px 10px rgba(0, 102, 255, 0.3);
+            border: none;
+        }
+        .btn-circular-back:hover {
+            background-color: #0052cc;
+            transform: scale(1.05);
+        }
+
+        .brand-logo-card {
+            width: 85px;
+            height: 85px;
+            background-color: #000000;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-bottom: 35px;
+        }
+        
+        /* Matching your unique White Circle emblem style from mockup */
+        .custom-logo-vector {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 1.2rem;
+            position: relative;
+        }
+        .custom-logo-vector::after {
+            content: '↗';
+            position: absolute;
+            top: -2px;
+            right: 4px;
+            font-size: 0.8rem;
+        }
+
+        .brand-logo-card span {
+            color: #ffffff;
+            font-size: 0.58rem;
+            font-weight: 700;
+            margin-top: 6px;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .welcome-headline {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 40px;
+            letter-spacing: -0.5px;
+        }
+
+        .login-form-box {
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .input-wrapper-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-label-caption {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .input-icon-decor {
+            position: absolute;
+            left: 14px;
+            top: 41px;
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        .sso-input-field {
+            width: 100%;
+            background-color: #bcbcbc;
+            border: 1px solid #888888;
+            border-radius: 6px;
+            padding: 10px 15px 10px 40px;
+            font-size: 0.88rem;
+            color: #000000;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .sso-input-field:focus {
+            border-color: #0066ff;
+        }
+
+        .link-forgot-password {
+            color: #ef4444;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: -5px;
+            margin-bottom: 30px;
+        }
+
+        .btn-continue-sso {
+            width: 100%;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+            transition: background-color 0.2s;
+        }
+        .btn-continue-sso:hover {
+            background-color: #1d4ed8;
+        }
+
+        .social-footer-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 32px;
+            margin-top: 60px;
+        }
+        .social-icon-anchor {
+            color: #000000;
+            font-size: 1.6rem;
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+        .social-icon-anchor:hover {
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+
+<div class="split-screen-container">
+    
+    <div class="left-banner-side"></div>
+
+    <div class="right-login-side">
+        <a href="/employee/dashboard" class="btn-circular-back">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div class="brand-logo-card">
+            <div class="custom-logo-vector">W</div>
+            <span>White Circle</span>
+        </div>
+
+        <h2 class="welcome-headline">Welcome Back!</h2>
+
+        <div class="login-form-box">
+			<form id="ssoLoginForm" th:action="@{/my-whitecircle/login}" method="POST">
+			    
+			    <div class="input-wrapper-group">
+			        <label class="input-label-caption">Username or email address</label>
+			        <i class="fa-solid fa-user input-icon-decor"></i>
+			        <input type="text" class="sso-input-field" name="username" 
+			               th:value="${user != null ? user.username : ''}" 
+			               placeholder="eg. abc123@gmail.com" required>
+			    </div>
+
+			    <div class="input-wrapper-group">
+			        <label class="input-label-caption">Password</label>
+			        <i class="fa-solid fa-lock input-icon-decor"></i>
+			        <input type="password" class="sso-input-field" name="password" 
+			               th:value="${savedPassword != null ? savedPassword : ''}" 
+			               placeholder="enter your password" required>
+			    </div>
+
+			    <a href="#" class="link-forgot-password">Forgot Password?</a>
+
+			    <button type="submit" class="btn-continue-sso">Continue with My WhiteCircle</button>
+			</form>
+        </div>
+
+        <div class="social-footer-row">
+            <a href="#" class="social-icon-anchor"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="social-icon-anchor"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="#" class="social-icon-anchor"><i class="fa-regular fa-envelope"></i></a>
+            <a href="#" class="social-icon-anchor"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

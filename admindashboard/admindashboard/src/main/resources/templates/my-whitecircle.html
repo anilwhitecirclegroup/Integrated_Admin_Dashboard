@@ -10,297 +10,253 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --bs-primary: #1e3a8a; /* Navy Blue Theme */
-            --bg-color: #f8fafc;
-        }
+		:root {
+		    --bs-primary: #0066ff; 
+		    --bg-color: #dcdcdc;  
+		    --card-bg: #bcbcbc;   
+		    --card-border: #666666;
+		}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: #334155;
-            overflow-x: hidden;
-        }
+		body {
+		    font-family: 'Inter', sans-serif;
+		    background-color: var(--bg-color);
+		    color: #000000;
+		    overflow-x: hidden;
+		    margin: 0;
+		    padding: 0;
+		}
 
-        .top-header {
-            background: white; border-bottom: 1px solid #e2e8f0;
-            padding: 10px 30px;
-            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-            height: 80px;
-        }
-        .btn-back-home {
-            background-color: var(--bs-primary); color: white;
-            border-radius: 10px; padding: 10px 24px; font-weight: 600;
-            font-size: 0.85rem; text-decoration: none; display: flex; align-items: center;
-            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.2); transition: all 0.3s ease;
-        }
-        .btn-back-home:hover { background-color: #172554; transform: translateY(-2px); color: white; }
+		/* --- MOCKUP HEADER BAR --- */
+		/* --- SINGLE CARD HEADER NAVIGATION FIX --- */
+		.top-header {
+		    background: white;
+		    padding: 15px 40px;
+		    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+		    display: flex; justify-content: flex-start; align-items: center;
+		    height: 90px;
+		}
 
-        /* HERO SECTION  */
-        .hero-section {
-            margin-top: 70px;
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-            color: white;
-            padding: 25px 20px;
-            text-align: center;
-            border-radius: 0 0 40px 40px / 15px;
-            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.2);
-            margin-bottom: 30px;
-        }
+		.btn-circular-back-hub {
+		    width: 44px;
+		    height: 44px;
+		    background-color: #0066ff;
+		    color: #ffffff !important;
+		    border-radius: 50%;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    font-size: 1.2rem;
+		    text-decoration: none;
+		    border: none;
+		    margin-right: 25px; 
+		    flex-shrink: 0;
+		}
 
-        /* UPDATED LOGO: Removed Background & Padding */
-        .hero-logo {
-            width: 65px; height: 65px; /* Slightly larger */
-            border-radius: 50%;
-            border: none;
-            background: transparent; /* Transparent background */
-            padding: 0; /* No padding */
-            margin-bottom: 10px;
-            object-fit: cover; /* Fills the circle */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
+		/* Sizing wrapper for the single card and divider line */
+		.mockup-badge-container {
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    padding-right: 25px; /* Creates clean spacing before the vertical line */
+		    /* This creates the crisp vertical divider line from your mockup */
+		    border-right: 2px solid #000000; 
+		    height: 42px; 
+		    flex-shrink: 0;
+		}
 
-        .greeting-text {
-            font-size: 1.5rem;
-            font-weight: 700; margin-bottom: 2px;
-        }
-        .sub-text { opacity: 0.9; font-size: 0.9rem; font-weight: 300; }
+		/* Bold layout for the single card icon */
+		.mockup-icon-card-only {
+		    font-size: 2.3rem !important; /* Made larger and bolder to fill out the workspace layout */
+		    color: #000000 !important;
+		    display: inline-block;
+		    line-height: 1;
+		}
 
-        /*  QUICK ACTION GRID  */
-        .container-grid {
-            max-width: 1200px; margin: 0 auto 40px; padding: 0 20px;
-        }
+		.header-title-text {
+		    font-size: 2.4rem;
+		    font-weight: 700;
+		    color: #000000;
+		    letter-spacing: -0.5px;
+		    padding-left: 25px; /* Equal spacing after the vertical line */
+		    line-height: 1;
+		}
+		/* --- CONTENT MAIN WRAPPER CANVAS --- */
+		.main-content-canvas {
+		    margin-top: 150px;
+		    max-width: 1200px;
+		    margin-left: auto;
+		    margin-right: auto;
+		    padding: 0 25px 60px 25px;
+		}
 
-        /* UPDATED CARDS: Increased Padding for Size */
-        .action-box {
-            background: white;
-            border: 1.5px solid var(--bs-primary);
-            border-radius: 12px;
-            /* CHANGED: Increased padding to 45px to make cards taller */
-            padding: 35px 20px;
-            text-align: center;
-            height: 100%;
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
+		.section-headline-title {
+		    font-size: 1.6rem;
+		    font-weight: 700;
+		    color: #000000;
+		    margin-bottom: 35px;
+		    position: relative;
+		    display: inline-block;
+		}
+		.section-headline-title::after {
+		    content: '';
+		    position: absolute;
+		    left: 0;
+		    bottom: -6px;
+		    width: 75px; 
+		    height: 3px;
+		    background-color: #0066ff;
+		}
 
-        .action-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.15);
-            background-color: #eff6ff;
-        }
+		/* --- ENHANCED GRID ITEM ROW GAP --- */
+		
+		.custom-grid-row {
+		    row-gap: 55px !important; /* Adjust this number higher or lower to get your perfect spacing */
+		}
+		
 
-        /* Icon Styling */
-        .icon-circle {
-            width: 55px; height: 55px;
-            background: #eff6ff;
-            color: var(--bs-primary);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.4rem;
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
-        }
+		/* --- ACTION BOX MATRIX CARDS --- */
+		.action-box {
+		    background: var(--card-bg); 
+		    border: 1px solid var(--card-border);
+		    border-radius: 16px; 
+		    padding: 20px 10px;
+		    text-align: center;
+		    height: 140px; 
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;
+		    justify-content: center;
+		    gap: 12px;
+		    cursor: pointer;
+		    transition: background-color 0.15s, transform 0.1s;
+		}
+		.action-box:hover {
+		    background-color: #b0b0b0;
+		    transform: scale(1.02);
+		}
 
-        .action-box:hover .icon-circle {
-            background: var(--bs-primary);
-            color: white;
-            transform: scale(1.1);
-        }
+		.icon-wrapper-flat {
+		    color: #000000;
+		    font-size: 2.2rem;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		}
 
-        .box-title {
-            font-weight: 700;
-            color: #1e3a8a;
-            font-size: 0.9rem;
-            line-height: 1.3;
-        }
+		.box-title {
+		    font-weight: 600;
+		    color: #000000;
+		    font-size: 0.85rem;
+		    line-height: 1.2;
+		}
     </style>
-    <link href="/css/style.css" rel="stylesheet">
 
     <style>
         @media (max-width: 991px) {
-
-            /* 1. COMPACT GLOBAL LAYOUT */
-            html, body {
-                padding-top: 0 !important;
-                margin-top: 0 !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                overflow-x: hidden !important;
-                width: 100% !important;
-            }
-            body { padding-top: 75px !important; }
-
-            /* 2. SHRINK THE TOP NAV BAR */
-            .top-header {
-                height: auto !important; padding: 12px 15px !important; display: flex !important;
-                flex-direction: row !important; justify-content: space-between !important; align-items: center !important; flex-wrap: nowrap !important;
-            }
-
-            .top-header > .d-flex { min-width: 0 !important; width: auto !important; flex: 1 !important; }
-            .top-header i.fa-id-badge { font-size: 1.6rem !important; }
-            .top-header span { font-size: 1.1rem !important; margin-left: 8px !important; padding-left: 8px !important; line-height: 1.1 !important; white-space: nowrap !important; }
-
-            .btn-back-home {
-                flex: 0 0 auto !important; margin: 0 0 0 10px !important; width: auto !important;
-                padding: 6px 12px !important; font-size: 0.75rem !important; border-radius: 8px !important; white-space: nowrap !important;
-            }
-
-            /* 3. HERO SECTION ADJUSTMENTS */
-            .hero-section {
-                margin-top: 0 !important; padding: 20px 10px !important; border-radius: 0 0 25px 25px !important;
-                margin-bottom: 25px !important; height: auto !important; position: relative !important; display: block !important;
-            }
-            .hero-section .container { display: block !important; min-height: 0 !important; height: auto !important; padding: 0 !important; margin: 0 auto !important; }
-            .hero-logo { width: 50px !important; height: 50px !important; margin-bottom: 8px !important; }
-            .greeting-text { font-size: 1.25rem !important; margin-bottom: 5px !important;}
-            .sub-text { font-size: 0.8rem !important; margin-bottom: 0 !important;}
-
-            /* 4. QUICK ACTION GRID */
-            .container-grid { padding: 0 12px !important; margin-top: 15px !important; margin-bottom: 20px !important; display: block !important; }
-            .container-grid h5 { font-size: 1rem !important; margin-bottom: 15px !important; line-height: 1.2 !important; padding-top: 5px !important; }
-
-            /* Force a 3-column grid on mobile */
-            .container-grid .row {
-                display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important;
-                margin-top: 0 !important; margin-left: 0 !important; margin-right: 0 !important;
-            }
-
-            .container-grid .col { width: 100% !important; padding: 0 !important; margin: 0 !important;}
-
-            /* Squeeze the boxes so 3 fit across */
-            .action-box { padding: 12px 6px !important; border-radius: 10px !important; border-width: 1px !important; min-height: 100px !important; justify-content: flex-start !important; }
-            .icon-circle { width: 38px !important; height: 38px !important; font-size: 1.1rem !important; margin-bottom: 8px !important; flex-shrink: 0 !important; }
-            .box-title { font-size: 0.65rem !important; line-height: 1.1 !important; text-align: center !important; margin: 0 !important; }
+            .top-header { padding: 10px 20px !important; height: 75px !important; }
+            .btn-circular-back-hub { width: 36px !important; height: 36px !important; font-size: 1rem !important; margin-right: 12px !important; }
+            .mockup-badge-container { width: 38px !important; height: 30px !important; margin-right: 10px !important; }
+            .mockup-icon-user { font-size: 1.5rem !important; }
+            .mockup-icon-card { font-size: 1.2rem !important; }
+            .header-separator { margin-right: 15px !important; height: 25px !important; }
+            .header-title-text { font-size: 1.4rem !important; }
+            .main-content-canvas { margin-top: 110px !important; padding: 0 15px !important; }
+            .section-headline-title { font-size: 1.3rem !important; margin-bottom: 25px !important; }
+            .action-box { height: 120px !important; border-radius: 12px !important; }
+            .icon-wrapper-flat { font-size: 1.8rem !important; }
+            .box-title { font-size: 0.75rem !important; }
         }
     </style>
-
-    <link href="/css/dark-mode.css" rel="stylesheet">
-    <script src="/js/theme-engine.js"></script>
 </head>
 <body>
 
 <header class="top-header">
-    <div class="d-flex align-items-center">
-        <i class="fas fa-id-badge text-dark" style="font-size: 2.5rem;"></i>
-        <span class="fw-bold text-dark" style="border-left: 2px solid #cbd5e1; padding-left: 17px; margin-left: 15px; font-size: 1.5rem; letter-spacing: 0.5px;">
-            MY WHITECIRCLE
-        </span>
-    </div>
-    <a href="/employee/dashboard" class="btn-back-home">
-        <i class="fas fa-arrow-left me-2"></i> Back to Home
+    <a href="/employee/dashboard" class="btn-circular-back-hub" title="Back to Dashboard">
+        <i class="fa-solid fa-arrow-left"></i>
     </a>
-</header>
-
-<section class="hero-section">
-    <div class="container">
-        <img src="/images/wcg-logo.jpg" alt="WhiteCircle" class="hero-logo">
-        <h1 class="greeting-text" id="greetingDisplay">Good Afternoon!</h1>
-        <p class="sub-text">Welcome to your White Circle Employee Hub</p>
+    
+    <div class="mockup-badge-container">
+        <i class="fa-solid fa-address-card mockup-icon-card-only"></i>
     </div>
-</section>
+    
+    <div class="header-title-text">My WhiteCircle</div>
+</header>
+<main class="main-content-canvas">
+    <h5 class="section-headline-title">Quick Actions</h5>
 
-<div class="container-grid">
-    <h5 class="fw-bold text-dark mb-4 ps-2 border-start border-4 border-primary">
-        &nbsp;Quick Actions
-    </h5>
-
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4">
-
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 gx-4 custom-grid-row">
         <div class="col">
             <div class="action-box" onclick="window.location.href='/my-timeoff'">
-                <div class="icon-circle"><i class="fas fa-calendar-minus"></i></div>
-                <div class="box-title">Leave Request /<br>Timeoff</div>
+                <div class="icon-wrapper-flat"><i class="fa-solid fa-calendar-check"></i></div>
+                <div class="box-title">Leave Request</div>
             </div>
         </div>
 
         <div class="col">
             <div class="action-box" onclick="window.location.href='/employee/full-profile'">
-                <div class="icon-circle"><i class="fas fa-user-circle"></i></div>
-                <div class="box-title">View My<br>Profile</div>
+                <div class="icon-wrapper-flat"><i class="fa-solid fa-user-gear"></i></div>
+                <div class="box-title">View Profile</div>
             </div>
         </div>
 
         <div class="col">
             <div class="action-box" onclick="window.location.href='/coming-soon'">
-                <div class="icon-circle"><i class="fas fa-sitemap"></i></div>
-                <div class="box-title">View Org<br>Chart</div>
+                <div class="icon-wrapper-flat"><i class="fa-solid fa-sitemap"></i></div>
+                <div class="box-title">Org. Chart</div>
             </div>
         </div>
 
         <div class="col">
             <div class="action-box" onclick="window.location.href='/employee/timesheet-report'">
-                <div class="icon-circle"><i class="fas fa-clock"></i></div>
-                <div class="box-title">View My<br>Time Sheet</div>
+                <div class="icon-wrapper-flat"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <div class="box-title">TimeSheet</div>
             </div>
         </div>
 
         <div class="col">
             <div class="action-box" onclick="window.location.href='/coming-soon'">
-                <div class="icon-circle"><i class="fas fa-bullseye"></i></div>
-                <div class="box-title">Manage My<br>Goals</div>
+                <div class="icon-wrapper-flat"><i class="fa-solid fa-bullseye"></i></div>
+                <div class="box-title">Manage Goal</div>
             </div>
         </div>
 
         <div class="col">
             <div class="action-box" onclick="window.location.href='/coming-soon'">
-                <div class="icon-circle"><i class="fas fa-graduation-cap"></i></div>
-                <div class="box-title">View My<br>Learning</div>
+                <div class="icon-wrapper-flat"><i class="fa-solid fa-graduation-cap"></i></div>
+                <div class="box-title">View Learning</div>
             </div>
         </div>
 
         <div class="col">
             <div class="action-box" onclick="window.location.href='/coming-soon'">
-                <div class="icon-circle"><i class="fas fa-mobile-alt"></i></div>
-                <div class="box-title">Activate<br>Mobile App</div>
+                <div class="icon-wrapper-flat"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                <div class="box-title">Activate Mobile</div>
             </div>
         </div>
 
         <div class="col">
             <div class="action-box" onclick="window.location.href='/coming-soon'">
-                <div class="icon-circle"><i class="fas fa-tasks"></i></div>
-                <div class="box-title">Pending<br>Workflows</div>
+                <div class="icon-wrapper-flat"><i class="fa-solid fa-list-check"></i></div>
+                <div class="box-title">Pending Workflows</div>
             </div>
         </div>
 
         <div class="col">
             <div class="action-box" onclick="window.location.href='/coming-soon'">
-                <div class="icon-circle"><i class="fas fa-bell"></i></div>
-                <div class="box-title">View<br>Reminders</div>
+                <div class="icon-wrapper-flat"><i class="fa-solid fa-bell"></i></div>
+                <div class="box-title">View Reminder</div>
             </div>
         </div>
 
         <div class="col">
             <div class="action-box" onclick="window.location.href='/coming-soon'">
-                <div class="icon-circle"><i class="fas fa-star"></i></div>
-                <div class="box-title">View<br>Favorites</div>
+                <div class="icon-wrapper-flat"><i class="fa-solid fa-star"></i></div>
+                <div class="box-title">View Favourite</div>
             </div>
         </div>
 
     </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const hour = new Date().getHours();
-        const greetingElement = document.getElementById('greetingDisplay');
-        let greetingText = 'Good Morning!';
-
-        if (hour >= 12 && hour < 17) {
-            greetingText = 'Good Afternoon!';
-        } else if (hour >= 17) {
-            greetingText = 'Good Evening!';
-        }
-
-        greetingElement.textContent = greetingText;
-    });
-
-</script>
+</main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
