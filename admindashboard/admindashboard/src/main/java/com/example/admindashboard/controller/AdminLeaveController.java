@@ -101,6 +101,7 @@ public class AdminLeaveController {
                         .body("Leave already approved.");
             }
             leave.setStatus("Approved");
+            leaveRequestRepository.save(leave);
             String leaveCode;
 
             switch (leave.getLeaveType()) {
@@ -165,14 +166,23 @@ public class AdminLeaveController {
 
             // Create Ledger Entry
             LeaveLedger ledger = new LeaveLedger();
+            ledger.setTransactionDate(java.time.LocalDateTime.now());
 
-            ledger.setEmployee(leave.getUser());
+            ledger.setUser(leave.getUser());
 
             ledger.setLeaveType(leaveTypeMaster);
 
             ledger.setTransactionType("DEBIT");
 
-            ledger.setDays(requestedDays);
+            ledger.setDebit(requestedDays);
+
+            ledger.setCredit(0.0);
+
+            ledger.setBalanceAfter(
+                    wallet.getAvailableBalance()
+            );
+
+            ledger.setStatus("APPROVED");
 
             ledger.setReferenceType("LEAVE_APPROVAL");
 
