@@ -38,7 +38,12 @@ public class SecurityConfig {
                             // Get which portal user selected during login
                             String portalType = request.getParameter("portalType");
 
-                            boolean isClient = authorities.contains("ROLE_CLIENT");
+                            boolean isClient = authentication.getAuthorities()
+                                .stream()
+                                .map(auth -> auth.getAuthority())
+                                .anyMatch(authority ->
+                                        authority.equalsIgnoreCase("ROLE_CLIENT")
+                                                || authority.equalsIgnoreCase("client_dashboard_view"));
 
                             // PORTAL VALIDATION
                             // Client trying Employee Portal
