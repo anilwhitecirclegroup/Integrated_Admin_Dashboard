@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Policies | WhiteCircle Health</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --med-primary: #1E88E5;
+            --med-primary-dark: #1565C0;
+            --med-green: #43A047;
+            --med-orange: #FB8C00;
+            --bg-color: #f4f7fb;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.6);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding-top: 100px;
+            padding-bottom: 50px;
+            background-image: radial-gradient(circle at 50% 0%, rgba(30, 136, 229, 0.05) 0%, transparent 60%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        /* --- TOP NAV --- */
+        .med-nav {
+            position: fixed; top: 0; left: 0; right: 0; height: 80px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 40px; z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
+        }
+        .brand-logo { font-weight: 800; font-size: 1.4rem; color: var(--med-primary); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px;}
+
+        /* --- PAGE HEADER --- */
+        .page-header {
+            max-width: 1000px;
+            margin: 0 auto 40px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        .page-header h2 { font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; }
+        .page-header p { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 160, 71, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(67, 160, 71, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 160, 71, 0); }
+        }
+
+        .fade-in-scroll {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.2s; /* Slight delay after header */
+        }
+
+        /* --- 3D FLIP CARD --- */
+        .policy-container {
+            max-width: 480px;
+            margin: 0 auto;
+            perspective: 1000px; /* Gives the 3D depth */
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy flip */
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .policy-container:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden; /* Hides the back when looking at front */
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* FRONT OF CARD */
+        .flip-card-front {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-top: 6px solid var(--med-primary);
+        }
+
+        .card-icon {
+            width: 60px; height: 60px;
+            background: rgba(30, 136, 229, 0.1);
+            color: var(--med-primary);
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; margin: 0 auto 20px;
+        }
+
+        .policy-title { font-weight: 800; font-size: 1.4rem; color: var(--text-dark); margin-bottom: 5px;}
+        .provider-name { color: var(--text-muted); font-weight: 600; font-size: 0.95rem; margin-bottom: 25px; }
+
+        .policy-details {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex; justify-content: space-between;
+            margin-bottom: auto;
+        }
+        .detail-block { text-align: left; }
+        .detail-block span { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+        .detail-block h5 { margin: 0; font-weight: 800; color: var(--med-primary-dark); font-size: 1.1rem;}
+
+        .badge-active {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+            animation: glowPulse 2s infinite; /* The requested Glow Animation */
+        }
+
+        /* BACK OF CARD */
+        .flip-card-back {
+            background: linear-gradient(135deg, var(--med-primary) 0%, var(--med-primary-dark) 100%);
+            color: white;
+            transform: rotateY(180deg);
+            border: 1px solid rgba(255,255,255,0.2);
+            justify-content: center;
+        }
+
+        .back-title { font-weight: 800; font-size: 1.2rem; margin-bottom: 30px; letter-spacing: 0.5px;}
+
+        .btn-action {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+        .btn-action:hover {
+            background: white;
+            color: var(--med-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .flip-hint {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav class="med-nav">
+    <div class="brand-logo">
+        <i class="fas fa-shield-heart fs-3"></i> WhiteCircle Health
+    </div>
+    <div class="d-flex align-items-center gap-4">
+        <a href="/employee/mediclaim/portal" class="btn btn-light border btn-sm fw-bold rounded-pill px-3 shadow-sm">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+</nav>
+
+<div class="container fade-in-scroll">
+    <div class="page-header">
+        <h2>Your Insurance Policies</h2>
+        <p>Hover over the policy card to access your digital documents and view the cashless hospital network.</p>
+    </div>
+
+    <div class="policy-container">
+        <div class="flip-card-inner">
+
+            <div class="flip-card-front">
+                <div class="card-icon"><i class="fas fa-briefcase-medical"></i></div>
+                <div class="policy-title">Group Health Insurance</div>
+                <div class="provider-name">Provider: Star Health</div>
+
+                <div class="policy-details">
+                    <div class="detail-block">
+                        <span>Total Coverage</span>
+                        <h5>₹5,00,000</h5>
+                    </div>
+                    <div class="detail-block text-end">
+                        <span>Validity</span>
+                        <h5 class="text-dark">2026 - 2027</h5>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <div class="badge-active">
+                        <i class="fas fa-circle" style="font-size: 0.5rem;"></i> ACTIVE POLICY
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card-back">
+                <div class="back-title">WCG-2026-MED</div>
+
+                <a href="#" class="btn-action">
+                    <i class="fas fa-file-pdf fs-5"></i> View PDF Document
+                </a>
+
+                <a href="#" class="btn-action">
+                    <i class="fas fa-hospital fs-5"></i> Network Hospitals
+                </a>
+
+                <div class="flip-hint"><i class="fas fa-sync-alt me-1"></i> Hover away to flip back</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

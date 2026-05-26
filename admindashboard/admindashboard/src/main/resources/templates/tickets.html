@@ -10,267 +10,314 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --bs-primary: #1e3a8a; /* Navy Blue Theme */
-            --navy-dark: #172554;
-            --bg-color: #f3f4f6;
-            --premium-shadow: 0 20px 25px -5px rgba(30, 58, 138, 0.1), 0 10px 10px -5px rgba(30, 58, 138, 0.04);
+        /* --- LOCKED VIEWPORT (NO SCROLLING) --- */
+        html, body {
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Disables all page scrolling */
+            background: #b7d5d8;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: #334155;
-            padding-top: 100px; /* Adjusted for larger header */
-            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* --- NAVIGATION BAR --- */
         .top-nav-bar {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-            background: white;
-            height: 80px;
-            display: flex; align-items: center; justify-content: space-between;
+            height: 70px;
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 0 40px;
-            border-bottom: 2px solid #e2e8f0;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0; /* Prevents navbar from shrinking */
         }
 
         .brand-section {
-            display: flex; align-items: center;
-            color: #1e3a8a; font-weight: 800; font-size: 1.6rem; min-width: 250px;
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-section i.fa-ticket-alt {
+            font-size: 1.8rem;
+            color: #1e293b;
+        }
+
+        .brand-section span {
+            border-left: 2px solid #cbd5e1;
+            padding-left: 15px;
+            margin-left: 15px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #1e293b;
         }
 
         .btn-back {
-            background: #1e3a8a; color: white;
-            padding: 10px 24px; border-radius: 10px; font-size: 1.0rem; text-decoration: none;
-            border: none; transition: all 0.2s; font-weight: 600;
-            box-shadow: 0 2px 5px rgba(30, 58, 138, 0.2);
-        }
-        .btn-back:hover { background: var(--navy-dark); color: white; transform: translateY(-1px); }
-
-        /*  UPGRADED PREMIUM NAVY HERO SECTION  */
-        .hero-section {
-            background: #1e3a8a; /* Navy background */
-            padding: 25px 15px; /* Increased vertical padding */
-            text-align: center;
-            margin-top: 15px;
-            margin-bottom: 15px;
-            border-radius: 25px; /* Softer radius */
-            max-width: 1400px;
-            margin-left: auto; margin-right: auto;
-            border: none;
-            box-shadow: var(--premium-shadow);
+            text-decoration: none;
+            background-color: #1e3a8a;
+            color: #ffffff !important;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .greeting-text {
-            font-size: 2.2rem; /* Scared up text */
-            font-weight: 800; color: white; margin-bottom: 8px;
+        .btn-back:hover {
+            background-color: #172554;
+            transform: translateY(-1px);
+        }
+
+        /* --- PERFECTLY CENTERED MAIN CONTAINER --- */
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            align-items: center; /* Centers layout vertically */
+            justify-content: center; /* Centers layout horizontally */
+            padding-bottom: 40px; /* Balances the bottom visual weight */
+        }
+
+        .helpdesk-container {
+            width: 100%;
+            max-width: 1120px;
+            padding: 0 20px;
+        }
+
+        .welcome-title {
+            color: #0b2d7a;
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 45px;
             letter-spacing: -0.5px;
         }
-        .sub-text {
-            font-size: 1.05rem; color: #bfdbfe; /* Muted light blue for contrast */
-            margin-bottom: 30px;
+
+        /* --- GRID AND CARDS LAYOUT --- */
+        .helpdesk-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 320px);
+            justify-content: center;
+            column-gap: 55px;
+            row-gap: 55px;
         }
 
-        /* Hero Search Input (Internal dark mode) */
-        .search-container {
-            max-width: 650px; margin: 0 auto; position: relative;
-        }
-        .search-input {
-            height: 35px; /* Taller input */
-            border-radius: 30px; border: 2px solid white;
-            background-color: white; /* clean white input on navy bg */
-            color: #0f172a;
-            padding-left: 55px; font-size: 1.0rem; font-weight: 500;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
-        }
-        .search-input::placeholder { color: #94a3b8; font-weight: 400;}
-        .search-input:focus {
-            background-color: white;
-            border-color: #93c5fd;
-            box-shadow: 0 0 0 5px rgba(147, 197, 253, 0.3); /* Soft blue focus glow */
-            outline: none;
-        }
-        .search-icon {
-            position: absolute; left: 22px; top: 50%; transform: translateY(-50%);
-            color: #94a3b8; font-size: 1.15rem;
+        .ticket-card {
+            width: 320px;
+            height: 145px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 24px 20px;
+            text-decoration: none;
+            color: #000;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-sizing: border-box;
         }
 
-        .action-card {
-            background: white;
-            border: 2px solid #e2e8f0; /* Default border */
-            border-radius: 16px;
-            padding: 50px 30px; /* Heavily increased padding to increase size */
-            min-height: 280px; /* Increased min height */
-            height: 100%;
-            text-decoration: none; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        .ticket-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+            color: #000;
         }
 
-        .action-card:hover {
-            transform: translateY(-10px); /* Subtle pop */
-            background-color: #ffffff;
-            border-color: #1e3a8a; /* Border becomes active on hover */
-            box-shadow: var(--premium-shadow);
-        }
-
-        .icon-circle {
-            width: 80px; height: 80px; /* Scaled up icon size */
+        .ticket-icon {
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            background: #eff6ff; color: #1e3a8a;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2.2rem; /* Scaled up icon font */
-            margin-bottom: 25px;
-            transition: all 0.3s;
-            border: 1px solid #bfdbfe;
+            background: #eef4ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #1d57c4;
+            font-size: 24px;
+            flex-shrink: 0;
         }
 
-        .action-card:hover .icon-circle {
-            background: #1e3a8a;
-            color: white;
-            transform: scale(1.05);
-            border-color: #1e3a8a;
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .card-heading {
-            font-size: 1.3rem; /* Scaled up heading */
-            font-weight: 800; color: #1e3a8a; margin-bottom: 12px;
-            letter-spacing: -0.3px;
-        }
-        .card-desc {
-            font-size: 1.0rem; /* Scaled up description */
-            color: #64748b; line-height: 1.5;
-            font-weight: 500;
+        .card-content h5 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #000000;
+            line-height: 1.2;
         }
 
-    </style>
-    <link href="/css/style.css" rel="stylesheet">
+        .card-content p {
+            font-size: 11.5px;
+            margin: 0;
+            color: #555555;
+            line-height: 1.4;
+            font-weight: 400;
+        }
 
-    <style>
-        @media (max-width: 991px) {
+        .last-card {
+            grid-column: 2;
+        }
 
-            /* 1. COMPACT GLOBAL LAYOUT */
+        /* Responsive Breakpoints (Allows scrolling only when screen height is too small for grid) */
+        @media(max-height: 720px), (max-width: 1199px) {
             html, body {
-                padding-top: 0 !important;
-                margin-top: 0 !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                overflow-x: hidden !important;
-                width: 100% !important;
+                overflow: auto; /* Fallback fallback scrollbar if browser viewport is way too small to fit the dashboard */
+                height: auto;
             }
-            body { padding-top: 80px !important; }
+            .main-wrapper {
+                padding-top: 40px;
+                padding-bottom: 40px;
+            }
+        }
 
-            /* 2. SHRINK THE TOP NAV BAR */
+        @media(max-width: 1199px) {
+            .helpdesk-grid {
+                grid-template-columns: repeat(2, 320px);
+            }
+            .last-card {
+                grid-column: span 2;
+                justify-self: center;
+            }
+        }
+
+        @media(max-width: 767px) {
             .top-nav-bar {
-                height: auto !important; padding: 12px 15px !important; display: grid !important;
-                grid-template-columns: 1fr auto !important; gap: 12px !important; align-items: center !important;
+                padding: 12px 20px;
+                height: auto;
             }
-
-            .brand-section { width: 100% !important; justify-content: flex-start !important; margin: 0 !important; min-width: 0 !important; }
-            .brand-section i.fa-ticket-alt { font-size: 1.6rem !important; margin-top: 2px !important; }
-            .brand-section span { font-size: 1.2rem !important; margin-left: 8px !important; padding-left: 8px !important; line-height: 1.1 !important; }
-
-            .btn-back { margin: 0 !important; width: auto !important; padding: 6px 12px !important; font-size: 0.75rem !important; border-radius: 8px !important; white-space: nowrap !important; }
-
-            /* 3. HERO SECTION ADJUSTMENTS */
-            .container-fluid.px-4.px-md-5 { padding-left: 15px !important; padding-right: 15px !important; }
-
-            .hero-section { margin-top: 15px !important; padding: 20px 15px !important; border-radius: 16px !important; margin-bottom: 20px !important; }
-            .greeting-text { font-size: 1.5rem !important; margin-bottom: 5px !important; }
-            .sub-text { font-size: 0.85rem !important; margin-bottom: 15px !important; line-height: 1.4 !important; }
-
-            /* Compress Search Bar */
-            .search-input { font-size: 0.85rem !important; padding-left: 40px !important; height: 40px !important; }
-            .search-icon { left: 15px !important; font-size: 1rem !important; }
-
-            /* 4. COMPACT INSTRUCTION TEXT */
-            .container-fluid.px-4.px-md-5 > .text-center.mb-5.mt-2 { margin-bottom: 20px !important; }
-            .container-fluid h5.fw-semibold { font-size: 0.9rem !important; padding: 0 10px !important; line-height: 1.4 !important; }
-
-            /* 5. SHRINK ACTION CARDS */
-            .row.g-4 { gap: 12px !important; margin-bottom: 30px !important; }
-
-            .action-card { padding: 25px 20px !important; min-height: auto !important; border-radius: 12px !important; }
-            .icon-circle { width: 55px !important; height: 55px !important; font-size: 1.5rem !important; margin-bottom: 15px !important; }
-            .card-heading { font-size: 1.1rem !important; margin-bottom: 8px !important; }
-            .card-desc { font-size: 0.85rem !important; line-height: 1.4 !important; }
+            .brand-section span {
+                font-size: 1.1rem;
+            }
+            .btn-back {
+                padding: 8px 14px;
+                font-size: 0.8rem;
+            }
+            .welcome-title {
+                font-size: 26px;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+            .helpdesk-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .ticket-card {
+                width: 100%;
+                max-width: 340px;
+                margin: 0 auto;
+            }
+            .last-card {
+                grid-column: auto;
+            }
         }
     </style>
-
-    <link href="/css/dark-mode.css" rel="stylesheet">
-    <script src="/js/theme-engine.js"></script>
 </head>
 <body>
 
 <nav class="top-nav-bar">
-    <div class="brand-section d-flex align-items-center">
-        <i class="fas fa-ticket-alt text-dark" style="font-size: 2.5rem;"></i>
-        <span class="fw-bold text-dark" style="border-left: 2px solid #cbd5e1; padding-left: 17px; margin-left: 15px; font-size: 1.5rem; letter-spacing: 0.5px;">
-            LOG TICKETS
-        </span>
+    <div class="brand-section">
+        <i class="fas fa-ticket-alt"></i>
+        <span>LOG TICKETS</span>
     </div>
     <a href="/employee/dashboard" class="btn-back">
-        <i class="fas fa-arrow-left me-2"></i>Back to Home
+        <i class="fas fa-arrow-left"></i> Back to Home
     </a>
 </nav>
 
-<div class="container-fluid px-4 px-md-5">
+<div class="main-wrapper">
+    <div class="helpdesk-container">
 
-    <div class="hero-section">
-        <h2 class="greeting-text">
-            Hello, <span th:text="${session.loggedInUser}">User</span>
-        </h2>
-        <p class="sub-text">Find all your requests in one place. Search or raise new tickets from the cards below.</p>
+        <h3 class="welcome-title">
+            Welcome to Helpdesk
+        </h3>
 
-        <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" class="form-control search-input" placeholder="Search knowledge articles, past requests, or assets...">
+        <div class="helpdesk-grid">
+
+            <a href="/ticket-dashboard" class="ticket-card">
+                <div class="ticket-icon">
+                    <i class="fas fa-desktop"></i>
+                </div>
+                <div class="card-content">
+                    <h5>IT Helpdesk</h5>
+                    <p>Technical support for systems, devices, and software issues.</p>
+                </div>
+            </a>
+
+            <a href="/ticket-dashboard" class="ticket-card">
+                <div class="ticket-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="card-content">
+                    <h5>Facilities Admin Helpdesk</h5>
+                    <p>Assistance for office facilities and admin services.</p>
+                </div>
+            </a>
+
+            <a href="/ticket-dashboard" class="ticket-card">
+                <div class="ticket-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="card-content">
+                    <h5>HR Helpdesk</h5>
+                    <p>Support for employee queries, policies, and HR services.</p>
+                </div>
+            </a>
+
+            <a href="/ticket-dashboard" class="ticket-card">
+                <div class="ticket-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="card-content">
+                    <h5>Payroll & Reimbursement</h5>
+                    <p>Assist with salary, claims, reimbursements, and payments.</p>
+                </div>
+            </a>
+
+            <a href="/ticket-dashboard" class="ticket-card">
+                <div class="ticket-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <div class="card-content">
+                    <h5>Alumni Support</h5>
+                    <p>Assistance for alumni services, records, and communication.</p>
+                </div>
+            </a>
+
+            <a href="/ticket-dashboard" class="ticket-card">
+                <div class="ticket-icon">
+                    <i class="fas fa-th-large"></i>
+                </div>
+                <div class="card-content">
+                    <h5>Enterprise Application Support</h5>
+                    <p>Support for enterprise software, applications, and system access.</p>
+                </div>
+            </a>
+
+            <a href="/ticket-dashboard" class="ticket-card last-card">
+                <div class="ticket-icon">
+                    <i class="fas fa-book-reader"></i>
+                </div>
+                <div class="card-content">
+                    <h5>Learning & Development</h5>
+                    <p>Resources and support for training, skills, and career growth.</p>
+                </div>
+            </a>
+
         </div>
     </div>
-</div>
-
-<div class="container-fluid px-4 px-md-5">
-
-    <div class="text-center mb-5 mt-2">
-        <h5 class="fw-semibold text-muted" style="letter-spacing: 0.5px;">
-            Select a service requirement from the four categories below to begin.
-        </h5>
-    </div>
-
-    <div class="row g-4 mb-5">
-        <div class="col-xl-3 col-md-4">
-            <a href="/service-requests" class="action-card">
-                <div class="icon-circle"><i class="fas fa-laptop-medical"></i></div>
-                <div class="card-heading">Service Request</div>
-                <div class="card-desc">Request new hardware, specialized software licenses, or elevate access permissions.</div>
-            </a>
-        </div>
-        <div class="col-xl-3 col-md-4">
-            <a href="/my-assets" class="action-card">
-                <div class="icon-circle"><i class="fas fa-box-open"></i></div>
-                <div class="card-heading">My Assets</div>
-                <div class="card-desc">View your assigned devices, active software licenses, and IT accessories.</div>
-            </a>
-        </div>
-        <div class="col-xl-3 col-md-4">
-            <a href="/report-incident" class="action-card">
-                <div class="icon-circle" style="background: #fee2e2; color: #b91c1c; border-color: #fecaca;"><i class="fas fa-exclamation-triangle"></i></div>
-                <div class="card-heading text-danger">Report Incident</div>
-                <div class="card-desc">Report equipment that is damaged or system software that is not working correctly.</div>
-            </a>
-        </div>
-        <div class="col-xl-3 col-md-4">
-            <a href="/knowledge-base" class="action-card">
-                <div class="icon-circle"><i class="fas fa-book-open"></i></div>
-                <div class="card-heading">Knowledge Base</div>
-                <div class="card-desc">Browse through FAQs, how-to guides, and troubleshooting articles for self-help.</div>
-            </a>
-        </div>
-    </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

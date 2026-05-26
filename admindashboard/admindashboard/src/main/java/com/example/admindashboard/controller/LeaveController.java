@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
+import com.example.admindashboard.service.EmployeeLeaveWalletService;
+import com.example.admindashboard.model.EmployeeLeaveWallet;
+import com.example.admindashboard.repository.EmployeeLeaveWalletRepository;
 
 @RestController
 @RequestMapping("/api/leave")
@@ -31,6 +34,12 @@ public class LeaveController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private EmployeeLeaveWalletService employeeLeaveWalletService;
+    
+    @Autowired
+    private EmployeeLeaveWalletRepository walletRepository;
+
     // 1. SUBMIT LEAVE REQUEST
     @PostMapping("/submit")
     public ResponseEntity<?> submitLeaveRequest(@RequestBody LeaveRequest leaveRequest, Principal principal) {
@@ -39,6 +48,7 @@ public class LeaveController {
             String username = principal.getName();
             User currentUser = userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
+            employeeLeaveWalletService.initializeEmployeeWallet(currentUser);
 
             // 2. Attach the employee to the request and set status to "Pending"
             leaveRequest.setUser(currentUser);
@@ -89,43 +99,60 @@ public class LeaveController {
         }
     }
 
-    // 3. CALCULATE LEAVE BALANCE DYNAMICALLY
+    // 3. CALCULATE LEAVE BALANCE  WITH LEAVE WALLET
     @GetMapping("/balance")
     public ResponseEntity<?> getLeaveBalance(Principal principal) {
+
         try {
+
             String username = principal.getName();
+
             User currentUser = userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            List<LeaveRequest> allLeaves = leaveRequestRepository.findByUserOrderByIdDesc(currentUser);
+            // Ensure wallet exists
+            employeeLeaveWalletService.initializeEmployeeWallet(currentUser);
 
-            int totalCL = 12;
-            int totalSL = 10;
-            int totalEL = 20;
+            List<EmployeeLeaveWallet> wallets =
+                    walletRepository.findByUser(currentUser);
 
-            int usedCL = 0, usedSL = 0, usedEL = 0;
+            Map<String, Map<String, Double>> balances =
+                    new HashMap<>();
 
-            for (LeaveRequest leave : allLeaves) {
-                if ("APPROVED".equalsIgnoreCase(leave.getStatus())) {
-                    if ("Casual".equalsIgnoreCase(leave.getLeaveType())) {
-                        usedCL += leave.getTotalDays();
-                    } else if ("Sick".equalsIgnoreCase(leave.getLeaveType())) {
-                        usedSL += leave.getTotalDays();
-                    } else if ("Earned".equalsIgnoreCase(leave.getLeaveType())) {
-                        usedEL += leave.getTotalDays();
-                    }
-                }
+            for (EmployeeLeaveWallet wallet : wallets) {
+
+                String leaveCode =
+                        wallet.getLeaveType().getLeaveCode();
+
+                Double total =
+                        wallet.getOpeningBalance()
+                        + wallet.getEarnedCredit();
+
+                Double used =
+                        wallet.getUsedBalance();
+
+                Double left =
+                        wallet.getAvailableBalance();
+
+                Map<String, Double> leaveData =
+                        new HashMap<>();
+
+                leaveData.put("used", used);
+
+                leaveData.put("total", total);
+
+                leaveData.put("left", left);
+
+                balances.put(leaveCode, leaveData);
             }
-
-            Map<String, Map<String, Integer>> balances = new HashMap<>();
-            balances.put("Casual", Map.of("used", usedCL, "total", totalCL, "left", totalCL - usedCL));
-            balances.put("Sick", Map.of("used", usedSL, "total", totalSL, "left", totalSL - usedSL));
-            balances.put("Earned", Map.of("used", usedEL, "total", totalEL, "left", totalEL - usedEL));
 
             return ResponseEntity.ok(balances);
 
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error calculating balance: " + e.getMessage());
+
+            return ResponseEntity
+                    .badRequest()
+                    .body("Error calculating balance: " + e.getMessage());
         }
     }
 }
