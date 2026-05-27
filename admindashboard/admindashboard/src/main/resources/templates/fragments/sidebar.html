@@ -1,0 +1,73 @@
+<div th:fragment="sidebar">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="logo-box">
+                <img th:src="@{/images/wcg-logo.jpg}" alt="WhiteCircle Group">
+            </div>
+
+            <ul class="sidebar-menu">
+
+                <li>
+                    <a href="/payroll-dashboard" class="sidebar-link" data-page="/payroll-dashboard">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/payroll/my-profile" class="sidebar-link" data-page="/payroll/my-profile">
+                        <i class="fa-solid fa-user"></i>
+                        <span>My Profile</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/tax-calculator" class="sidebar-link" data-page="/tax-calculator">
+                        <i class="fa-solid fa-calculator"></i>
+                        <span>Tax Calculator</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/pf-contribution" class="sidebar-link" data-page="/pf-contribution">
+                        <i class="fa-solid fa-shield"></i>
+                        <span>PF Contribution</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/payroll/my-queries" class="sidebar-link" data-page="/payroll/my-queries">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span>Helpdesk</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/payroll/travel-expenses" class="sidebar-link" data-page="/payroll/travel-expenses">
+                        <i class="fa-solid fa-plane"></i>
+                        <span>Travel & Expenses</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/payroll/faqs" class="sidebar-link" data-page="/payroll/faqs">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span>FAQs</span>
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+        <a href="/payroll/logout" class="sidebar-link logout-btn">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Log Out</span>
+        </a>
+
+    </aside>
+
+</div>

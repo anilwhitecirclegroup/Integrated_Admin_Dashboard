@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Helpdesk – Payroll Portal</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/base/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/variables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/typography.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/dashboard-layout.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/sidebar.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/cards.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/tables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/badges.css}"/>
+
+    <style>
+        .section-card { 
+            background: var(--white); 
+            border-radius: var(--radius-lg); 
+            padding: 32px; 
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04); 
+            border: 1px solid #ECECEC; 
+        }
+        .section-card-title { 
+            font-size: 16px; 
+            font-weight: 700; 
+            color: var(--text-dark); 
+            margin-bottom: 24px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+        }
+        .filter-bar { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+        .filter-select { 
+            height: 42px; 
+            border: 1.5px solid #E2E8F0; 
+            border-radius: 10px; 
+            padding: 0 16px; 
+            font-size: 13px; 
+            font-weight: 500; 
+            background: white; 
+            color: var(--text-dark); 
+            outline: none; 
+            cursor: pointer; 
+            transition: var(--transition); 
+        }
+        .filter-select:focus { 
+            border-color: var(--primary-blue); 
+            box-shadow: 0 0 0 3px rgba(47, 84, 235, 0.08); 
+        }
+        .raise-btn { 
+            margin-left: auto; 
+            height: 42px; 
+            padding: 0 22px; 
+            background: var(--primary-blue); 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 13px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: var(--transition); 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            box-shadow: 0 4px 10px rgba(47, 84, 235, 0.15); 
+        }
+        .raise-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 15px rgba(47, 84, 235, 0.25); 
+            opacity: 0.95; 
+        }
+        .raise-btn:active { 
+            transform: translateY(0); 
+        }
+    </style>
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+    <main class="main-content">
+
+        <h1 class="page-title">Helpdesk – My Queries</h1>
+
+        <div class="section-card">
+
+            <div class="section-card-title">
+                <i class="fa-solid fa-circle-question" style="color:var(--primary-blue);"></i>
+                Query History
+            </div>
+
+            <!-- Filters -->
+            <div class="filter-bar">
+                <select class="filter-select" id="queryTypeFilter">
+                    <option value="">All Query Types</option>
+                    <option>Payslip</option>
+                    <option>PF Correction</option>
+                    <option>Tax Declaration</option>
+                    <option>Reimbursement</option>
+                </select>
+
+                <select class="filter-select" id="queryMonthFilter">
+                    <option value="">All Months</option>
+                    <option>April 2026</option>
+                    <option>May 2026</option>
+                    <option>March 2026</option>
+                </select>
+
+                <select class="filter-select" id="queryStatusFilter">
+                    <option value="">All Status</option>
+                    <option>Open</option>
+                    <option>In Progress</option>
+                    <option>Resolved</option>
+                </select>
+
+                <button class="raise-btn" onclick="alert('Raise query form coming soon.')">
+                    <i class="fa-solid fa-plus"></i> Raise Query
+                </button>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Query ID</th>
+                            <th>Type</th>
+                            <th>Subject</th>
+                            <th>Raised On</th>
+                            <th>Status</th>
+                            <th>Last Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#QRY-001</td>
+                            <td>Payslip</td>
+                            <td>Missing May 2026 payslip</td>
+                            <td>03 May 2026</td>
+                            <td><span class="badge-status badge-success">Resolved</span></td>
+                            <td>06 May 2026</td>
+                        </tr>
+                        <tr>
+                            <td>#QRY-002</td>
+                            <td>Tax Declaration</td>
+                            <td>80C investment declaration update</td>
+                            <td>12 April 2026</td>
+                            <td><span class="badge-status badge-warning">In Progress</span></td>
+                            <td>18 April 2026</td>
+                        </tr>
+                        <tr>
+                            <td>#QRY-003</td>
+                            <td>PF Correction</td>
+                            <td>PF account UAN mismatch</td>
+                            <td>28 March 2026</td>
+                            <td><span class="badge-status badge-danger">Open</span></td>
+                            <td>28 March 2026</td>
+                        </tr>
+                        <tr>
+                            <td>#QRY-004</td>
+                            <td>Reimbursement</td>
+                            <td>Travel reimbursement for March</td>
+                            <td>05 April 2026</td>
+                            <td><span class="badge-status badge-success">Resolved</span></td>
+                            <td>10 April 2026</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/common/sidebar.js}"></script>
+</body>
+</html>

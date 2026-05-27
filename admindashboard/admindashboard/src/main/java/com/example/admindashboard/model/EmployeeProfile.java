@@ -64,6 +64,14 @@ public class EmployeeProfile {
     private String qual2Inst;
     private String qual2Year;
 
+    // Bank Details
+    private String bankAccountHolder;
+    private String bankAccountNumber;
+    private String bankIfscCode;
+    private String bankName;
+    private String bankBranch;
+    private String bankAccountType;
+
     // GETTERS AND SETTERS
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -175,4 +183,22 @@ public class EmployeeProfile {
 
     public String getQual2Year() { return qual2Year; }
     public void setQual2Year(String qual2Year) { this.qual2Year = qual2Year; }
+
+    public String getBankAccountHolder() { return bankAccountHolder; }
+    public void setBankAccountHolder(String bankAccountHolder) { this.bankAccountHolder = bankAccountHolder; }
+
+    public String getBankAccountNumber() { return bankAccountNumber; }
+    public void setBankAccountNumber(String bankAccountNumber) { this.bankAccountNumber = bankAccountNumber; }
+
+    public String getBankIfscCode() { return bankIfscCode; }
+    public void setBankIfscCode(String bankIfscCode) { this.bankIfscCode = bankIfscCode; }
+
+    public String getBankName() { return bankName; }
+    public void setBankName(String bankName) { this.bankName = bankName; }
+
+    public String getBankBranch() { return bankBranch; }
+    public void setBankBranch(String bankBranch) { this.bankBranch = bankBranch; }
+
+    public String getBankAccountType() { return bankAccountType; }
+    public void setBankAccountType(String bankAccountType) { this.bankAccountType = bankAccountType; }
 }
