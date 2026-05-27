@@ -47,6 +47,40 @@
         }
         .brand-logo { font-weight: 800; font-size: 1.4rem; color: var(--med-primary); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px;}
 
+        /* --- TOP NAV LINKS --- */
+        .nav-links { display: flex; gap: 24px; align-items: center; margin-left: 50px; }
+        .nav-links a { color: var(--text-dark); text-decoration: none; font-weight: 700; font-size: 0.95rem; transition: 0.3s; opacity: 0.7; }
+        .nav-links a:hover, .nav-links a.active { color: var(--med-primary); opacity: 1; }
+
+        /* --- LEFT SIDEBAR --- */
+        .med-sidebar {
+            position: fixed; top: 80px; left: 0; bottom: 0; width: 260px;
+            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border);
+            padding: 30px 20px; z-index: 900;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .sidebar-link {
+            display: flex; align-items: center; gap: 15px;
+            padding: 14px 20px; border-radius: 12px;
+            color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        .sidebar-link i { font-size: 1.2rem; width: 24px; text-align: center; }
+        .sidebar-link:hover, .sidebar-link.active {
+            background: rgba(30, 136, 229, 0.1); color: var(--med-primary); font-weight: 700;
+        }
+
+        /* --- MAIN CONTENT WRAPPER --- */
+        .main-content {
+            margin-left: 260px; /* Offset for sidebar */
+            padding: 0 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content { margin-left: 0; }
+        }
+
         /* --- SAAS LAYOUT GRID --- */
         .dashboard-grid {
             display: grid;
@@ -54,7 +88,6 @@
             gap: 24px;
             max-width: 1300px;
             margin: 0 auto;
-            padding: 0 20px;
         }
 
         /* --- UNIFIED HEALTH WALLET (HERO BANNER) - COMPACTED --- */
@@ -215,8 +248,16 @@
 <body>
 
 <nav class="med-nav">
-    <div class="brand-logo">
-        <i class="fas fa-shield-heart fs-3"></i> WhiteCircle Health
+    <div class="d-flex align-items-center">
+        <div class="brand-logo">
+            <i class="fas fa-shield-heart fs-3"></i> WhiteCircle Health
+        </div>
+
+        <div class="nav-links d-none d-lg-flex">
+            <a href="/employee/mediclaim/portal" class="active">Dashboard</a>
+            <a href="/employee/mediclaim/policy">Insurance</a>
+            <a th:href="@{/employee/mediclaim/track/list}">Claims</a>
+        </div>
     </div>
 
     <div class="d-flex align-items-center gap-3">
@@ -229,10 +270,6 @@
             <a href="/employee/mediclaim/profile" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold shadow-sm">
                 <i class="fas fa-user-circle me-1"></i> My Profile
             </a>
-
-            <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 rounded-pill fw-bold shadow-sm d-none d-md-inline-block">
-                <i class="fas fa-check-circle me-1"></i> Policy Active
-            </span>
         </div>
 
         <a href="/employee/dashboard" class="btn btn-light border btn-sm fw-bold rounded-pill px-3 shadow-sm">
@@ -241,118 +278,127 @@
     </div>
 </nav>
 
-<div class="dashboard-grid">
-    <div>
-        <div class="health-wallet-panel">
-            <div class="wallet-metrics">
-                <div class="wallet-label">Available Balance</div>
-                <div class="wallet-balance">₹3,80,000</div>
+<aside class="med-sidebar d-none d-lg-flex">
+    <div class="text-uppercase small fw-bold text-muted mb-2 px-3" style="letter-spacing: 1px;">Main Menu</div>
+    <a href="/employee/mediclaim/portal" class="sidebar-link active"><i class="fas fa-home"></i> Dashboard</a>
+    <a href="/employee/mediclaim/policy" class="sidebar-link"><i class="fas fa-file-contract"></i> Policies</a>
+    <a href="/employee/mediclaim/dependents" class="sidebar-link"><i class="fas fa-users"></i> Dependents</a>
+    <a th:href="@{/employee/mediclaim/track/list}" class="sidebar-link"><i class="fas fa-notes-medical"></i> Claims</a>
+    <a href="#" class="sidebar-link"><i class="fas fa-folder-open"></i> Documents</a>
+</aside>
 
-                <div class="sub-metrics-row">
-                    <div class="sub-metric">
-                        <span>Total Coverage</span>
-                        <h5>₹5,00,000</h5>
+<main class="main-content">
+    <div class="dashboard-grid">
+        <div>
+            <div class="health-wallet-panel">
+                <div class="wallet-metrics">
+                    <div class="wallet-label">Available Balance</div>
+                    <div class="wallet-balance">₹3,80,000</div>
+
+                    <div class="sub-metrics-row">
+                        <div class="sub-metric">
+                            <span>Total Coverage</span>
+                            <h5>₹5,00,000</h5>
+                        </div>
+                        <div class="sub-metric">
+                            <span>Amount Used</span>
+                            <h5>₹1,20,000</h5>
+                        </div>
                     </div>
-                    <div class="sub-metric">
-                        <span>Amount Used</span>
-                        <h5>₹1,20,000</h5>
+                </div>
+
+                <div class="progress-circle">
+                    <div class="progress-value">
+                        24%
+                        <span>Utilized</span>
                     </div>
                 </div>
             </div>
 
-            <div class="progress-circle">
-                <div class="progress-value">
-                    24%
-                    <span>Utilized</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="analytics-grid">
-            <div class="glass-panel">
-                <div class="panel-title"><i class="fas fa-chart-pie"></i> Claim Status Distribution</div>
-                <div class="flex-grow-1 d-flex justify-content-center align-items-center" style="position: relative; height: 220px;">
-                    <canvas id="claimsPieChart"></canvas>
-                </div>
-            </div>
-
-            <div class="glass-panel">
-                <div class="panel-title d-flex justify-content-between w-100">
-                    <span><i class="fas fa-file-medical-alt"></i> Recent Claims</span>
-                    <span class="badge bg-warning text-dark rounded-pill" th:text="${pendingCount != null ? pendingCount + ' Pending' : '0 Pending'}">0 Pending</span>
+            <div class="analytics-grid">
+                <div class="glass-panel">
+                    <div class="panel-title"><i class="fas fa-chart-pie"></i> Claim Status Distribution</div>
+                    <div class="flex-grow-1 d-flex justify-content-center align-items-center" style="position: relative; height: 220px;">
+                        <canvas id="claimsPieChart"></canvas>
+                    </div>
                 </div>
 
-                <div class="d-flex flex-column gap-3 mt-2">
-                    <div th:if="${#lists.isEmpty(claims)}" class="alert alert-light border text-center py-3 m-0">
-                        <span class="text-muted small fw-bold">No claims raised yet.</span>
+                <div class="glass-panel">
+                    <div class="panel-title d-flex justify-content-between w-100">
+                        <span><i class="fas fa-file-medical-alt"></i> Recent Claims</span>
+                        <span class="badge bg-warning text-dark rounded-pill" th:text="${pendingCount != null ? pendingCount + ' Pending' : '0 Pending'}">0 Pending</span>
                     </div>
 
-                    <div class="claim-list-item" th:each="claim, stat : ${claims}" th:if="${stat.index < 3}"
-                         th:classappend="${claim.status == 'Settled' or claim.status == 'Rejected' ? 'opacity-50' : ''}">
-
-                        <div>
-                            <h6 class="fw-bold m-0" style="font-size: 0.95rem;"
-                                th:text="'CLM-' + ${#temporals.format(claim.submissionDate, 'yyyy')} + '-' + ${#numbers.formatInteger(claim.id, 4)}">CLM-0000</h6>
-                            <span class="text-muted small" th:text="${claim.hospitalName + ' • ' + claim.claimType}">Hospital • Type</span>
+                    <div class="d-flex flex-column gap-3 mt-2">
+                        <div th:if="${#lists.isEmpty(claims)}" class="alert alert-light border text-center py-3 m-0">
+                            <span class="text-muted small fw-bold">No claims raised yet.</span>
                         </div>
 
-                        <span class="badge border"
-                              th:classappend="${claim.status == 'Pending' ? 'bg-warning bg-opacity-10 text-warning border-warning' :
-                                              (claim.status == 'Approved' or claim.status == 'Settled' ? 'bg-success bg-opacity-10 text-success border-success' :
-                                              'bg-danger bg-opacity-10 text-danger border-danger')}"
-                              th:text="${claim.status}">Status</span>
-                    </div>
-                </div>
+                        <div class="claim-list-item" th:each="claim, stat : ${claims}" th:if="${stat.index < 3}"
+                             th:classappend="${claim.status == 'Settled' or claim.status == 'Rejected' ? 'opacity-50' : ''}">
 
-                <div class="mt-4 pt-2 border-top" th:if="${not #lists.isEmpty(claims)}">
-                    <a th:href="@{/employee/mediclaim/track/{id}(id=${claims[0].id})}"
-                       class="btn btn-outline-primary btn-sm w-100 fw-bold rounded-pill"
-                       style="padding: 8px; font-size: 0.85rem;">
-                        <i class="fas fa-eye me-2"></i>View Tracking Details
-                    </a>
+                            <div>
+                                <h6 class="fw-bold m-0" style="font-size: 0.95rem;"
+                                    th:text="'CLM-' + ${#temporals.format(claim.submissionDate, 'yyyy')} + '-' + ${#numbers.formatInteger(claim.id, 4)}">CLM-0000</h6>
+                                <span class="text-muted small" th:text="${claim.hospitalName + ' • ' + claim.claimType}">Hospital • Type</span>
+                            </div>
+
+                            <span class="badge border"
+                                  th:classappend="${claim.status == 'Pending' ? 'bg-warning bg-opacity-10 text-warning border-warning' :
+                                                  (claim.status == 'Approved' or claim.status == 'Settled' ? 'bg-success bg-opacity-10 text-success border-success' :
+                                                  'bg-danger bg-opacity-10 text-danger border-danger')}"
+                                  th:text="${claim.status}">Status</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-2 border-top" th:if="${not #lists.isEmpty(claims)}">
+                        <a th:href="@{/employee/mediclaim/track/{id}(id=${claims[0].id})}"
+                           class="btn btn-outline-primary btn-sm w-100 fw-bold rounded-pill"
+                           style="padding: 8px; font-size: 0.85rem;">
+                            <i class="fas fa-eye me-2"></i>View Tracking Details
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div class="action-sidebar">
+            <h5 class="fw-bold mb-1 mt-2">Quick Actions</h5>
+
+            <a href="/employee/mediclaim/claim" class="premium-btn raise-claim">
+                <div class="btn-icon-wrapper"><i class="fas fa-plus"></i></div>
+                <div>
+                    <h6>Raise New Claim</h6>
+                    <p>Reimbursement & cashless</p>
+                </div>
+            </a>
+
+            <a href="/employee/mediclaim/dependents" class="premium-btn add-dep">
+                <div class="btn-icon-wrapper"><i class="fas fa-user-plus"></i></div>
+                <div>
+                    <h6>Add Dependent</h6>
+                    <p>Register family members</p>
+                </div>
+            </a>
+
+            <a href="/employee/mediclaim/policy" class="premium-btn view-pol">
+                <div class="btn-icon-wrapper"><i class="fas fa-file-contract"></i></div>
+                <div>
+                    <h6>Insurance Policy</h6>
+                    <p>View coverage details</p>
+                </div>
+            </a>
+
+            <a href="/employee/mediclaim/hospitals" class="premium-btn find-hosp">
+                <div class="btn-icon-wrapper"><i class="fas fa-hospital-symbol"></i></div>
+                <div>
+                    <h6>Find Hospital</h6>
+                    <p>Network & cashless clinics</p>
+                </div>
+            </a>
+        </div>
     </div>
-
-    <div class="action-sidebar">
-        <h5 class="fw-bold mb-1 mt-2">Quick Actions</h5>
-
-        <a href="/employee/mediclaim/claim" class="premium-btn raise-claim">
-            <div class="btn-icon-wrapper"><i class="fas fa-plus"></i></div>
-            <div>
-                <h6>Raise New Claim</h6>
-                <p>Reimbursement & cashless</p>
-            </div>
-        </a>
-
-        <a href="/employee/mediclaim/dependents" class="premium-btn add-dep">
-            <div class="btn-icon-wrapper"><i class="fas fa-user-plus"></i></div>
-            <div>
-                <h6>Add Dependent</h6>
-                <p>Register family members</p>
-            </div>
-        </a>
-
-        <a href="/employee/mediclaim/policy" class="premium-btn view-pol">
-            <div class="btn-icon-wrapper"><i class="fas fa-file-contract"></i></div>
-            <div>
-                <h6>Insurance Policy</h6>
-                <p>View coverage details</p>
-            </div>
-        </a>
-
-        <a href="/employee/mediclaim/hospitals" class="premium-btn find-hosp">
-            <div class="btn-icon-wrapper"><i class="fas fa-hospital-symbol"></i></div>
-            <div>
-                <h6>Find Hospital</h6>
-                <p>Network & cashless clinics</p>
-            </div>
-        </a>
-    </div>
-</div>
-
-<script>
+</main> <script>
     document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('claimsPieChart').getContext('2d');
 
