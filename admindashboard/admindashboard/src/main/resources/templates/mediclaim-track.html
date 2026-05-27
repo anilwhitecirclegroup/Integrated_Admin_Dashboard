@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Track Claim | WhiteCircle Health</title>
+    <title>Track Claims | WhiteCircle Health</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -20,35 +20,79 @@
             --text-muted: #64748b;
         }
 
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-dark); padding-top: 100px; padding-bottom: 50px; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-dark); padding-top: 120px; padding-bottom: 50px; }
 
         .med-nav { position: fixed; top: 0; left: 0; right: 0; height: 80px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); }
 
-        .container { max-width: 1000px; }
+        .container { max-width: 1200px; }
 
-        /* Unified Header */
-        .claim-header { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; border-left: 6px solid var(--med-primary); }
+        /* --- DYNAMIC GRID LAYOUT --- */
+        .claims-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 992px) { .claims-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .claims-grid { grid-template-columns: 1fr; } }
 
-        /* Unified Panels */
-        .glass-panel { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); height: 100%; }
-        .panel-title { font-weight: 800; font-size: 1.1rem; margin-bottom: 25px; color: var(--med-primary); }
+        /* --- CARD STYLING & EXPANSION --- */
+        .claim-card {
+            background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden; border: 1px solid transparent;
+        }
+        .claim-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(30, 136, 229, 0.08); border-color: rgba(30, 136, 229, 0.2); }
 
-        /* Timeline */
+        .claim-summary { padding: 30px; display: block; }
+
+        /* TIGHTENED EXPANDED VIEW PADDING */
+        .claim-detail-view { display: none; padding: 20px 25px; animation: fadeIn 0.5s ease; }
+
+        /* When the card is expanded */
+        .claim-card.expanded {
+            grid-column: 1 / -1; /* Spans full width */
+            transform: translateY(0);
+            border-left: 6px solid var(--med-primary);
+        }
+        .claim-card.expanded .claim-summary { display: none; }
+        .claim-card.expanded .claim-detail-view { display: block; }
+
+        .close-btn {
+            cursor: pointer; font-size: 1.2rem; color: var(--text-muted);
+            transition: all 0.3s ease; width: 35px; height: 35px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; background: #f8fafc;
+        }
+        .close-btn:hover { color: white; background: var(--med-red); transform: rotate(90deg); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- TIMELINE & INTERNAL PANELS (TIGHTENED) --- */
+        .inner-panel { background: #f8fafc; border-radius: 16px; padding: 20px; border: 1px solid #e2e8f0; height: 100%; }
+        .panel-title { font-weight: 800; font-size: 1.05rem; margin-bottom: 15px; color: var(--med-primary); }
+
         .timeline { position: relative; padding-left: 20px; }
-        .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: #e2e8f0; }
-        .timeline-step { position: relative; margin-bottom: 30px; }
-        .step-dot { position: absolute; left: -31px; width: 24px; height: 24px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; }
+        .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: #cbd5e1; }
+
+        /* REDUCED TIMELINE MARGIN */
+        .timeline-step { position: relative; margin-bottom: 20px; }
+        .timeline-step:last-child { margin-bottom: 0; }
+        .step-dot { position: absolute; left: -31px; width: 24px; height: 24px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; transition: all 0.3s ease; }
+        .step-title { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); margin-bottom: 0; }
+        .step-date { font-size: 0.75rem; color: var(--text-muted); }
+
         .step-dot.completed { background: var(--med-green); box-shadow: 0 0 10px rgba(67, 160, 71, 0.3); }
         .step-dot.active { background: var(--med-orange); animation: pulse 2s infinite; }
+        .step-dot.rejected { background: var(--med-red); box-shadow: 0 0 10px rgba(229, 57, 53, 0.3); }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(251, 140, 0, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(251, 140, 0, 0); } }
 
-        /* Details */
-        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f8fafc; }
+        /* TIGHTENED INFO ROWS */
+        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #cbd5e1; }
+        .info-row:last-child { border-bottom: none; }
 
-        /* History Table */
-        .history-table { width: 100%; margin-top: 20px; }
-        .history-table th { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); padding-bottom: 10px; }
-        .history-table td { padding: 15px 0; font-weight: 600; border-top: 1px solid #f1f5f9; }
+        .doc-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 15px; background: white; transition: all 0.3s; }
+        .doc-card:hover { border-color: var(--med-primary); box-shadow: 0 5px 15px rgba(30, 136, 229, 0.08); }
     </style>
 </head>
 <body>
@@ -59,95 +103,183 @@
         <i class="fas fa-arrow-left me-1"></i>Back to Dashboard</a>
 </nav>
 
-<div class="container" th:if="${activeClaim != null}">
-    <div class="claim-header">
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold mb-1" th:text="'Claim #CLM-' + ${#temporals.format(activeClaim.submissionDate, 'yyyy')} + '-' + ${#numbers.formatInteger(activeClaim.id, 4)}">Claim #CLM-0000</h2>
-            <span class="text-muted fw-medium"><i class="fas fa-hospital me-1"></i> <span th:text="${activeClaim.hospitalName}">Hospital Name</span></span>
+            <h3 class="fw-bold m-0">Claim Tracking Vault</h3>
+            <p class="text-muted m-0">Monitor the live status of all your submitted claims.</p>
         </div>
-        <span class="badge fs-6 px-3 py-2 rounded-pill"
-              th:classappend="${activeClaim.status == 'Pending' ? 'bg-warning text-dark' :
-                              (activeClaim.status == 'Approved' or activeClaim.status == 'Settled' ? 'bg-success text-white' :
-                              'bg-danger text-white')}"
-              th:text="${activeClaim.status}">Status</span>
     </div>
 
-    <div class="row g-4">
-        <div class="col-md-6">
-            <div class="glass-panel">
-                <div class="panel-title">Tracking Timeline</div>
-                <div class="timeline">
-                    <div class="timeline-step">
-                        <div class="step-dot completed"><i class="fas fa-check"></i></div>
-                        <div class="step-title">Submitted</div>
-                        <div class="step-date" th:text="${#temporals.format(activeClaim.submissionDate, 'dd MMM yyyy')}">Date</div>
-                    </div>
-                    <div class="timeline-step">
-                        <div class="step-dot active"><i class="fas fa-hourglass-half text-white"></i></div>
-                        <div class="step-title text-warning fw-bold">HR Review (Active)</div>
-                        <div class="step-date">Pending Admin Action</div>
-                    </div>
-                    <div class="timeline-step">
-                        <div class="step-dot"><i class="fas fa-minus text-white"></i></div>
-                        <div class="step-title text-muted">TPA Processing</div>
+    <div th:if="${allClaims == null or allClaims.empty}" class="text-center mt-5 p-5 bg-white rounded-4 shadow-sm border">
+        <i class="fas fa-folder-open fa-4x text-muted opacity-50 mb-3"></i>
+        <h4 class="fw-bold text-dark">No Claims Found</h4>
+        <p class="text-muted">You have not submitted any claims yet.</p>
+    </div>
+
+    <div class="claims-grid" th:if="${allClaims != null and !allClaims.empty}">
+
+        <div class="claim-card" th:each="claim : ${allClaims}" th:id="'claim-card-' + ${claim.id}">
+
+            <div class="claim-summary">
+                <div class="d-flex justify-content-between align-items-start mb-3 border-bottom pb-3">
+                    <div>
+                        <h5 class="fw-bold mb-1 text-dark" th:text="'CLM-' + ${#temporals.format(claim.submissionDate, 'yyyy')} + '-' + ${#numbers.formatInteger(claim.id, 4)}">CLM-0000</h5>
+                        <span class="text-muted small fw-medium"><i class="fas fa-hospital me-1"></i> <span th:text="${claim.hospitalName}">Hospital Name</span></span>
                     </div>
                 </div>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small fw-bold text-uppercase">Claim Type</span>
+                        <span class="fw-bold text-dark" th:text="${claim.claimType}">Type</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted small fw-bold text-uppercase">Amount</span>
+                        <span class="fw-bold text-primary fs-5" th:text="'₹' + ${#numbers.formatDecimal(claim.claimAmount, 0, 'COMMA', 0, 'POINT')}">₹0</span>
+                    </div>
+
+                    <div class="text-center p-2 rounded-3 bg-light border">
+                        <span class="badge rounded-pill w-100 py-2 fs-6"
+                              th:classappend="${claim.status == 'Pending' ? 'bg-warning text-dark' : (claim.status == 'Rejected' ? 'bg-danger text-white' : 'bg-success text-white')}"
+                              th:text="${claim.status}">Pending
+                        </span>
+                    </div>
+                </div>
+
+                <button class="btn btn-outline-primary w-100 rounded-pill fw-bold expand-btn" th:data-id="${claim.id}">
+                    <i class="fas fa-eye me-2"></i> View Tracking Details
+                </button>
             </div>
-        </div>
 
-        <div class="col-md-6">
-            <div class="glass-panel">
-                <div class="panel-title">Claim Details</div>
-                <div class="info-row"><span class="info-label text-muted fw-bold">Hospital</span><span class="info-value fw-bold text-dark" th:text="${activeClaim.hospitalName}">Hospital Name</span></div>
-                <div class="info-row"><span class="info-label text-muted fw-bold">Diagnosis</span><span class="info-value fw-bold text-dark" th:text="${activeClaim.diagnosis}">Diagnosis</span></div>
-                <div class="info-row"><span class="info-label text-muted fw-bold">Type</span><span class="info-value fw-bold text-dark" th:text="${activeClaim.claimType}">Type</span></div>
-                <div class="info-row"><span class="info-label text-muted fw-bold">Amount</span><span class="info-value text-primary fw-bold fs-5" th:text="'₹' + ${activeClaim.claimAmount}">₹0</span></div>
 
-                <div class="mt-4 bg-light p-3 rounded small text-muted border">
-                    <i class="fas fa-info-circle me-1"></i> <em th:text="${activeClaim.remarks != null and activeClaim.remarks != '' ? activeClaim.remarks : 'No additional remarks provided.'}">Remarks</em>
-                </div>
-            </div>
-        </div>
+            <div class="claim-detail-view">
 
-        <div class="col-12 mt-2">
-            <div class="glass-panel">
-                <div class="panel-title">Your Claim History</div>
-
-                <div th:if="${allClaims == null or allClaims.empty}" class="alert alert-light text-center border">
-                    <span class="text-muted fw-bold">No claim history found.</span>
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                    <div>
+                        <h4 class="fw-bold m-0" th:text="'Claim #CLM-' + ${#temporals.format(claim.submissionDate, 'yyyy')} + '-' + ${#numbers.formatInteger(claim.id, 4)}">Claim #CLM-0000</h4>
+                        <span class="badge mt-2 px-3 py-1 rounded-pill"
+                              th:classappend="${claim.status == 'Pending' ? 'bg-warning text-dark' : (claim.status == 'Rejected' ? 'bg-danger text-white' : 'bg-success text-white')}"
+                              th:text="${claim.status}">Status</span>
+                    </div>
+                    <div class="close-btn shrink-btn" th:data-id="${claim.id}" title="Close Details">
+                        <i class="fas fa-times"></i>
+                    </div>
                 </div>
 
-                <table class="history-table" th:if="${allClaims != null and !allClaims.empty}">
-                    <thead><tr><th>ID</th><th>Date</th><th>Type</th><th>Amount</th><th>Status</th></tr></thead>
-                    <tbody>
-                    <tr th:each="claim : ${allClaims}">
-                        <td th:text="'CLM-' + ${#temporals.format(claim.submissionDate, 'yyyy')} + '-' + ${#numbers.formatInteger(claim.id, 4)}">ID</td>
-                        <td th:text="${#temporals.format(claim.submissionDate, 'dd MMM yyyy')}">Date</td>
-                        <td th:text="${claim.claimType}">Type</td>
-                        <td th:text="'₹' + ${claim.claimAmount}">Amount</td>
-                        <td>
-                                <span class="fw-bold"
-                                      th:classappend="${claim.status == 'Pending' ? 'text-warning' :
-                                                      (claim.status == 'Approved' or claim.status == 'Settled' ? 'text-success' :
-                                                      'text-danger')}">
-                                    <i class="fas" th:classappend="${claim.status == 'Pending' ? 'fa-clock' : (claim.status == 'Approved' or claim.status == 'Settled' ? 'fa-check-circle' : 'fa-times-circle')}"></i>
-                                    <span th:text="${claim.status}">Status</span>
-                                </span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="row g-3 align-items-stretch">
+
+                    <div class="col-lg-4 col-md-12">
+                        <div class="inner-panel">
+                            <div class="panel-title"><i class="fas fa-route me-2"></i> Tracking Timeline</div>
+                            <div class="timeline">
+                                <div class="timeline-step">
+                                    <div class="step-dot completed"><i class="fas fa-check"></i></div>
+                                    <div class="step-title">Submitted</div>
+                                    <div class="step-date" th:text="${#temporals.format(claim.submissionDate, 'dd MMM yyyy, HH:mm')}">Date</div>
+                                </div>
+
+                                <div class="timeline-step">
+                                    <div class="step-dot" th:classappend="${claim.status == 'Pending' ? 'active' : (claim.status == 'Rejected' ? 'rejected' : 'completed')}">
+                                        <i class="fas" th:classappend="${claim.status == 'Pending' ? 'fa-hourglass-half text-white' : (claim.status == 'Rejected' ? 'fa-times' : 'fa-check')}"></i>
+                                    </div>
+                                    <div class="step-title" th:classappend="${claim.status == 'Pending' ? 'text-warning' : (claim.status == 'Rejected' ? 'text-danger' : '')}">HR Review</div>
+                                    <div class="step-date" th:if="${claim.status == 'Pending'}">Awaiting HR verification</div>
+                                </div>
+
+                                <div class="timeline-step">
+                                    <div class="step-dot" th:classappend="${claim.status == 'Pending' or claim.status == 'Rejected' ? '' : (claim.status == 'Approved' ? 'active' : 'completed')}">
+                                        <i class="fas" th:classappend="${claim.status == 'Approved' ? 'fa-cog text-white' : (claim.status == 'Settled' ? 'fa-check' : 'fa-minus text-white')}"></i>
+                                    </div>
+                                    <div class="step-title" th:classappend="${claim.status == 'Pending' or claim.status == 'Rejected' ? 'text-muted' : (claim.status == 'Approved' ? 'text-warning' : '')}">TPA Processing</div>
+                                    <div class="step-date" th:if="${claim.status == 'Approved'}">In review with Third Party Admin</div>
+                                </div>
+
+                                <div class="timeline-step">
+                                    <div class="step-dot" th:classappend="${claim.status == 'Settled' ? 'completed' : ''}">
+                                        <i class="fas" th:classappend="${claim.status == 'Settled' ? 'fa-check' : 'fa-minus text-white'}"></i>
+                                    </div>
+                                    <div class="step-title" th:classappend="${claim.status == 'Settled' ? '' : 'text-muted'}">Claim Approved</div>
+                                </div>
+
+                                <div class="timeline-step">
+                                    <div class="step-dot" th:classappend="${claim.status == 'Settled' ? 'completed' : ''}">
+                                        <i class="fas" th:classappend="${claim.status == 'Settled' ? 'fa-check' : 'fa-minus text-white'}"></i>
+                                    </div>
+                                    <div class="step-title" th:classappend="${claim.status == 'Settled' ? 'text-success' : 'text-muted'}">Paid / Settled</div>
+                                    <div class="step-date" th:if="${claim.status == 'Settled'}">Amount credited to account</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="inner-panel">
+                            <div class="panel-title"><i class="fas fa-file-medical-alt me-2"></i> Submission Details</div>
+                            <div class="info-row"><span class="info-label text-muted fw-bold">Hospital</span><span class="info-value fw-bold text-dark text-end" th:text="${claim.hospitalName}">Hospital Name</span></div>
+                            <div class="info-row"><span class="info-label text-muted fw-bold">Diagnosis</span><span class="info-value fw-bold text-dark text-end" th:text="${claim.diagnosis}">Diagnosis</span></div>
+                            <div class="info-row"><span class="info-label text-muted fw-bold">Type</span><span class="info-value fw-bold text-dark text-end" th:text="${claim.claimType}">Type</span></div>
+                            <div class="info-row border-0"><span class="info-label text-muted fw-bold">Requested</span><span class="info-value text-primary fw-bold fs-5 text-end" th:text="'₹' + ${#numbers.formatDecimal(claim.claimAmount, 0, 'COMMA', 0, 'POINT')}">₹0</span></div>
+
+                            <div class="mt-3 bg-white p-2 rounded small text-muted border">
+                                <i class="fas fa-info-circle me-1 text-primary"></i> <em th:text="${claim.remarks != null and claim.remarks != '' ? claim.remarks : 'No additional remarks provided.'}">Remarks</em>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="inner-panel">
+                            <div class="panel-title mb-3"><i class="fas fa-paperclip me-2"></i> Attached Documents</div>
+                            <div class="doc-card flex-column align-items-start text-start">
+                                <div class="d-flex w-100 align-items-center gap-3">
+                                    <div class="bg-danger bg-opacity-10 text-danger p-3 rounded-3"><i class="fas fa-file-pdf fs-3"></i></div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="m-0 fw-bold text-dark text-truncate" style="max-width: 180px;" th:text="'claim_documents_' + ${claim.id} + '.pdf'">claim_documents.pdf</h6>
+                                        <span class="text-muted small">Uploaded on <span th:text="${#temporals.format(claim.submissionDate, 'dd MMM')}">Date</span></span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-primary btn-sm rounded-pill fw-bold w-100 mt-2"><i class="fas fa-download me-1"></i> View Document</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
     </div>
 </div>
 
-<div class="container text-center mt-5 pt-5" th:if="${activeClaim == null}">
-    <i class="fas fa-exclamation-triangle text-warning mb-3" style="font-size: 4rem;"></i>
-    <h3 class="fw-bold">Claim Not Found</h3>
-    <p class="text-muted">The requested claim details could not be found or you do not have permission to view them.</p>
-    <a href="/employee/mediclaim/portal" class="btn btn-primary rounded-pill mt-3 px-4">Return to Dashboard</a>
-</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Expand Card Logic
+        document.querySelectorAll('.expand-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Close any currently expanded cards
+                document.querySelectorAll('.claim-card.expanded').forEach(card => card.classList.remove('expanded'));
 
+                // Expand the clicked card
+                const claimId = this.getAttribute('data-id');
+                const cardToExpand = document.getElementById('claim-card-' + claimId);
+                cardToExpand.classList.add('expanded');
+
+                // Smooth scroll to the expanded card
+                setTimeout(() => {
+                    cardToExpand.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            });
+        });
+
+        // Shrink Card Logic
+        document.querySelectorAll('.shrink-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const claimId = this.getAttribute('data-id');
+                document.getElementById('claim-card-' + claimId).classList.remove('expanded');
+            });
+        });
+    });
+</script>
 </body>
 </html>

@@ -75,6 +75,22 @@
         .btn-prev { background: #f1f5f9; color: var(--text-muted); }
         .btn-next { background: var(--med-primary); color: white; }
         .btn-submit { background: var(--med-green); color: white; }
+
+        /* --- CLAIM TRACKING TABLE --- */
+        .tracking-panel { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.04); margin-top: 40px; }
+        .table-custom { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
+        .table-custom th { color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; padding: 0 20px 10px; border: none; }
+        .table-custom td { padding: 20px; background: #ffffff; border: 1px solid #e2e8f0; border-style: solid none; vertical-align: middle; }
+        .table-custom td:first-child { border-left-style: solid; border-radius: 12px 0 0 12px; }
+        .table-custom td:last-child { border-right-style: solid; border-radius: 0 12px 12px 0; }
+        .table-custom tr { transition: transform 0.2s; }
+        .table-custom tr:hover td { border-color: var(--med-primary); box-shadow: 0 5px 15px rgba(30, 136, 229, 0.05); }
+
+        .badge-status { padding: 6px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .status-pending { background: rgba(251, 140, 0, 0.1); color: var(--med-orange); border: 1px solid rgba(251, 140, 0, 0.2); }
+        .status-approved { background: rgba(67, 160, 71, 0.1); color: var(--med-green); border: 1px solid rgba(67, 160, 71, 0.2); }
+        .status-rejected { background: rgba(229, 57, 53, 0.1); color: var(--med-red); border: 1px solid rgba(229, 57, 53, 0.2); }
+
     </style>
 </head>
 <body>
@@ -216,6 +232,56 @@
                 </div>
             </div>
         </form>
+
+        <!-- NEW: Claim Tracking Table -->
+        <div class="tracking-panel">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1">Claim Tracking</h4>
+                    <p class="text-muted small m-0">Monitor the status of your submitted reimbursement and cashless claims.</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table-custom">
+                    <thead>
+                    <tr>
+                        <th>Claim ID</th>
+                        <th>Hospital & Diagnosis</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Fallback if no claims exist -->
+                    <tr th:if="${claims == null or claims.empty}">
+                        <td colspan="6" class="text-center py-4 text-muted fw-bold border-start border-end">No claims submitted yet.</td>
+                    </tr>
+
+                    <!-- Dynamic Rows -->
+                    <tr th:each="claim : ${claims}">
+                        <td class="fw-bold text-dark" th:text="'CLM-' + ${#temporals.format(claim.submissionDate, 'yyyy')} + '-' + ${#numbers.formatInteger(claim.id, 4)}">CLM-2026-0001</td>
+                        <td>
+                            <div class="fw-bold text-dark" th:text="${claim.hospitalName}">Hospital Name</div>
+                            <div class="small text-muted" th:text="${claim.diagnosis}">Diagnosis</div>
+                        </td>
+                        <td th:text="${claim.claimType}">Reimbursement</td>
+                        <td class="fw-bold" th:text="'₹' + ${#numbers.formatDecimal(claim.claimAmount, 0, 'COMMA', 0, 'POINT')}">₹0</td>
+                        <td>
+                                <span class="badge-status"
+                                      th:classappend="${claim.status == 'Pending' ? 'status-pending' : (claim.status == 'Approved' or claim.status == 'Settled' ? 'status-approved' : 'status-rejected')}"
+                                      th:text="${claim.status}">Pending</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/employee/mediclaim/track/{id}(id=${claim.id})}" class="btn btn-sm btn-outline-primary rounded-pill fw-bold px-3">Track</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 

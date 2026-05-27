@@ -74,14 +74,7 @@ public class MediclaimController {
     }
 
     @GetMapping("/policy")
-    public String mediclaimPolicy() { return "mediclaim-policy"; }
-
-    @GetMapping("/claim")
-    public String mediclaimClaim() { return "mediclaim-claim"; }
-
-    // 4. UPDATE THIS GET MAPPING FOR TRACKING
-    @GetMapping("/track/{claimId}")
-    public String mediclaimTrack(@PathVariable Long claimId, Principal principal, Model model) {
+    public String mediclaimPolicy(Principal principal, Model model) {
         if (principal == null) {
             return "redirect:/employee/mediclaim/auth";
         }
@@ -89,18 +82,66 @@ public class MediclaimController {
         Optional<User> userOpt = userRepository.findByUsername(principal.getName());
         if (userOpt.isPresent()) {
             User user = userOpt.get();
+            // Fetch the user's specific insurance policy
+            policyRepository.findByUser(user).ifPresent(policy -> {
+                model.addAttribute("policy", policy);
+            });
+        }
 
-            // 1. Fetch the specific active claim by ID
-            Optional<Mediclaim> activeClaimOpt = mediclaimRepository.findById(claimId);
-            if (activeClaimOpt.isPresent()) {
-                model.addAttribute("activeClaim", activeClaimOpt.get());
-            }
+        return "mediclaim-policy";
+    }
 
-            // 2. Fetch all claims for the history table
+    @GetMapping("/claim")
+    public String showRaiseClaimPage(Principal principal, Model model) {
+        if (principal == null) {
+            return "redirect:/employee/mediclaim/auth";
+        }
+
+        // Fetch the logged-in user
+        Optional<User> userOpt = userRepository.findByUsername(principal.getName());
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+
+            // Fetch all claims for this user and add them to the model
+            List<Mediclaim> userClaims = mediclaimRepository.findByUserOrderBySubmissionDateDesc(user);
+            model.addAttribute("claims", userClaims);
+        }
+
+        return "mediclaim-claim";
+    }
+
+    // 4. UPDATE THIS GET MAPPING FOR TRACKING
+    @GetMapping("/track/list")
+    public String listAllClaims(Principal principal, Model model) {
+        if (principal == null) return "redirect:/employee/mediclaim/auth";
+
+        Optional<User> userOpt = userRepository.findByUsername(principal.getName());
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            // Fetch all claims for this user to display in the grid
             List<Mediclaim> allClaims = mediclaimRepository.findByUserOrderBySubmissionDateDesc(user);
             model.addAttribute("allClaims", allClaims);
         }
+        return "mediclaim-track";
+    }
 
+    // 4.1. THIS HANDLES THE REDIRECT FROM THE "VIEW DETAILS" BUTTON
+    @GetMapping("/track/{claimId}")
+    public String trackSpecificClaim(@PathVariable Long claimId, Principal principal, Model model) {
+        if (principal == null) return "redirect:/employee/mediclaim/auth";
+
+        Optional<User> userOpt = userRepository.findByUsername(principal.getName());
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+
+            // Add all claims so the list remains visible in the background
+            List<Mediclaim> allClaims = mediclaimRepository.findByUserOrderBySubmissionDateDesc(user);
+            model.addAttribute("allClaims", allClaims);
+
+            // Set the specific claim to be "active" (which triggers the expanded view)
+            Optional<Mediclaim> activeClaimOpt = mediclaimRepository.findById(claimId);
+            activeClaimOpt.ifPresent(claim -> model.addAttribute("activeClaim", claim));
+        }
         return "mediclaim-track";
     }
 
