@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Management System - WhiteCircle</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-primary: #1e3a8a;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: #334155;
+            padding-top: 78px;
+            animation: fadeInPage 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ═══════════════════════ FIXED HEADER ═══════════════════════ */
+        .top-header {
+            background: white; border-bottom: 2px solid var(--bs-primary);
+            padding: 18px 40px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            backdrop-filter: blur(10px);
+        }
+        .page-title { display: flex; align-items: center; }
+        .page-title i { font-size: 2rem; color: var(--bs-primary); }
+        .page-title span {
+            font-weight: 800; color: var(--text-primary); font-size: 1.35rem;
+            letter-spacing: 0.5px; margin-left: 14px; padding-left: 14px;
+            border-left: 2px solid #cbd5e1;
+        }
+        .btn-back-home {
+            background-color: var(--bs-primary); color: white;
+            border-radius: 10px; padding: 10px 24px; font-weight: 600;
+            font-size: 0.9rem; text-decoration: none; display: flex; align-items: center;
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.2); transition: all 0.3s ease; border: none;
+        }
+        .btn-back-home:hover {
+            background-color: #172554; transform: translateY(-2px); color: white;
+        }
+
+        /* ═══════════════════════ CONTAINER ═══════════════════════ */
+        .main-container {
+            max-width: 1400px;
+            margin: 30px auto 40px;
+            padding: 0 20px;
+        }
+
+        /* ═══════════════════════ CARDS ═══════════════════════ */
+        .app-card {
+            background: white; border: 1px solid #e2e8f0;
+            border-radius: 16px; overflow: hidden; margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .app-card:hover {
+            box-shadow: 0 8px 24px rgba(30, 58, 138, 0.08);
+        }
+        .app-card-header {
+            background: var(--bs-primary); color: white;
+            padding: 14px 22px; font-weight: 700; text-transform: uppercase;
+            font-size: 0.82rem; letter-spacing: 0.5px; display: flex; align-items: center;
+        }
+        .app-card-header i { color: #bfdbfe; margin-right: 10px; font-size: 1rem; }
+        .app-card-body { padding: 22px; }
+
+        .view-all-link {
+            color: white; text-decoration: none; font-size: 0.78rem;
+            font-weight: 700; opacity: 0.85; transition: opacity 0.2s ease;
+            display: inline-flex; align-items: center; cursor: pointer;
+        }
+        .view-all-link:hover { color: white; opacity: 1; }
+
+        /* ═══════════════════════ FORM STYLES ═══════════════════════ */
+        .form-label {
+            font-size: 0.78rem; font-weight: 600; color: #64748b; margin-bottom: 5px;
+        }
+        .form-control, .form-select {
+            border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 12px;
+            font-size: 0.9rem; transition: all 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--bs-primary); box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+        .form-control:read-only { background-color: #f8fafc; color: #475569; }
+
+        /* ═══════════════════════ UPCOMING HOLIDAYS (Simple Todo Style) ═══════════════════════ */
+        .holiday-todo-item {
+            display: flex; align-items: center; padding: 10px 14px;
+            border: 1px solid #f1f5f9; border-radius: 10px;
+            margin-bottom: 8px; transition: all 0.2s ease;
+            background: #fafbfc;
+        }
+        .holiday-todo-item:last-child { margin-bottom: 0; }
+        .holiday-todo-item:hover { background: #f1f5f9; transform: translateX(4px); }
+
+        .holiday-emoji {
+            font-size: 1.4rem; margin-right: 12px; width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 8px; flex-shrink: 0;
+        }
+        .holiday-todo-date {
+            font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.5px; margin-right: 14px; min-width: 44px;
+            text-align: center; line-height: 1.2;
+        }
+        .holiday-todo-date .day { font-size: 1.1rem; display: block; color: var(--bs-primary); }
+        .holiday-todo-date .month { color: #94a3b8; display: block; }
+        .holiday-todo-name { font-size: 0.82rem; font-weight: 600; color: #1e293b; flex-grow: 1; }
+        .holiday-todo-day { font-size: 0.7rem; color: #94a3b8; }
+        .badge-sm {
+            font-size: 0.58rem; padding: 3px 8px; border-radius: 4px;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;
+        }
+        .badge-fixed-sm { background: #dbeafe; color: #1e40af; }
+        .badge-floater-sm { background: #ffedd5; color: #c2410c; }
+
+        /* ═══════════════════════ LEAVE WALLET SUMMARY (Minimal Cards) ═══════════════════════ */
+        .wallet-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+        }
+        .wallet-chip {
+            background: #f8fafc; border: 1px solid #e2e8f0;
+            border-radius: 12px; padding: 14px 12px; text-align: center;
+            transition: all 0.25s ease; cursor: default;
+        }
+        .wallet-chip:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.06); }
+        .wallet-chip .chip-code {
+            font-size: 0.65rem; font-weight: 700; color: #94a3b8;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+        }
+        .wallet-chip .chip-balance {
+            font-size: 1.5rem; font-weight: 800; line-height: 1;
+        }
+        .wallet-chip .chip-label {
+            font-size: 0.68rem; color: #64748b; font-weight: 500; margin-top: 4px;
+        }
+        .chip-positive { color: #16a34a; }
+        .chip-zero { color: #dc2626; }
+        .chip-auto { color: #7c3aed; font-size: 0.7rem !important; font-style: italic; }
+
+        /* ═══════════════════════ STATUS BADGES ═══════════════════════ */
+        .badge-status { padding: 5px 12px; border-radius: 6px; font-size: 0.72rem; font-weight: 600; }
+        .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+        .status-approved { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
+        .status-rejected { background: #fef2f2; color: #b91c1c; border: 1px solid #fee2e2; }
+        .status-auto-approved { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+
+        /* ═══════════════════════ CALENDAR ═══════════════════════ */
+        .calendar-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            gap: 4px; text-align: center;
+        }
+        .calendar-day-header {
+            font-size: 0.68rem; font-weight: 700; color: #94a3b8;
+            padding: 8px 0; text-transform: uppercase;
+        }
+        .calendar-day {
+            height: 36px; display: flex; align-items: center; justify-content: center;
+            border-radius: 8px; font-size: 0.8rem; font-weight: 500;
+            cursor: default; transition: all 0.2s ease; position: relative;
+        }
+        .calendar-day:hover:not(.cal-empty) { transform: scale(1.15); z-index: 2; }
+        .cal-empty { cursor: default; }
+        .cal-today { background: #3b82f6; color: white; font-weight: 700; box-shadow: 0 2px 8px rgba(59,130,246,0.35); }
+        .cal-weekend { background: #f1f5f9; color: #94a3b8; }
+        .cal-approved { background: #22c55e; color: white; font-weight: 600; cursor: pointer; }
+        .cal-floater-holiday { background: #f97316; color: white; font-weight: 600; cursor: pointer; }
+        .cal-fixed-holiday { background: #93c5fd; color: #1e293b; font-weight: 600; cursor: pointer; }
+        .cal-pending { background: #eab308; color: white; font-weight: 600; cursor: pointer; }
+        .cal-rejected { background: #ef4444; color: white; font-weight: 600; cursor: pointer; }
+
+        .calendar-legend {
+            display: flex; flex-wrap: wrap; gap: 10px; padding-top: 14px;
+            border-top: 1px solid #e2e8f0; margin-top: 14px;
+        }
+        .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.65rem; color: #64748b; font-weight: 500; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+        .cal-nav-btn {
+            background: none; border: 1px solid #e2e8f0; width: 30px; height: 30px;
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #475569; transition: all 0.2s ease;
+        }
+        .cal-nav-btn:hover { background: var(--bs-primary); color: white; border-color: var(--bs-primary); }
+
+        .cal-tooltip {
+            position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%);
+            background: #1e293b; color: white; padding: 5px 10px; border-radius: 6px;
+            font-size: 0.65rem; font-weight: 600; white-space: nowrap; z-index: 100;
+            pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .cal-tooltip::after {
+            content: ''; position: absolute; top: 100%; left: 50%;
+            transform: translateX(-50%); border: 4px solid transparent; border-top-color: #1e293b;
+        }
+
+        /* ═══════════════════════ ABSENCE REQUEST ITEMS ═══════════════════════ */
+        .absence-item {
+            display: flex; align-items: center; padding: 12px 18px;
+            border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: all 0.2s ease;
+        }
+        .absence-item:last-child { border-bottom: none; }
+        .absence-item:hover { background: #f8fafc; padding-left: 22px; }
+        .absence-icon {
+            width: 38px; height: 38px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 14px; flex-shrink: 0; font-size: 0.9rem;
+        }
+
+        /* ═══════════════════════ BUTTONS ═══════════════════════ */
+        .btn-navy {
+            background: var(--bs-primary); color: white; border: none;
+            padding: 10px 28px; border-radius: 10px; font-weight: 700;
+            font-size: 0.9rem; letter-spacing: 0.3px;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2); transition: all 0.3s ease;
+        }
+        .btn-navy:hover { background: #172554; transform: translateY(-2px); color: white; }
+        .btn-navy-outline {
+            background: transparent; color: var(--bs-primary);
+            border: 2px solid var(--bs-primary); padding: 9px 28px;
+            border-radius: 10px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s ease;
+        }
+        .btn-navy-outline:hover { background: var(--bs-primary); color: white; transform: translateY(-2px); }
+
+        /* ═══════════════════════ BALANCE WARNING ═══════════════════════ */
+        .balance-warning {
+            background: #fef3c7; border: 1px solid #fde68a;
+            border-radius: 8px; padding: 10px 14px; margin-top: 10px;
+            font-size: 0.8rem; color: #92400e; font-weight: 600;
+            display: none; align-items: center; gap: 8px;
+        }
+
+        /* ═══════════════════════ EMPTY STATE ═══════════════════════ */
+        .empty-state { text-align: center; padding: 30px 20px; color: #94a3b8; }
+        .empty-state i { font-size: 2rem; margin-bottom: 10px; opacity: 0.4; }
+        .empty-state p { font-size: 0.82rem; font-weight: 500; margin-bottom: 0; }
+
+        .loading-state { text-align: center; padding: 25px 20px; }
+        .loading-state .spinner-border { width: 1.5rem; height: 1.5rem; }
+
+        /* ═══════════════════════ SCROLL ═══════════════════════ */
+        .scroll-container { max-height: 350px; overflow-y: auto; }
+        .scroll-container::-webkit-scrollbar { width: 4px; }
+        .scroll-container::-webkit-scrollbar-track { background: #f8fafc; }
+        .scroll-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* ═══════════════════════ SWEETALERT PREMIUM ═══════════════════════ */
+        div:where(.swal2-container) {
+            font-family: 'Inter', sans-serif !important;
+            z-index: 99999 !important;
+            position: fixed !important;
+        }
+        .swal2-popup {
+            border-radius: 20px !important;
+            box-shadow: 0 25px 50px -12px rgba(30, 58, 138, 0.25) !important;
+            padding: 1.5em 2em !important; border: 1px solid #e2e8f0;
+            max-height: 85vh !important;
+            overflow-y: auto !important;
+        }
+        .swal2-html-container {
+            color: #475569 !important; font-weight: 500 !important;
+            overflow: visible !important;
+            max-height: none !important;
+        }
+        .swal2-title { color: #1e3a8a !important; font-weight: 800 !important; font-size: 1.3rem !important; }
+        .swal2-confirm {
+            border-radius: 10px !important; padding: 10px 28px !important;
+            font-weight: 700 !important; letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2) !important;
+        }
+        .swal2-cancel {
+            border-radius: 10px !important; padding: 10px 28px !important;
+            font-weight: 600 !important;
+        }
+    </style>
+
+    <link href="/css/style.css" rel="stylesheet">
+
+    <style>
+        /* ═══════════════════════ RESPONSIVE ═══════════════════════ */
+        @media (max-width: 991px) {
+            html, body { padding-top: 0 !important; margin-top: 0 !important; overflow-x: hidden !important; width: 100% !important; }
+            body { padding-top: 70px !important; }
+            .top-header {
+                height: auto !important; padding: 12px 15px !important;
+                display: flex !important; justify-content: space-between !important; align-items: center !important;
+            }
+            .page-title i { font-size: 1.4rem !important; }
+            .page-title span { font-size: 0.95rem !important; margin-left: 8px !important; padding-left: 8px !important; }
+            .btn-back-home { padding: 7px 14px !important; font-size: 0.75rem !important; }
+            .main-container { margin-top: 15px !important; padding: 0 12px !important; }
+            .app-card { margin-bottom: 15px !important; border-radius: 12px !important; }
+            .app-card-header { padding: 10px 15px !important; font-size: 0.75rem !important; }
+            .app-card-body { padding: 15px !important; }
+            .wallet-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; }
+            .wallet-chip { padding: 10px 8px !important; }
+            .wallet-chip .chip-balance { font-size: 1.2rem !important; }
+            .calendar-day { height: 30px !important; font-size: 0.7rem !important; }
+            .legend-item { font-size: 0.58rem !important; }
+            .form-label { font-size: 0.72rem !important; }
+            .form-control, .form-select { padding: 8px 10px !important; font-size: 0.85rem !important; }
+            .absence-item { padding: 10px 14px !important; }
+        }
+
+        /* ═══════════════════════ DARK MODE ═══════════════════════ */
+        [data-bs-theme="dark"] body { background-color: #0f172a; color: #e2e8f0; }
+        [data-bs-theme="dark"] .top-header { background: #1e293b; border-bottom-color: #334155; }
+        [data-bs-theme="dark"] .top-header .page-title span { color: #e2e8f0; }
+        [data-bs-theme="dark"] .top-header .page-title i { color: #93c5fd; }
+        [data-bs-theme="dark"] .app-card { background: #1e293b; border-color: #334155; }
+        [data-bs-theme="dark"] .app-card-body { background: #1e293b; }
+        [data-bs-theme="dark"] .form-control, [data-bs-theme="dark"] .form-select {
+            background: #0f172a; border-color: #334155; color: #e2e8f0;
+        }
+        [data-bs-theme="dark"] .form-control:read-only { background: #0f172a; color: #94a3b8; }
+        [data-bs-theme="dark"] .form-label { color: #94a3b8; }
+        [data-bs-theme="dark"] .holiday-todo-item { background: #0f172a; border-color: #334155; }
+        [data-bs-theme="dark"] .holiday-todo-item:hover { background: #1e293b; }
+        [data-bs-theme="dark"] .holiday-todo-name { color: #e2e8f0; }
+        [data-bs-theme="dark"] .wallet-chip { background: #0f172a; border-color: #334155; }
+        [data-bs-theme="dark"] .wallet-chip .chip-label { color: #94a3b8; }
+        [data-bs-theme="dark"] .absence-item { border-bottom-color: #334155; }
+        [data-bs-theme="dark"] .absence-item:hover { background: #0f172a; }
+        [data-bs-theme="dark"] .cal-weekend { background: #1e293b; color: #64748b; }
+        [data-bs-theme="dark"] .cal-nav-btn { border-color: #475569; color: #94a3b8; }
+        [data-bs-theme="dark"] .calendar-legend { border-top-color: #334155; }
+        [data-bs-theme="dark"] .balance-warning { background: #422006; border-color: #854d0e; color: #fbbf24; }
+    </style>
+
+    <link href="/css/dark-mode.css" rel="stylesheet">
+    <script src="/js/theme-engine.js"></script>
+</head>
+<body>
+
+<!-- ═══════════════════════ FIXED HEADER ═══════════════════════ -->
+<header class="top-header">
+    <div class="page-title">
+        <i class="fas fa-calendar-check"></i>
+        <span>LEAVE MANAGEMENT SYSTEM</span>
+    </div>
+    <div>
+        <a href="/employee/dashboard" class="btn-back-home">
+            <i class="fas fa-arrow-left me-2"></i> Back to Home
+        </a>
+    </div>
+</header>
+
+<div class="main-container">
+
+    <!-- ═══════════════════════ ROW 1: PROFILE + UPCOMING HOLIDAYS ═══════════════════════ -->
+    <div class="row g-4 mb-0">
+        <!-- Applicant Details -->
+        <div class="col-lg-5">
+            <div class="app-card">
+                <div class="app-card-header">
+                    <i class="fas fa-user-circle"></i> Applicant Details
+                </div>
+                <div class="app-card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Employee Name</label>
+                            <input type="text" class="form-control fw-bold" th:value="${user.fullName}" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Employee Code</label>
+                            <input type="text" class="form-control" th:value="${user.username}" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Department</label>
+                            <input type="text" class="form-control" th:value="${user.employeeProfile?.businessUnit ?: 'General'}" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Reporting Manager</label>
+                            <input type="text" class="form-control" th:value="${user.employeeProfile?.reportingManager ?: 'N/A'}" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Holidays -->
+        <div class="col-lg-7">
+            <div class="app-card">
+                <div class="app-card-header">
+                    <i class="fas fa-calendar-alt"></i> Upcoming Holidays
+                </div>
+                <div class="app-card-body" style="padding: 16px 20px;">
+                    <div class="scroll-container" style="max-height: 210px;" id="upcomingHolidaysContainer">
+                        <div class="loading-state">
+                            <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
+                            <br><small class="fw-bold text-muted">Loading holidays...</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════ ROW 2: LEAVE WALLET (Minimal Summary) ═══════════════════════ -->
+    <div class="row g-4 mb-0">
+        <div class="col-12">
+            <div class="app-card">
+                <div class="app-card-header justify-content-between">
+                    <div><i class="fas fa-wallet"></i> Leave Wallet</div>
+                    <a class="view-all-link" onclick="showWalletDetailsModal()">View All <i class="fas fa-chevron-right ms-1" style="font-size:0.6rem;"></i></a>
+                </div>
+                <div class="app-card-body" style="padding: 18px 20px;">
+                    <div class="wallet-grid" id="walletSummaryGrid">
+                        <div class="loading-state" style="grid-column: 1/-1;">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                            <small class="ms-2 fw-bold text-muted">Loading...</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════ ROW 3: LEAVE TRANSACTIONS ═══════════════════════ -->
+    <div class="row g-4 mb-0">
+        <div class="col-12">
+            <div class="app-card">
+                <div class="app-card-header justify-content-between">
+                    <div><i class="fas fa-history"></i> Leave Transactions</div>
+                    <a class="view-all-link" onclick="showLedgerModal()">View All <i class="fas fa-chevron-right ms-1" style="font-size:0.6rem;"></i></a>
+                </div>
+                <div class="app-card-body" style="padding: 16px 20px;">
+                    <div id="ledgerSummaryContainer">
+                        <div class="loading-state">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                            <small class="ms-2 fw-bold text-muted">Loading...</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════ ROW 4: CALENDAR + APPLY FORM ═══════════════════════ -->
+    <div class="row g-4 mb-0">
+        <!-- Working Calendar -->
+        <div class="col-lg-5">
+            <div class="app-card">
+                <div class="app-card-header">
+                    <i class="fas fa-calendar-days"></i> Working Calendar
+                </div>
+                <div class="app-card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <button class="cal-nav-btn" onclick="navigateMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                        <h6 class="mb-0 fw-bold" id="calendarMonthTitle" style="color: var(--bs-primary); font-size: 0.95rem;"></h6>
+                        <button class="cal-nav-btn" onclick="navigateMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="calendar-grid mb-2">
+                        <div class="calendar-day-header">Mon</div>
+                        <div class="calendar-day-header">Tue</div>
+                        <div class="calendar-day-header">Wed</div>
+                        <div class="calendar-day-header">Thu</div>
+                        <div class="calendar-day-header">Fri</div>
+                        <div class="calendar-day-header">Sat</div>
+                        <div class="calendar-day-header">Sun</div>
+                    </div>
+                    <div class="calendar-grid" id="calendarDaysGrid"></div>
+                    <div class="calendar-legend">
+                        <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div>Today</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div>Approved</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:#eab308;"></div>Pending</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div>Rejected</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div>Floater</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:#93c5fd;"></div>Fixed Holiday</div>
+                        <div class="legend-item"><div class="legend-dot" style="background:#f1f5f9; border:1px solid #cbd5e1;"></div>Weekend</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Apply Leave Form -->
+        <div class="col-lg-7">
+            <div class="app-card">
+                <div class="app-card-header">
+                    <i class="fas fa-calendar-plus"></i> Apply for Leave
+                </div>
+                <div class="app-card-body">
+                    <form id="leaveForm" onsubmit="return false;">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Leave Type <span class="text-danger">*</span></label>
+                                <select class="form-select" id="leaveType" onchange="calculateDays()" required>
+                                    <option selected disabled value="">Select Type...</option>
+                                    <option value="Casual">Casual Leave (CL)</option>
+                                    <option value="Sick">Sick Leave (SL)</option>
+                                    <option value="Earned">Earned Leave (EL)</option>
+                                    <option value="CompOff">Comp Off</option>
+                                    <option value="Maternity">Maternity Leave</option>
+                                    <option value="Paternity">Paternity Leave</option>
+                                    <option value="Marriage">Marriage Leave</option>
+                                    <option value="Bereavement">Bereavement Leave</option>
+                                    <option value="WFH">WFH</option>
+                                    <option value="Floater">Floater Holiday</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Reason <span class="text-danger">*</span></label>
+                                <select class="form-select" id="reasonType" required>
+                                    <option selected disabled value="">Select Reason...</option>
+                                    <option value="Personal">Personal</option>
+                                    <option value="Medical">Medical</option>
+                                    <option value="Family Function">Family Function</option>
+                                    <option value="Festival/Religious">Festival/Religious</option>
+                                    <option value="Travel">Travel</option>
+                                    <option value="Planned Vacation">Planned Vacation</option>
+                                    <option value="Emergency">Emergency</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">From Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="fromDate" onchange="calculateDays()" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">To Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="toDate" onchange="calculateDays()" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Number of Days</label>
+                                <input type="text" class="form-control fw-bold text-primary" id="totalDays" value="0" readonly>
+                            </div>
+                            <div class="col-12">
+                                <div class="balance-warning" id="balanceWarning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span id="balanceWarningText">Insufficient leave balance!</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Comments <small class="text-muted">(Optional)</small></label>
+                                <textarea class="form-control" id="leaveComments" rows="2"
+                                          placeholder="Write the reason clearly..." style="resize: vertical;"></textarea>
+                            </div>
+                            <div class="col-12 text-end mt-3">
+                                <button type="button" class="btn-navy-outline me-2" onclick="openPreviewPopup()">
+                                    <i class="fas fa-eye me-2"></i>Preview
+                                </button>
+                                <button type="button" class="btn-navy" onclick="submitLeaveRequest()">
+                                    <i class="fas fa-paper-plane me-2"></i>Submit Request
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════ ROW 5: ABSENCE REQUESTS ═══════════════════════ -->
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="app-card">
+                <div class="app-card-header justify-content-between">
+                    <div><i class="fas fa-clipboard-list"></i> Absence Requests</div>
+                    <a href="/my-timeoff" class="view-all-link">View All <i class="fas fa-chevron-right ms-1" style="font-size:0.6rem;"></i></a>
+                </div>
+                <div class="app-card-body p-0">
+                    <div id="absenceRequestsContainer">
+                        <div class="loading-state">
+                            <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
+                            <br><small class="fw-bold text-muted">Loading absence requests...</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ═══════════════════════ SCRIPTS ═══════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+
+    // ═══════════════════════ GLOBAL SWAL DEFAULTS ═══════════════════════
+    // Override SweetAlert defaults globally so ALL popups are properly positioned
+    const _origSwalFire = Swal.fire.bind(Swal);
+    Swal.fire = function(opts) {
+        if (typeof opts === 'object' && opts !== null) {
+            opts.heightAuto = false;
+            opts.scrollbarPadding = false;
+        }
+        return _origSwalFire(opts);
+    };
+
+    // ═══════════════════════ GLOBAL STATE ═══════════════════════
+    let calendarMonth = new Date().getMonth();
+    let calendarYear = new Date().getFullYear();
+    let calendarData = { leaves: [], holidays: [] };
+    let walletData = [];
+    let ledgerData = [];
+    let absenceData = [];
+    window.availableLeaveBalances = {};
+
+    const monthNames = ['January','February','March','April','May','June',
+                        'July','August','September','October','November','December'];
+
+    // ═══════════════════════ HOLIDAY EMOJI MAPPING ═══════════════════════
+    function getHolidayEmoji(name) {
+        const n = (name || '').toLowerCase();
+        if (n.includes('diwali')) return '🪔';
+        if (n.includes('holi')) return '🎨';
+        if (n.includes('christmas')) return '🎄';
+        if (n.includes('republic')) return '🇮🇳';
+        if (n.includes('independence')) return '🇮🇳';
+        if (n.includes('gandhi')) return '🕊️';
+        if (n.includes('good friday')) return '✝️';
+        if (n.includes('ganesh')) return '🐘';
+        if (n.includes('dussehra')) return '🏹';
+        if (n.includes('eid')) return '🌙';
+        if (n.includes('labour') || n.includes('maharashtra')) return '⚒️';
+        if (n.includes('raksha') || n.includes('bandhan')) return '🧵';
+        if (n.includes('shivratri') || n.includes('shivaratri')) return '🔱';
+        if (n.includes('ram navami')) return '🏛️';
+        if (n.includes('guru nanak')) return '🙏';
+        return '📅';
+    }
+
+    // ═══════════════════════ 1. FETCH UPCOMING HOLIDAYS ═══════════════════════
+    async function fetchUpcomingHolidays() {
+        const container = document.getElementById('upcomingHolidaysContainer');
+        try {
+            const res = await fetch('/api/holidays/upcoming');
+            if (!res.ok) throw new Error('Failed');
+            const holidays = await res.json();
+
+            if (!holidays || holidays.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-umbrella-beach d-block"></i><p>No upcoming holidays</p></div>';
+                return;
+            }
+
+            let html = '';
+            holidays.forEach(h => {
+                const d = new Date(h.date);
+                const month = d.toLocaleString('en', { month: 'short' }).toUpperCase();
+                const day = d.getDate();
+                const dayName = d.toLocaleString('en', { weekday: 'long' });
+                const isFloater = (h.type || '').toLowerCase() === 'floater';
+                const badgeClass = isFloater ? 'badge-floater-sm' : 'badge-fixed-sm';
+                const badgeText = isFloater ? 'FLOATER' : 'FIXED';
+                const emoji = getHolidayEmoji(h.name);
+
+                html += '<div class="holiday-todo-item">' +
+                    '<div class="holiday-emoji">' + emoji + '</div>' +
+                    '<div class="holiday-todo-date">' +
+                        '<span class="month">' + month + '</span>' +
+                        '<span class="day">' + day + '</span>' +
+                    '</div>' +
+                    '<div class="flex-grow-1">' +
+                        '<div class="holiday-todo-name">' + h.name + '</div>' +
+                        '<div class="holiday-todo-day">' + dayName + '</div>' +
+                    '</div>' +
+                    '<span class="badge-sm ' + badgeClass + '">' + badgeText + '</span>' +
+                '</div>';
+            });
+            container.innerHTML = html;
+        } catch (e) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-xmark d-block"></i><p>Unable to load holidays</p></div>';
+        }
+    }
+
+    // ═══════════════════════ 2. FETCH LEAVE WALLET (Minimal Chips) ═══════════════════════
+    async function fetchLeaveWallet() {
+        const grid = document.getElementById('walletSummaryGrid');
+        try {
+            const res = await fetch('/api/leave/wallet-summary');
+            if (!res.ok) throw new Error('Failed');
+            walletData = await res.json();
+
+            if (!walletData || walletData.length === 0) {
+                grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-wallet d-block"></i><p>No wallet data</p></div>';
+                return;
+            }
+
+            walletData.forEach(w => { window.availableLeaveBalances[w.leaveCode] = w.balance || 0; });
+
+            let html = '<div style="font-size:0.72rem; color:#94a3b8; margin-bottom:10px; font-weight:500; grid-column:1/-1;"><i class="fas fa-info-circle me-1"></i>Your leave balance summary. Click <strong>View All</strong> for full details.</div>';
+
+            walletData.forEach(w => {
+                const isLOP = w.leaveCode === 'LOP';
+                let balClass = 'chip-positive';
+                let balText = w.balance || 0;
+                let subLabel = 'Available';
+
+                if (isLOP) {
+                    // LOP shows used count, not balance
+                    const lopUsed = w.used || 0;
+                    if (lopUsed > 0) {
+                        balClass = 'chip-zero';
+                        balText = lopUsed;
+                        subLabel = 'Days Used';
+                    } else {
+                        balClass = 'chip-positive';
+                        balText = '0';
+                        subLabel = 'No LOP';
+                    }
+                } else if (w.balance <= 0) {
+                    balClass = 'chip-zero';
+                }
+
+                html += '<div class="wallet-chip">' +
+                    '<div class="chip-code">' + w.leaveCode + '</div>' +
+                    '<div class="chip-balance ' + balClass + '">' + balText + '</div>' +
+                    '<div class="chip-label">' + w.leaveType + '</div>' +
+                    '<div style="font-size:0.58rem; color:#94a3b8; margin-top:2px;">' + subLabel + '</div>' +
+                '</div>';
+            });
+
+            grid.innerHTML = html;
+        } catch (e) {
+            grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-exclamation-circle d-block"></i><p>Unable to load wallet</p></div>';
+        }
+    }
+
+    // ═══════════════════════ 3. WALLET DETAILS MODAL (SweetAlert) ═══════════════════════
+    function showWalletDetailsModal() {
+        if (!walletData || walletData.length === 0) {
+            Swal.fire({ icon: 'info', title: 'No Data', text: 'No leave wallet data available.', confirmButtonColor: '#1e3a8a' });
+            return;
+        }
+
+        let tableHTML = '<div style="font-size:0.72rem; color:#64748b; background:#f8fafc; border-radius:8px; padding:8px 12px; margin-bottom:10px; line-height:1.6;">' +
+            '<strong>Opening</strong> = Yearly balance | ' +
+            '<strong>Monthly Cr.</strong> = Monthly credit | ' +
+            '<strong>Earned</strong> = Extra earned | ' +
+            '<strong>Used</strong> = Taken | ' +
+            '<strong>Encashed</strong> = Encashed | ' +
+            '<strong>Balance</strong> = Remaining' +
+            '</div>' +
+            '<div style="max-height:50vh; overflow-y:auto;">' +
+            '<table style="width:100%; border-collapse:collapse; font-size:0.78rem; font-family:Inter,sans-serif;">' +
+            '<thead>' +
+            '<tr style="background:#f8fafc; border-bottom:2px solid #e2e8f0; position:sticky; top:0;">' +
+            '<th style="padding:8px 6px; text-align:left; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Leave Type</th>' +
+            '<th style="padding:8px 6px; text-align:center; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Opening</th>' +
+            '<th style="padding:8px 6px; text-align:center; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Monthly Cr.</th>' +
+            '<th style="padding:8px 6px; text-align:center; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Earned</th>' +
+            '<th style="padding:8px 6px; text-align:center; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Used</th>' +
+            '<th style="padding:8px 6px; text-align:center; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Encashed</th>' +
+            '<th style="padding:8px 6px; text-align:center; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Balance</th>' +
+            '</tr></thead><tbody>';
+
+        walletData.forEach(w => {
+            const isLOP = w.leaveCode === 'LOP';
+            const balColor = isLOP ? '#7c3aed' : (w.balance > 0 ? '#16a34a' : '#dc2626');
+            const balText = isLOP ? 'Auto' : (w.balance || 0);
+            tableHTML += '<tr style="border-bottom:1px solid #f1f5f9;">' +
+                '<td style="padding:7px 6px; font-weight:600; white-space:nowrap;">' + w.leaveType + ' <span style="color:#94a3b8; font-size:0.65rem;">(' + w.leaveCode + ')</span></td>' +
+                '<td style="padding:7px 6px; text-align:center;">' + (w.openingBalance || 0) + '</td>' +
+                '<td style="padding:7px 6px; text-align:center;">' + (w.monthlyCredit || 0) + '</td>' +
+                '<td style="padding:7px 6px; text-align:center;">' + (w.earnedCredit || 0) + '</td>' +
+                '<td style="padding:7px 6px; text-align:center;">' + (w.used || 0) + '</td>' +
+                '<td style="padding:7px 6px; text-align:center;">' + (w.encashed || 0) + '</td>' +
+                '<td style="padding:7px 6px; text-align:center; font-weight:700; color:' + balColor + ';">' + balText + '</td>' +
+                '</tr>';
+        });
+
+        tableHTML += '</tbody></table></div>';
+
+        Swal.fire({
+            title: 'Leave Wallet Details',
+            html: tableHTML,
+            width: '850px',
+            confirmButtonColor: '#1e3a8a',
+            confirmButtonText: 'Close'
+        });
+    }
+
+    // ═══════════════════════ 4. FETCH LEAVE LEDGER ═══════════════════════
+    async function fetchLeaveLedger() {
+        const container = document.getElementById('ledgerSummaryContainer');
+        try {
+            const res = await fetch('/api/leave/ledger');
+            if (!res.ok) throw new Error('Failed');
+            ledgerData = await res.json();
+
+            if (!ledgerData || ledgerData.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-receipt d-block"></i><p>No transactions yet. Your leave transactions will appear here.</p></div>';
+                return;
+            }
+
+            const recent = ledgerData.slice(0, 3);
+            let html = '<div style="font-size:0.72rem; color:#94a3b8; margin-bottom:10px; font-weight:500;"><i class="fas fa-info-circle me-1"></i>Recent leave credits (+) and deductions (-) from your account. Click <strong>View All</strong> to see full history.</div>';
+            html += '<div style="display:flex; flex-wrap:wrap; gap:10px;">';
+            recent.forEach(t => {
+                const date = t.date ? new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '\u2014';
+                const isCredit = t.credit && t.credit > 0;
+                const color = isCredit ? '#16a34a' : '#dc2626';
+                const icon = isCredit ? 'fa-arrow-up' : 'fa-arrow-down';
+                const amount = isCredit ? ('+' + t.credit) : ('-' + t.debit);
+                const reasonText = t.reason || '\u2014';
+
+                html += '<div style="flex:1; min-width:180px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px;">' +
+                    '<div style="font-size:0.68rem; color:#94a3b8; font-weight:600;">' + date + '</div>' +
+                    '<div style="font-size:0.85rem; font-weight:700; margin-top:2px;">' + (t.leaveType || '\u2014') + '</div>' +
+                    '<div style="font-size:0.85rem; font-weight:700; color:' + color + '; margin-top:2px;">' +
+                        '<i class="fas ' + icon + '" style="font-size:0.65rem;"></i> ' + amount + ' day(s)' +
+                    '</div>' +
+                    '<div style="font-size:0.68rem; color:#64748b; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="' + reasonText + '">' + reasonText + '</div>' +
+                '</div>';
+            });
+            html += '</div>';
+
+            if (ledgerData.length > 3) {
+                html += '<div style="text-align:center; margin-top:12px;">' +
+                    '<span style="font-size:0.78rem; color:#64748b; font-weight:500;">' +
+                    'Showing 3 of ' + ledgerData.length + ' transactions \u2014 click <strong>View All</strong> for full history</span></div>';
+            }
+
+            container.innerHTML = html;
+        } catch (e) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-circle d-block"></i><p>Unable to load transactions</p></div>';
+        }
+    }
+
+    // ═══════════════════════ 5. LEDGER DETAILS MODAL (SweetAlert) ═══════════════════════
+    function showLedgerModal() {
+        if (!ledgerData || ledgerData.length === 0) {
+            Swal.fire({ icon: 'info', title: 'No Transactions', text: 'No leave transactions found.', confirmButtonColor: '#1e3a8a' });
+            return;
+        }
+
+        let tableHTML = '<div style="font-size:0.72rem; color:#64748b; background:#f8fafc; border-radius:8px; padding:8px 12px; margin-bottom:10px;">' +
+            'Each row shows a leave credit (+) or deduction (-) from your account with the resulting balance.</div>' +
+            '<div style="max-height:55vh; overflow-y:auto;">' +
+            '<table style="width:100%; border-collapse:collapse; font-size:0.78rem; font-family:Inter,sans-serif;">' +
+            '<thead>' +
+            '<tr style="background:#f8fafc; border-bottom:2px solid #e2e8f0; position:sticky; top:0;">' +
+            '<th style="padding:8px 6px; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Date & Time</th>' +
+            '<th style="padding:8px 6px; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Leave Type</th>' +
+            '<th style="padding:8px 6px; text-align:center; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Credit (+)</th>' +
+            '<th style="padding:8px 6px; text-align:center; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Debit (-)</th>' +
+            '<th style="padding:8px 6px; text-align:center; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Balance</th>' +
+            '<th style="padding:8px 6px; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; min-width:140px;">Reason</th>' +
+            '<th style="padding:8px 6px; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Approved By</th>' +
+            '</tr></thead><tbody>';
+
+        ledgerData.forEach(t => {
+            const dateObj = t.date ? new Date(t.date) : null;
+            const dateFmt = dateObj ? dateObj.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '\u2014';
+            const timeFmt = dateObj ? dateObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : '';
+            const credit = t.credit ? ('<span style="color:#16a34a; font-weight:700;">+' + t.credit + '</span>') : '<span style="color:#cbd5e1;">\u2014</span>';
+            const debit = t.debit ? ('<span style="color:#dc2626; font-weight:700;">-' + t.debit + '</span>') : '<span style="color:#cbd5e1;">\u2014</span>';
+
+            tableHTML += '<tr style="border-bottom:1px solid #f1f5f9;">' +
+                '<td style="padding:7px 6px;"><div style="font-weight:600; white-space:nowrap;">' + dateFmt + '</div><div style="font-size:0.62rem; color:#94a3b8;">' + timeFmt + '</div></td>' +
+                '<td style="padding:7px 6px; font-weight:600;">' + (t.leaveType || '\u2014') + '</td>' +
+                '<td style="padding:7px 6px; text-align:center;">' + credit + '</td>' +
+                '<td style="padding:7px 6px; text-align:center;">' + debit + '</td>' +
+                '<td style="padding:7px 6px; text-align:center; font-weight:700;">' + (t.balanceAfter != null ? t.balanceAfter : '\u2014') + '</td>' +
+                '<td style="padding:7px 6px; word-break:break-word; max-width:180px;">' + (t.reason || '\u2014') + '</td>' +
+                '<td style="padding:7px 6px;">' + (t.approvedBy || '\u2014') + '</td>' +
+                '</tr>';
+        });
+
+        tableHTML += '</tbody></table></div>';
+
+        Swal.fire({
+            title: 'Leave Transaction History',
+            html: tableHTML,
+            width: '850px',
+            confirmButtonColor: '#1e3a8a',
+            confirmButtonText: 'Close'
+        });
+    }
+
+    // ═══════════════════════ 6. FETCH CALENDAR DATA ═══════════════════════
+    async function fetchCalendarData(month, year) {
+        try {
+            const res = await fetch('/api/leave/calendar-data?month=' + (month + 1) + '&year=' + year);
+            if (!res.ok) throw new Error('Failed');
+            calendarData = await res.json();
+        } catch (e) {
+            calendarData = { leaves: [], holidays: [] };
+        }
+        renderCalendar(month, year);
+    }
+
+    // ═══════════════════════ 7. RENDER CALENDAR ═══════════════════════
+    function renderCalendar(month, year) {
+        const grid = document.getElementById('calendarDaysGrid');
+        const title = document.getElementById('calendarMonthTitle');
+        title.textContent = monthNames[month] + ' ' + year;
+
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const totalDays = lastDay.getDate();
+        let startDay = firstDay.getDay() - 1;
+        if (startDay < 0) startDay = 6;
+
+        const today = new Date();
+        const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+
+        const leaveMap = {};
+        (calendarData.leaves || []).forEach(l => { leaveMap[l.date] = l; });
+        const holidayMap = {};
+        (calendarData.holidays || []).forEach(h => { holidayMap[h.date] = h; });
+
+        let html = '';
+        for (let i = 0; i < startDay; i++) {
+            html += '<div class="calendar-day cal-empty"></div>';
+        }
+
+        for (let d = 1; d <= totalDays; d++) {
+            const dateStr = year + '-' + String(month+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+            const dayOfWeek = new Date(year, month, d).getDay();
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+
+            let cssClass = '';
+            let tooltipText = '';
+
+            if (dateStr === todayStr) {
+                cssClass = 'cal-today'; tooltipText = 'Today';
+            } else if (leaveMap[dateStr]) {
+                const leave = leaveMap[dateStr];
+                const st = (leave.status || '').toUpperCase();
+                if (st === 'APPROVED' || st === 'AUTO_APPROVED' || st === 'AUTO APPROVED') {
+                    cssClass = 'cal-approved'; tooltipText = (leave.type || 'Leave') + ' \u2014 Approved';
+                } else if (st === 'PENDING' || st === 'PENDING_APPROVAL') {
+                    cssClass = 'cal-pending'; tooltipText = (leave.type || 'Leave') + ' \u2014 Pending';
+                } else if (st === 'REJECTED') {
+                    cssClass = 'cal-rejected'; tooltipText = (leave.type || 'Leave') + ' \u2014 Rejected';
+                }
+            } else if (holidayMap[dateStr]) {
+                const hol = holidayMap[dateStr];
+                if ((hol.type || '').toLowerCase() === 'floater') {
+                    cssClass = 'cal-floater-holiday'; tooltipText = hol.name + ' (Floater)';
+                } else {
+                    cssClass = 'cal-fixed-holiday'; tooltipText = hol.name;
+                }
+            } else if (isWeekend) {
+                cssClass = 'cal-weekend';
+            }
+
+            const safeTooltip = tooltipText.replace(/'/g, "\\'");
+            const tooltipAttr = tooltipText ? ' onmouseenter="showCalTooltip(event, \'' + safeTooltip + '\')" onmouseleave="hideCalTooltip(event)"' : '';
+            html += '<div class="calendar-day ' + cssClass + '"' + tooltipAttr + '>' + d + '</div>';
+        }
+        grid.innerHTML = html;
+    }
+
+    function showCalTooltip(e, text) {
+        const el = e.target; const tip = document.createElement('div');
+        tip.className = 'cal-tooltip'; tip.textContent = text;
+        el.style.position = 'relative'; el.appendChild(tip);
+    }
+    function hideCalTooltip(e) {
+        const tip = e.target.querySelector('.cal-tooltip'); if (tip) tip.remove();
+    }
+
+    function navigateMonth(dir) {
+        calendarMonth += dir;
+        if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+        if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+        fetchCalendarData(calendarMonth, calendarYear);
+    }
+
+    // ═══════════════════════ 8. CALCULATE DAYS ═══════════════════════
+    function calculateDays() {
+        const leaveType = document.getElementById('leaveType').value;
+        const startInput = document.getElementById('fromDate');
+        const endInput = document.getElementById('toDate');
+        const totalInput = document.getElementById('totalDays');
+        const warning = document.getElementById('balanceWarning');
+        const warningText = document.getElementById('balanceWarningText');
+
+        if (startInput.value) endInput.min = startInput.value;
+
+        const start = new Date(startInput.value);
+        const end = new Date(endInput.value);
+        warning.style.display = 'none';
+
+        if (startInput.value && endInput.value && end >= start) {
+            const diffDays = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) + 1;
+
+            if (absenceData && absenceData.length > 0) {
+                const isDuplicate = absenceData.some(leave => {
+                    if (leave.status === 'REJECTED') return false;
+                    return (start <= new Date(leave.toDate) && end >= new Date(leave.fromDate));
+                });
+                if (isDuplicate) {
+                    Swal.fire({ icon: 'error', title: 'Duplicate Leave', text: 'You already have a leave request for one or more of the selected dates.', confirmButtonColor: '#1e3a8a' });
+                    endInput.value = ''; totalInput.value = '0'; return;
+                }
+            }
+
+            if (leaveType) {
+                let balKey = leaveType;
+                if (leaveType === 'Casual') balKey = 'CL';
+                else if (leaveType === 'Sick') balKey = 'SL';
+                else if (leaveType === 'Earned') balKey = 'EL';
+
+                const available = window.availableLeaveBalances[balKey] || 0;
+                if (diffDays > available && balKey !== 'LOP') {
+                    warning.style.display = 'flex';
+                    warningText.textContent = 'Insufficient balance! You have ' + available + ' ' + leaveType + ' leave(s) remaining but requested ' + diffDays + ' day(s). Excess will be marked as LOP.';
+                }
+            }
+            totalInput.value = diffDays;
+        } else {
+            totalInput.value = '0';
+        }
+    }
+
+    // ═══════════════════════ 9. PREVIEW (SweetAlert Popup) ═══════════════════════
+    function openPreviewPopup() {
+        const leaveType = document.getElementById('leaveType');
+        const reasonType = document.getElementById('reasonType');
+        const fromDate = document.getElementById('fromDate').value;
+        const toDate = document.getElementById('toDate').value;
+        const totalDays = document.getElementById('totalDays').value;
+        const comments = document.getElementById('leaveComments').value;
+
+        if (!leaveType.value || !reasonType.value || !fromDate || !toDate) {
+            Swal.fire({ icon: 'warning', title: 'Missing Details', text: 'Please fill in all required fields before previewing.', confirmButtonColor: '#1e3a8a' });
+            return;
+        }
+        if (parseInt(totalDays) <= 0) {
+            Swal.fire({ icon: 'warning', title: 'Invalid Dates', text: 'Total days must be at least 1.', confirmButtonColor: '#1e3a8a' });
+            return;
+        }
+
+        let balKey = leaveType.value;
+        if (leaveType.value === 'Casual') balKey = 'CL';
+        else if (leaveType.value === 'Sick') balKey = 'SL';
+        else if (leaveType.value === 'Earned') balKey = 'EL';
+
+        const currentBal = window.availableLeaveBalances[balKey] || 0;
+        const afterBal = currentBal - parseInt(totalDays);
+        const afterColor = afterBal < 0 ? '#dc2626' : '#16a34a';
+        const fmtFrom = new Date(fromDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+        const fmtTo = new Date(toDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+
+        let previewHTML = '<div style="text-align:left; font-family:Inter,sans-serif;">' +
+            '<div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">' +
+            '<div><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Leave Type</div>' +
+            '<div style="font-size:0.9rem; font-weight:700; color:#1e293b; margin-top:2px;">' + leaveType.options[leaveType.selectedIndex].text + '</div></div>' +
+            '<div><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Total Days</div>' +
+            '<div style="font-size:0.9rem; font-weight:700; color:#1e293b; margin-top:2px;">' + totalDays + ' day(s)</div></div>' +
+            '<div><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">From Date</div>' +
+            '<div style="font-size:0.88rem; font-weight:600; color:#1e293b; margin-top:2px;">' + fmtFrom + '</div></div>' +
+            '<div><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">To Date</div>' +
+            '<div style="font-size:0.88rem; font-weight:600; color:#1e293b; margin-top:2px;">' + fmtTo + '</div></div>' +
+            '</div>' +
+            '<div style="margin-bottom:12px;"><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Reason</div>' +
+            '<div style="font-size:0.88rem; font-weight:600; color:#1e293b; margin-top:2px;">' + reasonType.value + '</div></div>';
+
+        if (comments) {
+            previewHTML += '<div style="margin-bottom:12px;"><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Comments</div>' +
+                '<div style="font-size:0.82rem; color:#64748b; font-style:italic; margin-top:2px;">' + comments + '</div></div>';
+        }
+
+        previewHTML += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">' +
+            '<div><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Current Balance</div>' +
+            '<div style="font-size:1.1rem; font-weight:800; color:#16a34a; margin-top:3px;">' + currentBal + ' day(s)</div></div>' +
+            '<div><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Balance After</div>' +
+            '<div style="font-size:1.1rem; font-weight:800; color:' + afterColor + '; margin-top:3px;">' + afterBal + ' day(s)</div></div></div>';
+
+        if (afterBal < 0) {
+            const lopDays = Math.abs(afterBal);
+            previewHTML += '<div style="background:#fef3c7; border:1px solid #fde68a; border-radius:8px; padding:8px 12px; margin-top:10px; font-size:0.75rem; color:#92400e; font-weight:600; display:flex; align-items:center; gap:6px;">' +
+                '<i class="fas fa-exclamation-triangle"></i> ' + lopDays + ' day(s) will be auto-converted to LOP (Loss of Pay).</div>';
+        }
+
+        previewHTML += '</div>';
+
+        Swal.fire({
+            title: 'Leave Request Preview',
+            html: previewHTML,
+            width: '480px',
+            showCancelButton: true,
+            confirmButtonColor: '#1e3a8a',
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: '<i class="fas fa-check me-1"></i>Confirm & Submit',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) submitLeaveRequest();
+        });
+    }
+
+    // ═══════════════════════ 10. SUBMIT LEAVE REQUEST ═══════════════════════
+    async function submitLeaveRequest() {
+        const leaveType = document.getElementById('leaveType').value;
+        const reasonType = document.getElementById('reasonType').value;
+        const fromDate = document.getElementById('fromDate').value;
+        const toDate = document.getElementById('toDate').value;
+        const totalDays = document.getElementById('totalDays').value;
+        const comments = document.getElementById('leaveComments').value;
+
+        if (!leaveType || !reasonType || !fromDate || !toDate) {
+            Swal.fire({ icon: 'warning', title: 'Missing Details', text: 'Please fill in all required fields before submitting.', confirmButtonColor: '#1e3a8a' });
+            return;
+        }
+
+        const requestedDays = parseFloat(totalDays) || 0;
+        if (requestedDays <= 0) {
+            Swal.fire({ icon: 'warning', title: 'Invalid Dates', text: 'Total days must be at least 1.', confirmButtonColor: '#1e3a8a' });
+            return;
+        }
+
+        if (absenceData && absenceData.length > 0) {
+            const reqStart = new Date(fromDate); const reqEnd = new Date(toDate);
+            const isDuplicate = absenceData.some(leave => {
+                if (leave.status === 'REJECTED') return false;
+                return (reqStart <= new Date(leave.toDate) && reqEnd >= new Date(leave.fromDate));
+            });
+            if (isDuplicate) {
+                Swal.fire({ icon: 'error', title: 'Duplicate Leave', text: 'You already have a leave request for the selected dates.', confirmButtonColor: '#1e3a8a' });
+                return;
+            }
+        }
+
+        const confirmResult = await Swal.fire({
+            title: 'Submit Leave Request?',
+            text: 'Your request will be sent to your manager for approval.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#1e3a8a',
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: 'Yes, submit it!',
+            cancelButtonText: 'Cancel'
+        });
+
+        if (!confirmResult.isConfirmed) return;
+
+        const payload = {
+            leaveType, leaveMode: 'Offline', fromDate, toDate,
+            totalDays: requestedDays,
+            reason: reasonType + (comments ? ' \u2014 ' + comments : '')
+        };
+
+        Swal.fire({ title: 'Submitting...', text: 'Please wait...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+        try {
+            const response = await fetch('/api/leave/submit', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (response.ok) {
+                await Swal.fire({ icon: 'success', title: 'Request Submitted!', text: 'Your leave request has been sent successfully.', confirmButtonColor: '#1e3a8a', timer: 2500, timerProgressBar: true, showConfirmButton: false });
+                window.location.reload();
+            } else {
+                const errorText = await response.text();
+                Swal.fire({ icon: 'error', title: 'Submission Failed', text: errorText || 'Something went wrong.', confirmButtonColor: '#1e3a8a' });
+            }
+        } catch (e) {
+            Swal.fire({ icon: 'error', title: 'Network Error', text: 'Could not connect to server.', confirmButtonColor: '#1e3a8a' });
+        }
+    }
+
+    // ═══════════════════════ 11. FETCH ABSENCE REQUESTS ═══════════════════════
+    async function fetchAbsenceRequests() {
+        const container = document.getElementById('absenceRequestsContainer');
+        try {
+            const res = await fetch('/api/leave/my-leaves');
+            if (!res.ok) throw new Error('Failed');
+            absenceData = await res.json();
+
+            if (!absenceData || absenceData.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-check d-block"></i><p>No leave requests found. Apply for your first leave above!</p></div>';
+                return;
+            }
+
+            let html = '<div class="row g-0">';
+            absenceData.forEach((leave, idx) => {
+                const status = (leave.status || '').toUpperCase();
+                let statusClass = 'status-pending', statusText = 'Pending Approval';
+                let iconBg = '#fff7ed', iconColor = '#f97316';
+
+                if (status === 'APPROVED') { statusClass = 'status-approved'; statusText = 'Approved'; iconBg = '#f0fdf4'; iconColor = '#22c55e'; }
+                else if (status === 'AUTO_APPROVED' || status === 'AUTO APPROVED') { statusClass = 'status-auto-approved'; statusText = 'Auto Approved'; iconBg = '#ecfdf5'; iconColor = '#059669'; }
+                else if (status === 'REJECTED') { statusClass = 'status-rejected'; statusText = 'Rejected'; iconBg = '#fef2f2'; iconColor = '#ef4444'; }
+
+                const fromDate = leave.fromDate ? new Date(leave.fromDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : '\u2014';
+                const toDate = leave.toDate ? new Date(leave.toDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '\u2014';
+
+                let typeIcon = 'fa-calendar-minus';
+                const lt = (leave.leaveType || '').toLowerCase();
+                if (lt.includes('casual')) typeIcon = 'fa-sun';
+                else if (lt.includes('sick')) typeIcon = 'fa-kit-medical';
+                else if (lt.includes('earned')) typeIcon = 'fa-star';
+                else if (lt.includes('comp')) typeIcon = 'fa-rotate';
+                else if (lt.includes('wfh')) typeIcon = 'fa-house-laptop';
+                else if (lt.includes('floater')) typeIcon = 'fa-flag';
+
+                html += '<div class="col-lg-6">' +
+                    '<div class="absence-item" onclick="showLeaveDetails(' + idx + ')">' +
+                    '<div class="absence-icon" style="background:' + iconBg + '; color:' + iconColor + ';"><i class="fas ' + typeIcon + '"></i></div>' +
+                    '<div class="flex-grow-1">' +
+                    '<div class="fw-bold" style="font-size:0.82rem;">' + (leave.leaveType || 'Leave') + '</div>' +
+                    '<div class="text-muted" style="font-size:0.7rem;">' + fromDate + ' \u2014 ' + toDate + ' <span class="ms-2"><i class="fas fa-clock me-1"></i>' + (leave.totalDays || 0) + ' day(s)</span></div>' +
+                    '</div>' +
+                    '<span class="badge badge-status ' + statusClass + '">' + statusText + '</span>' +
+                    '</div></div>';
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        } catch (e) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-circle d-block"></i><p>Unable to load absence requests</p></div>';
+        }
+    }
+
+    // ═══════════════════════ 12. LEAVE DETAILS (SweetAlert) ═══════════════════════
+    function showLeaveDetails(index) {
+        if (!absenceData || !absenceData[index]) return;
+        const leave = absenceData[index];
+
+        const status = (leave.status || '').toUpperCase();
+        let statusColor = '#c2410c', statusBg = '#fff7ed', statusText = 'Pending';
+        if (status === 'APPROVED' || status === 'AUTO_APPROVED') { statusColor = '#15803d'; statusBg = '#f0fdf4'; statusText = status.replace(/_/g, ' '); }
+        else if (status === 'REJECTED') { statusColor = '#b91c1c'; statusBg = '#fef2f2'; statusText = 'Rejected'; }
+
+        const fmtFrom = leave.fromDate ? new Date(leave.fromDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '\u2014';
+        const fmtTo = leave.toDate ? new Date(leave.toDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '\u2014';
+
+        let detailsHTML = '<div style="text-align:left; font-family:Inter,sans-serif;">' +
+            '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">' +
+            '<div><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Leave Type</div>' +
+            '<div style="font-size:0.95rem; font-weight:700; color:#1e293b;">' + (leave.leaveType || '\u2014') + '</div></div>' +
+            '<span style="background:' + statusBg + '; color:' + statusColor + '; padding:4px 12px; border-radius:6px; font-size:0.72rem; font-weight:600;">' + statusText + '</span></div>' +
+            '<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">' +
+            '<div><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">From Date</div>' +
+            '<div style="font-size:0.88rem; font-weight:600;">' + fmtFrom + '</div></div>' +
+            '<div><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">To Date</div>' +
+            '<div style="font-size:0.88rem; font-weight:600;">' + fmtTo + '</div></div></div>' +
+            '<div style="margin-bottom:14px;"><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Total Days</div>' +
+            '<div style="font-size:0.88rem; font-weight:700;">' + (leave.totalDays || 0) + ' day(s)</div></div>' +
+            '<div style="margin-bottom:14px;"><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Reason</div>' +
+            '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px 12px; margin-top:3px; font-size:0.82rem; line-height:1.5;">' + (leave.reason || 'No reason provided') + '</div></div>';
+
+        if (leave.managerComments) {
+            detailsHTML += '<div><div style="font-size:0.65rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Manager Comments</div>' +
+                '<div style="background:#fef2f2; border:1px solid #fee2e2; border-radius:8px; padding:8px 12px; margin-top:3px; font-size:0.82rem; color:#b91c1c;">' + leave.managerComments + '</div></div>';
+        }
+        detailsHTML += '</div>';
+
+        Swal.fire({
+            title: 'Leave Request Details',
+            html: detailsHTML,
+            width: '460px',
+            confirmButtonColor: '#1e3a8a',
+            confirmButtonText: 'Close'
+        });
+    }
+
+    // ═══════════════════════ DOM CONTENT LOADED ═══════════════════════
+    document.addEventListener('DOMContentLoaded', () => {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('fromDate').min = today;
+        document.getElementById('toDate').min = today;
+
+        fetchUpcomingHolidays();
+        fetchLeaveWallet();
+        fetchLeaveLedger();
+        fetchCalendarData(calendarMonth, calendarYear);
+        fetchAbsenceRequests();
+    });
+
+</script>
+</body>
+</html>

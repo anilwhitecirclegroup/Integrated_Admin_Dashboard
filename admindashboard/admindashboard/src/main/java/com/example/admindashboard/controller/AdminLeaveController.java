@@ -102,97 +102,106 @@ public class AdminLeaveController {
             }
             leave.setStatus("Approved");
             leaveRequestRepository.save(leave);
+
+            // Map leave type string to code
             String leaveCode;
-
             switch (leave.getLeaveType()) {
-
-                case "Casual":
-                    leaveCode = "CL";
-                    break;
-
-                case "Sick":
-                    leaveCode = "SL";
-                    break;
-
-                case "Earned":
-                    leaveCode = "EL";
-                    break;
-
-                default:
-                    return ResponseEntity.badRequest()
-                            .body("Invalid leave type.");
+                case "Casual": leaveCode = "CL"; break;
+                case "Sick": leaveCode = "SL"; break;
+                case "Earned": leaveCode = "EL"; break;
+                case "CompOff": leaveCode = "COMP_OFF"; break;
+                case "Maternity": leaveCode = "MATERNITY"; break;
+                case "Paternity": leaveCode = "PATERNITY"; break;
+                case "Marriage": leaveCode = "MARRIAGE"; break;
+                case "Bereavement": leaveCode = "BEREAVEMENT"; break;
+                case "WFH": leaveCode = "WFH"; break;
+                case "Floater": leaveCode = "FLOATER"; break;
+                default: leaveCode = leave.getLeaveType().toUpperCase(); break;
             }
 
             LeaveTypeMaster leaveTypeMaster =
-                    leaveTypeRepository
-                            .findByLeaveCode(leaveCode)
-                            .orElseThrow(() ->
-                                    new RuntimeException(
-                                            "Leave type not found"
-                                    ));
+                    leaveTypeRepository.findByLeaveCode(leaveCode)
+                            .orElseThrow(() -> new RuntimeException("Leave type not found for code: " + leaveCode));
 
             EmployeeLeaveWallet wallet =
-                    walletRepository
-                            .findByUserAndLeaveType(
-                                    leave.getUser(),
-                                    leaveTypeMaster
-                            )
-                            .orElseThrow(() ->
-                                    new RuntimeException(
-                                            "Employee wallet not found"
-                                    ));
+                    walletRepository.findByUserAndLeaveType(leave.getUser(), leaveTypeMaster)
+                            .orElseThrow(() -> new RuntimeException("Employee wallet not found"));
 
-            double requestedDays =
-                    leave.getTotalDays();
+            double requestedDays = leave.getTotalDays();
+            double availableBalance = wallet.getAvailableBalance();
 
-            if (wallet.getAvailableBalance() < requestedDays) {
+            // ══════════════════════════════════════════════════════════════════
+            // SMART LOP CONVERSION: If balance is insufficient, auto-split
+            // Regular deduction (what's available) + LOP (excess days)
+            // ══════════════════════════════════════════════════════════════════
+            double regularDays;
+            double lopDays;
 
-                return ResponseEntity.badRequest()
-                        .body("Insufficient leave balance.");
+            if (availableBalance >= requestedDays) {
+                // Sufficient balance — full deduction from this leave type
+                regularDays = requestedDays;
+                lopDays = 0;
+            } else {
+                // Insufficient balance — deduct what's available, convert rest to LOP
+                regularDays = Math.max(availableBalance, 0);
+                lopDays = requestedDays - regularDays;
             }
 
-            // Deduct Balance
-            wallet.setAvailableBalance(
-                    wallet.getAvailableBalance()
-                            - requestedDays
-            );
+            // --- Deduct from primary leave type ---
+            if (regularDays > 0) {
+                wallet.setAvailableBalance(wallet.getAvailableBalance() - regularDays);
+                wallet.setUsedBalance(wallet.getUsedBalance() + regularDays);
+                walletRepository.save(wallet);
 
-            wallet.setUsedBalance(
-                    wallet.getUsedBalance()
-                            + requestedDays
-            );
+                // Create ledger entry for regular deduction
+                LeaveLedger ledger = new LeaveLedger();
+                ledger.setTransactionDate(java.time.LocalDateTime.now());
+                ledger.setUser(leave.getUser());
+                ledger.setLeaveType(leaveTypeMaster);
+                ledger.setTransactionType("DEBIT");
+                ledger.setDebit(regularDays);
+                ledger.setCredit(0.0);
+                ledger.setBalanceAfter(wallet.getAvailableBalance());
+                ledger.setStatus("APPROVED");
+                ledger.setReferenceType("LEAVE_APPROVAL");
+                ledger.setReferenceId(leave.getId());
+                ledger.setRemarks("Leave approved by admin/manager");
+                ledger.setApprovedBy(currentUser);
+                leaveLedgerRepository.save(ledger);
+            } else if (regularDays == 0 && lopDays > 0) {
+                // No regular days to deduct, just save wallet as-is
+                walletRepository.save(wallet);
+            }
 
-            walletRepository.save(wallet);
+            // --- Deduct excess from LOP ---
+            if (lopDays > 0) {
+                LeaveTypeMaster lopType = leaveTypeRepository.findByLeaveCode("LOP")
+                        .orElseThrow(() -> new RuntimeException("LOP leave type not found"));
 
-            // Create Ledger Entry
-            LeaveLedger ledger = new LeaveLedger();
-            ledger.setTransactionDate(java.time.LocalDateTime.now());
+                EmployeeLeaveWallet lopWallet = walletRepository.findByUserAndLeaveType(leave.getUser(), lopType)
+                        .orElse(null);
 
-            ledger.setUser(leave.getUser());
+                if (lopWallet != null) {
+                    lopWallet.setUsedBalance(lopWallet.getUsedBalance() + lopDays);
+                    walletRepository.save(lopWallet);
+                }
 
-            ledger.setLeaveType(leaveTypeMaster);
-
-            ledger.setTransactionType("DEBIT");
-
-            ledger.setDebit(requestedDays);
-
-            ledger.setCredit(0.0);
-
-            ledger.setBalanceAfter(
-                    wallet.getAvailableBalance()
-            );
-
-            ledger.setStatus("APPROVED");
-
-            ledger.setReferenceType("LEAVE_APPROVAL");
-
-            ledger.setReferenceId(leave.getId());
-
-            ledger.setRemarks(
-                    "Leave approved by admin/manager"
-            );
-
-            leaveLedgerRepository.save(ledger);
+                // Create ledger entry for LOP portion
+                LeaveLedger lopLedger = new LeaveLedger();
+                lopLedger.setTransactionDate(java.time.LocalDateTime.now());
+                lopLedger.setUser(leave.getUser());
+                lopLedger.setLeaveType(lopType);
+                lopLedger.setTransactionType("DEBIT");
+                lopLedger.setDebit(lopDays);
+                lopLedger.setCredit(0.0);
+                lopLedger.setBalanceAfter(0.0);
+                lopLedger.setStatus("APPROVED");
+                lopLedger.setReferenceType("LOP_AUTO_CONVERSION");
+                lopLedger.setReferenceId(leave.getId());
+                lopLedger.setRemarks("Auto-converted to LOP (" + lopDays + " days) — insufficient " + leave.getLeaveType() + " balance");
+                lopLedger.setApprovedBy(currentUser);
+                leaveLedgerRepository.save(lopLedger);
+            }
 
             // --- EMAIL TRIGGER START ---
             Map<String, Object> emailData = new HashMap<>();
@@ -200,6 +209,10 @@ public class AdminLeaveController {
             emailData.put("specificType", leave.getLeaveType());
             emailData.put("submittedOn", leave.getCreatedAt());
             emailData.put("duration", leave.getFromDate() + " to " + leave.getToDate() + " (" + leave.getTotalDays() + " Days)");
+
+            if (lopDays > 0) {
+                emailData.put("lopNote", regularDays + " day(s) from " + leave.getLeaveType() + " + " + lopDays + " day(s) as LOP");
+            }
 
             emailService.sendRequestStatusUpdateToEmployee(
                     leave.getUser().getEmail(),
@@ -210,7 +223,11 @@ public class AdminLeaveController {
             );
             // --- EMAIL TRIGGER END ---
 
-            return ResponseEntity.ok("Leave Approved successfully");
+            String successMsg = "Leave Approved successfully";
+            if (lopDays > 0) {
+                successMsg += " (" + regularDays + " day(s) from " + leave.getLeaveType() + " + " + lopDays + " day(s) converted to LOP)";
+            }
+            return ResponseEntity.ok(successMsg);
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
