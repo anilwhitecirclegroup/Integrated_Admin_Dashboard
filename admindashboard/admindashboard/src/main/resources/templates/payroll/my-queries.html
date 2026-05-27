@@ -3,176 +3,286 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Helpdesk – Payroll Portal</title>
-
+    <title>My Queries – WhiteCircle Group</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
     <link rel="stylesheet" th:href="@{/css/base/reset.css}"/>
     <link rel="stylesheet" th:href="@{/css/base/variables.css}"/>
     <link rel="stylesheet" th:href="@{/css/base/typography.css}"/>
     <link rel="stylesheet" th:href="@{/css/layouts/dashboard-layout.css}"/>
     <link rel="stylesheet" th:href="@{/css/layouts/sidebar.css}"/>
-    <link rel="stylesheet" th:href="@{/css/components/cards.css}"/>
-    <link rel="stylesheet" th:href="@{/css/components/tables.css}"/>
-    <link rel="stylesheet" th:href="@{/css/components/badges.css}"/>
-
+    
     <style>
-        .section-card { 
-            background: var(--white); 
-            border-radius: var(--radius-lg); 
-            padding: 32px; 
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04); 
-            border: 1px solid #ECECEC; 
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
         }
-        .section-card-title { 
-            font-size: 16px; 
-            font-weight: 700; 
-            color: var(--text-dark); 
-            margin-bottom: 24px; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px;
+        
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
         }
-        .filter-bar { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
-        .filter-select { 
-            height: 42px; 
-            border: 1.5px solid #E2E8F0; 
-            border-radius: 10px; 
-            padding: 0 16px; 
-            font-size: 13px; 
-            font-weight: 500; 
-            background: white; 
-            color: var(--text-dark); 
-            outline: none; 
-            cursor: pointer; 
-            transition: var(--transition); 
+        
+        .user-profile-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            cursor: pointer;
         }
-        .filter-select:focus { 
-            border-color: var(--primary-blue); 
-            box-shadow: 0 0 0 3px rgba(47, 84, 235, 0.08); 
+        
+        .user-avatar-icon {
+            width: 48px;
+            height: 48px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            overflow: hidden;
         }
-        .raise-btn { 
-            margin-left: auto; 
-            height: 42px; 
-            padding: 0 22px; 
-            background: var(--primary-blue); 
-            color: white; 
-            border: none; 
-            border-radius: 10px; 
-            font-size: 13px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: var(--transition); 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-            box-shadow: 0 4px 10px rgba(47, 84, 235, 0.15); 
+        .user-avatar-icon i {
+            margin-top: 10px;
         }
-        .raise-btn:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 15px rgba(47, 84, 235, 0.25); 
-            opacity: 0.95; 
+        
+        .user-name-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
         }
-        .raise-btn:active { 
-            transform: translateY(0); 
+        
+        .page-title-large {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 24px;
+        }
+        
+        /* Filter Bar */
+        .filter-bar {
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: flex-end;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .filter-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+        }
+        
+        .filter-input, .filter-select {
+            height: 44px;
+            border: 1px solid #a0aec0;
+            border-radius: 22px; /* pill shape */
+            padding: 0 20px;
+            font-size: 14px;
+            color: #4a5568;
+            outline: none;
+            background-color: white;
+            width: 100%;
+        }
+        
+        .filter-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 10px;
+        }
+        
+        .search-wrapper {
+            position: relative;
+            flex: 1.5;
+        }
+        
+        .search-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+        }
+        
+        .search-wrapper .filter-input {
+            padding-left: 44px;
+        }
+        
+        .filter-actions {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .btn-search {
+            height: 44px;
+            background-color: #2b5dff;
+            color: white;
+            border: none;
+            border-radius: 22px;
+            padding: 0 32px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-search:hover { transform: translateY(-2px); }
+        
+        .btn-reset {
+            height: 44px;
+            background-color: #e2e8f0;
+            color: #2b5dff;
+            border: 1px solid #2b5dff;
+            border-radius: 22px;
+            padding: 0 32px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-reset:hover { background-color: #cbd5e1; }
+        
+        /* Table Area */
+        .table-container {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: white;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            background-color: #b0b8c1; /* Metallic gray from Figma */
+            color: #1a202c;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 16px 24px;
+            text-align: left;
+        }
+        .data-table th:last-child { text-align: right; }
+        
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #718096;
+        }
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 12px;
+            color: #a0aec0;
+        }
+        .empty-state p {
+            font-size: 16px;
+        }
+        
+        @media (max-width: 900px) {
+            .filter-bar { flex-direction: column; align-items: stretch; }
+            .filter-actions { justify-content: flex-end; }
         }
     </style>
 </head>
 <body>
+
 <div class="app-layout">
     <div th:replace="fragments/sidebar :: sidebar"></div>
+
     <main class="main-content">
+        
+        <div class="page-header">
+            <img th:src="@{/images/white-logo.png}" alt="Logo" class="header-logo">
+            
+            <a href="/payroll/my-profile" class="user-profile-link">
+                <div class="user-avatar-icon"><i class="fa-solid fa-user"></i></div>
+                <div class="user-name-text" th:text="${user != null ? user.fullName : 'Rohit Sharma'}">Rohit Sharma</div>
+            </a>
+        </div>
+        
+        <h1 class="page-title-large">My Queries</h1>
 
-        <h1 class="page-title">Helpdesk – My Queries</h1>
-
-        <div class="section-card">
-
-            <div class="section-card-title">
-                <i class="fa-solid fa-circle-question" style="color:var(--primary-blue);"></i>
-                Query History
-            </div>
-
-            <!-- Filters -->
-            <div class="filter-bar">
-                <select class="filter-select" id="queryTypeFilter">
-                    <option value="">All Query Types</option>
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label class="filter-label">Query Type</label>
+                <select class="filter-select">
+                    <option>Select Query Type</option>
                     <option>Payslip</option>
-                    <option>PF Correction</option>
                     <option>Tax Declaration</option>
-                    <option>Reimbursement</option>
                 </select>
-
-                <select class="filter-select" id="queryMonthFilter">
-                    <option value="">All Months</option>
-                    <option>April 2026</option>
-                    <option>May 2026</option>
-                    <option>March 2026</option>
-                </select>
-
-                <select class="filter-select" id="queryStatusFilter">
-                    <option value="">All Status</option>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Status</label>
+                <select class="filter-select">
+                    <option>Suspended</option>
                     <option>Open</option>
-                    <option>In Progress</option>
                     <option>Resolved</option>
                 </select>
-
-                <button class="raise-btn" onclick="alert('Raise query form coming soon.')">
-                    <i class="fa-solid fa-plus"></i> Raise Query
-                </button>
             </div>
-
-            <div class="table-wrapper">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Query ID</th>
-                            <th>Type</th>
-                            <th>Subject</th>
-                            <th>Raised On</th>
-                            <th>Status</th>
-                            <th>Last Updated</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#QRY-001</td>
-                            <td>Payslip</td>
-                            <td>Missing May 2026 payslip</td>
-                            <td>03 May 2026</td>
-                            <td><span class="badge-status badge-success">Resolved</span></td>
-                            <td>06 May 2026</td>
-                        </tr>
-                        <tr>
-                            <td>#QRY-002</td>
-                            <td>Tax Declaration</td>
-                            <td>80C investment declaration update</td>
-                            <td>12 April 2026</td>
-                            <td><span class="badge-status badge-warning">In Progress</span></td>
-                            <td>18 April 2026</td>
-                        </tr>
-                        <tr>
-                            <td>#QRY-003</td>
-                            <td>PF Correction</td>
-                            <td>PF account UAN mismatch</td>
-                            <td>28 March 2026</td>
-                            <td><span class="badge-status badge-danger">Open</span></td>
-                            <td>28 March 2026</td>
-                        </tr>
-                        <tr>
-                            <td>#QRY-004</td>
-                            <td>Reimbursement</td>
-                            <td>Travel reimbursement for March</td>
-                            <td>05 April 2026</td>
-                            <td><span class="badge-status badge-success">Resolved</span></td>
-                            <td>10 April 2026</td>
-                        </tr>
-                    </tbody>
-                </table>
+            
+            <div class="filter-group search-wrapper">
+                <label class="filter-label">Search</label>
+                <div style="position: relative;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" class="filter-input" placeholder="Search Query By Code" />
+                </div>
             </div>
-
+            
+            <div class="filter-actions">
+                <button class="btn-search">Search</button>
+                <button class="btn-reset">Reset</button>
+            </div>
         </div>
+        
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Query Code</th>
+                        <th>Query Type</th>
+                        <th>Query Date</th>
+                        <th style="text-align: center;">Subject</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <!-- Empty tbody for showing empty state below -->
+            </table>
+            
+            <div class="empty-state">
+                <i class="fa-solid fa-user-group"></i>
+                <p>(No data found)</p>
+            </div>
+        </div>
+
     </main>
 </div>
 <script th:src="@{/js/common/sidebar.js}"></script>

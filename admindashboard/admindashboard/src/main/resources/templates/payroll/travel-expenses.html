@@ -3,213 +3,366 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Travel &amp; Expenses – Payroll Portal</title>
-
+    <title>Travel & Expenses – WhiteCircle Group</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
     <link rel="stylesheet" th:href="@{/css/base/reset.css}"/>
     <link rel="stylesheet" th:href="@{/css/base/variables.css}"/>
     <link rel="stylesheet" th:href="@{/css/base/typography.css}"/>
     <link rel="stylesheet" th:href="@{/css/layouts/dashboard-layout.css}"/>
     <link rel="stylesheet" th:href="@{/css/layouts/sidebar.css}"/>
-    <link rel="stylesheet" th:href="@{/css/components/cards.css}"/>
-    <link rel="stylesheet" th:href="@{/css/components/tables.css}"/>
-    <link rel="stylesheet" th:href="@{/css/components/badges.css}"/>
-
+    
     <style>
-        .section-card { 
-            background: var(--white); 
-            border-radius: var(--radius-lg); 
-            padding: 32px; 
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04); 
-            border: 1px solid #ECECEC; 
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
         }
-        .section-card-title { 
-            font-size: 16px; 
-            font-weight: 700; 
-            color: var(--text-dark); 
-            margin-bottom: 24px; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px;
+        
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
         }
-        .travel-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 32px; }
-        .travel-stat { 
-            background: var(--white); 
-            border-radius: var(--radius-lg); 
-            padding: 26px 30px; 
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04); 
-            border: 1px solid #ECECEC; 
-            transition: var(--transition); 
+        
+        .user-profile-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            cursor: pointer;
         }
-        .travel-stat:hover { 
-            transform: translateY(-4px); 
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06); 
+        
+        .user-avatar-icon {
+            width: 48px;
+            height: 48px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            overflow: hidden;
         }
-        .travel-stat-label { font-size: 11px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-        .travel-stat-value { font-size: 26px; font-weight: 700; color: var(--primary-blue); }
-        .filter-bar { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
-        .filter-select { 
-            height: 42px; 
-            border: 1.5px solid #E2E8F0; 
-            border-radius: 10px; 
-            padding: 0 16px; 
-            font-size: 13px; 
-            font-weight: 500; 
-            background: white; 
-            color: var(--text-dark); 
-            outline: none; 
-            cursor: pointer; 
-            transition: var(--transition); 
+        .user-avatar-icon i {
+            margin-top: 10px;
         }
-        .filter-select:focus { 
-            border-color: var(--primary-blue); 
-            box-shadow: 0 0 0 3px rgba(47, 84, 235, 0.08); 
+        
+        .user-name-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
         }
-        .raise-btn { 
-            margin-left: auto; 
-            height: 42px; 
-            padding: 0 22px; 
-            background: var(--primary-blue); 
-            color: white; 
-            border: none; 
-            border-radius: 10px; 
-            font-size: 13px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-            transition: var(--transition); 
-            box-shadow: 0 4px 10px rgba(47, 84, 235, 0.15); 
+        
+        .page-title-large {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 24px;
         }
-        .raise-btn:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 15px rgba(47, 84, 235, 0.25); 
-            opacity: 0.95; 
+        
+        /* Filter Bar */
+        .filter-bar {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            margin-bottom: 24px;
         }
-        .raise-btn:active { 
-            transform: translateY(0); 
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
         }
-        @media (max-width: 768px) { .travel-summary { grid-template-columns: 1fr; } }
+        
+        .filter-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+        }
+        
+        .filter-input, .filter-select {
+            height: 44px;
+            border: 1px solid #a0aec0;
+            border-radius: 22px;
+            padding: 0 16px;
+            font-size: 14px;
+            color: #4a5568;
+            outline: none;
+            background-color: white;
+            width: 100%;
+        }
+        
+        .filter-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 10px;
+        }
+        
+        .search-wrapper {
+            position: relative;
+            flex: 1.5;
+        }
+        .search-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+        }
+        .search-wrapper .filter-input {
+            padding-left: 44px;
+        }
+        
+        .btn-search {
+            height: 44px;
+            background-color: #2b5dff;
+            color: white;
+            border: none;
+            border-radius: 22px;
+            padding: 0 32px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-search:hover { transform: translateY(-2px); }
+        
+        /* Summary Cards */
+        .summary-cards-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .summary-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .card-icon.pending { background-color: #fff3e0; color: #f59e0b; }
+        .card-icon.approved { background-color: #dcfce7; color: #22c55e; }
+        .card-icon.draft { background-color: #f1f5f9; color: #94a3b8; }
+        .card-icon.rejected { background-color: #fee2e2; color: #ef4444; }
+        .card-icon.total { background-color: #e0e7ff; color: #3b82f6; }
+        
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+        .card-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000;
+        }
+        
+        /* Table Area */
+        .table-container {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: white;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            background-color: #e0e7ff; /* light blue/grey from Figma */
+            color: #000;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 16px;
+            text-align: center;
+        }
+        .data-table th:first-child { text-align: left; padding-left: 24px; }
+        .data-table th:last-child { text-align: right; padding-right: 24px; }
+        
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #718096;
+        }
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 12px;
+            color: #a0aec0;
+        }
+        .empty-state p {
+            font-size: 16px;
+        }
+        
+        @media (max-width: 1200px) {
+            .summary-cards-row { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .filter-bar { flex-wrap: wrap; }
+            .filter-group { min-width: 150px; }
+            .summary-cards-row { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body>
+
 <div class="app-layout">
     <div th:replace="fragments/sidebar :: sidebar"></div>
+
     <main class="main-content">
-
-        <h1 class="page-title">Travel &amp; Expenses</h1>
-
-        <!-- Summary Stats -->
-        <div class="travel-summary">
-            <div class="travel-stat">
-                <div class="travel-stat-label">Total Claimed (FY 2026-27)</div>
-                <div class="travel-stat-value">₹18,500</div>
-            </div>
-            <div class="travel-stat">
-                <div class="travel-stat-label">Approved</div>
-                <div class="travel-stat-value" style="color:#15803D;">₹14,000</div>
-            </div>
-            <div class="travel-stat">
-                <div class="travel-stat-label">Pending Review</div>
-                <div class="travel-stat-value" style="color:#B45309;">₹4,500</div>
-            </div>
+        
+        <div class="page-header">
+            <img th:src="@{/images/white-logo.png}" alt="Logo" class="header-logo">
+            
+            <a href="/payroll/my-profile" class="user-profile-link">
+                <div class="user-avatar-icon"><i class="fa-solid fa-user"></i></div>
+                <div class="user-name-text" th:text="${user != null ? user.fullName : 'Rohit Sharma'}">Rohit Sharma</div>
+            </a>
         </div>
+        
+        <h1 class="page-title-large">Travel & Expenses</h1>
 
-        <!-- Expense Table -->
-        <div class="section-card">
-
-            <div class="section-card-title">
-                <i class="fa-solid fa-plane" style="color:var(--primary-blue);"></i>
-                Expense Claims
-            </div>
-
-            <div class="filter-bar">
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label class="filter-label">Application Status</label>
                 <select class="filter-select">
-                    <option>All Types</option>
-                    <option>Local Travel</option>
-                    <option>Outstation</option>
-                    <option>Hotel / Stay</option>
-                    <option>Meals</option>
-                </select>
-                <select class="filter-select">
-                    <option>All Status</option>
-                    <option>Approved</option>
                     <option>Pending</option>
+                    <option>Approved</option>
                     <option>Rejected</option>
                 </select>
-                <button class="raise-btn" onclick="alert('Expense claim form coming soon.')">
-                    <i class="fa-solid fa-plus"></i> New Claim
-                </button>
             </div>
-
-            <div class="table-wrapper">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Claim ID</th>
-                            <th>Type</th>
-                            <th>Description</th>
-                            <th>Travel Date</th>
-                            <th class="text-right">Amount (₹)</th>
-                            <th>Status</th>
-                            <th>Approved By</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#EXP-001</td>
-                            <td>Outstation</td>
-                            <td>Client visit – Mumbai</td>
-                            <td>10 Apr 2026</td>
-                            <td class="text-right">6,500</td>
-                            <td><span class="badge-status badge-success">Approved</span></td>
-                            <td>Priya Mehta</td>
-                        </tr>
-                        <tr>
-                            <td>#EXP-002</td>
-                            <td>Local Travel</td>
-                            <td>Office errands – auto/cab</td>
-                            <td>15 Apr 2026</td>
-                            <td class="text-right">850</td>
-                            <td><span class="badge-status badge-success">Approved</span></td>
-                            <td>Priya Mehta</td>
-                        </tr>
-                        <tr>
-                            <td>#EXP-003</td>
-                            <td>Hotel / Stay</td>
-                            <td>Bangalore team offsite</td>
-                            <td>22 Apr 2026</td>
-                            <td class="text-right">4,200</td>
-                            <td><span class="badge-status badge-success">Approved</span></td>
-                            <td>Ankit Joshi</td>
-                        </tr>
-                        <tr>
-                            <td>#EXP-004</td>
-                            <td>Meals</td>
-                            <td>Working lunch – client meeting</td>
-                            <td>02 May 2026</td>
-                            <td class="text-right">2,450</td>
-                            <td><span class="badge-status badge-success">Approved</span></td>
-                            <td>Priya Mehta</td>
-                        </tr>
-                        <tr>
-                            <td>#EXP-005</td>
-                            <td>Outstation</td>
-                            <td>Delhi sales conference</td>
-                            <td>18 May 2026</td>
-                            <td class="text-right">4,500</td>
-                            <td><span class="badge-status badge-warning">Pending</span></td>
-                            <td>–</td>
-                        </tr>
-                    </tbody>
-                </table>
+            
+            <div class="filter-group">
+                <label class="filter-label">From Date</label>
+                <input type="date" class="filter-input" style="border-radius: 22px;" />
             </div>
-
+            
+            <div class="filter-group">
+                <label class="filter-label">To Date</label>
+                <input type="date" class="filter-input" style="border-radius: 22px;" />
+            </div>
+            
+            <div class="filter-group search-wrapper">
+                <label class="filter-label">Search</label>
+                <div style="position: relative;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" class="filter-input" placeholder="Search Register Code" />
+                </div>
+            </div>
+            
+            <button class="btn-search">Search</button>
         </div>
+        
+        <div class="summary-cards-row">
+            <div class="summary-card">
+                <div class="card-icon pending"><i class="fa-regular fa-clock"></i></div>
+                <div class="card-content">
+                    <div class="card-title">Pending</div>
+                    <div class="card-value">0</div>
+                </div>
+            </div>
+            
+            <div class="summary-card">
+                <div class="card-icon approved"><i class="fa-solid fa-check"></i></div>
+                <div class="card-content">
+                    <div class="card-title">Approved</div>
+                    <div class="card-value">0</div>
+                </div>
+            </div>
+            
+            <div class="summary-card">
+                <div class="card-icon draft"><i class="fa-regular fa-file-lines"></i></div>
+                <div class="card-content">
+                    <div class="card-title">Draft</div>
+                    <div class="card-value">0</div>
+                </div>
+            </div>
+            
+            <div class="summary-card">
+                <div class="card-icon rejected"><i class="fa-regular fa-circle-xmark"></i></div>
+                <div class="card-content">
+                    <div class="card-title">Rejected</div>
+                    <div class="card-value">0</div>
+                </div>
+            </div>
+            
+            <div class="summary-card">
+                <div class="card-icon total"><i class="fa-solid fa-file-invoice"></i></div>
+                <div class="card-content">
+                    <div class="card-title">Total App.</div>
+                    <div class="card-value">0</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="text-align: left; padding-left: 24px;">Register Code</th>
+                        <th>View Applications</th>
+                        <th>Applied Amount</th>
+                        <th>Approved Amount</th>
+                        <th>Rejected Amount</th>
+                        <th>Applied Date</th>
+                        <th style="text-align: right; padding-right: 24px;">Application Count</th>
+                    </tr>
+                </thead>
+                <!-- Empty tbody for showing empty state below -->
+            </table>
+            
+            <div class="empty-state">
+                <i class="fa-solid fa-user-group"></i>
+                <p>(No data found)</p>
+            </div>
+        </div>
+
     </main>
 </div>
 <script th:src="@{/js/common/sidebar.js}"></script>
