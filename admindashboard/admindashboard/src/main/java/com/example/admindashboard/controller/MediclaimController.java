@@ -44,6 +44,9 @@ public class MediclaimController {
     @Autowired
     private MediclaimRepository mediclaimRepository;
 
+    @Autowired
+    private com.example.admindashboard.repository.HospitalRepository hospitalRepository;
+
     @GetMapping("/auth")
     public String mediclaimAuth() { return "mediclaim-login"; }
 
@@ -137,7 +140,10 @@ public class MediclaimController {
     }
 
     @GetMapping("/hospitals")
-    public String mediclaimHospitals() { return "mediclaim-hospitals"; }
+    public String mediclaimHospitals(Model model) {
+        model.addAttribute("hospitals", hospitalRepository.findAll());
+        return "mediclaim-hospitals";
+    }
 
     @PostMapping("/verify-login")
     @ResponseBody

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,18 +32,21 @@
         .chip.active { background: var(--med-primary); color: white; border-color: var(--med-primary); }
 
         /* Hospital Cards */
-        .hospital-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.03); transition: 0.3s; height: 100%; border: 1px solid #f1f5f9; }
+        .hospital-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.03); transition: 0.3s; height: 100%; border: 1px solid #f1f5f9; position: relative; }
         .hospital-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
         .map-thumb { height: 150px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; color: #94a3b8; }
         .card-body { padding: 20px; }
 
-        .badge-247 { background: var(--med-green); color: white; font-size: 0.7rem; padding: 4px 8px; border-radius: 6px; font-weight: 700; }
+        .badge-247 { background: var(--med-green); color: white; font-size: 0.7rem; padding: 4px 8px; border-radius: 6px; font-weight: 700; display: inline-block; margin-bottom: 8px; }
+        .badge-cashless { background: var(--med-orange); color: white; font-size: 0.7rem; padding: 4px 8px; border-radius: 6px; font-weight: 700; display: inline-block; margin-bottom: 8px; margin-left: 5px; }
 
         /* Call Button Animation */
-        .btn-call { background: var(--med-primary); color: white; border-radius: 12px; width: 100%; padding: 12px; font-weight: 700; transition: 0.3s; position: relative; }
+        .btn-call { background: var(--med-primary); color: white; border-radius: 12px; width: 100%; padding: 12px; font-weight: 700; transition: 0.3s; position: relative; border: none; }
         .btn-call:hover { background: var(--med-primary-dark); transform: scale(1.02); }
         .btn-call i { animation: ring 2s infinite; }
         @keyframes ring { 0% { transform: rotate(0); } 10% { transform: rotate(15deg); } 20% { transform: rotate(-15deg); } 30% { transform: rotate(15deg); } 40% { transform: rotate(0); } }
+
+        .empty-state { display: none; padding: 40px; text-align: center; color: var(--text-muted); }
     </style>
 </head>
 <body>
@@ -59,24 +62,45 @@
         <h3 class="fw-bold mb-4">Find a Network Hospital</h3>
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Search by hospital name or location...">
-            <button class="btn btn-primary rounded-pill px-4">Search</button>
+            <button class="btn btn-primary rounded-pill px-4" onclick="applyFilters()">Search</button>
         </div>
         <div class="filter-chips">
-            <div class="chip active" onclick="filter('all')">All Hospitals</div>
-            <div class="chip" onclick="filter('cashless')">Cashless</div>
-            <div class="chip" onclick="filter('emergency')">Emergency 24x7</div>
+            <div class="chip active" onclick="setFilter('all', this)">All Hospitals</div>
+            <div class="chip" onclick="setFilter('cashless', this)">Cashless</div>
+            <div class="chip" onclick="setFilter('emergency', this)">Emergency 24x7</div>
         </div>
     </div>
 
+    <div id="noResultsMessage" class="empty-state">
+        <i class="fas fa-hospital-user fa-3x mb-3 text-muted opacity-50"></i>
+        <h5 class="fw-bold">No Hospitals Found</h5>
+        <p>Try adjusting your search terms or filters.</p>
+    </div>
+
     <div class="row g-4" id="hospitalGrid">
-        <div class="col-md-4 hospital-card-wrapper" data-type="cashless emergency">
-            <div class="hospital-card">
+
+        <div th:if="${hospitals == null or hospitals.empty}" class="col-12 text-center text-muted py-5">
+            <p class="fw-bold">No hospitals currently registered in the network.</p>
+        </div>
+
+        <div class="col-md-4 hospital-card-wrapper"
+             th:each="hospital : ${hospitals}"
+             th:data-type="${(hospital.cashless ? 'cashless ' : '') + (hospital.emergency24x7 ? 'emergency' : '')}">
+
+            <div class="hospital-card search-target">
                 <div class="map-thumb"><i class="fas fa-map-marked-alt fa-3x"></i></div>
                 <div class="card-body">
-                    <span class="badge-247">24x7 AVAILABLE</span>
-                    <h5 class="fw-bold mt-2">Apollo Hospitals</h5>
-                    <p class="text-muted small mb-2"><i class="fas fa-map-marker-alt me-1"></i> Saket, New Delhi</p>
-                    <button class="btn btn-call"><i class="fas fa-phone-alt me-2"></i> Call Hospital</button>
+                    <div class="d-flex flex-wrap">
+                        <span th:if="${hospital.emergency24x7}" class="badge-247"><i class="fas fa-bolt me-1"></i> 24x7</span>
+                        <span th:if="${hospital.cashless}" class="badge-cashless"><i class="fas fa-credit-card me-1"></i> Cashless</span>
+                    </div>
+
+                    <h5 class="fw-bold mt-2 hospital-name" th:text="${hospital.name}">Hospital Name</h5>
+                    <p class="text-muted small mb-3 hospital-location"><i class="fas fa-map-marker-alt me-1"></i> <span th:text="${hospital.location}">Location</span></p>
+
+                    <a th:href="'tel:' + ${hospital.contactNumber}" class="btn btn-call d-block text-center text-decoration-none">
+                        <i class="fas fa-phone-alt me-2"></i> <span th:text="${hospital.contactNumber}">Number</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -85,19 +109,49 @@
 </div>
 
 <script>
-    function filter(type) {
-        // Toggle active class for chips
-        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-        event.target.classList.add('active');
+    let currentFilterType = 'all';
 
-        // Filter logic
-        document.querySelectorAll('.hospital-card-wrapper').forEach(card => {
-            if (type === 'all' || card.getAttribute('data-type').includes(type)) {
+    // Updates the active chip styling and stores the current filter type
+    function setFilter(type, element) {
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        element.classList.add('active');
+        currentFilterType = type;
+        applyFilters();
+    }
+
+    // Trigger search when typing
+    document.getElementById('searchInput').addEventListener('keyup', applyFilters);
+
+    // Combined filtering logic (Type + Text Search)
+    function applyFilters() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const cards = document.querySelectorAll('.hospital-card-wrapper');
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            // Check Type Filter
+            const typeMatch = (currentFilterType === 'all') || card.getAttribute('data-type').includes(currentFilterType);
+
+            // Check Text Search (searches both name and location)
+            const name = card.querySelector('.hospital-name').innerText.toLowerCase();
+            const location = card.querySelector('.hospital-location').innerText.toLowerCase();
+            const textMatch = name.includes(searchTerm) || location.includes(searchTerm);
+
+            if (typeMatch && textMatch) {
                 card.style.display = 'block';
+                visibleCount++;
             } else {
                 card.style.display = 'none';
             }
         });
+
+        // Show/Hide Empty State Message
+        const emptyState = document.getElementById('noResultsMessage');
+        if (visibleCount === 0 && cards.length > 0) {
+            emptyState.style.display = 'block';
+        } else {
+            emptyState.style.display = 'none';
+        }
     }
 </script>
 </body>
