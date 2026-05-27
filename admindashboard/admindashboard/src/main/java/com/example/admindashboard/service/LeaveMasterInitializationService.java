@@ -53,6 +53,48 @@ public class LeaveMasterInitializationService {
                 0.0,
                 0.0
         );
+
+        createLeaveTypeIfNotExists(
+                "MATERNITY",
+                "Maternity Leave",
+                0.0,
+                180.0
+        );
+
+        createLeaveTypeIfNotExists(
+                "PATERNITY",
+                "Paternity Leave",
+                0.0,
+                15.0
+        );
+
+        createLeaveTypeIfNotExists(
+                "MARRIAGE",
+                "Marriage Leave",
+                0.0,
+                15.0
+        );
+
+        createLeaveTypeIfNotExists(
+                "BEREAVEMENT",
+                "Bereavement Leave",
+                0.0,
+                5.0
+        );
+
+        createLeaveTypeIfNotExists(
+                "WFH",
+                "Work From Home",
+                0.0,
+                50.0
+        );
+
+        createLeaveTypeIfNotExists(
+                "FLOATER",
+                "Floater Holiday",
+                0.0,
+                5.0
+        );
     }
 
     private void createLeaveTypeIfNotExists(

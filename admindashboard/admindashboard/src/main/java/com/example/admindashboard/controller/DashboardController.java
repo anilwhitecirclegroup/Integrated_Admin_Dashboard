@@ -299,6 +299,17 @@ public class DashboardController {
         return "apply-leave";
     }
 
+    @GetMapping("/leave-management")
+    public String showLeaveManagement(Model model, Principal principal) {
+        String username = principal.getName();
+        User currentUser = userRepository.findByUsername(username).orElse(null);
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("user", currentUser);
+        return "leave-management";
+    }
+
     @GetMapping("/attendance")
     public String showAttendanceRegulation(Model model, Principal principal) {
         String username = principal.getName();
