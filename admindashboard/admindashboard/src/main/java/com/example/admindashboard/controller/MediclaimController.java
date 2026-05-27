@@ -2,7 +2,10 @@ package com.example.admindashboard.controller;
 
 import com.example.admindashboard.model.MediclaimDependent;
 import com.example.admindashboard.model.User;
-import com.example.admindashboard.repository.*;
+import com.example.admindashboard.repository.EmployeeProfileRepository;
+import com.example.admindashboard.repository.InsurancePolicyRepository;
+import com.example.admindashboard.repository.MediclaimDependentRepository;
+import com.example.admindashboard.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.admindashboard.model.Mediclaim;
+import com.example.admindashboard.repository.MediclaimRepository;
 import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,9 +43,6 @@ public class MediclaimController {
 
     @Autowired
     private MediclaimRepository mediclaimRepository;
-
-    @Autowired
-    private HospitalRepository hospitalRepository;
 
     @GetMapping("/auth")
     public String mediclaimAuth() { return "mediclaim-login"; }
@@ -136,11 +137,7 @@ public class MediclaimController {
     }
 
     @GetMapping("/hospitals")
-    public String mediclaimHospitals(Model model) {
-        // Fetch all active network hospitals from the database
-        model.addAttribute("hospitals", hospitalRepository.findAll());
-        return "mediclaim-hospitals";
-    }
+    public String mediclaimHospitals() { return "mediclaim-hospitals"; }
 
     @PostMapping("/verify-login")
     @ResponseBody
