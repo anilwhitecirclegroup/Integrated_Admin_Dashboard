@@ -3,117 +3,222 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Payroll Login – WhiteCircle Group</title>
-    <meta name="description" content="Secure login to the WhiteCircle Group Payroll Portal"/>
-
-    <!-- Google Fonts -->
+    <title>Login – WhiteCircle Group</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-
-    <!-- Design System CSS -->
-    <link rel="stylesheet" href="../../static/css/base/reset.css" th:href="@{/css/base/reset.css}"/>
-    <link rel="stylesheet" href="../../static/css/base/variables.css" th:href="@{/css/base/variables.css}"/>
-    <link rel="stylesheet" href="../../static/css/base/typography.css" th:href="@{/css/base/typography.css}"/>
-    <link rel="stylesheet" href="../../static/css/pages/login.css" th:href="@{/css/pages/login.css}"/>
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        .login-page { display: flex; height: 100vh; }
+        
+        /* Left Panel */
+        .login-left { flex: 1; position: relative; overflow: hidden; }
+        .login-left img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Right Panel */
+        .login-right {
+            width: 480px;
+            background-color: #e2e2e2;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding: 40px;
+        }
+        
+        /* Back Button */
+        .back-btn {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            width: 48px;
+            height: 48px;
+            background-color: #0d6efd;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .back-btn:hover { transform: scale(1.05); }
+        
+        .login-content {
+            margin: auto;
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 32px;
+        }
+        
+        .welcome-text {
+            font-size: 28px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 40px;
+        }
+        
+        .form-group {
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 15px;
+            font-weight: 500;
+            color: #000;
+            margin-bottom: 8px;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            background-color: #d1d1d1;
+            border: 1px solid #a0a0a0;
+            border-radius: 8px;
+            padding: 12px 16px 12px 40px;
+            font-size: 14px;
+            color: #333;
+            outline: none;
+        }
+        
+        .form-input::placeholder {
+            color: #777;
+        }
+        
+        .forgot-pass {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #e53935;
+            text-decoration: none;
+            margin-top: 8px;
+        }
+        
+        .login-btn {
+            width: auto;
+            min-width: 160px;
+            background-color: #2b5dff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 24px;
+            cursor: pointer;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .social-footer {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .social-footer a {
+            color: #111;
+            font-size: 28px;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .social-footer a:hover { transform: translateY(-3px); }
+        
+        .error-msg {
+            color: #e53935;
+            font-size: 14px;
+            margin-bottom: 16px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 900px) {
+            .login-page { flex-direction: column; }
+            .login-left { display: none; }
+            .login-right { width: 100%; }
+        }
+    </style>
 </head>
 <body>
 
 <div class="login-page">
 
-    <!-- ───────────── LEFT PANEL ───────────── -->
     <div class="login-left">
-        <img src="../../static/images/wcg-building.png"
-             th:src="@{/images/wcg-building.png}"
-             onerror="this.style.background='linear-gradient(135deg,#001447 0%,#2F54EB 100%)'; this.removeAttribute('src')"
-             alt="WhiteCircle Group Office"/>
-
-        <div class="login-left-overlay">
-            <div class="logo-icon">
-                <img src="../../static/images/wcg-logo.jpg" th:src="@{/images/wcg-logo.jpg}" alt="WCG Logo"/>
-            </div>
-            <h2>WhiteCircle <span>Payroll</span></h2>
-            <p>Secure, accurate, and transparent payroll<br/>management for every team member.</p>
-        </div>
+        <img th:src="@{/images/wcg-building.png}" alt="Building"/>
     </div>
 
-    <!-- ───────────── RIGHT PANEL ───────────── -->
     <div class="login-right">
+        <a href="/employee/dashboard" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
         
-        <!-- Header Area -->
-        <header class="login-header">
-            <span class="portal-badge"><i class="fa-solid fa-indian-rupee-sign"></i> Payroll Portal</span>
-        </header>
-
-        <!-- Login Card -->
-        <div class="login-card">
-
-            <div class="login-logo-container">
-                <img src="../../static/images/wcg-logo.jpg" th:src="@{/images/wcg-logo.jpg}" alt="WCG Logo" class="login-brand-logo"/>
+        <div class="login-content">
+            <img th:src="@{/images/wcg-logo.jpg}" alt="Logo" class="logo-img"/>
+            
+            <h1 class="welcome-text">Welcome Back!</h1>
+            
+            <div th:if="${error}" class="error-msg">
+                <span th:text="${error}"></span>
             </div>
-
-            <h1>Welcome Back</h1>
-            <p class="login-subtitle">Enter your credentials to access your payroll information.</p>
-
-            <!-- Error Alert -->
-            <div class="login-error" th:if="${error}">
-                <i class="fa-solid fa-circle-exclamation"></i>
-                <span th:text="${error}">Invalid credentials.</span>
-            </div>
-
-            <!-- Login Form -->
-            <form method="post" th:action="@{/payroll-login}">
-
-                <div class="login-form-group">
-                    <label for="loginId">Employee ID</label>
-                    <input id="loginId"
-                           name="loginId"
-                           type="text"
-                           class="login-input"
-                           placeholder="e.g. WCG001"
-                           autocomplete="username"
-                           required/>
+            
+            <form method="post" th:action="@{/payroll-login}" style="width: 100%;">
+                <div class="form-group">
+                    <label>Username or email address</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" name="loginId" class="form-input" placeholder="eg. abc123@gmail.com" required/>
+                    </div>
                 </div>
-
-                <div class="login-form-group">
-                    <label for="password">Password</label>
-                    <input id="password"
-                           name="password"
-                           type="password"
-                           class="login-input"
-                           placeholder="Enter your password"
-                           autocomplete="current-password"
-                           required/>
+                
+                <div class="form-group" style="margin-bottom: 8px;">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" name="password" class="form-input" placeholder="enter your password" required/>
+                    </div>
+                    <a href="#" class="forgot-pass">Forgot Password?</a>
                 </div>
-
-                <div class="login-options">
-                    <label class="remember-me">
-                        <input type="checkbox" id="rememberMe"/> Remember me
-                    </label>
-                    <a href="#" class="forgot-link">Forgot password?</a>
-                </div>
-
-                <button type="submit" class="login-btn" id="loginSubmitBtn">
-                    <i class="fa-solid fa-right-to-bracket" style="margin-right:8px;"></i>
-                    Log In to Payroll
-                </button>
-
+                
+                <button type="submit" class="login-btn">Login</button>
             </form>
-
         </div>
-
-        <!-- Footer Area -->
-        <footer class="login-footer">
-            <div class="social-links">
-                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            </div>
-            <p class="copyright">© 2026 WhiteCircle Group. All rights reserved.</p>
-        </footer>
+        
+        <div class="social-footer">
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="#"><i class="fa-regular fa-envelope"></i></a>
+            <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
     </div>
 
 </div>
