@@ -703,7 +703,11 @@
 
             let html = '<div style="font-size:0.72rem; color:#94a3b8; margin-bottom:10px; font-weight:500; grid-column:1/-1;"><i class="fas fa-info-circle me-1"></i>Your leave balance summary. Click <strong>View All</strong> for full details.</div>';
 
+            const displayTypes = ['CL', 'SL', 'EL', 'COMP_OFF', 'LOP'];
+
             walletData.forEach(w => {
+                if (!displayTypes.includes(w.leaveCode)) return;
+
                 const isLOP = w.leaveCode === 'LOP';
                 let balClass = 'chip-positive';
                 let balText = w.balance || 0;
@@ -767,7 +771,11 @@
             '<th style="padding:8px 6px; text-align:center; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Balance</th>' +
             '</tr></thead><tbody>';
 
+        const displayTypes = ['CL', 'SL', 'EL', 'COMP_OFF', 'LOP'];
+
         walletData.forEach(w => {
+            if (!displayTypes.includes(w.leaveCode)) return;
+
             const isLOP = w.leaveCode === 'LOP';
             const balColor = isLOP ? '#7c3aed' : (w.balance > 0 ? '#16a34a' : '#dc2626');
             const balText = isLOP ? 'Auto' : (w.balance || 0);
