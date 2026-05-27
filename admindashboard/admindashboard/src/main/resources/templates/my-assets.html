@@ -90,12 +90,14 @@
         }
 
         .form-control-custom {
+            width: 100%;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 7px 12px;
             font-size: 0.9rem;
             color: #000000;
             background-color: #ffffff;
+            box-sizing: border-box;
         }
         .form-control-custom:focus {
             border-color: var(--primary-blue);
@@ -166,7 +168,6 @@
             background-color: #f3f4f6;
         }
 
-        /* Hidden dynamic loop data block wrapper out of workspace */
         .hidden-tracker-feed {
             display: none !important;
         }
@@ -175,79 +176,82 @@
 <body>
 
 <div class="hero-banner-container">
-    <a href="/ticket-dashboard" class="btn-back-dashboard">Back to Dashboard</a>
-    <h1>Assets Form</h1>
+    <!-- SYNC LOGIC: Routes back directly with active context channel parameter tracking -->
+    <a th:href="@{/ticket-dashboard(dept=${currentDept})}" class="btn-back-dashboard">Back to Dashboard</a>
+    <h1 th:text="${currentDept + ' Assets Form'}">Assets Form</h1>
 </div>
 
 <div class="form-content-area">
-    <div class="instruction-text">Fill the required details to request IT accessories / upgrade hardware</div>
+    <div class="instruction-text">Fill the required details to request accessories / allocate hardware</div>
 
     <form id="assetsFormMain">
+        <!-- SYNC LOGIC: Tracker capturing current context parameters -->
+        <input type="hidden" id="assetDeptType" th:value="${currentDept}">
+
         <div class="container-fluid p-0">
             <div class="row g-4">
                 
                 <div class="col-md-6">
-                    <div class="row mb-3">
+                    <div class="row mb-3 align-items-center">
                         <div class="col-sm-3"><label class="form-label-custom">Item Type*</label></div>
                         <div class="col-sm-9">
+                            <!-- SYNC LOGIC: Iterates via categoriesList provided dynamically by backend switch map -->
                             <select class="form-select form-control-custom" id="astItemType" required>
-                                <option value="" selected disabled hidden>Select</option>
-                                <option value="Wireless Mouse">Wireless Mouse</option>
-                                <option value="Mechanical Keyboard">Mechanical Keyboard</option>
-                                <option value="Noise-Cancelling Headset">Noise-Cancelling Headset</option>
-                                <option value="External Display / Monitor">External Display / Monitor</option>
-                                <option value="RAM Upgrade Module">RAM Upgrade Module</option>
+                                <option value="" selected disabled hidden>Select Asset Type</option>
+                                <option th:each="cat : ${categoriesList}" th:value="${cat}" th:text="${cat}"></option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="row mb-3">
+                    <div class="row mb-3 align-items-center">
                         <div class="col-sm-3"><label class="form-label-custom">Priority*</label></div>
                         <div class="col-sm-9">
                             <select class="form-select form-control-custom" id="astPriority" required>
-                                <option value="" selected disabled hidden>Select</option>
                                 <option value="Low">Low</option>
-                                <option value="Medium">Medium</option>
+                                <option value="Medium" selected>Medium</option>
                                 <option value="High">High</option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-sm-3"><label class="form-label-custom">Subject</label></div>
-                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astSubject"></div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Subject*</label></div>
+                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astSubject" placeholder="Brief allocation reason" required></div>
                     </div>
 
-                    <div class="row mb-3">
+                    <div class="row mb-3 align-items-center">
                         <div class="col-sm-3"><label class="form-label-custom">Mobile No.*</label></div>
-						<div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astMobile" required pattern="[0-9]{10}" maxlength="10"></div>                    </div>
+                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astMobile" required pattern="[0-9]{10}" maxlength="10"></div>
+                    </div>
 
-                    <div class="row mb-3">
+                    <div class="row mb-3 align-items-center">
                         <div class="col-sm-3"><label class="form-label-custom">Email ID*</label></div>
-						<div class="col-sm-9"><input type="email" class="form-control form-control-custom" id="astEmail" required></div>                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-sm-3"><label class="form-label-custom">Subject</label></div>
-                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astSubjectSecondary"></div>
+                        <div class="col-sm-9"><input type="email" class="form-control form-control-custom" id="astEmail" required></div>
                     </div>
                 </div>
 
                 <div class="col-md-6">
-                    <div class="row mb-3">
+                    <div class="row mb-3 align-items-center">
                         <div class="col-sm-3"><label class="form-label-custom">Delivery Location*</label></div>
-                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astDeliveryLocation" required></div>
+                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astDeliveryLocation" placeholder="Desk No. or Remote Address" required></div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-sm-3"><label class="form-label-custom">Subcategory</label></div>
-                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astSubcategory"></div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Model / Spec*</label></div>
+                        <div class="col-sm-9">
+                            <!-- SYNC LOGIC: Changed input text field to select element parsing dynamic allocations map -->
+                            <select class="form-select form-control-custom" id="astSubcategory" required>
+                                <option value="" selected disabled hidden>Select Core Allocation / Upgrade Spec</option>
+                                <option th:each="item : ${itemsList}" th:value="${item}" th:text="${item}"></option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="row mb-3">
+                    <div class="row mb-3 align-items-center">
                         <div class="col-sm-3"><label class="form-label-custom">Location*</label></div>
                         <div class="col-sm-9">
                             <select class="form-select form-control-custom" id="astLocation" required>
-                                <option value="" selected disabled hidden>Select</option>
+                                <option value="" selected disabled hidden>Select Hub Facility</option>
                                 <option value="Noida">Noida</option>
                                 <option value="Pune">Pune</option>
                                 <option value="Remote">Remote</option>
@@ -261,21 +265,21 @@
             <div class="row mt-2">
                 <div class="col-md-12">
                     <div class="d-flex flex-column gap-2">
-                        <label class="form-label-custom" style="height:auto;">Description</label>
-                        <textarea class="form-control form-control-custom" id="astDescription" rows="5"></textarea>
+                        <label class="form-label-custom" style="height:auto;">Description*</label>
+                        <textarea class="form-control form-control-custom" id="astDescription" rows="5" placeholder="Specify explicit asset details or modification justifications..." required></textarea>
                     </div>
                 </div>
             </div>
 
-            <div class="upload-dropzone" onclick="document.getElementById('fileInputHidden').click()">
-                <span>Browse files</span> or drag files here
-                <input type="file" id="fileInputHidden" style="display: none;">
-            </div>
+			<div class="upload-dropzone" id="dropzoneContainer" onclick="document.getElementById('fileInputHidden').click()">
+			    <span id="dropzoneText">Browse files</span> or drag files here
+			    <input type="file" id="fileInputHidden" style="display: none;" onchange="displaySelectedFile(this)">
+			</div>
 
             <div class="form-actions-row">
                 <button type="button" class="btn-submit-custom" onclick="executeAssetsFormSubmission()">Submit Request</button>
                 <button type="reset" class="btn-outline-custom">Reset</button>
-                <button type="button" class="btn-outline-custom" onclick="window.location.href='/ticket-dashboard'">Cancel</button>
+                <button type="button" class="btn-outline-custom" th:onclick="|window.location.href='/ticket-dashboard?dept=' + document.getElementById('assetDeptType').value|">Cancel</button>
             </div>
 
         </div>
@@ -283,15 +287,8 @@
 </div>
 
 <div class="hidden-tracker-feed">
-    <div th:each="req : ${myRequests}" th:if="${req.type == 'HARDWARE'}" class="incident-row" th:data-status="${req.status}">
+    <div th:each="req : ${myRequests}" class="incident-row" th:data-status="${req.status}">
         <span th:text="${req.detailItem}"></span>
-        <span th:text="${req.status}"></span>
-        <span th:text="${req.ticketId}"></span>
-        <span th:text="${#temporals.format(req.submissionDate, 'dd MMM yyyy')}"></span>
-        <span th:text="${#strings.abbreviate(req.justification, 60)}"></span>
-        <span th:text="${req.durationOrLevel}"></span>
-        <span th:text="${req.priority}"></span>
-        <span th:text="${req.justification}"></span>
     </div>
 </div>
 
@@ -302,46 +299,41 @@
     const sessionUser = {
         id: /*[[${user != null ? user.username : 'EMP-0000'}]]*/ 'EMP-0000',
         name: /*[[${user != null ? user.fullName : 'Unknown User'}]]*/ 'Unknown User',
-        dept: /*[[${user?.employeeProfile?.businessUnit ?: 'General'}]]*/ 'General',
-        manager: /*[[${user?.employeeProfile?.reportingManager ?: 'Admin'}]]*/ 'Admin'
+        dept: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.businessUnit : 'General'}]]*/ 'General',
+        manager: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.reportingManager : 'Admin'}]]*/ 'Admin'
     };
 
     async function executeAssetsFormSubmission() {
+        const typeContext = document.getElementById('assetDeptType').value;
         const itemType = document.getElementById('astItemType').value;
         const priority = document.getElementById('astPriority').value;
         const deliveryLoc = document.getElementById('astDeliveryLocation').value.trim();
         const locationVal = document.getElementById('astLocation').value;
         const mobile = document.getElementById('astMobile').value.trim();
         const email = document.getElementById('astEmail').value.trim();
-        const subject = document.getElementById('astSubject').value.trim() || 'No Subject';
-        const description = document.getElementById('astDescription').value.trim() || 'No Description';
-        const subcategory = document.getElementById('astSubcategory').value.trim() || 'N/A';
-		
-		if (!itemType || !priority || !deliveryLoc || !locationVal || !mobile || !email) {
-		        Swal.fire({ icon: 'warning', title: 'Required Fields Missing', text: 'Please populate all mandatory items marked with (*)', confirmButtonColor: '#2563eb' });
-		        return;
-		    }
-
-		    // Add checks here
-		    const mobileRegex = /^[6-9]\d{9}$/;
-		    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-		    if (!mobileRegex.test(mobile)) {
-		        Swal.fire({ icon: 'error', title: 'Invalid Mobile Number', text: 'Please enter a valid 10-digit number.', confirmButtonColor: '#2563eb' });
-		        return;
-		    }
-		    if (!emailRegex.test(email)) {
-		        Swal.fire({ icon: 'error', title: 'Invalid Email Address', text: 'Please enter a valid email address.', confirmButtonColor: '#2563eb' });
-		        return;
-		    }
-
-        if (!itemType || !priority || !deliveryLoc || !locationVal || !mobile || !email) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Required Fields Missing',
-                text: 'Please populate all mandatory items marked with (*)',
-                confirmButtonColor: '#2563eb'
+        const subject = document.getElementById('astSubject').value.trim();
+        const description = document.getElementById('astDescription').value.trim();
+        const subcategory = document.getElementById('astSubcategory').value;
+        
+        if (!itemType || !priority || !deliveryLoc || !locationVal || !mobile || !email || !subject || !description || !subcategory) {
+            Swal.fire({ 
+                icon: 'warning', 
+                title: 'Required Fields Missing', 
+                text: 'Please populate all mandatory items marked with (*)', 
+                confirmButtonColor: '#2563eb' 
             });
+            return;
+        }
+
+        const mobileRegex = /^[6-9]\d{9}$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!mobileRegex.test(mobile)) {
+            Swal.fire({ icon: 'error', title: 'Invalid Mobile Number', text: 'Please enter a valid 10-digit number.', confirmButtonColor: '#2563eb' });
+            return;
+        }
+        if (!emailRegex.test(email)) {
+            Swal.fire({ icon: 'error', title: 'Invalid Email Address', text: 'Please enter a valid email address.', confirmButtonColor: '#2563eb' });
             return;
         }
 
@@ -350,15 +342,14 @@
             employeeName: sessionUser.name,
             department: sessionUser.dept,
             managerName: sessionUser.manager,
-            type: "HARDWARE", 
-            category: "Asset Request",
-            detailItem: itemType,
+            type: typeContext, 
+            category: itemType,
+            detailItem: subject,
             durationOrLevel: subcategory,
             priority: priority,
-            justification: `Subject: ${subject} | Delivery Address: ${deliveryLoc} | Memo: ${description}`,
+            justification: `Delivery Address: ${deliveryLoc} | Info: ${description}`,
             location: locationVal,
             status: "Open",
-            // --- INJECT EXPLICIT MAIL TARGETS FROM ENVIRONMENT KEYS ---
             notificationEmailPrimary: /*[[${@environment.getProperty('app.notification.email.primary')}]]*/ 'primary_fallback@example.com',
             notificationEmailSecondary: /*[[${@environment.getProperty('app.notification.email.secondary')}]]*/ 'secondary_fallback@example.com'
         };
@@ -384,7 +375,7 @@
                     text: 'Your procurement hardware item ticket has been queued successfully.',
                     confirmButtonColor: '#2563eb'
                 });
-                window.location.href = '/ticket-dashboard';
+                window.location.href = '/ticket-dashboard?dept=' + typeContext;
             } else {
                 throw new Error("Server Response Error");
             }
@@ -397,6 +388,22 @@
             });
         }
     }
+	function displaySelectedFile(input) {
+	    const dropzoneText = document.getElementById('dropzoneText');
+	    const container = document.getElementById('dropzoneContainer');
+	    
+	    if (input.files && input.files.length > 0) {
+	        const file = input.files[0];
+	        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+	        
+	        // Update the dropzone text to show the file icon, name, and size
+	        container.innerHTML = `<i class="fas fa-file-alt me-2" style="color: #2563eb;"></i> <strong>${file.name}</strong> (${fileSizeMB} MB) <span class="ms-3 text-secondary" style="font-size: 0.85rem; text-decoration: underline;">Change file</span>`;
+	        
+	        // Re-inject the hidden file input so the click listener still works if they want to change it
+	        const newInput = input.cloneNode(true);
+	        container.appendChild(newInput);
+	    }
+	}
 </script>
 </body>
 </html>
