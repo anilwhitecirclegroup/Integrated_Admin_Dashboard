@@ -176,9 +176,36 @@ public class PayrollUIController {
 
     /* ─── PF CONTRIBUTION ───────────────────────────────────────── */
 
-    @GetMapping("/pf-contribution")
-    public String pfContribution(HttpSession session) {
+    @GetMapping("/payroll/pf-contribution")
+    public String pfContribution(HttpSession session, Model model, Principal principal) {
         if (!isPayrollAuthenticated(session)) return "redirect:/payroll-login";
+        
+        String username = (String) session.getAttribute("payrollUser");
+        if (username == null && principal != null) {
+            username = principal.getName();
+        }
+        
+        if (username != null) {
+            Optional<User> userOpt = userRepository.findByUsername(username);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                model.addAttribute("user", user);
+                model.addAttribute("profile", user.getEmployeeProfile());
+                
+                String fullName = user.getFullName();
+                String initials = "";
+                if (fullName != null && !fullName.isEmpty()) {
+                    String[] parts = fullName.split(" ");
+                    if (parts.length > 0 && parts[0].length() > 0) {
+                        initials += parts[0].substring(0, 1).toUpperCase();
+                    }
+                    if (parts.length > 1 && parts[1].length() > 0) {
+                        initials += parts[1].substring(0, 1).toUpperCase();
+                    }
+                }
+                model.addAttribute("initials", initials);
+            }
+        }
         return "payroll/pf-contribution";
     }
 

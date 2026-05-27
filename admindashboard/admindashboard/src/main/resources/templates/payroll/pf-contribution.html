@@ -3,92 +3,353 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>PF Contribution – Payroll Portal</title>
-
+    <title>PF Contribution – WhiteCircle Group</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
     <link rel="stylesheet" th:href="@{/css/base/reset.css}"/>
     <link rel="stylesheet" th:href="@{/css/base/variables.css}"/>
     <link rel="stylesheet" th:href="@{/css/base/typography.css}"/>
     <link rel="stylesheet" th:href="@{/css/layouts/dashboard-layout.css}"/>
     <link rel="stylesheet" th:href="@{/css/layouts/sidebar.css}"/>
-    <link rel="stylesheet" th:href="@{/css/components/cards.css}"/>
-    <link rel="stylesheet" th:href="@{/css/components/tables.css}"/>
-
+    
     <style>
-        .pf-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 32px; }
-        .pf-stat { background: var(--white); border-radius: var(--radius-md); padding: 24px 28px; box-shadow: var(--shadow-sm); }
-        .pf-stat-label { font-size: 13px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px; }
-        .pf-stat-value { font-size: 26px; font-weight: 700; color: var(--primary-blue); }
-        .section-card { background: var(--white); border-radius: var(--radius-md); padding: 32px; box-shadow: var(--shadow-sm); }
-        .section-card-title { font-size: 18px; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
-        @media (max-width: 768px) { .pf-summary { grid-template-columns: 1fr; } }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .user-profile-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .user-avatar-icon {
+            width: 48px;
+            height: 48px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            overflow: hidden;
+        }
+        .user-avatar-icon i {
+            margin-top: 10px;
+        }
+        
+        .user-name-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        /* Breadcrumb & Title */
+        .breadcrumb {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2b5dff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .breadcrumb-separator {
+            color: #718096;
+            font-size: 12px;
+        }
+        .breadcrumb-current {
+            color: #2b5dff;
+        }
+        
+        .page-title-large {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 40px;
+        }
+        
+        /* Table Styles */
+        .table-container {
+            border: 1px solid #c2c9d6;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            margin-bottom: 40px;
+        }
+        
+        .pf-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .pf-table th, .pf-table td {
+            border: 1px solid #c2c9d6;
+            text-align: center;
+        }
+        
+        .pf-table th {
+            background-color: #eef2ff; /* Light blue/grey header */
+            color: #2b5dff; /* Blue text */
+            font-size: 14px;
+            font-weight: 600;
+            padding: 16px 12px;
+        }
+        
+        .pf-table td {
+            padding: 16px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #000;
+        }
+        
+        /* First column align left */
+        .pf-table td:first-child {
+            text-align: left;
+            padding-left: 24px;
+        }
+        
+        /* Totals row */
+        .pf-table tr.totals-row td {
+            background-color: #eef2ff;
+            color: #2b5dff;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 16px 12px;
+        }
+        .pf-table tr.totals-row td:first-child {
+            text-align: left;
+            padding-left: 24px;
+            font-size: 16px;
+        }
+        
+        @media (max-width: 1024px) {
+            .table-container {
+                overflow-x: auto;
+            }
+            .pf-table {
+                min-width: 900px;
+            }
+        }
     </style>
 </head>
 <body>
+
 <div class="app-layout">
+    <!-- Setting the active sidebar item dynamically if needed, or sidebar.js handles it based on data-page -->
     <div th:replace="fragments/sidebar :: sidebar"></div>
+
     <main class="main-content">
-
-        <h1 class="page-title">PF Contribution</h1>
-
-        <!-- Summary Stats -->
-        <div class="pf-summary">
-            <div class="pf-stat">
-                <div class="pf-stat-label">Total Employee PF (FY 2026-27)</div>
-                <div class="pf-stat-value">₹28,800</div>
-            </div>
-            <div class="pf-stat">
-                <div class="pf-stat-label">Total Employer PF (FY 2026-27)</div>
-                <div class="pf-stat-value">₹28,800</div>
-            </div>
-            <div class="pf-stat">
-                <div class="pf-stat-label">Total Pension Fund (FY 2026-27)</div>
-                <div class="pf-stat-value">₹20,400</div>
-            </div>
+        
+        <div class="page-header">
+            <img th:src="@{/images/white-logo.png}" alt="Logo" class="header-logo">
+            
+            <a href="/payroll/my-profile" class="user-profile-link">
+                <div class="user-avatar-icon"><i class="fa-solid fa-user"></i></div>
+                <div class="user-name-text" th:text="${user != null ? user.fullName : 'Rohit Sharma'}">Rohit Sharma</div>
+            </a>
         </div>
+        
+        <div class="breadcrumb">
+            <a href="/payroll/tax" style="text-decoration: none; color: inherit;">Payroll & Tax</a> 
+            <i class="fa-solid fa-chevron-right breadcrumb-separator"></i> 
+            <span class="breadcrumb-current">PF Contribution</span>
+        </div>
+        
+        <h1 class="page-title-large">PF Contribution</h1>
 
-        <!-- Contribution Table -->
-        <div class="section-card">
-            <div class="section-card-title">
-                <i class="fa-solid fa-shield" style="color:var(--primary-blue);"></i>
-                Monthly PF Statement – FY 2026-27
-            </div>
-
-            <div class="table-wrapper">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Month</th>
-                            <th class="text-right">Basic Wage (₹)</th>
-                            <th class="text-right">Employee PF 12% (₹)</th>
-                            <th class="text-right">Employer PF 3.67% (₹)</th>
-                            <th class="text-right">Pension Fund 8.33% (₹)</th>
-                            <th class="text-right">Total (₹)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>April 2026</td><td class="text-right">20,000</td><td class="text-right">2,400</td><td class="text-right">734</td><td class="text-right">1,666</td><td class="text-right">4,800</td></tr>
-                        <tr><td>May 2026</td><td class="text-right">20,000</td><td class="text-right">2,400</td><td class="text-right">734</td><td class="text-right">1,666</td><td class="text-right">4,800</td></tr>
-                        <tr><td>June 2026</td><td class="text-right">20,000</td><td class="text-right">2,400</td><td class="text-right">734</td><td class="text-right">1,666</td><td class="text-right">4,800</td></tr>
-                        <tr><td>July 2026</td><td class="text-right">20,000</td><td class="text-right">2,400</td><td class="text-right">734</td><td class="text-right">1,666</td><td class="text-right">4,800</td></tr>
-                        <tr><td>August 2026</td><td class="text-right">20,000</td><td class="text-right">2,400</td><td class="text-right">734</td><td class="text-right">1,666</td><td class="text-right">4,800</td></tr>
-                        <tr><td>September 2026</td><td class="text-right">20,000</td><td class="text-right">2,400</td><td class="text-right">734</td><td class="text-right">1,666</td><td class="text-right">4,800</td></tr>
-                        <tr class="row-total">
-                            <td><strong>Total (Apr–Sep)</strong></td>
-                            <td class="text-right"><strong>1,20,000</strong></td>
-                            <td class="text-right"><strong>14,400</strong></td>
-                            <td class="text-right"><strong>4,404</strong></td>
-                            <td class="text-right"><strong>9,996</strong></td>
-                            <td class="text-right"><strong>28,800</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-container">
+            <table class="pf-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2">Month</th>
+                        <th rowspan="2">PF Wages<br>₹</th>
+                        <th rowspan="2">Pension Wages<br>₹</th>
+                        <th colspan="2">Contribution</th>
+                        <th colspan="2">Employee Share</th>
+                        <th rowspan="2">Total A+B</th>
+                    </tr>
+                    <tr>
+                        <th>EPF Incl. VPF (₹)</th>
+                        <th>EPS (₹)</th>
+                        <th>EPF (A)</th>
+                        <th>EPS (B)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mar 2026 (Paid in Apr 2026)</td>
+                        <td>15,000.00</td>
+                        <td>15,000.00</td>
+                        <td>18,000.00</td>
+                        <td>18,000.00</td>
+                        <td>18,000.00</td>
+                        <td>18,000.00</td>
+                        <td>36,000.00</td>
+                    </tr>
+                    <tr>
+                        <td>Mar 2026 (Paid in Apr 2026)</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr>
+                        <td>Mar 2026 (Paid in Apr 2026)</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr>
+                        <td>Mar 2028 (Paid in Apr 2028)</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr>
+                        <td>Mar 2026 (Paid in Apr 2026)</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr>
+                        <td>Mar 2026 (Paid in Apr 2026)</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr>
+                        <td>Mar 2026 (Paid in Apr 2026)</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr>
+                        <td>Mar 2026 (Paid in Apr 2026)</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr>
+                        <td>Mar 2026 (Paid in Apr 2026)</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr>
+                        <td>Mar 2026 (Paid in Apr 2026)</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr>
+                        <td>Mar 2028 (Paid in Apr 2028)</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr>
+                        <td>Mar 2028 (Paid in Apr 2028)</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr>
+                        <td>Mar 2026 (Paid in Apr 2026)</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                        <td>0.00</td>
+                    </tr>
+                    <tr class="totals-row">
+                        <td>Totals:</td>
+                        <td>15,000.00</td>
+                        <td>15,000.00</td>
+                        <td>15,000.00</td>
+                        <td>15,000.00</td>
+                        <td>15,000.00</td>
+                        <td>15,000.00</td>
+                        <td>15,000.00</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
     </main>
 </div>
 <script th:src="@{/js/common/sidebar.js}"></script>
+<script>
+    // Ensure sidebar highlights Payroll & Tax when on this subpage
+    document.addEventListener("DOMContentLoaded", function() {
+        const payrollLink = document.querySelector('.sidebar-link[data-page="/payroll/tax"]');
+        if (payrollLink) {
+            payrollLink.classList.add('active');
+        }
+    });
+</script>
 </body>
 </html>
