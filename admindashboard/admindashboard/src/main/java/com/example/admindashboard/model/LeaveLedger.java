@@ -53,10 +53,6 @@ public class LeaveLedger {
 
     private LocalDateTime transactionDate;
 
-	@ManyToOne
-	@JoinColumn(name = "employee_id", nullable = false)
-	private User employee;
-
     @PrePersist
     protected void onCreate() {
         transactionDate = LocalDateTime.now();
@@ -164,12 +160,5 @@ public class LeaveLedger {
 
 	public void setTransactionDate(LocalDateTime transactionDate) {
 		this.transactionDate = transactionDate;
-	}
-	public User getEmployee() {
-    return employee;
-	}
-
-	public void setEmployee(User employee) {
-		this.employee = employee;
 	}
 }

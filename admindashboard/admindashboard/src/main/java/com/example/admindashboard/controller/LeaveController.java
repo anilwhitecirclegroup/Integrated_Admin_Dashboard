@@ -125,8 +125,7 @@ public class LeaveController {
                         wallet.getLeaveType().getLeaveCode();
 
                 Double total =
-                        wallet.getOpeningBalance()
-                        + wallet.getEarnedCredit();
+                    wallet.getOpeningBalance();
 
                 Double used =
                         wallet.getUsedBalance();

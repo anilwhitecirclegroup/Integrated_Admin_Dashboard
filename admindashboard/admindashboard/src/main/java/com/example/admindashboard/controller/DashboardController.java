@@ -323,7 +323,26 @@ public class DashboardController {
     public String showPasswordResetPage() { return "password-reset"; }
 
     @GetMapping("/my-whitecircle")
-    public String showMyWhiteCircle() { return "my-whitecircle"; }
+    public String showMyWhiteCircle(Model model, Principal principal) { 
+        if (principal != null) {
+            String username = principal.getName();
+            User currentUser = userRepository.findByUsername(username).orElse(new User());
+            
+            model.addAttribute("user", currentUser);
+            model.addAttribute("savedPassword", currentUser.getPassword()); 
+        } else {
+            model.addAttribute("user", new User());
+            model.addAttribute("savedPassword", "");
+        }
+        // 1. Shows your crisp split login screen first when clicked from the dashboard
+        return "my-whitecircle-login"; 
+    }
+
+    @PostMapping("/my-whitecircle/login")
+    public String processMyWhiteCircleLogin() {
+        // 2. When they click "Continue with My WhiteCircle", they instantly land on your Quick Actions hub
+        return "my-whitecircle"; 
+    }
 
     @GetMapping("/coming-soon")
     public String comingSoonPage() {
@@ -349,8 +368,48 @@ public class DashboardController {
         return "my-timeoff";
     }
 
+ // 1. THIS ALWAYS SHOWS THE LOGIN GATE FIRST WHEN CLICKED FROM THE MAIN DASHBOARD
     @GetMapping("/tickets")
-    public String showTicketsPage() { return "tickets"; }
+    public String showTicketLoginGate(Model model, Principal principal) {
+        if (principal != null) {
+            String loginId = principal.getName();
+            User currentUser = userRepository.findByUsername(loginId).orElse(new User());
+            
+            model.addAttribute("user", currentUser);
+            model.addAttribute("savedPassword", currentUser.getPassword()); 
+        } else {
+            model.addAttribute("user", new User());
+            model.addAttribute("savedPassword", "");
+        }
+        // Always force the split login page view first
+        return "ticket-login"; 
+    }
+
+    // 2. THE POST ROUTE TARGETS TICKETS.HTML ONCE THEY CLICK CONTINUE
+    @PostMapping("/tickets/authenticate")
+    public String processTicketAuthentication(Model model, Principal principal) {
+        if (principal != null) {
+            String loginId = principal.getName();
+            User currentUser = userRepository.findByUsername(loginId).orElse(new User());
+            model.addAttribute("user", currentUser);
+            
+            List<ServiceRequest> userRequests = serviceRequestRepository.findByEmployeeIdOrderBySubmissionDateDesc(loginId);
+            model.addAttribute("myRequests", userRequests);
+        }
+        return "tickets"; 
+    }
+
+    // 3. NEW STEP: A SPECIFIC ROUTE FOR THE BACK BUTTON TO BYPASS THE GATE SECURELY
+    @GetMapping("/tickets/hub")
+    public String backToTicketsHub(Model model, Principal principal) {
+        if (principal != null) {
+            String loginId = principal.getName();
+            User currentUser = userRepository.findByUsername(loginId).orElse(new User());
+            model.addAttribute("user", currentUser);
+        }
+        // Directly renders the tickets.html screen without showing the gate
+        return "tickets";
+    }
     @GetMapping("/ticket-dashboard")
     public String showTicketDashboard(Model model, Principal principal) {
         if (principal != null) {
