@@ -244,82 +244,97 @@
             Welcome to Helpdesk
         </h3>
 
-        <div class="helpdesk-grid">
+		<div class="helpdesk-grid">
 
-            <a href="/ticket-dashboard" class="ticket-card">
-                <div class="ticket-icon">
-                    <i class="fas fa-desktop"></i>
-                </div>
-                <div class="card-content">
-                    <h5>IT Helpdesk</h5>
-                    <p>Technical support for systems, devices, and software issues.</p>
-                </div>
-            </a>
-
-            <a href="/ticket-dashboard" class="ticket-card">
-                <div class="ticket-icon">
-                    <i class="fas fa-building"></i>
-                </div>
-                <div class="card-content">
-                    <h5>Facilities Admin Helpdesk</h5>
-                    <p>Assistance for office facilities and admin services.</p>
-                </div>
-            </a>
-
-            <a href="/ticket-dashboard" class="ticket-card">
-                <div class="ticket-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="card-content">
-                    <h5>HR Helpdesk</h5>
-                    <p>Support for employee queries, policies, and HR services.</p>
-                </div>
-            </a>
-
-            <a href="/ticket-dashboard" class="ticket-card">
-                <div class="ticket-icon">
-                    <i class="fas fa-wallet"></i>
-                </div>
-                <div class="card-content">
-                    <h5>Payroll & Reimbursement</h5>
-                    <p>Assist with salary, claims, reimbursements, and payments.</p>
-                </div>
-            </a>
-
-            <a href="/ticket-dashboard" class="ticket-card">
-                <div class="ticket-icon">
-                    <i class="fas fa-user-graduate"></i>
-                </div>
-                <div class="card-content">
-                    <h5>Alumni Support</h5>
-                    <p>Assistance for alumni services, records, and communication.</p>
-                </div>
-            </a>
-
-            <a href="/ticket-dashboard" class="ticket-card">
-                <div class="ticket-icon">
-                    <i class="fas fa-th-large"></i>
-                </div>
-                <div class="card-content">
-                    <h5>Enterprise Application Support</h5>
-                    <p>Support for enterprise software, applications, and system access.</p>
-                </div>
-            </a>
-
-            <a href="/ticket-dashboard" class="ticket-card last-card">
-                <div class="ticket-icon">
-                    <i class="fas fa-book-reader"></i>
-                </div>
-                <div class="card-content">
-                    <h5>Learning & Development</h5>
-                    <p>Resources and support for training, skills, and career growth.</p>
-                </div>
-            </a>
-
-        </div>
-    </div>
+	        <!-- 1. IT Card -->
+	        <div class="ticket-card" id="card-it" data-dept="IT" onclick="navigateToDashboard(this)" style="cursor: pointer;">
+	            <div class="ticket-icon">
+	                <i class="fas fa-desktop"></i>
+	            </div>
+	            <div class="card-content">
+	                <h5>IT Helpdesk</h5>
+	                <p>Technical support for systems, devices, and software issues.</p>
+	            </div>
+	        </div>
+	
+	        <!-- 2. Facilities Card -->
+	        <div class="ticket-card" id="card-facilities" data-dept="FACILITIES" onclick="navigateToDashboard(this)" style="cursor: pointer;">
+	            <div class="ticket-icon">
+	                <i class="fas fa-building"></i>
+	            </div>
+	            <div class="card-content">
+	                <h5>Facilities Admin Helpdesk</h5>
+	                <p>Assistance for office facilities and admin services.</p>
+	            </div>
+	        </div>
+	
+	        <!-- 3. HR Card -->
+	        <div class="ticket-card" id="card-hr" data-dept="HR" onclick="navigateToDashboard(this)" style="cursor: pointer;">
+	            <div class="ticket-icon">
+	                <i class="fas fa-users"></i>
+	            </div>
+	            <div class="card-content">
+	                <h5>HR Helpdesk</h5>
+	                <p>Support for employee queries, policies, and HR services.</p>
+	            </div>
+	        </div>
+	
+	        <!-- 4. Payroll Card -->
+	        <div class="ticket-card" id="card-payroll" data-dept="PAYROLL" onclick="navigateToDashboard(this)" style="cursor: pointer;">
+	            <div class="ticket-icon">
+	                <i class="fas fa-wallet"></i>
+	            </div>
+	            <div class="card-content">
+	                <h5>Payroll & Reimbursement</h5>
+	                <p>Assist with salary, claims, reimbursements, and payments.</p>
+	            </div>
+	        </div>
+	
+	        <!-- 5. Alumni Card -->
+	        <div class="ticket-card" id="card-alumni" data-dept="ALUMNI" onclick="navigateToDashboard(this)" style="cursor: pointer;">
+	            <div class="ticket-icon">
+	                <i class="fas fa-user-graduate"></i>
+	            </div>
+	            <div class="card-content">
+	                <h5>Alumni Support</h5>
+	                <p>Assistance for alumni services, records, and communication.</p>
+	            </div>
+	        </div>
+	
+	        <!-- 6. Enterprise Card -->
+	        <div class="ticket-card" id="card-enterprise" data-dept="ENTERPRISE" onclick="navigateToDashboard(this)" style="cursor: pointer;">
+	            <div class="ticket-icon">
+	                <i class="fas fa-th-large"></i>
+	            </div>
+	            <div class="card-content">
+	                <h5>Enterprise Application Support</h5>
+	                <p>Support for enterprise software, applications, and system access.</p>
+	            </div>
+	        </div>
+	
+	        <!-- 7. Learning Card -->
+	        <div class="ticket-card last-card" id="card-learning" data-dept="LEARNING" onclick="navigateToDashboard(this)" style="cursor: pointer;">
+	            <div class="ticket-icon">
+	                <i class="fas fa-book-reader"></i>
+	            </div>
+	            <div class="card-content">
+	                <h5>Learning & Development</h5>
+	                <p>Resources and support for training, skills, and career growth.</p>
+	            </div>
+	        </div>
+	
+	    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+	function navigateToDashboard(cardElement) {
+	    // 1. Grab the department token text
+	    const selectedDept = cardElement.getAttribute('data-dept');
+	    
+	    // 2. CORRECTION: Completely remove any literal spaces from the path string
+	    window.location.href = '/ticket-dashboard?dept=' + selectedDept;
+	}
+</script>
 </body>
 </html>

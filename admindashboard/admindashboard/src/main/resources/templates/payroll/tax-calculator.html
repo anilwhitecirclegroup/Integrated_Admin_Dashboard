@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Income Tax Calculator – WhiteCircle Group Payroll</title>
+    <meta name="description" content="Compare Old vs New Regime income tax for FY 2026-27."/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+    <link rel="stylesheet" th:href="@{/css/base/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/variables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/typography.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/dashboard-layout.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/sidebar.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/buttons.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/forms.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/cards.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/tables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/pages/tax-calculator.css}"/>
+
+    <style>
+        /* Inline additions for wired JS elements */
+        .tax-banner {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            margin-top: 28px;
+        }
+        .tax-banner i { font-size: 18px; }
+        .tax-banner-success { background: #DCFCE7; color: #15803D; }
+        .tax-banner-info    { background: #DBEAFE; color: #1D4ED8; }
+        .tax-banner-neutral { background: #F1F5F9; color: #475569; }
+        #tax-result-section { display: none; margin-top: 32px; }
+        .regime-label { font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+                        text-transform: uppercase; color: var(--text-light); }
+        .form-group input[type="number"] { -moz-appearance: textfield; }
+        .form-group input[type="number"]::-webkit-outer-spin-button,
+        .form-group input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    </style>
+</head>
+<body>
+
+<div class="app-layout">
+
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+    <main class="main-content">
+
+        <h1 class="page-title">Income Tax Calculator</h1>
+
+        <section class="tax-layout">
+
+            <!-- ── LEFT: INPUT FORM ── -->
+            <div class="tax-form-section">
+
+                <div class="tax-section-header">
+                    <i class="fa-regular fa-file-lines"></i>
+                    <h2>Simulate Your Tax</h2>
+                </div>
+
+                <div class="tax-top-grid">
+                    <div class="form-group">
+                        <label>Tax Year</label>
+                        <select class="payroll-select">
+                            <option selected>FY 2026-27</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Age Group</label>
+                        <select class="payroll-select">
+                            <option selected>Below 60</option>
+                            <option>60 – 80 (Senior)</option>
+                            <option>Above 80 (Super Senior)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group full-width" style="margin-bottom:24px;">
+                    <label for="grossSalary">Annual Gross Salary (₹)</label>
+                    <input id="grossSalary" type="number" class="tax-input" placeholder="e.g. 1200000"/>
+                </div>
+
+                <div class="tax-field-list">
+
+                    <div class="tax-row">
+                        <span>HRA Exemption (Old Regime)</span>
+                        <input id="hraExemption" type="number" class="tax-small-input" placeholder="₹ 0"/>
+                    </div>
+
+                    <div class="tax-row">
+                        <span>Section 80C Investments</span>
+                        <input id="section80C" type="number" class="tax-small-input" placeholder="₹ 0 (max 1.5L)"/>
+                    </div>
+
+                    <div class="tax-row">
+                        <span>NPS Contribution (80CCD)</span>
+                        <input id="npsContrib" type="number" class="tax-small-input" placeholder="₹ 0 (max 50k)"/>
+                    </div>
+
+                </div>
+
+                <button class="primary-btn" id="calculateTaxBtn" style="margin-top:32px;">
+                    <i class="fa-solid fa-calculator" style="margin-right:8px;"></i>
+                    Calculate Result
+                </button>
+
+                <!-- Recommendation Banner -->
+                <div id="tax-recommendation" class="tax-banner"></div>
+
+            </div>
+
+            <!-- ── RIGHT: RESULTS TABLE ── -->
+            <div class="tax-table-section">
+
+                <div class="tax-section-header">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <h2>Tax Comparison</h2>
+                </div>
+
+                <table class="tax-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th><span class="regime-label">Old Regime</span></th>
+                            <th><span class="regime-label">New Regime</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Taxable Income</td>
+                            <td id="res-old-taxable">–</td>
+                            <td id="res-new-taxable">–</td>
+                        </tr>
+                        <tr>
+                            <td>Income Tax</td>
+                            <td id="res-old-tax">–</td>
+                            <td id="res-new-tax">–</td>
+                        </tr>
+                        <tr>
+                            <td>Health &amp; Education Cess (4%)</td>
+                            <td id="res-old-cess">–</td>
+                            <td id="res-new-cess">–</td>
+                        </tr>
+                        <tr class="row-total">
+                            <td><strong>Total Tax Liability</strong></td>
+                            <td id="res-old-total">–</td>
+                            <td id="res-new-total">–</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div id="tax-result-section">
+                    <p style="font-size:13px; color:var(--text-light); margin-top:16px; line-height:1.6;">
+                        * Standard deduction: ₹75,000 (New Regime), ₹50,000 (Old Regime).<br/>
+                        * 87A rebate applied where applicable.<br/>
+                        * Figures are estimates. Consult a CA for exact liability.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script th:src="@{/js/common/sidebar.js}"></script>
+<script th:src="@{/js/payroll/tax-calculator.js}"></script>
+</body>
+</html>

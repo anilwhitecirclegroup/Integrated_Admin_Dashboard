@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Payroll Dashboard – WhiteCircle Group</title>
+    <meta name="description" content="Your payroll summary, payslips, PF and Form 16 at a glance."/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+    <link rel="stylesheet" th:href="@{/css/base/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/variables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/typography.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/dashboard-layout.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/sidebar.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/buttons.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/forms.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/cards.css}"/>
+    <link rel="stylesheet" th:href="@{/css/pages/payroll-dashboard.css}"/>
+</head>
+<body>
+
+<div class="app-layout">
+
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+    <main class="main-content">
+
+        <h1 class="page-title">Payroll &amp; Tax</h1>
+
+        <section class="payroll-grid">
+
+            <!-- ── PAYSLIP ── -->
+            <div class="payroll-card">
+                <div class="payroll-card-header">
+                    <i class="fa-regular fa-file-lines"></i>
+                    <h3 class="payroll-card-title">Payslip</h3>
+                </div>
+
+                <div class="payroll-select-group">
+                    <select class="payroll-select" id="payslipYear">
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                    </select>
+                    <select class="payroll-select" id="payslipMonth">
+                        <option value="04">April</option>
+                        <option value="05" selected>May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                        <option value="01">January</option>
+                        <option value="02">February</option>
+                        <option value="03">March</option>
+                    </select>
+                </div>
+
+                <div class="payroll-action">
+                    <button class="primary-btn" onclick="alert('Payslip download feature coming soon.')">
+                        Download Slip
+                    </button>
+                    <button class="icon-btn" onclick="alert('Payslip preview coming soon.')">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── TAX COMPUTATION ── -->
+            <div class="payroll-card">
+                <div class="payroll-card-header">
+                    <i class="fa-solid fa-calculator"></i>
+                    <h3 class="payroll-card-title">Tax Computation</h3>
+                </div>
+
+                <div class="payroll-select-group">
+                    <select class="payroll-select" id="taxYear">
+                        <option value="2026-27" selected>FY 2026-27</option>
+                        <option value="2025-26">FY 2025-26</option>
+                    </select>
+                    <select class="payroll-select" id="taxMonth">
+                        <option value="all" selected>Full Year</option>
+                        <option value="05">May</option>
+                        <option value="04">April</option>
+                    </select>
+                </div>
+
+                <div class="payroll-action">
+                    <a href="/tax-calculator" class="primary-btn" style="text-decoration:none; display:inline-flex; align-items:center;">
+                        Calculate Tax
+                    </a>
+                    <button class="icon-btn" onclick="alert('Tax report coming soon.')">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── PF CONTRIBUTION ── -->
+            <div class="payroll-card">
+                <div class="payroll-card-header">
+                    <i class="fa-solid fa-shield"></i>
+                    <h3 class="payroll-card-title">PF Contribution</h3>
+                </div>
+
+                <div class="payroll-select-group">
+                    <select class="payroll-select" style="width:100%;" id="pfYear">
+                        <option value="2026-27" selected>FY 2026-27</option>
+                        <option value="2025-26">FY 2025-26</option>
+                    </select>
+                </div>
+
+                <div class="payroll-action">
+                    <a href="/pf-contribution" class="primary-btn" style="text-decoration:none; display:inline-flex; align-items:center;">
+                        Transaction History
+                    </a>
+                    <button class="icon-btn" onclick="alert('PF details coming soon.')">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="payroll-grid-bottom">
+
+            <!-- ── COMPENSATION ── -->
+            <div class="payroll-card">
+                <div class="payroll-card-header">
+                    <i class="fa-solid fa-briefcase"></i>
+                    <h3 class="payroll-card-title">Compensation</h3>
+                </div>
+
+                <div class="payroll-select-group">
+                    <select class="payroll-select" style="width:100%;" id="compensationPeriod">
+                        <option value="current" selected>Current</option>
+                        <option value="previous">Previous</option>
+                    </select>
+                </div>
+
+                <div class="payroll-action">
+                    <a href="/payroll/my-profile" class="primary-btn" style="text-decoration:none; display:inline-flex; align-items:center;">
+                        View Details
+                    </a>
+                    <button class="icon-btn" onclick="alert('Compensation summary coming soon.')">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── FORM 16 ── -->
+            <div class="payroll-card">
+                <div class="payroll-card-header">
+                    <i class="fa-regular fa-file-lines"></i>
+                    <h3 class="payroll-card-title">Form 16</h3>
+                </div>
+
+                <div class="payroll-select-group">
+                    <select class="payroll-select" style="width:100%;" id="form16Year">
+                        <option value="2026-27" selected>FY 2026-27</option>
+                        <option value="2025-26">FY 2025-26</option>
+                    </select>
+                </div>
+
+                <div class="payroll-action">
+                    <button class="primary-btn small-btn" onclick="alert('Form 16 download coming soon.')">
+                        Download Form 16
+                    </button>
+                    <button class="icon-btn" onclick="alert('Form 16 preview coming soon.')">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script th:src="@{/js/common/sidebar.js}"></script>
+</body>
+</html>
