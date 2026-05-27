@@ -71,16 +71,106 @@ public class PayrollUIController {
     /* ─── PAYROLL DASHBOARD ─────────────────────────────────────── */
 
     @GetMapping("/payroll-dashboard")
-    public String payrollDashboard(HttpSession session) {
+    public String payrollDashboard(HttpSession session, Model model, Principal principal) {
         if (!isPayrollAuthenticated(session)) return "redirect:/payroll-login";
+        
+        String username = (String) session.getAttribute("payrollUser");
+        if (username == null && principal != null) {
+            username = principal.getName();
+        }
+        
+        if (username != null) {
+            Optional<User> userOpt = userRepository.findByUsername(username);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                model.addAttribute("user", user);
+                model.addAttribute("profile", user.getEmployeeProfile());
+                
+                // Get initials for Avatar
+                String fullName = user.getFullName();
+                String initials = "";
+                if (fullName != null && !fullName.isEmpty()) {
+                    String[] parts = fullName.split(" ");
+                    if (parts.length > 0 && parts[0].length() > 0) {
+                        initials += parts[0].substring(0, 1).toUpperCase();
+                    }
+                    if (parts.length > 1 && parts[1].length() > 0) {
+                        initials += parts[1].substring(0, 1).toUpperCase();
+                    }
+                }
+                model.addAttribute("initials", initials);
+            }
+        }
         return "payroll/payroll-dashboard";
+    }
+
+    /* ─── PAYROLL & TAX ─────────────────────────────────────────── */
+
+    @GetMapping("/payroll/tax")
+    public String payrollTax(HttpSession session, Model model, Principal principal) {
+        if (!isPayrollAuthenticated(session)) return "redirect:/payroll-login";
+        
+        String username = (String) session.getAttribute("payrollUser");
+        if (username == null && principal != null) {
+            username = principal.getName();
+        }
+        
+        if (username != null) {
+            Optional<User> userOpt = userRepository.findByUsername(username);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                model.addAttribute("user", user);
+                model.addAttribute("profile", user.getEmployeeProfile());
+                
+                String fullName = user.getFullName();
+                String initials = "";
+                if (fullName != null && !fullName.isEmpty()) {
+                    String[] parts = fullName.split(" ");
+                    if (parts.length > 0 && parts[0].length() > 0) {
+                        initials += parts[0].substring(0, 1).toUpperCase();
+                    }
+                    if (parts.length > 1 && parts[1].length() > 0) {
+                        initials += parts[1].substring(0, 1).toUpperCase();
+                    }
+                }
+                model.addAttribute("initials", initials);
+            }
+        }
+        return "payroll/payroll-tax";
     }
 
     /* ─── TAX CALCULATOR ────────────────────────────────────────── */
 
     @GetMapping("/tax-calculator")
-    public String taxCalculator(HttpSession session) {
+    public String taxCalculator(HttpSession session, Model model, Principal principal) {
         if (!isPayrollAuthenticated(session)) return "redirect:/payroll-login";
+        
+        String username = (String) session.getAttribute("payrollUser");
+        if (username == null && principal != null) {
+            username = principal.getName();
+        }
+        
+        if (username != null) {
+            Optional<User> userOpt = userRepository.findByUsername(username);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                model.addAttribute("user", user);
+                model.addAttribute("profile", user.getEmployeeProfile());
+                
+                String fullName = user.getFullName();
+                String initials = "";
+                if (fullName != null && !fullName.isEmpty()) {
+                    String[] parts = fullName.split(" ");
+                    if (parts.length > 0 && parts[0].length() > 0) {
+                        initials += parts[0].substring(0, 1).toUpperCase();
+                    }
+                    if (parts.length > 1 && parts[1].length() > 0) {
+                        initials += parts[1].substring(0, 1).toUpperCase();
+                    }
+                }
+                model.addAttribute("initials", initials);
+            }
+        }
         return "payroll/tax-calculator";
     }
 
@@ -131,24 +221,105 @@ public class PayrollUIController {
     /* ─── MY QUERIES (Helpdesk) ─────────────────────────────────── */
 
     @GetMapping("/payroll/my-queries")
-    public String myQueries(HttpSession session) {
+    public String myQueries(HttpSession session, Model model, Principal principal) {
         if (!isPayrollAuthenticated(session)) return "redirect:/payroll-login";
+        
+        String username = (String) session.getAttribute("payrollUser");
+        if (username == null && principal != null) {
+            username = principal.getName();
+        }
+        
+        if (username != null) {
+            Optional<User> userOpt = userRepository.findByUsername(username);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                model.addAttribute("user", user);
+                model.addAttribute("profile", user.getEmployeeProfile());
+                
+                String fullName = user.getFullName();
+                String initials = "";
+                if (fullName != null && !fullName.isEmpty()) {
+                    String[] parts = fullName.split(" ");
+                    if (parts.length > 0 && parts[0].length() > 0) {
+                        initials += parts[0].substring(0, 1).toUpperCase();
+                    }
+                    if (parts.length > 1 && parts[1].length() > 0) {
+                        initials += parts[1].substring(0, 1).toUpperCase();
+                    }
+                }
+                model.addAttribute("initials", initials);
+            }
+        }
         return "payroll/my-queries";
     }
 
     /* ─── TRAVEL & EXPENSES ─────────────────────────────────────── */
 
     @GetMapping("/payroll/travel-expenses")
-    public String travelExpenses(HttpSession session) {
+    public String travelExpenses(HttpSession session, Model model, Principal principal) {
         if (!isPayrollAuthenticated(session)) return "redirect:/payroll-login";
+        
+        String username = (String) session.getAttribute("payrollUser");
+        if (username == null && principal != null) {
+            username = principal.getName();
+        }
+        
+        if (username != null) {
+            Optional<User> userOpt = userRepository.findByUsername(username);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                model.addAttribute("user", user);
+                model.addAttribute("profile", user.getEmployeeProfile());
+                
+                String fullName = user.getFullName();
+                String initials = "";
+                if (fullName != null && !fullName.isEmpty()) {
+                    String[] parts = fullName.split(" ");
+                    if (parts.length > 0 && parts[0].length() > 0) {
+                        initials += parts[0].substring(0, 1).toUpperCase();
+                    }
+                    if (parts.length > 1 && parts[1].length() > 0) {
+                        initials += parts[1].substring(0, 1).toUpperCase();
+                    }
+                }
+                model.addAttribute("initials", initials);
+            }
+        }
         return "payroll/travel-expenses";
     }
 
-    /* ─── FAQs ──────────────────────────────────────────────────── */
+    /* ─── FAQS ──────────────────────────────────────────────────── */
 
     @GetMapping("/payroll/faqs")
-    public String faqs(HttpSession session) {
+    public String faqs(HttpSession session, Model model, Principal principal) {
         if (!isPayrollAuthenticated(session)) return "redirect:/payroll-login";
+        
+        String username = (String) session.getAttribute("payrollUser");
+        if (username == null && principal != null) {
+            username = principal.getName();
+        }
+        
+        if (username != null) {
+            Optional<User> userOpt = userRepository.findByUsername(username);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                model.addAttribute("user", user);
+                model.addAttribute("profile", user.getEmployeeProfile());
+                
+                String fullName = user.getFullName();
+                String initials = "";
+                if (fullName != null && !fullName.isEmpty()) {
+                    String[] parts = fullName.split(" ");
+                    if (parts.length > 0 && parts[0].length() > 0) {
+                        initials += parts[0].substring(0, 1).toUpperCase();
+                    }
+                    if (parts.length > 1 && parts[1].length() > 0) {
+                        initials += parts[1].substring(0, 1).toUpperCase();
+                    }
+                }
+                model.addAttribute("initials", initials);
+            }
+        }
         return "payroll/faqs";
     }
 
