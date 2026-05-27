@@ -71,14 +71,14 @@
         .fade-in-scroll {
             opacity: 0;
             animation: fadeInUp 0.8s ease forwards;
-            animation-delay: 0.2s; /* Slight delay after header */
+            animation-delay: 0.2s;
         }
 
         /* --- 3D FLIP CARD --- */
         .policy-container {
             max-width: 480px;
             margin: 0 auto;
-            perspective: 1000px; /* Gives the 3D depth */
+            perspective: 1000px;
         }
 
         .flip-card-inner {
@@ -86,7 +86,7 @@
             width: 100%;
             height: 380px;
             text-align: center;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy flip */
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             transform-style: preserve-3d;
             cursor: pointer;
         }
@@ -99,7 +99,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden; /* Hides the back when looking at front */
+            backface-visibility: hidden;
             border-radius: 24px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.05);
             padding: 30px;
@@ -149,7 +149,7 @@
             align-items: center;
             gap: 8px;
             margin: 0 auto;
-            animation: glowPulse 2s infinite; /* The requested Glow Animation */
+            animation: glowPulse 2s infinite;
         }
 
         /* BACK OF CARD */
@@ -210,40 +210,47 @@
         <p>Hover over the policy card to access your digital documents and view the cashless hospital network.</p>
     </div>
 
-    <div class="policy-container">
+    <div th:if="${policy == null}" class="text-center mt-5">
+        <i class="fas fa-file-excel fa-4x text-muted opacity-50 mb-3"></i>
+        <h4 class="fw-bold text-dark">No Active Policy Found</h4>
+        <p class="text-muted">It appears you do not have an active corporate insurance policy registered yet. Please contact HR.</p>
+    </div>
+
+    <div class="policy-container" th:if="${policy != null}">
         <div class="flip-card-inner">
 
             <div class="flip-card-front">
                 <div class="card-icon"><i class="fas fa-briefcase-medical"></i></div>
                 <div class="policy-title">Group Health Insurance</div>
-                <div class="provider-name">Provider: Star Health</div>
+                <div class="provider-name" th:text="'Provider: ' + ${policy.providerName != null ? policy.providerName : 'Star Health'}">Provider: Star Health</div>
 
                 <div class="policy-details">
                     <div class="detail-block">
                         <span>Total Coverage</span>
-                        <h5>₹5,00,000</h5>
+                        <h5 th:text="'₹' + ${policy.totalCoverage != null ? #numbers.formatDecimal(policy.totalCoverage, 0, 'COMMA', 0, 'POINT') : '5,00,000'}">₹5,00,000</h5>
                     </div>
                     <div class="detail-block text-end">
                         <span>Validity</span>
-                        <h5 class="text-dark">2026 - 2027</h5>
+                        <h5 class="text-dark" th:text="${policy.validFrom != null ? policy.validFrom.year + ' - ' + policy.validUntil.year : '2026 - 2027'}">2026 - 2027</h5>
                     </div>
                 </div>
 
                 <div class="mt-4">
                     <div class="badge-active">
-                        <i class="fas fa-circle" style="font-size: 0.5rem;"></i> ACTIVE POLICY
+                        <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
+                        <span th:text="${policy.status != null ? #strings.toUpperCase(policy.status) + ' POLICY' : 'ACTIVE POLICY'}">ACTIVE POLICY</span>
                     </div>
                 </div>
             </div>
 
             <div class="flip-card-back">
-                <div class="back-title">WCG-2026-MED</div>
+                <div class="back-title" th:text="${policy.policyNumber != null ? policy.policyNumber : 'WCG-2026-MED'}">WCG-2026-MED</div>
 
                 <a href="#" class="btn-action">
                     <i class="fas fa-file-pdf fs-5"></i> View PDF Document
                 </a>
 
-                <a href="#" class="btn-action">
+                <a th:href="@{/employee/mediclaim/hospitals}" class="btn-action">
                     <i class="fas fa-hospital fs-5"></i> Network Hospitals
                 </a>
 

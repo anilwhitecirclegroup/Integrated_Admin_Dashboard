@@ -114,6 +114,11 @@
                     </div>
                 </div>
 
+                <div class="mb-3 mt-3">
+                    <label class="form-label">Coverage %</label>
+                    <input type="number" class="form-control" name="coveragePercentage" placeholder="Enter percentage (0-100)" min="0" max="100" required>
+                </div>
+
                 <div class="toggle-wrapper mb-4 mt-2">
                     <div>
                         <p class="toggle-label">Include in Insurance Cover</p>
@@ -152,8 +157,9 @@
                         </p>
                     </div>
                     <div class="badge-status"
-                         th:classappend="${dep.covered ? 'status-covered' : 'status-not-covered'}"
-                         th:utext="${dep.covered ? '<i class=''fas fa-shield-alt me-1''></i> Covered' : '<i class=''fas fa-times-circle me-1''></i> Not Covered'}">
+                         th:classappend="${dep.covered ? 'status-covered' : 'status-not-covered'}">
+                        <i class="fas" th:classappend="${dep.covered ? 'fa-shield-alt' : 'fa-times-circle'}"></i>
+                        <span th:text="${dep.covered ? 'Covered (' + dep.coveragePercentage + '%)' : 'Not Covered'}">Covered</span>
                     </div>
                 </div>
 

@@ -34,6 +34,9 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Autowired
     private com.example.admindashboard.repository.HospitalRepository hospitalRepository;
 
+    @Autowired
+    private com.example.admindashboard.repository.InsurancePolicyRepository insurancePolicyRepository;
+
     // NEW: Injecting JdbcTemplate to fix the database constraint
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -472,6 +475,51 @@ public class DatabaseSeeder implements CommandLineRunner {
         } else {
             System.out.println("⚡ Network Hospitals already exist. Skipping seed.");
         }
+
+        // ==========================================
+        // INSURANCE POLICIES SEEDING (EMP114 & EMP187)
+        // ==========================================
+        System.out.println("🛡️ Checking for Employee Insurance Policies...");
+        if (insurancePolicyRepository.count() == 0) {
+            System.out.println("⚙️ Seeding dummy insurance policies...");
+
+            // Seed for EMP114 (Om Tripathi)
+            Optional<User> emp114Opt = userRepository.findByUsername("EMP114");
+            if (emp114Opt.isPresent()) {
+                InsurancePolicy policy1 = new InsurancePolicy();
+                policy1.setUser(emp114Opt.get());
+                policy1.setPolicyNumber("WCG-2026-MED-114");
+                policy1.setProviderName("Star Health & Allied Insurance");
+                policy1.setTotalCoverage(500000.0);
+                policy1.setAmountUsed(120000.0);
+                policy1.setValidFrom(LocalDate.of(2026, 1, 1));
+                policy1.setValidUntil(LocalDate.of(2027, 12, 31));
+                policy1.setStatus("Active");
+
+                insurancePolicyRepository.save(policy1);
+                System.out.println("✅ Assigned Health Policy to EMP114");
+            }
+
+            // Seed for EMP187 (Om Singrore)
+            Optional<User> emp187Opt = userRepository.findByUsername("EMP187");
+            if (emp187Opt.isPresent()) {
+                InsurancePolicy policy2 = new InsurancePolicy();
+                policy2.setUser(emp187Opt.get());
+                policy2.setPolicyNumber("WCG-2026-MED-187");
+                policy2.setProviderName("HDFC ERGO General Insurance");
+                policy2.setTotalCoverage(750000.0);
+                policy2.setAmountUsed(0.0);
+                policy2.setValidFrom(LocalDate.of(2026, 4, 1));
+                policy2.setValidUntil(LocalDate.of(2027, 3, 31));
+                policy2.setStatus("Active");
+
+                insurancePolicyRepository.save(policy2);
+                System.out.println("✅ Assigned Health Policy to EMP187");
+            }
+        } else {
+            System.out.println("⚡ Insurance Policies already exist. Skipping seed.");
+        }
+
 
         System.out.println("=========================================================");
     }
