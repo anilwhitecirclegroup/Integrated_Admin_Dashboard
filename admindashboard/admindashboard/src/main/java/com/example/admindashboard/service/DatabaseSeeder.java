@@ -31,6 +31,9 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private com.example.admindashboard.repository.HospitalRepository hospitalRepository;
+
     // NEW: Injecting JdbcTemplate to fix the database constraint
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -413,6 +416,61 @@ public class DatabaseSeeder implements CommandLineRunner {
             recUser.setEmployeeProfile(recProfile);
             userRepository.save(recUser);
             System.out.println("✅ Created Recruiter -> ID: EMP401");
+        }
+
+        // ==========================================
+        // NETWORK HOSPITALS SEEDING
+        // ==========================================
+        System.out.println("🏥 Checking for Network Hospitals...");
+        if (hospitalRepository.count() == 0) {
+            System.out.println("⚙️ Seeding dummy network hospitals for testing...");
+
+            Hospital h1 = new Hospital();
+            h1.setName("Apollo Hospitals");
+            h1.setLocation("Saket, New Delhi");
+            h1.setContactNumber("+91-11-29871090");
+            h1.setCashless(true);○
+            h1.setEmergency24x7(true);
+
+            Hospital h2 = new Hospital();
+            h2.setName("Fortis Escorts Heart Institute");
+            h2.setLocation("Okhla, New Delhi");
+            h2.setContactNumber("+91-11-47135000");
+            h2.setCashless(true);
+            h2.setEmergency24x7(false);
+
+            Hospital h3 = new Hospital();
+            h3.setName("Max Super Speciality Hospital");
+            h3.setLocation("Vaishali, Ghaziabad");
+            h3.setContactNumber("+91-120-4188000");
+            h3.setCashless(false);
+            h3.setEmergency24x7(true);
+
+            Hospital h4 = new Hospital();
+            h4.setName("Orange City Hospital & Research Institute");
+            h4.setLocation("Nagpur, Maharashtra");
+            h4.setContactNumber("+91-712-6634800");
+            h4.setCashless(true);
+            h4.setEmergency24x7(true);
+
+            Hospital h5 = new Hospital();
+            h5.setName("Bansal Hospital");
+            h5.setLocation("Bhopal, Madhya Pradesh");
+            h5.setContactNumber("+91-755-4086000");
+            h5.setCashless(true);
+            h5.setEmergency24x7(false);
+
+            Hospital h6 = new Hospital();
+            h6.setName("Care CHL Hospital");
+            h6.setLocation("Indore, Madhya Pradesh");
+            h6.setContactNumber("+91-731-4774444");
+            h6.setCashless(false);
+            h6.setEmergency24x7(false);
+
+            hospitalRepository.saveAll(Arrays.asList(h1, h2, h3, h4, h5, h6));
+            System.out.println("✅ Successfully seeded 6 Network Hospitals.");
+        } else {
+            System.out.println("⚡ Network Hospitals already exist. Skipping seed.");
         }
 
         System.out.println("=========================================================");
