@@ -90,12 +90,14 @@
         }
 
         .form-control-custom {
+            width: 100%;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 7px 12px;
             font-size: 0.9rem;
             color: #000000;
             background-color: #ffffff;
+            box-sizing: border-box;
         }
         .form-control-custom:focus {
             border-color: var(--primary-blue);
@@ -166,7 +168,6 @@
             background-color: #f3f4f6;
         }
 
-        /* Hidden dynamic loop data block wrapper out of workspace */
         .hidden-tracker-feed {
             display: none !important;
         }
@@ -175,77 +176,77 @@
 <body>
 
 <div class="hero-banner-container">
-    <a href="/ticket-dashboard" class="btn-back-dashboard">Back to Dashboard</a>
-    <h1>Solutions Form</h1>
+    <!-- FOLLOW LOGIC: Dynamic link targets backend department context view area cleanly -->
+    <a th:href="@{/ticket-dashboard(dept=${currentDept})}" class="btn-back-dashboard">Back to Dashboard</a>
+    <h1 th:text="${currentDept + ' Solutions Form'}">Solutions Form</h1>
 </div>
 
 <div class="form-content-area">
     <div class="instruction-text">Fill the required details to seek solutions from our expert team</div>
 
     <form id="solutionsFormMain">
+        <!-- FOLLOW LOGIC: Hidden parameter cleanly tracking chosen workspace channel context -->
+        <input type="hidden" id="solDeptType" th:value="${currentDept}">
+
         <div class="container-fluid p-0">
             <div class="row g-4">
                 
                 <div class="col-md-6">
-                    <div class="row mb-3">
+                    <div class="row mb-3 align-items-center">
                         <div class="col-sm-3"><label class="form-label-custom">Category*</label></div>
                         <div class="col-sm-9">
+                            <!-- FOLLOW LOGIC: Populates iteratively via backend dataset values lists arrays -->
                             <select class="form-select form-control-custom" id="solCategory" required>
-                                <option value="" selected disabled hidden>Select</option>
-                                <option value="Technical Fix">Technical Fix</option>
-                                <option value="Account Recovery">Account Recovery</option>
-                                <option value="Software Patch">Software Patch</option>
+                                <option value="" selected disabled hidden>Select Category</option>
+                                <option th:each="cat : ${categoriesList}" th:value="${cat}" th:text="${cat}"></option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="row mb-3">
+                    <div class="row mb-3 align-items-center">
                         <div class="col-sm-3"><label class="form-label-custom">Severity Level*</label></div>
                         <div class="col-sm-9">
                             <select class="form-select form-control-custom" id="solSeverity" required>
-                                <option value="" selected disabled hidden>Select</option>
                                 <option value="Low">Low</option>
-                                <option value="Medium">Medium</option>
+                                <option value="Medium" selected>Medium</option>
                                 <option value="High">High</option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-sm-3"><label class="form-label-custom">Subject</label></div>
-                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="solSubject"></div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Subject*</label></div>
+                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="solSubject" placeholder="Brief statement of query" required></div>
                     </div>
 
-                    <div class="row mb-3">
+                    <div class="row mb-3 align-items-center">
                         <div class="col-sm-3"><label class="form-label-custom">Mobile No.*</label></div>
-						<div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="solMobile" required pattern="[0-9]{10}" maxlength="10"></div>                    </div>
+                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="solMobile" required pattern="[0-9]{10}" maxlength="10"></div>
+                    </div>
 
-                    <div class="row mb-3">
+                    <div class="row mb-3 align-items-center">
                         <div class="col-sm-3"><label class="form-label-custom">Email ID*</label></div>
-						<div class="col-sm-9"><input type="email" class="form-control form-control-custom" id="solEmail" required></div>                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-sm-3"><label class="form-label-custom">Subject</label></div>
-                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="solSubjectSecondary"></div>
+                        <div class="col-sm-9"><input type="email" class="form-control form-control-custom" id="solEmail" required></div>
                     </div>
                 </div>
 
                 <div class="col-md-6">
-                    <div class="row mb-3">
-                        <div class="col-sm-3"><label class="form-label-custom">Item</label></div>
-                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="solItem" placeholder="Select category first"></div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Item*</label></div>
+                        <div class="col-sm-9">
+                            <!-- FOLLOW LOGIC: Converted to a dynamic dropdown using backend itemsList loop arrays -->
+                            <select class="form-select form-control-custom" id="solItem" required>
+                                <option value="" selected disabled hidden>Select Specific Component</option>
+                                <option th:each="item : ${itemsList}" th:value="${item}" th:text="${item}"></option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-sm-3"><label class="form-label-custom">Subcategory</label></div>
-                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="solSubcategory"></div>
-                    </div>
-
-                    <div class="row mb-3">
+                    <div class="row mb-3 align-items-center">
                         <div class="col-sm-3"><label class="form-label-custom">Location*</label></div>
                         <div class="col-sm-9">
                             <select class="form-select form-control-custom" id="solLocation" required>
-                                <option value="" selected disabled hidden>Select</option>
+                                <option value="" selected disabled hidden>Select Location</option>
                                 <option value="Noida">Noida</option>
                                 <option value="Pune">Pune</option>
                                 <option value="Remote">Remote</option>
@@ -259,21 +260,21 @@
             <div class="row mt-2">
                 <div class="col-md-12">
                     <div class="d-flex flex-column gap-2">
-                        <label class="form-label-custom" style="height:auto;">Description</label>
-                        <textarea class="form-control form-control-custom" id="solDescription" rows="5"></textarea>
+                        <label class="form-label-custom" style="height:auto;">Description*</label>
+                        <textarea class="form-control form-control-custom" id="solDescription" rows="5" placeholder="Provide description details here..." required></textarea>
                     </div>
                 </div>
             </div>
 
-            <div class="upload-dropzone" onclick="document.getElementById('fileInputHidden').click()">
-                <span>Browse files</span> or drag files here
-                <input type="file" id="fileInputHidden" style="display: none;">
-            </div>
+			<div class="upload-dropzone" id="dropzoneContainer" onclick="document.getElementById('fileInputHidden').click()">
+			    <span id="dropzoneText">Browse files</span> or drag files here
+			    <input type="file" id="fileInputHidden" style="display: none;" onchange="displaySelectedFile(this)">
+			</div>
 
             <div class="form-actions-row">
-                <button type="button" class="btn-submit-custom" onclick="executeSolutionsSubmission()">Submit Incident Ticket</button>
+                <button type="button" class="btn-submit-custom" onclick="executeSolutionsSubmission()">Submit Solutions Ticket</button>
                 <button type="reset" class="btn-outline-custom">Reset</button>
-                <button type="button" class="btn-outline-custom" onclick="window.location.href='/ticket-dashboard'">Cancel</button>
+                <button type="button" class="btn-outline-custom" th:onclick="|window.location.href='/ticket-dashboard?dept=' + document.getElementById('solDeptType').value|">Cancel</button>
             </div>
 
         </div>
@@ -281,15 +282,8 @@
 </div>
 
 <div class="hidden-tracker-feed">
-    <div th:each="req : ${myRequests}" th:if="${req.type == 'SOFTWARE'}" class="incident-row" th:data-status="${req.status}">
+    <div th:each="req : ${myRequests}" class="incident-row" th:data-status="${req.status}">
         <span th:text="${req.detailItem}"></span>
-        <span th:text="${req.status}"></span>
-        <span th:text="${req.ticketId}"></span>
-        <span th:text="${#temporals.format(req.submissionDate, 'dd MMM yyyy')}"></span>
-        <span th:text="${#strings.abbreviate(req.justification, 60)}"></span>
-        <span th:text="${req.durationOrLevel}"></span>
-        <span th:text="${req.priority}"></span>
-        <span th:text="${req.justification}"></span>
     </div>
 </div>
 
@@ -300,45 +294,40 @@
     const sessionUser = {
         id: /*[[${user != null ? user.username : 'EMP-0000'}]]*/ 'EMP-0000',
         name: /*[[${user != null ? user.fullName : 'Unknown User'}]]*/ 'Unknown User',
-        dept: /*[[${user?.employeeProfile?.businessUnit ?: 'General'}]]*/ 'General',
-        manager: /*[[${user?.employeeProfile?.reportingManager ?: 'Admin'}]]*/ 'Admin'
+        dept: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.businessUnit : 'General'}]]*/ 'General',
+        manager: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.reportingManager : 'Admin'}]]*/ 'Admin'
     };
 
     async function executeSolutionsSubmission() {
+        const typeContext = document.getElementById('solDeptType').value;
         const category = document.getElementById('solCategory').value;
         const severity = document.getElementById('solSeverity').value;
         const locationVal = document.getElementById('solLocation').value;
         const mobile = document.getElementById('solMobile').value.trim();
         const email = document.getElementById('solEmail').value.trim();
-        const subject = document.getElementById('solSubject').value.trim() || 'No Subject';
-        const description = document.getElementById('solDescription').value.trim() || 'No Description';
-        const subcategory = document.getElementById('solSubcategory').value.trim() || 'N/A';
-		
-		if (!category || !severity || !locationVal || !mobile || !email) {
-		        Swal.fire({ icon: 'warning', title: 'Required Fields Missing', text: 'Please populate all mandatory items marked with (*)', confirmButtonColor: '#2563eb' });
-		        return;
-		    }
+        const subject = document.getElementById('solSubject').value.trim();
+        const description = document.getElementById('solDescription').value.trim();
+        const item = document.getElementById('solItem').value;
 
-		    // Add checks here
-		    const mobileRegex = /^[6-9]\d{9}$/;
-		    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-		    if (!mobileRegex.test(mobile)) {
-		        Swal.fire({ icon: 'error', title: 'Invalid Mobile Number', text: 'Please enter a valid 10-digit number.', confirmButtonColor: '#2563eb' });
-		        return;
-		    }
-		    if (!emailRegex.test(email)) {
-		        Swal.fire({ icon: 'error', title: 'Invalid Email Address', text: 'Please enter a valid email address.', confirmButtonColor: '#2563eb' });
-		        return;
-		    }
-
-        if (!category || !severity || !locationVal || !mobile || !email) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Required Fields Missing',
-                text: 'Please populate all mandatory items marked with (*)',
-                confirmButtonColor: '#2563eb'
+        if (!category || !severity || !locationVal || !mobile || !email || !subject || !description || !item) {
+            Swal.fire({ 
+                icon: 'warning', 
+                title: 'Required Fields Missing', 
+                text: 'Please populate all mandatory items marked with (*)', 
+                confirmButtonColor: '#2563eb' 
             });
+            return;
+        }
+
+        const mobileRegex = /^[6-9]\d{9}$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!mobileRegex.test(mobile)) {
+            Swal.fire({ icon: 'error', title: 'Invalid Mobile Number', text: 'Please enter a valid 10-digit number.', confirmButtonColor: '#2563eb' });
+            return;
+        }
+        if (!emailRegex.test(email)) {
+            Swal.fire({ icon: 'error', title: 'Invalid Email Address', text: 'Please enter a valid email address.', confirmButtonColor: '#2563eb' });
             return;
         }
 
@@ -347,22 +336,21 @@
             employeeName: sessionUser.name,
             department: sessionUser.dept,
             managerName: sessionUser.manager,
-            type: "SOFTWARE", 
+            type: typeContext, 
             category: category,
             detailItem: subject,
-            durationOrLevel: subcategory,
-            priority: severity == 'High' ? 'High' : (severity == 'Low' ? 'Low' : 'Medium'),
+            durationOrLevel: item,
+            priority: severity,
             justification: description,
             location: locationVal,
             status: "Open",
-            // --- INJECT EXPLICIT MAIL TARGETS FROM ENVIRONMENT KEYS ---
             notificationEmailPrimary: /*[[${@environment.getProperty('app.notification.email.primary')}]]*/ 'primary_fallback@example.com',
             notificationEmailSecondary: /*[[${@environment.getProperty('app.notification.email.secondary')}]]*/ 'secondary_fallback@example.com'
         };
 
         Swal.fire({
             title: 'Processing Submission...',
-            text: 'Logging your incident data inside database records...',
+            text: 'Logging your tracking metrics inside database records...',
             allowOutsideClick: false,
             didOpen: () => { Swal.showLoading(); }
         });
@@ -377,11 +365,11 @@
             if (response.ok) {
                 await Swal.fire({
                     icon: 'success',
-                    title: 'Incident Logged!',
-                    text: 'Your request ticket has been recorded successfully.',
+                    title: 'Query Logged!',
+                    text: 'Your solutions ticket has been recorded successfully.',
                     confirmButtonColor: '#2563eb'
                 });
-                window.location.href = '/ticket-dashboard';
+                window.location.href = '/ticket-dashboard?dept=' + typeContext;
             } else {
                 throw new Error("Server Response Error");
             }
@@ -394,6 +382,22 @@
             });
         }
     }
+	function displaySelectedFile(input) {
+	    const dropzoneText = document.getElementById('dropzoneText');
+	    const container = document.getElementById('dropzoneContainer');
+	    
+	    if (input.files && input.files.length > 0) {
+	        const file = input.files[0];
+	        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+	        
+	        // Update the dropzone text to show the file icon, name, and size
+	        container.innerHTML = `<i class="fas fa-file-alt me-2" style="color: #2563eb;"></i> <strong>${file.name}</strong> (${fileSizeMB} MB) <span class="ms-3 text-secondary" style="font-size: 0.85rem; text-decoration: underline;">Change file</span>`;
+	        
+	        // Re-inject the hidden file input so the click listener still works if they want to change it
+	        const newInput = input.cloneNode(true);
+	        container.appendChild(newInput);
+	    }
+	}
 </script>
 </body>
 </html>

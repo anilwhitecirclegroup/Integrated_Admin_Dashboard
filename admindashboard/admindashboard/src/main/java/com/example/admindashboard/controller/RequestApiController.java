@@ -106,6 +106,30 @@ public class RequestApiController {
             System.err.println("Non-fatal error: Failed to trigger IT ticket email - " + e.getMessage());
         }
 
+        // =========================================================================
+        // MULTI-DEPARTMENT SYSTEM VARIABLE EMAIL ROUTING TRIGGER For Tickets
+        // =========================================================================
+        try {
+            Map<String, Object> helpdeskModel = new HashMap<>();
+            helpdeskModel.put("empName", employeeName);
+            helpdeskModel.put("ticketId", savedRequest.getTicketId() != null ? savedRequest.getTicketId() : "TKT-NEW");
+            helpdeskModel.put("type", savedRequest.getType());
+            helpdeskModel.put("priority", savedRequest.getPriority());
+            helpdeskModel.put("category", savedRequest.getCategory());
+            helpdeskModel.put("detailItem", savedRequest.getDetailItem());
+            helpdeskModel.put("justification", savedRequest.getJustification());
+
+            emailService.sendHelpdeskNotifications(
+                    savedRequest.getType(),           // departmentCode context ("IT", "HR", etc.)
+                    employeeName,                     // employeeName
+                    employeeEmail,                    // employeeEmail
+                    savedRequest.getDetailItem(),     // formSubject
+                    helpdeskModel                     // shared template data map
+            );
+        } catch (Exception e) {
+            System.err.println("Non-fatal error: Multi-dept email routing issue - " + e.getMessage());
+        }
+
         return ResponseEntity.ok(savedRequest);
     }
 

@@ -140,7 +140,7 @@
             text-underline-offset: 4px; /* Drops the underline down slightly so it looks modern */
         }
 
-        /*  DYNAMIC CALENDAR STYLES  */
+        /* DYNAMIC CALENDAR STYLES  */
         .dash-calendar-card {
             background: #ffffff;
             border-radius: 10px;
@@ -188,7 +188,7 @@
             margin-bottom: 10px;
         }
 
-        /*  CALENDAR LAYOUT FIX  */
+        /* CALENDAR LAYOUT FIX  */
         .cal-navigation-wrapper {
             padding-top: 2px; /* Reduced slightly to prevent bottom cut-off */
             margin-bottom: 10px;
@@ -441,7 +441,7 @@
             width: 100%; /* Expand to full width on hover */
         }
 
-        /*  Special Navy Header (For APPS & SELF SERVICE)  */
+        /* Special Navy Header (For APPS & SELF SERVICE)  */
         .navy-header {
             background-color: var(--bs-primary); /* Navy Blue Background */
             color: white !important; /* Main Text White */
@@ -483,7 +483,7 @@
             transform: translateY(-2px); /* Lifts it up smoothly */
         }
 
-        /*  MODERN DROPDOWN CARD  */
+        /* MODERN DROPDOWN CARD  */
         .search-dropdown-card {
             position: absolute;
             top: 100%;
@@ -498,7 +498,7 @@
             z-index: 1050;
         }
 
-        /*  RESULT ITEM LAYOUT  */
+        /* RESULT ITEM LAYOUT  */
         .search-result-item {
             display: flex;
             align-items: center;
@@ -526,7 +526,7 @@
             font-size: 1.1rem;
         }
 
-        /*  FESTIVE BIRTHDAY WIDGET STYLES */
+        /* FESTIVE BIRTHDAY WIDGET STYLES */
         .birthday-card-active {
             background: linear-gradient(135deg, #ffffff 0%, #fdf4ff 100%);
             border: 1px solid #f5d0fe !important;
@@ -687,7 +687,7 @@
             #employeeDirModal .d-flex.flex-md-row { margin-top: -25px !important; margin-bottom: 8px !important; }
             #modalEmpAvatar { width: 55px !important; height: 55px !important; font-size: 1.3rem !important; border: 2px solid #fff !important; }
             #modalEmpName { font-size: 0.95rem !important; margin-bottom: 0 !important; }
-            #modalEmpDesignation { font-size: 0.7rem !important; opacity: 0.8; }
+            #modalEmpDesignation { font-size: 0.7rem !opacity: 0.8; }
             #modalEmpLocation { font-size: 0.6rem !important; padding: 2px 8px !important; }
             #employeeDirModal .row.g-4 { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
             #employeeDirModal .col-md-6 h6 { grid-column: span 2 !important; margin-top: 5px !important; margin-bottom: 3px !important; font-size: 0.6rem !important; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -889,7 +889,7 @@
                             </a>
                         </div>
                         <div class="col-md-6">
-                            <a href="/tickets" class="app-btn">
+                            <a href="/tickets/authenticate" class="app-btn">
                                 <i class="fas fa-ticket-alt text-primary me-2 fs-5"></i>
                                 <span class="app-text">Log Tickets</span>
                             </a>
@@ -974,7 +974,7 @@
                         <span class="fw-bold text-dark" style="font-size: 0.9rem; letter-spacing: 0.5px;">
                             <i class="fas fa-ticket-alt text-primary me-2"></i> TICKET STATUS
                         </span>
-                        <a href="/tickets" class="text-primary text-decoration-none" style="font-size: 0.8rem; font-weight: 700;">View All</a>
+                        <a th:href="@{/tickets/authenticate}" class="text-primary text-decoration-none" style="font-size: 0.8rem; font-weight: 700;">View All</a>
                     </div>
 
                     <div class="widget-body flex-grow-1 d-flex flex-column" th:classappend="${#lists.isEmpty(recentTickets)} ? 'justify-content-center' : 'justify-content-start'" style="overflow-y: auto;">
@@ -1487,4 +1487,3 @@
 </script>
 </body>
 </html>
-

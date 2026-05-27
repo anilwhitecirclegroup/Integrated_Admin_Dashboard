@@ -267,12 +267,13 @@
 <body>
 
 <div class="hero-banner-container">
+    <!-- FIXED: Links securely back to your standard helpdesk view route mapping -->
     <a href="/tickets/hub" class="btn-back-helpdesk">
         <i class="fas fa-arrow-left me-2"></i>Back to Helpdesk
     </a>
 
     <div class="action-cards-row">
-        <div class="action-box box-issue" onclick="window.location.href='/report-incident'">
+        <div class="action-box box-issue" th:attr="data-url=@{/report-incident(dept=${currentDept ?: 'IT'})}" onclick="window.location.href=this.dataset.url">
             <div class="action-icon-wrap"><i class="fas fa-exclamation-triangle"></i></div>
             <div class="action-meta-content">
                 <small>I am facing an</small>
@@ -281,7 +282,9 @@
             </div>
         </div>
 
-        <div class="action-box box-new" onclick="window.location.href='/service-requests'">
+		<div class="action-box box-new"
+		th:attr="data-url=@{/service-requests(dept=${currentDept ?: 'IT'})}"
+		onclick="window.location.href=this.dataset.url">
             <div class="action-icon-wrap"><i class="fas fa-plus"></i></div>
             <div class="action-meta-content">
                 <small>I need something</small>
@@ -290,7 +293,9 @@
             </div>
         </div>
 
-        <div class="action-box box-solutions" onclick="window.location.href='/knowledge-base'">
+		<div class="action-box box-solutions"
+		th:attr="data-url=@{/service-requests(dept=${currentDept ?: 'IT'})}"
+		onclick="window.location.href=this.dataset.url">
             <div class="action-icon-wrap"><i class="fas fa-lightbulb"></i></div>
             <div class="action-meta-content">
                 <small>I am looking for</small>
@@ -299,7 +304,9 @@
             </div>
         </div>
 
-        <div class="action-box box-assets" onclick="window.location.href='/my-assets'">
+		<div class="action-box box-assets"
+		th:attr="data-url=@{/my-assets(dept=${currentDept ?: 'IT'})}"
+		onclick="window.location.href=this.dataset.url">
             <div class="action-icon-wrap"><i class="fas fa-desktop"></i></div>
             <div class="action-meta-content">
                 <small>I need to book</small>
@@ -313,7 +320,7 @@
 <div class="main-content-area">
 
     <div class="section-header-flex">
-        <h4>My Active Service Requests</h4>
+        <h4><span th:text="${currentDept ?: 'IT'}">IT</span> Active Service Requests</h4>
         <select id="statusFilter" class="select-filter-dropdown" onchange="filterMyRequests()">
             <option value="All">All Statuses</option>
             <option value="Open">Open</option>
@@ -340,7 +347,7 @@
                         <td><span class="ticket-id-clean" th:text="${req.ticketId}">#SR-2041</span></td>
                         <td><span class="type-bold" th:text="${req.category}">Issue</span></td>
                         <td>
-                            <div class="subject-text" th:text="${req.detailItem + (req.durationOrLevel != 'N/A' ? ' (' + req.durationOrLevel + ')' : '')}">
+                            <div class="subject-text" th:text="${req.detailItem + (req.durationOrLevel != 'N/A' and req.durationOrLevel != null ? ' (' + req.durationOrLevel + ')' : '')}">
                                 Keyboard not responding
                             </div>
                         </td>
@@ -362,10 +369,11 @@
                             <p class="mb-0 fw-bold">No requests match this filter.</p>
                         </td>
                     </tr>
-                    <tr th:if="${#lists.isEmpty(myRequests.?[type == 'SOFTWARE' or type == 'ACCESS' or type == 'PERMISSION' or type == 'INCIDENT'])}">
+                    
+                    <tr th:if="${#lists.isEmpty(myRequests)}">
                         <td colspan="6" class="text-center py-5 text-muted">
                             <i class="fas fa-inbox fa-2x mb-3 opacity-50"></i>
-                            <p class="mb-0 fw-bold">No active requests found.</p>
+                            <p class="mb-0 fw-bold">No active requests found for this department workspace.</p>
                         </td>
                     </tr>
                 </tbody>

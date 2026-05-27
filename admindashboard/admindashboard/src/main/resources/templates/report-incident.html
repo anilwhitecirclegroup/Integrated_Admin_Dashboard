@@ -75,7 +75,7 @@
 
         /* --- STYLING FORM LABELS & CONTROL NODES --- */
         .form-grid-container .row {
-            --bs-gutter-x: 60px; /* Generous gap spacing matching image layout */
+            --bs-gutter-x: 60px; 
             --bs-gutter-y: 20px;
         }
 
@@ -193,7 +193,6 @@
             background-color: #f3f7ff;
         }
 
-        /* Hidden dynamic loop data block wrapper out of workspace */
         .hidden-tracker-feed {
             display: none !important;
         }
@@ -202,24 +201,24 @@
 <body>
 
 <div class="form-hero-banner">
-    <a href="/tickets" class="btn-back-dashboard">Back to Helpdesk</a>
-    <h1>Report Issue Form</h1>
+    <a th:href="@{/ticket-dashboard(dept=${currentDept})}" class="btn-back-dashboard">Back to Helpdesk</a>
+    <h1 th:text="${currentDept + ' Issue Form'}">IT Issue Form</h1>
 </div>
 
 <div class="form-content-wrapper">
     <div class="instruction-headline">Fill the required details to report an issue</div>
 
     <form id="incidentForm">
+        <input type="hidden" id="incidentType" th:value="${currentDept}">
+
         <div class="form-grid-container">
             <div class="row">
                 <div class="col-md-6">
                     <div class="custom-form-group">
                         <label class="custom-form-label">Category*</label>
-                        <select class="form-select input-box-field" id="incidentCategory" required onchange="populateSubCategories()">
-                            <option value="" selected disabled hidden>Select</option>
-                            <option value="Hardware">Hardware (Physical)</option>
-                            <option value="Software">Software (App/OS)</option>
-                            <option value="Network">Network (VPN/Wi-Fi)</option>
+                        <select class="form-select input-box-field" id="incidentCategory" required>
+                            <option value="" selected disabled hidden>Select Category</option>
+                            <option th:each="cat : ${categoriesList}" th:value="${cat}" th:text="${cat}"></option>
                         </select>
                     </div>
 
@@ -234,40 +233,33 @@
                     </div>
 
                     <div class="custom-form-group">
-                        <label class="custom-form-label">Subject</label>
-                        <input type="text" class="form-control input-box-field" id="incidentSubject">
+                        <label class="custom-form-label">Subject*</label>
+                        <input type="text" class="form-control input-box-field" id="incidentSubject" placeholder="Brief statement of issue">
                     </div>
 
                     <div class="custom-form-group">
                         <label class="custom-form-label">Mobile No.*</label>
-						<input type="text" class="form-control input-box-field" id="incidentMobile" required pattern="[0-9]{10}" maxlength="10">			                    </div>
+                        <input type="text" class="form-control input-box-field" id="incidentMobile" required pattern="[0-9]{10}" maxlength="10">
+                    </div>
 
                     <div class="custom-form-group">
                         <label class="custom-form-label">Email ID*</label>
-						<input type="email" class="form-control input-box-field" id="incidentEmail" required>                    </div>
-
-                    <div class="custom-form-group">
-                        <label class="custom-form-label">Subject</label>
-                        <input type="text" class="form-control input-box-field">
+                        <input type="email" class="form-control input-box-field" id="incidentEmail" required>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="custom-form-group">
-                        <label class="custom-form-label">Item</label>
-                        <select class="form-select input-box-field" id="incidentSubCategory" required disabled>
-                            <option value="" selected disabled hidden>Select category first</option>
+                        <label class="custom-form-label">Item*</label>
+                        <select class="form-select input-box-field" id="incidentSubCategory" required>
+                            <option value="" selected disabled hidden>Select Specific Component</option>
+                            <option th:each="item : ${itemsList}" th:value="${item}" th:text="${item}"></option>
                         </select>
                     </div>
 
                     <div class="custom-form-group">
-                        <label class="custom-form-label">Subcategory</label>
-                        <input type="text" class="form-control input-box-field">
-                    </div>
-
-                    <div class="custom-form-group">
                         <label class="custom-form-label">Location*</label>
-                        <select class="form-select input-box-field" required>
+                        <select class="form-select input-box-field" id="incidentLocation" required>
                             <option value="" selected disabled hidden>Select</option>
                             <option value="Noida">Noida</option>
                             <option value="Pune">Pune</option>
@@ -279,34 +271,22 @@
         </div>
 
         <div class="textarea-block-group">
-            <label class="custom-form-label">Description</label>
-            <textarea class="form-control custom-textarea" id="incidentDescription" rows="6"></textarea>
+            <label class="custom-form-label">Description*</label>
+            <textarea class="form-control custom-textarea" id="incidentDescription" rows="6" placeholder="Provide details here..."></textarea>
         </div>
 
-        <div class="file-upload-dropzone" onclick="document.getElementById('nativeFileInput').click()">
-            <span>Browse files</span> or drag files here
-            <input type="file" id="nativeFileInput" style="display: none;">
-        </div>
+		<div class="upload-dropzone" id="dropzoneContainer" onclick="document.getElementById('fileInputHidden').click()">
+		    <span id="dropzoneText">Browse files</span> or drag files here
+		    <input type="file" id="fileInputHidden" style="display: none;" onchange="displaySelectedFile(this)">
+		</div>
 
         <div class="bottom-actions-center-row">
             <button type="button" class="btn-action-solid" onclick="submitIncident()">Submit Incident Ticket</button>
             <button type="reset" class="btn-action-outline">Reset</button>
-            <button type="button" class="btn-action-outline" onclick="window.location.href='/tickets'">Cancel</button>
+            <button type="button" class="btn-action-outline" th:attr="data-url=@{/ticket-dashboard(dept=${currentDept})}"
+			onclick="window.location.href=this.dataset.url">Cancel</button>
         </div>
     </form>
-</div>
-
-<div class="hidden-tracker-feed">
-    <div th:each="req : ${myRequests}" th:if="${req.type == 'INCIDENT'}" class="incident-row" th:data-status="${req.status}">
-        <span th:text="${req.detailItem}"></span>
-        <span th:text="${req.status}"></span>
-        <span th:text="${req.ticketId}"></span>
-        <span th:text="${#temporals.format(req.submissionDate, 'dd MMM yyyy')}"></span>
-        <span th:text="${#strings.abbreviate(req.justification, 60)}"></span>
-        <span th:text="${req.durationOrLevel}"></span>
-        <span th:text="${req.priority}"></span>
-        <span th:text="${req.justification}"></span>
-    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -316,72 +296,35 @@
     const sessionUser = {
         id: /*[[${user != null ? user.username : 'EMP-0000'}]]*/ 'EMP-0000',
         name: /*[[${user != null ? user.fullName : 'Unknown User'}]]*/ 'Unknown User',
-        dept: /*[[${user?.employeeProfile?.businessUnit ?: 'General'}]]*/ 'General',
-        manager: /*[[${user?.employeeProfile?.reportingManager ?: 'Admin'}]]*/ 'Admin'
+		dept: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.businessUnit : 'General'}]]*/ 'General',
+		manager: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.reportingManager : 'Admin'}]]*/ 'Admin'
     };
-
-    const subCategories = {
-        "Hardware": ["Laptop / PC", "Monitor / Display", "Keyboard / Mouse", "Docking Station", "Headset / Audio", "Other Physical Device"],
-        "Software": ["Operating System (Windows/Mac)", "Microsoft Office (Outlook, Word, etc.)", "Internal Tool (HRMS, ERP)", "Development Tool (IDE, Docker)", "Other Application"],
-        "Network": ["VPN / GlobalProtect", "Office Wi-Fi / Ethernet", "Unable to reach Internal Server", "Internet Connectivity Issue"]
-    };
-
-    function populateSubCategories() {
-        const categorySelect = document.getElementById("incidentCategory");
-        const subCategorySelect = document.getElementById("incidentSubCategory");
-        const selectedCategory = categorySelect.value;
-
-        subCategorySelect.innerHTML = '<option value="" selected disabled hidden>Select Specific Item...</option>';
-
-        if (selectedCategory && subCategories[selectedCategory]) {
-            subCategorySelect.disabled = false;
-            subCategories[selectedCategory].forEach(item => {
-                const option = document.createElement("option");
-                option.value = item;
-                option.textContent = item;
-                subCategorySelect.appendChild(option);
-            });
-        } else {
-            subCategorySelect.disabled = true;
-        }
-    }
 
     async function submitIncident() {
+        const typeContext = document.getElementById('incidentType').value;
         const category = document.getElementById('incidentCategory').value;
         const item = document.getElementById('incidentSubCategory').value;
-        const subject = document.getElementById('incidentSubject').value;
-        const description = document.getElementById('incidentDescription').value;
+        const subject = document.getElementById('incidentSubject').value.trim();
+        const description = document.getElementById('incidentDescription').value.trim();
         const severity = document.getElementById('incidentSeverity').value || 'Medium';
-		
-	// Extract mobile and email values
-	    const mobile = document.getElementById('incidentMobile').value.trim();
-	    const email = document.getElementById('incidentEmail').value.trim();
+        const mobile = document.getElementById('incidentMobile').value.trim();
+        const email = document.getElementById('incidentEmail').value.trim();
+        const location = document.getElementById('incidentLocation').value;
 
-	    if (!category || !item || !subject || !description || !mobile || !email) {
-	        Swal.fire({ icon: 'info', title: 'Missing Info', text: 'Please fill in all required fields.', confirmButtonColor: '#2563eb' });
-	        return;
-	    }
+        if (!category || !item || !subject || !description || !mobile || !email || !location) {
+            Swal.fire({ icon: 'info', title: 'Missing Info', text: 'Please fill in all required fields.', confirmButtonColor: '#2563eb' });
+            return;
+        }
 
-	    // Validation checks
-	    const mobileRegex = /^[6-9]\d{9}$/;
-	    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const mobileRegex = /^[6-9]\d{9}$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-	    if (!mobileRegex.test(mobile)) {
-	        Swal.fire({ icon: 'error', title: 'Invalid Mobile Number', text: 'Please enter a valid 10-digit number.', confirmButtonColor: '#2563eb' });
-	        return;
-	    }
-	    if (!emailRegex.test(email)) {
-	        Swal.fire({ icon: 'error', title: 'Invalid Email Address', text: 'Please enter a valid email address.', confirmButtonColor: '#2563eb' });
-	        return;
-	    }
-
-        if (!category || !item || !subject || !description) {
-            Swal.fire({
-                icon: 'info',
-                title: 'Missing Info',
-                text: 'Please fill in Category, Item, Subject, and Description.',
-                confirmButtonColor: '#2563eb'
-            });
+        if (!mobileRegex.test(mobile)) {
+            Swal.fire({ icon: 'error', title: 'Invalid Mobile Number', text: 'Please enter a valid 10-digit number.', confirmButtonColor: '#2563eb' });
+            return;
+        }
+        if (!emailRegex.test(email)) {
+            Swal.fire({ icon: 'error', title: 'Invalid Email Address', text: 'Please enter a valid email address.', confirmButtonColor: '#2563eb' });
             return;
         }
 
@@ -390,14 +333,13 @@
             employeeName: sessionUser.name,
             department: sessionUser.dept,
             managerName: sessionUser.manager,
-            type: "INCIDENT",
+            type: typeContext,
             category: category,
             detailItem: subject,
             durationOrLevel: item,
             priority: severity,
             justification: description,
             status: "Open",
-            // --- INJECT EXPLICIT MAIL TARGETS FROM ENVIRONMENT KEYS ---
             notificationEmailPrimary: /*[[${@environment.getProperty('app.notification.email.primary')}]]*/ 'primary_fallback@example.com',
             notificationEmailSecondary: /*[[${@environment.getProperty('app.notification.email.secondary')}]]*/ 'secondary_fallback@example.com'
         };
@@ -416,7 +358,7 @@
 
         Swal.fire({
             title: 'Logging Incident...',
-            text: 'Analyzing priority and alerting IT Response Team...',
+            text: 'Analyzing priority and alerting Support Response Team...',
             allowOutsideClick: false,
             didOpen: () => { Swal.showLoading(); }
         });
@@ -439,12 +381,13 @@
                 await Swal.fire({
                     icon: 'success',
                     title: 'Incident Logged',
-                    html: `Ticket ID generated. IT Support has been notified.`,
+                    html: `Ticket ID generated. Support Team has been notified.`,
                     confirmButtonText: 'Back to Dashboard',
                     timer: 4000,
                     timerProgressBar: true
                 });
-                window.location.href = '/tickets';
+                // FIXED: Direct redirection strictly aligned with hyphen path syntax
+                window.location.href = '/ticket-dashboard?dept=' + typeContext;
             } else {
                 throw new Error("Log failed");
             }
@@ -452,11 +395,27 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Helpdesk Offline',
-                text: 'Could not reach the IT portal. Please check your network connection.',
+                text: 'Could not reach the portal. Please check your network connection.',
                 confirmButtonColor: '#2563eb'
             });
         }
     }
+	function displaySelectedFile(input) {
+	    const dropzoneText = document.getElementById('dropzoneText');
+	    const container = document.getElementById('dropzoneContainer');
+	    
+	    if (input.files && input.files.length > 0) {
+	        const file = input.files[0];
+	        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+	        
+	        // Update the dropzone text to show the file icon, name, and size
+	        container.innerHTML = `<i class="fas fa-file-alt me-2" style="color: #2563eb;"></i> <strong>${file.name}</strong> (${fileSizeMB} MB) <span class="ms-3 text-secondary" style="font-size: 0.85rem; text-decoration: underline;">Change file</span>`;
+	        
+	        // Re-inject the hidden file input so the click listener still works if they want to change it
+	        const newInput = input.cloneNode(true);
+	        container.appendChild(newInput);
+	    }
+	}
 </script>
 </body>
 </html>
