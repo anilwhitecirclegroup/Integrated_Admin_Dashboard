@@ -1,24 +1,47 @@
-.payroll-card{
-    display:flex;
-    flex-direction:column;
-
-    gap:22px;
-
+.payroll-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+    border: 1px solid #ECECEC;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    transition: var(--transition);
 }
 
-.payroll-card-header{
-    display:flex;
-    align-items:center;
-
-    gap:20px;
+.payroll-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(47, 84, 235, 0.1);
+    border-color: rgba(47, 84, 235, 0.2);
 }
 
-.payroll-card-header i{
-    font-size:48px;
-    color:var(--primary-blue);
+.payroll-card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
-.payroll-card-title{
-    font-size:28px;
-    font-weight:700;
+.payroll-card-header i {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: rgba(47, 84, 235, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+    font-size: 20px;
+    transition: var(--transition);
+}
+
+.payroll-card:hover .payroll-card-header i {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.payroll-card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-dark);
 }

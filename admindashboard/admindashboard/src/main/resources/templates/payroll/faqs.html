@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>FAQs – Payroll Portal</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/base/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/variables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/typography.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/dashboard-layout.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/sidebar.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/cards.css}"/>
+
+    <style>
+        .faq-container { max-width: 780px; }
+        .faq-item { background: var(--white); border-radius: var(--radius-md); margin-bottom: 14px; box-shadow: var(--shadow-sm); overflow: hidden; }
+        .faq-question { display: flex; justify-content: space-between; align-items: center; padding: 22px 28px; cursor: pointer; gap: 16px; transition: background 0.2s; }
+        .faq-question:hover { background: #FAFBFC; }
+        .faq-question h3 { font-size: 16px; font-weight: 600; color: var(--text-dark); }
+        .faq-question i { color: var(--primary-blue); font-size: 16px; flex-shrink: 0; transition: transform 0.3s ease; }
+        .faq-answer { display: none; padding: 0 28px 22px 28px; font-size: 15px; color: var(--text-light); line-height: 1.7; border-top: 1px solid #F3F3F3; }
+        .faq-item.open .faq-answer { display: block; }
+        .faq-item.open .faq-question i { transform: rotate(45deg); }
+        .faq-categories { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+        .faq-cat-btn { padding: 8px 18px; border-radius: 50px; border: 1.5px solid var(--border); background: white; font-size: 13px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: var(--transition); }
+        .faq-cat-btn.active, .faq-cat-btn:hover { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
+        .page-subtitle { font-size: 15px; color: var(--text-light); margin-bottom: 28px; }
+    </style>
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+    <main class="main-content">
+
+        <h1 class="page-title">Frequently Asked Questions</h1>
+        <p class="page-subtitle">Find answers to common payroll and HR queries below.</p>
+
+        <div class="faq-categories">
+            <button class="faq-cat-btn active">All</button>
+            <button class="faq-cat-btn">Payslip</button>
+            <button class="faq-cat-btn">PF &amp; ESI</button>
+            <button class="faq-cat-btn">Tax</button>
+            <button class="faq-cat-btn">Reimbursements</button>
+        </div>
+
+        <div class="faq-container">
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>When is my salary credited every month?</h3>
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    Salaries are credited on the last working day of every month. If the last working day falls on a weekend or public holiday, the salary is credited on the preceding working day.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>How can I download my payslip?</h3>
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    Go to <strong>Payroll Dashboard → Payslip</strong>, select the year and month, then click <em>Download Slip</em>. Payslips are available from the month you joined the organisation.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>What is the PF deduction percentage?</h3>
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    Employee PF contribution is <strong>12%</strong> of your Basic Wage. The employer contributes an equal 12%, split into 3.67% towards PF and 8.33% towards the Employee Pension Scheme (EPS).
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>Which tax regime is better for me – Old or New?</h3>
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    It depends on your investments and deductions. Use the <strong>Tax Calculator</strong> on this portal to compare both regimes side by side. Generally, if you have significant 80C investments, HRA, or home loan interest, the Old Regime may save more tax.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>How do I submit a travel expense claim?</h3>
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    Go to <strong>Travel &amp; Expenses</strong> and click <em>New Claim</em>. Attach receipts and provide a description. Claims are typically approved within 5 working days by your reporting manager.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>What is Form 16 and when will I receive it?</h3>
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    Form 16 is a TDS certificate issued by your employer certifying the salary paid and tax deducted. It is generated annually by <strong>15th June</strong> for the preceding financial year and can be downloaded from the Payroll Dashboard.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>Can I change my tax regime mid-year?</h3>
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    For salaried employees, you can switch tax regimes only once at the beginning of a financial year (April) by submitting a declaration to the Payroll/HR team. Mid-year changes are generally not permitted under employer TDS provisions.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>How do I raise a payroll grievance or query?</h3>
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    Go to <strong>Helpdesk → My Queries</strong> and click <em>Raise Query</em>. Select the query type, describe your issue, and submit. The payroll team will respond within 3 working days.
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+</div>
+
+<script th:src="@{/js/common/sidebar.js}"></script>
+<script>
+    function toggleFaq(questionEl) {
+        var item = questionEl.closest('.faq-item');
+        var isOpen = item.classList.contains('open');
+        // Close all
+        document.querySelectorAll('.faq-item.open').forEach(function(el) { el.classList.remove('open'); });
+        // Toggle current
+        if (!isOpen) item.classList.add('open');
+    }
+</script>
+</body>
+</html>

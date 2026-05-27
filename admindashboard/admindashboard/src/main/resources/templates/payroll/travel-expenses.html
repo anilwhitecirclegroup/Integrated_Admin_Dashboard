@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Travel &amp; Expenses – Payroll Portal</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/base/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/variables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/typography.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/dashboard-layout.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/sidebar.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/cards.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/tables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/badges.css}"/>
+
+    <style>
+        .section-card { 
+            background: var(--white); 
+            border-radius: var(--radius-lg); 
+            padding: 32px; 
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04); 
+            border: 1px solid #ECECEC; 
+        }
+        .section-card-title { 
+            font-size: 16px; 
+            font-weight: 700; 
+            color: var(--text-dark); 
+            margin-bottom: 24px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+        }
+        .travel-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 32px; }
+        .travel-stat { 
+            background: var(--white); 
+            border-radius: var(--radius-lg); 
+            padding: 26px 30px; 
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04); 
+            border: 1px solid #ECECEC; 
+            transition: var(--transition); 
+        }
+        .travel-stat:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06); 
+        }
+        .travel-stat-label { font-size: 11px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .travel-stat-value { font-size: 26px; font-weight: 700; color: var(--primary-blue); }
+        .filter-bar { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
+        .filter-select { 
+            height: 42px; 
+            border: 1.5px solid #E2E8F0; 
+            border-radius: 10px; 
+            padding: 0 16px; 
+            font-size: 13px; 
+            font-weight: 500; 
+            background: white; 
+            color: var(--text-dark); 
+            outline: none; 
+            cursor: pointer; 
+            transition: var(--transition); 
+        }
+        .filter-select:focus { 
+            border-color: var(--primary-blue); 
+            box-shadow: 0 0 0 3px rgba(47, 84, 235, 0.08); 
+        }
+        .raise-btn { 
+            margin-left: auto; 
+            height: 42px; 
+            padding: 0 22px; 
+            background: var(--primary-blue); 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 13px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            transition: var(--transition); 
+            box-shadow: 0 4px 10px rgba(47, 84, 235, 0.15); 
+        }
+        .raise-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 15px rgba(47, 84, 235, 0.25); 
+            opacity: 0.95; 
+        }
+        .raise-btn:active { 
+            transform: translateY(0); 
+        }
+        @media (max-width: 768px) { .travel-summary { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+    <main class="main-content">
+
+        <h1 class="page-title">Travel &amp; Expenses</h1>
+
+        <!-- Summary Stats -->
+        <div class="travel-summary">
+            <div class="travel-stat">
+                <div class="travel-stat-label">Total Claimed (FY 2026-27)</div>
+                <div class="travel-stat-value">₹18,500</div>
+            </div>
+            <div class="travel-stat">
+                <div class="travel-stat-label">Approved</div>
+                <div class="travel-stat-value" style="color:#15803D;">₹14,000</div>
+            </div>
+            <div class="travel-stat">
+                <div class="travel-stat-label">Pending Review</div>
+                <div class="travel-stat-value" style="color:#B45309;">₹4,500</div>
+            </div>
+        </div>
+
+        <!-- Expense Table -->
+        <div class="section-card">
+
+            <div class="section-card-title">
+                <i class="fa-solid fa-plane" style="color:var(--primary-blue);"></i>
+                Expense Claims
+            </div>
+
+            <div class="filter-bar">
+                <select class="filter-select">
+                    <option>All Types</option>
+                    <option>Local Travel</option>
+                    <option>Outstation</option>
+                    <option>Hotel / Stay</option>
+                    <option>Meals</option>
+                </select>
+                <select class="filter-select">
+                    <option>All Status</option>
+                    <option>Approved</option>
+                    <option>Pending</option>
+                    <option>Rejected</option>
+                </select>
+                <button class="raise-btn" onclick="alert('Expense claim form coming soon.')">
+                    <i class="fa-solid fa-plus"></i> New Claim
+                </button>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Claim ID</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Travel Date</th>
+                            <th class="text-right">Amount (₹)</th>
+                            <th>Status</th>
+                            <th>Approved By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#EXP-001</td>
+                            <td>Outstation</td>
+                            <td>Client visit – Mumbai</td>
+                            <td>10 Apr 2026</td>
+                            <td class="text-right">6,500</td>
+                            <td><span class="badge-status badge-success">Approved</span></td>
+                            <td>Priya Mehta</td>
+                        </tr>
+                        <tr>
+                            <td>#EXP-002</td>
+                            <td>Local Travel</td>
+                            <td>Office errands – auto/cab</td>
+                            <td>15 Apr 2026</td>
+                            <td class="text-right">850</td>
+                            <td><span class="badge-status badge-success">Approved</span></td>
+                            <td>Priya Mehta</td>
+                        </tr>
+                        <tr>
+                            <td>#EXP-003</td>
+                            <td>Hotel / Stay</td>
+                            <td>Bangalore team offsite</td>
+                            <td>22 Apr 2026</td>
+                            <td class="text-right">4,200</td>
+                            <td><span class="badge-status badge-success">Approved</span></td>
+                            <td>Ankit Joshi</td>
+                        </tr>
+                        <tr>
+                            <td>#EXP-004</td>
+                            <td>Meals</td>
+                            <td>Working lunch – client meeting</td>
+                            <td>02 May 2026</td>
+                            <td class="text-right">2,450</td>
+                            <td><span class="badge-status badge-success">Approved</span></td>
+                            <td>Priya Mehta</td>
+                        </tr>
+                        <tr>
+                            <td>#EXP-005</td>
+                            <td>Outstation</td>
+                            <td>Delhi sales conference</td>
+                            <td>18 May 2026</td>
+                            <td class="text-right">4,500</td>
+                            <td><span class="badge-status badge-warning">Pending</span></td>
+                            <td>–</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/common/sidebar.js}"></script>
+</body>
+</html>

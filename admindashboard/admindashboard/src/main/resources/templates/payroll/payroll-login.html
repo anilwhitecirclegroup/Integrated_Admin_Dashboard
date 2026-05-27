@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Payroll Login – WhiteCircle Group</title>
+    <meta name="description" content="Secure login to the WhiteCircle Group Payroll Portal"/>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+    <!-- Design System CSS -->
+    <link rel="stylesheet" href="../../static/css/base/reset.css" th:href="@{/css/base/reset.css}"/>
+    <link rel="stylesheet" href="../../static/css/base/variables.css" th:href="@{/css/base/variables.css}"/>
+    <link rel="stylesheet" href="../../static/css/base/typography.css" th:href="@{/css/base/typography.css}"/>
+    <link rel="stylesheet" href="../../static/css/pages/login.css" th:href="@{/css/pages/login.css}"/>
+</head>
+<body>
+
+<div class="login-page">
+
+    <!-- ───────────── LEFT PANEL ───────────── -->
+    <div class="login-left">
+        <img src="../../static/images/wcg-building.png"
+             th:src="@{/images/wcg-building.png}"
+             onerror="this.style.background='linear-gradient(135deg,#001447 0%,#2F54EB 100%)'; this.removeAttribute('src')"
+             alt="WhiteCircle Group Office"/>
+
+        <div class="login-left-overlay">
+            <div class="logo-icon">
+                <img src="../../static/images/wcg-logo.jpg" th:src="@{/images/wcg-logo.jpg}" alt="WCG Logo"/>
+            </div>
+            <h2>WhiteCircle <span>Payroll</span></h2>
+            <p>Secure, accurate, and transparent payroll<br/>management for every team member.</p>
+        </div>
+    </div>
+
+    <!-- ───────────── RIGHT PANEL ───────────── -->
+    <div class="login-right">
+        
+        <!-- Header Area -->
+        <header class="login-header">
+            <span class="portal-badge"><i class="fa-solid fa-indian-rupee-sign"></i> Payroll Portal</span>
+        </header>
+
+        <!-- Login Card -->
+        <div class="login-card">
+
+            <div class="login-logo-container">
+                <img src="../../static/images/wcg-logo.jpg" th:src="@{/images/wcg-logo.jpg}" alt="WCG Logo" class="login-brand-logo"/>
+            </div>
+
+            <h1>Welcome Back</h1>
+            <p class="login-subtitle">Enter your credentials to access your payroll information.</p>
+
+            <!-- Error Alert -->
+            <div class="login-error" th:if="${error}">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span th:text="${error}">Invalid credentials.</span>
+            </div>
+
+            <!-- Login Form -->
+            <form method="post" th:action="@{/payroll-login}">
+
+                <div class="login-form-group">
+                    <label for="loginId">Employee ID</label>
+                    <input id="loginId"
+                           name="loginId"
+                           type="text"
+                           class="login-input"
+                           placeholder="e.g. WCG001"
+                           autocomplete="username"
+                           required/>
+                </div>
+
+                <div class="login-form-group">
+                    <label for="password">Password</label>
+                    <input id="password"
+                           name="password"
+                           type="password"
+                           class="login-input"
+                           placeholder="Enter your password"
+                           autocomplete="current-password"
+                           required/>
+                </div>
+
+                <div class="login-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe"/> Remember me
+                    </label>
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="login-btn" id="loginSubmitBtn">
+                    <i class="fa-solid fa-right-to-bracket" style="margin-right:8px;"></i>
+                    Log In to Payroll
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- Footer Area -->
+        <footer class="login-footer">
+            <div class="social-links">
+                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+            <p class="copyright">© 2026 WhiteCircle Group. All rights reserved.</p>
+        </footer>
+    </div>
+
+</div>
+
+</body>
+</html>

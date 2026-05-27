@@ -409,7 +409,7 @@ public class DashboardController {
     public String showKnowledgeBasePage() { return "knowledge-base"; }
 
     @GetMapping("/payroll")
-    public String showPayrollPage() { return "payroll"; }
+    public String showPayrollPage() { return "redirect:/payroll-login"; }
 
     @GetMapping("/holiday-list")
     public String showHolidayList() { return "holiday-list"; }

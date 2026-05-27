@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My Profile – Payroll Portal</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/base/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/variables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/typography.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/dashboard-layout.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/sidebar.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/cards.css}"/>
+
+    <style>
+        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 8px; }
+        .profile-section { background: var(--white); border-radius: var(--radius-md); padding: 32px; box-shadow: var(--shadow-sm); }
+        .profile-section-title { font-size: 16px; font-weight: 700; color: var(--primary-blue); margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.5px; }
+        .profile-field { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #F3F3F3; }
+        .profile-field:last-child { border-bottom: none; }
+        .profile-field-label { font-size: 13px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.4px; }
+        .profile-field-value { font-size: 15px; font-weight: 500; color: var(--text-dark); text-align: right; }
+        .profile-avatar { display: flex; align-items: center; gap: 20px; background: var(--white); border-radius: var(--radius-md); padding: 28px 32px; box-shadow: var(--shadow-sm); margin-bottom: 32px; }
+        .avatar-circle { width: 72px; height: 72px; border-radius: 50%; background: var(--primary-blue); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; color: white; flex-shrink: 0; }
+        .avatar-info h2 { font-size: 22px; font-weight: 700; color: var(--text-dark); }
+        .avatar-info p { font-size: 14px; color: var(--text-light); margin-top: 4px; }
+        .edit-bank-btn { background: none; border: none; color: var(--primary-blue); font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: var(--transition); }
+        .edit-bank-btn:hover { color: var(--primary-dark); transform: scale(1.05); }
+        
+        /* Modal Styles */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content { background: white; border-radius: var(--radius-lg); width: 100%; max-width: 480px; padding: 32px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); transform: translateY(-30px); transition: transform 0.3s ease; }
+        .modal-overlay.show .modal-content { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .modal-header h2 { font-size: 20px; font-weight: 700; color: var(--text-dark); }
+        .close-modal-btn { background: none; border: none; font-size: 24px; color: var(--text-light); cursor: pointer; }
+        .close-modal-btn:hover { color: var(--danger); }
+        .modal-form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+        .modal-form-group label { font-size: 14px; font-weight: 600; color: var(--text-dark); }
+        .modal-input, .modal-select { height: 46px; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 0 14px; font-size: 14px; width: 100%; outline: none; transition: var(--transition); background: white; color: var(--text-dark); }
+        .modal-input:focus, .modal-select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(47, 84, 235, 0.08); }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 28px; }
+        .modal-cancel-btn { height: 42px; padding: 0 20px; background: #F1F5F9; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: var(--transition); }
+        .modal-cancel-btn:hover { background: #E2E8F0; color: var(--text-dark); }
+        .modal-submit-btn { height: 42px; padding: 0 20px; background: var(--primary-blue); border: none; border-radius: 10px; font-size: 14px; font-weight: 600; color: white; cursor: pointer; transition: var(--transition); box-shadow: 0 4px 10px rgba(47, 84, 235, 0.15); }
+        .modal-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(47, 84, 235, 0.25); }
+        .modal-submit-btn:active { transform: translateY(0); }
+        @media (max-width: 900px) { .profile-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+    <main class="main-content">
+
+        <h1 class="page-title">My Profile</h1>
+
+        <!-- Avatar Card -->
+        <div class="profile-avatar">
+            <div class="avatar-circle" th:text="${initials != null ? initials : 'RS'}">RS</div>
+            <div class="avatar-info">
+                <h2 th:text="${user != null ? user.fullName : 'Rahul Sharma'}">Rahul Sharma</h2>
+                <p>
+                    <span th:text="${profile != null && profile.designation != null ? profile.designation : 'Employee'}">Software Engineer</span>
+                    &nbsp;·&nbsp; Employee ID: <span th:text="${user != null ? user.username : 'WCG042'}">WCG042</span>
+                    &nbsp;·&nbsp; Department: <span th:text="${user != null && user.role != null ? user.role.roleName : 'Technology'}">Technology</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="profile-grid">
+
+            <!-- Personal Details -->
+            <div class="profile-section">
+                <div class="profile-section-title">
+                    <i class="fa-solid fa-user"></i> Personal Details
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Full Name</span>
+                    <span class="profile-field-value" th:text="${user != null ? user.fullName : 'Rahul Sharma'}">Rahul Sharma</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Date of Birth</span>
+                    <span class="profile-field-value" th:text="${profile != null && profile.dob != null ? #temporals.format(profile.dob, 'dd MMMM yyyy') : '14 March 1995'}">14 March 1995</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Gender</span>
+                    <span class="profile-field-value" th:text="${profile != null && profile.gender != null ? profile.gender : 'Male'}">Male</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Mobile</span>
+                    <span class="profile-field-value" th:text="${profile != null && profile.mobileNumber != null ? profile.mobileNumber : '+91 98765 43210'}">+91 98765 43210</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Email</span>
+                    <span class="profile-field-value" th:text="${user != null ? user.email : 'rahul.sharma@wcg.in'}">rahul.sharma@wcg.in</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Aadhaar No.</span>
+                    <span class="profile-field-value" th:text="${profile != null && profile.aadharNo != null ? profile.aadharNo : 'XXXX XXXX 4521'}">XXXX XXXX 4521</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">PAN</span>
+                    <span class="profile-field-value" th:text="${profile != null && profile.panNo != null ? profile.panNo : 'ABCPS1234R'}">ABCPS1234R</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Address</span>
+                    <span class="profile-field-value" th:text="${profile != null && profile.permanentAddress != null ? profile.permanentAddress : '42 MG Road, Pune – 411001'}">42 MG Road, Pune – 411001</span>
+                </div>
+            </div>
+
+            <!-- Bank Details -->
+            <div class="profile-section">
+                <div class="profile-section-title">
+                    <span><i class="fa-solid fa-building-columns"></i> Bank Account Details</span>
+                    <button class="edit-bank-btn" onclick="openBankModal()"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Account Holder</span>
+                    <span class="profile-field-value" th:text="${profile != null && profile.bankAccountHolder != null ? profile.bankAccountHolder : (user != null ? user.fullName : 'Rahul Sharma')}">Rahul Sharma</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Account Number</span>
+                    <span class="profile-field-value" th:text="${profile != null && profile.bankAccountNumber != null ? profile.bankAccountNumber : (user != null ? 'XXXX XXXX ' + (1000 + user.id) : 'XXXX XXXX 8812')}">XXXX XXXX 8812</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">IFSC Code</span>
+                    <span class="profile-field-value" th:text="${profile != null && profile.bankIfscCode != null ? profile.bankIfscCode : 'HDFC0001234'}">HDFC0001234</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Bank Name</span>
+                    <span class="profile-field-value" th:text="${profile != null && profile.bankName != null ? profile.bankName : 'HDFC Bank'}">HDFC Bank</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Branch</span>
+                    <span class="profile-field-value" th:text="${profile != null && profile.bankBranch != null ? profile.bankBranch : 'MG Road, Pune'}">MG Road, Pune</span>
+                </div>
+                <div class="profile-field">
+                    <span class="profile-field-label">Account Type</span>
+                    <span class="profile-field-value" th:text="${profile != null && profile.bankAccountType != null ? profile.bankAccountType : 'Savings'}">Savings</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Bank Details Edit Modal -->
+<div id="bankModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Update Bank Details</h2>
+            <button class="close-modal-btn" onclick="closeBankModal()">&times;</button>
+        </div>
+        <form id="bankDetailsForm" method="post" th:action="@{/payroll/update-bank-details}">
+            
+            <div class="modal-form-group">
+                <label for="modalAccountHolder">Account Holder Name</label>
+                <input type="text" id="modalAccountHolder" name="bankAccountHolder" class="modal-input" required 
+                       th:value="${profile != null && profile.bankAccountHolder != null ? profile.bankAccountHolder : (user != null ? user.fullName : 'Rahul Sharma')}"/>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="modalAccountNumber">Account Number</label>
+                <input type="text" id="modalAccountNumber" name="bankAccountNumber" class="modal-input" required 
+                       th:value="${profile != null && profile.bankAccountNumber != null ? profile.bankAccountNumber : (user != null ? 'XXXX XXXX ' + (1000 + user.id) : 'XXXX XXXX 8812')}"/>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="modalIfscCode">IFSC Code</label>
+                <input type="text" id="modalIfscCode" name="bankIfscCode" class="modal-input" required 
+                       th:value="${profile != null && profile.bankIfscCode != null ? profile.bankIfscCode : 'HDFC0001234'}"/>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="modalBankName">Bank Name</label>
+                <input type="text" id="modalBankName" name="bankName" class="modal-input" required 
+                       th:value="${profile != null && profile.bankName != null ? profile.bankName : 'HDFC Bank'}"/>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="modalBankBranch">Branch</label>
+                <input type="text" id="modalBankBranch" name="bankBranch" class="modal-input" required 
+                       th:value="${profile != null && profile.bankBranch != null ? profile.bankBranch : 'MG Road, Pune'}"/>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="modalAccountType">Account Type</label>
+                <select id="modalAccountType" name="bankAccountType" class="modal-select">
+                    <option value="Savings" th:selected="${profile != null && profile.bankAccountType == 'Savings'}">Savings</option>
+                    <option value="Current" th:selected="${profile != null && profile.bankAccountType == 'Current'}">Current</option>
+                </select>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="modal-cancel-btn" onclick="closeBankModal()">Cancel</button>
+                <button type="submit" class="modal-submit-btn">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{/js/common/sidebar.js}"></script>
+<script>
+    function openBankModal() {
+        const modal = document.getElementById('bankModal');
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.classList.add('show');
+        }, 10);
+    }
+    
+    function closeBankModal() {
+        const modal = document.getElementById('bankModal');
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+    
+    // Close modal if user clicks outside the content box
+    window.onclick = function(event) {
+        const modal = document.getElementById('bankModal');
+        if (event.target === modal) {
+            closeBankModal();
+        }
+    }
+</script>
+</body>
+</html>
