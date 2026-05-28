@@ -204,10 +204,16 @@ public class LeaveController {
 
             List<Map<String, Object>> result = new ArrayList<>();
 
+            // Only return active leave types
+            java.util.Set<String> activeTypes = java.util.Set.of("CL", "SL", "EL", "COMP_OFF", "LOP");
+
             for (EmployeeLeaveWallet wallet : wallets) {
+                String code = wallet.getLeaveType().getLeaveCode();
+                if (!activeTypes.contains(code)) continue;
+
                 Map<String, Object> map = new LinkedHashMap<>();
                 map.put("leaveType", wallet.getLeaveType().getLeaveName());
-                map.put("leaveCode", wallet.getLeaveType().getLeaveCode());
+                map.put("leaveCode", code);
                 map.put("openingBalance", wallet.getOpeningBalance());
                 map.put("monthlyCredit", wallet.getLeaveType().getMonthlyCredit());
                 map.put("earnedCredit", wallet.getEarnedCredit());

@@ -104,36 +104,116 @@
         }
         .form-control:read-only { background-color: #f8fafc; color: #475569; }
 
-        /* ═══════════════════════ UPCOMING HOLIDAYS (Simple Todo Style) ═══════════════════════ */
-        .holiday-todo-item {
-            display: flex; align-items: center; padding: 10px 14px;
-            border: 1px solid #f1f5f9; border-radius: 10px;
-            margin-bottom: 8px; transition: all 0.2s ease;
-            background: #fafbfc;
+        /* ═══════════════════════ UPCOMING HOLIDAYS (Custom UI) ═══════════════════════ */
+        .holiday-wrapper {
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
-        .holiday-todo-item:last-child { margin-bottom: 0; }
-        .holiday-todo-item:hover { background: #f1f5f9; transform: translateX(4px); }
-
-        .holiday-emoji {
-            font-size: 1.4rem; margin-right: 12px; width: 36px; height: 36px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 8px; flex-shrink: 0;
+        .holiday-header-blue {
+            background: #254497;
+            color: white;
+            padding: 16px 20px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .holiday-todo-date {
-            font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
-            letter-spacing: 0.5px; margin-right: 14px; min-width: 44px;
-            text-align: center; line-height: 1.2;
+        .holiday-list-wrapper {
+            padding: 15px;
+            background: #ffffff;
         }
-        .holiday-todo-date .day { font-size: 1.1rem; display: block; color: var(--bs-primary); }
-        .holiday-todo-date .month { color: #94a3b8; display: block; }
-        .holiday-todo-name { font-size: 0.82rem; font-weight: 600; color: #1e293b; flex-grow: 1; }
-        .holiday-todo-day { font-size: 0.7rem; color: #94a3b8; }
-        .badge-sm {
-            font-size: 0.58rem; padding: 3px 8px; border-radius: 4px;
-            font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;
+        .holiday-list-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border: 1px solid #f1f5f9;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            background: #ffffff;
+            transition: all 0.2s ease;
         }
-        .badge-fixed-sm { background: #dbeafe; color: #1e40af; }
-        .badge-floater-sm { background: #ffedd5; color: #c2410c; }
+        .holiday-list-item:last-child {
+            margin-bottom: 0;
+        }
+        .holiday-list-item:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            border-color: #e2e8f0;
+            transform: translateY(-2px);
+        }
+        .holiday-img-container {
+            width: 42px;
+            height: 42px;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .holiday-img-container img {
+            max-width: 24px;
+            max-height: 24px;
+            object-fit: contain;
+        }
+        .holiday-date-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-right: 30px;
+            min-width: 40px;
+        }
+        .holiday-month {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+        .holiday-day-num {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            line-height: 1;
+        }
+        .holiday-info-col {
+            flex-grow: 1;
+        }
+        .holiday-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 3px;
+        }
+        .holiday-weekday {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #94a3b8;
+        }
+        .holiday-badge {
+            padding: 6px 14px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .floater-badge {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+        .fixed-badge {
+            background: #eff6ff;
+            color: #2563eb;
+        }
 
         /* ═══════════════════════ LEAVE WALLET SUMMARY (Minimal Cards) ═══════════════════════ */
         .wallet-grid {
@@ -336,9 +416,12 @@
         }
         [data-bs-theme="dark"] .form-control:read-only { background: #0f172a; color: #94a3b8; }
         [data-bs-theme="dark"] .form-label { color: #94a3b8; }
-        [data-bs-theme="dark"] .holiday-todo-item { background: #0f172a; border-color: #334155; }
-        [data-bs-theme="dark"] .holiday-todo-item:hover { background: #1e293b; }
-        [data-bs-theme="dark"] .holiday-todo-name { color: #e2e8f0; }
+        [data-bs-theme="dark"] .holiday-wrapper { background: #1e293b; border-color: #334155; }
+        [data-bs-theme="dark"] .holiday-list-wrapper { background: #1e293b; }
+        [data-bs-theme="dark"] .holiday-list-item { background: #0f172a; border-color: #334155; }
+        [data-bs-theme="dark"] .holiday-list-item:hover { background: #1e293b; }
+        [data-bs-theme="dark"] .holiday-title { color: #e2e8f0; }
+        [data-bs-theme="dark"] .holiday-img-container { background: #1e293b; }
         [data-bs-theme="dark"] .wallet-chip { background: #0f172a; border-color: #334155; }
         [data-bs-theme="dark"] .wallet-chip .chip-label { color: #94a3b8; }
         [data-bs-theme="dark"] .absence-item { border-bottom-color: #334155; }
@@ -402,52 +485,53 @@
 
         <!-- Upcoming Holidays -->
         <div class="col-lg-7">
-            <div class="app-card">
-                <div class="app-card-header">
-                    <i class="fas fa-calendar-alt"></i> Upcoming Holidays
+            <div style="background: transparent; margin-bottom: 24px; height: 100%;">
+                <div class="fw-bold text-uppercase" style="color: #1e293b; font-size: 0.82rem; letter-spacing: 0.5px; padding-top: 15px; margin-bottom: 12px;">Upcoming Holidays</div>
+                <div class="row w-100 m-0 align-items-center" style="background: #e8eaf6; border-radius: 8px; padding: 10px 20px; font-weight: 700; color: #2563eb; font-size: 0.78rem;">
+                    <div class="col-6 p-0">Holiday Details</div>
+                    <div class="col-2 p-0 text-center">Date</div>
+                    <div class="col-4 p-0 ps-5">Day</div>
                 </div>
-                <div class="app-card-body" style="padding: 16px 20px;">
-                    <div class="scroll-container" style="max-height: 210px;" id="upcomingHolidaysContainer">
-                        <div class="loading-state">
-                            <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                            <br><small class="fw-bold text-muted">Loading holidays...</small>
-                        </div>
+                <div class="scroll-container mt-2" style="max-height: 140px;" id="upcomingHolidaysContainer">
+                    <div class="loading-state">
+                        <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
+                        <br><small class="fw-bold text-muted">Loading holidays...</small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ═══════════════════════ ROW 2: LEAVE WALLET & TRANSACTIONS ═══════════════════════ -->
+    <!-- ═══════════════════════ ROW 2: LEAVE WALLET + TRANSACTIONS (Combined) ═══════════════════════ -->
     <div class="row g-4 mb-0">
-        <div class="col-lg-5">
+        <div class="col-12">
             <div class="app-card">
                 <div class="app-card-header justify-content-between">
                     <div><i class="fas fa-wallet"></i> Leave Wallet</div>
-                    <a class="view-all-link" onclick="showWalletDetailsModal()">View All <i class="fas fa-chevron-right ms-1" style="font-size:0.6rem;"></i></a>
+                    <a class="view-all-link" onclick="showWalletDetailsModal()">View Details <i class="fas fa-chevron-right ms-1" style="font-size:0.6rem;"></i></a>
                 </div>
-                <div class="app-card-body" style="padding: 18px 20px;">
-                    <div class="wallet-grid" id="walletSummaryGrid">
+                <div class="app-card-body" style="padding: 20px;">
+                    <!-- Wallet Cards Grid -->
+                    <div id="walletCardsGrid" style="display:grid; grid-template-columns: repeat(5, 1fr); gap:10px;">
                         <div class="loading-state" style="grid-column: 1/-1;">
                             <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-                            <small class="ms-2 fw-bold text-muted">Loading...</small>
+                            <small class="ms-2 fw-bold text-muted">Loading wallet...</small>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-lg-7">
-            <div class="app-card">
-                <div class="app-card-header justify-content-between">
-                    <div><i class="fas fa-history"></i> Leave Transactions</div>
-                    <a class="view-all-link" onclick="showLedgerModal()">View All <i class="fas fa-chevron-right ms-1" style="font-size:0.6rem;"></i></a>
-                </div>
-                <div class="app-card-body" style="padding: 16px 20px;">
-                    <div id="ledgerSummaryContainer">
-                        <div class="loading-state">
-                            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-                            <small class="ms-2 fw-bold text-muted">Loading...</small>
+                    <!-- Transaction History (inline) -->
+                    <div style="margin-top:20px; padding-top:18px; border-top:1px solid #e2e8f0;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div style="font-size:0.85rem; font-weight:700; color:#1e293b;">
+                                <i class="fas fa-history text-primary me-2"></i>Recent Transactions
+                            </div>
+                            <a class="view-all-link" style="color:#1e3a8a; opacity:1; font-size:0.75rem;" onclick="showLedgerModal()">View All <i class="fas fa-chevron-right ms-1" style="font-size:0.55rem;"></i></a>
+                        </div>
+                        <div id="ledgerSummaryContainer">
+                            <div class="loading-state">
+                                <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                <small class="ms-2 fw-bold text-muted">Loading...</small>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -459,37 +543,7 @@
     <div class="row g-4 mb-0">
         <!-- Working Calendar -->
         <div class="col-lg-5">
-            <div class="app-card">
-                <div class="app-card-header">
-                    <i class="fas fa-calendar-days"></i> Working Calendar
-                </div>
-                <div class="app-card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <button class="cal-nav-btn" onclick="navigateMonth(-1)"><i class="fas fa-chevron-left"></i></button>
-                        <h6 class="mb-0 fw-bold" id="calendarMonthTitle" style="color: var(--bs-primary); font-size: 0.95rem;"></h6>
-                        <button class="cal-nav-btn" onclick="navigateMonth(1)"><i class="fas fa-chevron-right"></i></button>
-                    </div>
-                    <div class="calendar-grid mb-2">
-                        <div class="calendar-day-header">Mon</div>
-                        <div class="calendar-day-header">Tue</div>
-                        <div class="calendar-day-header">Wed</div>
-                        <div class="calendar-day-header">Thu</div>
-                        <div class="calendar-day-header">Fri</div>
-                        <div class="calendar-day-header">Sat</div>
-                        <div class="calendar-day-header">Sun</div>
-                    </div>
-                    <div class="calendar-grid" id="calendarDaysGrid"></div>
-                    <div class="calendar-legend">
-                        <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div>Today</div>
-                        <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div>Approved</div>
-                        <div class="legend-item"><div class="legend-dot" style="background:#eab308;"></div>Pending</div>
-                        <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div>Rejected</div>
-                        <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div>Floater</div>
-                        <div class="legend-item"><div class="legend-dot" style="background:#93c5fd;"></div>Fixed Holiday</div>
-                        <div class="legend-item"><div class="legend-dot" style="background:#f1f5f9; border:1px solid #cbd5e1;"></div>Weekend</div>
-                    </div>
-                </div>
-            </div>
+            <div th:replace="~{fragments/spiral-calendar :: spiralCalendar}"></div>
         </div>
 
         <!-- Apply Leave Form -->
@@ -509,12 +563,6 @@
                                     <option value="Sick">Sick Leave (SL)</option>
                                     <option value="Earned">Earned Leave (EL)</option>
                                     <option value="CompOff">Comp Off</option>
-                                    <option value="Maternity">Maternity Leave</option>
-                                    <option value="Paternity">Paternity Leave</option>
-                                    <option value="Marriage">Marriage Leave</option>
-                                    <option value="Bereavement">Bereavement Leave</option>
-                                    <option value="WFH">WFH</option>
-                                    <option value="Floater">Floater Holiday</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
@@ -542,6 +590,10 @@
                             <div class="col-md-4">
                                 <label class="form-label">Number of Days</label>
                                 <input type="text" class="form-control fw-bold text-primary" id="totalDays" value="0" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Back to Office Date</label>
+                                <input type="text" class="form-control fw-bold" style="color: #059669;" id="backToOffice" value="--" readonly>
                             </div>
                             <div class="col-12">
                                 <div class="balance-warning" id="balanceWarning">
@@ -619,20 +671,29 @@
     const monthNames = ['January','February','March','April','May','June',
                         'July','August','September','October','November','December'];
 
-    // ═══════════════════════ HOLIDAY EMOJI MAPPING ═══════════════════════
-    function getHolidayEmoji(name) {
+    // ═══════════════════════ HOLIDAY EMOJI/IMAGE MAPPING ═══════════════════════
+    function getHolidayImage(name) {
         const n = (name || '').toLowerCase();
-        if (n.includes('diwali')) return '🪔';
-        if (n.includes('holi')) return '🎨';
-        if (n.includes('christmas')) return '🎄';
-        if (n.includes('republic')) return '🇮🇳';
-        if (n.includes('independence')) return '🇮🇳';
-        if (n.includes('good friday')) return '✝️';
-        if (n.includes('dussehra')) return '🏹';
-        if (n.includes('eid')) return '🌙';
-        if (n.includes('labour') || n.includes('maharashtra')) return '⚒️';
-        if (n.includes('shivratri') || n.includes('shivaratri')) return '🔱';
-        return '📅';
+        let src = '';
+        if (n.includes('diwali')) src = '/images/diwali.png';
+        else if (n.includes('holi')) src = '/images/holi.png';
+        else if (n.includes('christmas')) src = '/images/christmas.png';
+        else if (n.includes('republic')) src = '/images/republic.png';
+        else if (n.includes('independence')) src = '/images/independence.png';
+        else if (n.includes('good friday') || n.includes('friday')) src = '/images/good_friday.png';
+        else if (n.includes('dussehra')) src = '/images/dussehra.png';
+        else if (n.includes('ganesh') || n.includes('chaturthi')) src = '/images/ganesh.png';
+        else if (n.includes('gandhi') || n.includes('jayanti')) src = '/images/gandhi.png';
+        else if (n.includes('labour') || n.includes('maharashtra')) src = '/images/labour.png';
+        else if (n.includes('raksha') || n.includes('bandhan')) src = '/images/raksha.png';
+        
+        if (src) {
+            return `<img src="${src}" alt="${name}" style="max-width: 40px; max-height: 40px; object-fit: contain;">`;
+        } else if (n.includes('eid')) {
+            return `<div style="font-size: 2rem;">🌙</div>`;
+        } else {
+            return `<i class="fas fa-calendar-day" style="color: #6366f1; font-size: 1.8rem;"></i>`;
+        }
     }
 
     // ═══════════════════════ 1. FETCH UPCOMING HOLIDAYS ═══════════════════════
@@ -650,26 +711,34 @@
 
             let html = '';
             holidays.forEach(h => {
-                const d = new Date(h.date);
-                const month = d.toLocaleString('en', { month: 'short' }).toUpperCase();
-                const day = d.getDate();
-                const dayName = d.toLocaleString('en', { weekday: 'long' });
-                const isFloater = (h.type || '').toLowerCase() === 'floater';
-                const badgeClass = isFloater ? 'badge-floater-sm' : 'badge-fixed-sm';
-                const badgeText = isFloater ? 'FLOATER' : 'FIXED';
-                const emoji = getHolidayEmoji(h.name);
+                let d = new Date(h.date);
+                let month = "MTH";
+                let dayStr = h.date;
+                let dayName = "Day";
+                
+                if (!isNaN(d.getTime())) {
+                    month = d.toLocaleString('en', { month: 'short' }).toUpperCase();
+                    let dayNum = d.getDate();
+                    dayStr = (dayNum < 10 ? '0' : '') + dayNum;
+                    dayName = d.toLocaleString('en', { weekday: 'long' });
+                }
 
-                html += '<div class="holiday-todo-item">' +
-                    '<div class="holiday-emoji">' + emoji + '</div>' +
-                    '<div class="holiday-todo-date">' +
-                        '<span class="month">' + month + '</span>' +
-                        '<span class="day">' + day + '</span>' +
+                const imgTag = getHolidayImage(h.name);
+
+                html += '<div class="row w-100 m-0 align-items-center py-2" style="border-bottom: 1px solid #f1f5f9; padding: 0 20px;">' +
+                    '<div class="col-6 p-0 d-flex align-items-center" style="gap: 15px;">' +
+                        '<div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">' + imgTag + '</div>' +
+                        '<div style="font-weight: 700; color: #1e293b; font-size: 0.9rem;">' + h.name + '</div>' +
                     '</div>' +
-                    '<div class="flex-grow-1">' +
-                        '<div class="holiday-todo-name">' + h.name + '</div>' +
-                        '<div class="holiday-todo-day">' + dayName + '</div>' +
+                    '<div class="col-2 p-0 d-flex justify-content-center">' +
+                        '<div style="border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; width: 45px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.03);">' +
+                            '<div style="background: #3b82f6; color: white; font-size: 0.65rem; font-weight: 800; padding: 3px 0;">' + month + '</div>' +
+                            '<div style="background: white; color: #1e293b; font-size: 0.9rem; font-weight: 800; padding: 4px 0;">' + dayStr + '</div>' +
+                        '</div>' +
                     '</div>' +
-                    '<span class="badge-sm ' + badgeClass + '">' + badgeText + '</span>' +
+                    '<div class="col-4 p-0 ps-5" style="font-weight: 700; color: #1e293b; font-size: 0.9rem;">' +
+                        dayName +
+                    '</div>' +
                 '</div>';
             });
             container.innerHTML = html;
@@ -680,7 +749,7 @@
 
     // ═══════════════════════ 2. FETCH LEAVE WALLET (Minimal Chips) ═══════════════════════
     async function fetchLeaveWallet() {
-        const grid = document.getElementById('walletSummaryGrid');
+        const grid = document.getElementById('walletCardsGrid');
         try {
             const res = await fetch('/api/leave/wallet-summary');
             if (!res.ok) throw new Error('Failed');
@@ -693,40 +762,69 @@
 
             walletData.forEach(w => { window.availableLeaveBalances[w.leaveCode] = w.balance || 0; });
 
-            let html = '<div style="font-size:0.72rem; color:#94a3b8; margin-bottom:10px; font-weight:500; grid-column:1/-1;"><i class="fas fa-info-circle me-1"></i>Your leave balance summary. Click <strong>View All</strong> for full details.</div>';
+            // Color themes for each leave type
+            const themes = {
+                'CL':       { gradient: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', icon: 'fa-sun',          iconBg: 'rgba(255,255,255,0.2)' },
+                'SL':       { gradient: 'linear-gradient(135deg, #10b981, #059669)', icon: 'fa-kit-medical',   iconBg: 'rgba(255,255,255,0.2)' },
+                'EL':       { gradient: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', icon: 'fa-star',          iconBg: 'rgba(255,255,255,0.2)' },
+                'COMP_OFF': { gradient: 'linear-gradient(135deg, #f59e0b, #d97706)', icon: 'fa-rotate',        iconBg: 'rgba(255,255,255,0.2)' },
+                'LOP':      { gradient: 'linear-gradient(135deg, #ef4444, #b91c1c)', icon: 'fa-circle-exclamation', iconBg: 'rgba(255,255,255,0.2)' }
+            };
 
-            const displayTypes = ['CL', 'SL', 'EL', 'COMP_OFF', 'LOP'];
-
+          const displayTypes = ['CL', 'SL', 'EL', 'COMP_OFF', 'LOP'];  
+          let html = '';
             walletData.forEach(w => {
-                if (!displayTypes.includes(w.leaveCode)) return;
-
+              if (!displayTypes.includes(w.leaveCode)) return;
+                const t = themes[w.leaveCode] || { gradient: 'linear-gradient(135deg, #64748b, #475569)', icon: 'fa-calendar', iconBg: 'rgba(255,255,255,0.2)' };
+              const isLOP = w.leaveCode === 'LOP';
+                const total = w.openingBalance || 0;
                 const isLOP = w.leaveCode === 'LOP';
-                let balClass = 'chip-positive';
-                let balText = w.balance || 0;
-                let subLabel = 'Available';
+                const total = w.openingBalance || 0;
+                const used = w.used || 0;
+                const available = w.balance || 0;
 
+                // Progress bar calculation
+                let pct = 0;
                 if (isLOP) {
-                    // LOP shows used count, not balance
-                    const lopUsed = w.used || 0;
-                    if (lopUsed > 0) {
-                        balClass = 'chip-zero';
-                        balText = lopUsed;
-                        subLabel = 'Days Used';
-                    } else {
-                        balClass = 'chip-positive';
-                        balText = '0';
-                        subLabel = 'No LOP';
-                    }
-                } else if (w.balance <= 0) {
-                    balClass = 'chip-zero';
+                    pct = used > 0 ? 100 : 0;
+                } else if (total > 0) {
+                    pct = Math.round(((total - available) / total) * 100);
                 }
 
-                html += '<div class="wallet-chip">' +
-                    '<div class="chip-code">' + w.leaveCode + '</div>' +
-                    '<div class="chip-balance ' + balClass + '">' + balText + '</div>' +
-                    '<div class="chip-label">' + w.leaveType + '</div>' +
-                    '<div style="font-size:0.58rem; color:#94a3b8; margin-top:2px;">' + subLabel + '</div>' +
+                html += '<div style="background:' + t.gradient + '; border-radius:12px; padding:12px 14px; color:white; position:relative; overflow:hidden; transition:all 0.25s ease; cursor:default;" ' +
+                    'onmouseenter="this.style.transform=\'translateY(-3px)\'; this.style.boxShadow=\'0 8px 20px rgba(0,0,0,0.15)\'" ' +
+                    'onmouseleave="this.style.transform=\'translateY(0)\'; this.style.boxShadow=\'none\'">'+
+
+                    // Header: icon + name inline
+                    '<div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">' +
+                        '<div style="width:28px; height:28px; border-radius:8px; background:' + t.iconBg + '; display:flex; align-items:center; justify-content:center; flex-shrink:0;">' +
+                            '<i class="fas ' + t.icon + '" style="font-size:0.7rem;"></i>' +
+                        '</div>' +
+                        '<div style="font-size:0.72rem; font-weight:700; line-height:1.2;">' + w.leaveType + '</div>' +
+                    '</div>';
+
+                if (isLOP) {
+                    html += '<div style="font-size:1.4rem; font-weight:800; line-height:1;">' + used + '</div>' +
+                        '<div style="font-size:0.62rem; font-weight:600; opacity:0.8; margin-top:2px;">Days on LOP</div>';
+                } else {
+                    html += '<div style="font-size:1.4rem; font-weight:800; line-height:1;">' + available + '<span style="font-size:0.65rem; font-weight:600; opacity:0.7;"> / ' + total + '</span></div>' +
+                        '<div style="font-size:0.62rem; font-weight:600; opacity:0.8; margin-top:2px;">Available</div>';
+                }
+
+                // Progress bar
+                html += '<div style="margin-top:8px; background:rgba(255,255,255,0.2); border-radius:4px; height:4px; overflow:hidden;">' +
+                    '<div style="width:' + pct + '%; height:100%; background:rgba(255,255,255,0.7); border-radius:4px;"></div>' +
                 '</div>';
+
+                // Bottom stat - single line
+                if (!isLOP) {
+                    html += '<div style="margin-top:4px; font-size:0.58rem; font-weight:600; opacity:0.7;">Used: ' + used + ' &bull; ' + pct + '%</div>';
+                } else {
+                    html += '<div style="margin-top:4px; font-size:0.58rem; font-weight:600; opacity:0.7;">' +
+                        (used > 0 ? '⚠ Deduction applies' : '✓ No LOP') + '</div>';
+                }
+
+                html += '</div>';
             });
 
             grid.innerHTML = html;
@@ -988,6 +1086,7 @@
         const startInput = document.getElementById('fromDate');
         const endInput = document.getElementById('toDate');
         const totalInput = document.getElementById('totalDays');
+        const btoInput = document.getElementById('backToOffice');
         const warning = document.getElementById('balanceWarning');
         const warningText = document.getElementById('balanceWarningText');
 
@@ -1007,7 +1106,9 @@
                 });
                 if (isDuplicate) {
                     Swal.fire({ icon: 'error', title: 'Duplicate Leave', text: 'You already have a leave request for one or more of the selected dates.', confirmButtonColor: '#1e3a8a' });
-                    endInput.value = ''; totalInput.value = '0'; return;
+                    endInput.value = ''; totalInput.value = '0'; 
+                    if (btoInput) btoInput.value = '--';
+                    return;
                 }
             }
 
@@ -1024,8 +1125,18 @@
                 }
             }
             totalInput.value = diffDays;
+            
+            if (btoInput) {
+                let backDate = new Date(end);
+                backDate.setDate(backDate.getDate() + 1);
+                while (backDate.getDay() === 0 || backDate.getDay() === 6) {
+                    backDate.setDate(backDate.getDate() + 1);
+                }
+                btoInput.value = backDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' (' + backDate.toLocaleDateString('en-GB', { weekday: 'long' }) + ')';
+            }
         } else {
             totalInput.value = '0';
+            if (btoInput) btoInput.value = '--';
         }
     }
 
