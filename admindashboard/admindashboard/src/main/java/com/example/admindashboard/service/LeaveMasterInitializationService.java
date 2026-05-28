@@ -4,20 +4,34 @@ import com.example.admindashboard.model.LeaveTypeMaster;
 import com.example.admindashboard.repository.LeaveTypeMasterRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Service
 public class LeaveMasterInitializationService {
 
     private final LeaveTypeMasterRepository leaveTypeMasterRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     public LeaveMasterInitializationService(
-            LeaveTypeMasterRepository leaveTypeMasterRepository
+            LeaveTypeMasterRepository leaveTypeMasterRepository,
+            JdbcTemplate jdbcTemplate
     ) {
         this.leaveTypeMasterRepository = leaveTypeMasterRepository;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @PostConstruct
     public void initializeLeaveTypes() {
+        
+        // --- TEMPORARY DATABASE FIX ---
+        // Safely drop the NOT NULL constraint on employee_id in Render's live database
+        try {
+            jdbcTemplate.execute("ALTER TABLE leave_ledger ALTER COLUMN employee_id DROP NOT NULL");
+            System.out.println("✅ Successfully removed NOT NULL constraint from employee_id");
+        } catch (Exception e) {
+            System.out.println("⚠️ Could not alter employee_id (it might already be fixed or doesn't exist): " + e.getMessage());
+        }
+        // ------------------------------
 
         createLeaveTypeIfNotExists(
                 "CL",
