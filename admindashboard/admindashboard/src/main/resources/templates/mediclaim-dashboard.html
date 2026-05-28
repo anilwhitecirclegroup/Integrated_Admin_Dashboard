@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Control Center | WhiteCircle</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --med-primary: #1E88E5;
+            --med-primary-dark: #1565C0;
+            --med-green: #43A047;
+            --med-orange: #FB8C00;
+            --med-red: #E53935;
+            --bg-color: #f4f7fb;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.6);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding-top: 110px;
+            padding-bottom: 40px;
+            background-image: radial-gradient(circle at 10% 0%, rgba(30, 136, 229, 0.08) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 100%, rgba(67, 160, 71, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* --- TOP NAV --- */
+        .med-nav {
+            position: fixed; top: 0; left: 0; right: 0; height: 80px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 40px; z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
+        }
+        .brand-logo { font-weight: 800; font-size: 1.4rem; color: var(--med-primary); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px;}
+
+        /* --- SAAS LAYOUT GRID --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2.2fr 1fr;
+            gap: 24px;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- UNIFIED HEALTH WALLET (HERO BANNER) - COMPACTED --- */
+        .health-wallet-panel {
+            background: linear-gradient(135deg, var(--med-primary) 0%, var(--med-primary-dark) 100%);
+            border-radius: 20px;
+            padding: 25px 35px; /* TIGHTENED PADDING */
+            color: white;
+            box-shadow: 0 15px 35px rgba(30, 136, 229, 0.15);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Decorative Background Pattern */
+        .health-wallet-panel::after {
+            content: '\f21e'; /* Heartbeat icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: -10px;
+            bottom: -30px;
+            font-size: 12rem;
+            color: rgba(255,255,255,0.05);
+            pointer-events: none;
+            transform: rotate(-15deg);
+        }
+
+        .wallet-metrics { z-index: 2; }
+        .wallet-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.8); margin-bottom: 4px; }
+        .wallet-balance { font-size: 2.6rem; /* SCALED DOWN */ font-weight: 800; margin-bottom: 12px; line-height: 1; letter-spacing: -1px; }
+
+        .sub-metrics-row { display: flex; gap: 30px; /* TIGHTENED GAP */ }
+        .sub-metric span { display: block; font-size: 0.75rem; color: rgba(255,255,255,0.7); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;}
+        .sub-metric h5 { margin: 0; font-weight: 700; font-size: 1.15rem; /* SCALED DOWN */ }
+
+        /* Animated Progress Circle - COMPACTED */
+        .progress-circle {
+            width: 130px; height: 130px; border-radius: 50%; /* SCALED DOWN */
+            background: conic-gradient(#ffffff 24%, rgba(255,255,255,0.2) 0deg);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+            animation: loadProgress 1.5s ease-out forwards;
+            z-index: 2;
+        }
+        .progress-circle::before {
+            content: ''; position: absolute; width: 105px; height: 105px; /* SCALED DOWN */
+            background: var(--med-primary-dark); border-radius: 50%;
+        }
+        .progress-value { position: relative; z-index: 1; font-size: 1.6rem; /* SCALED DOWN */ font-weight: 800; color: white; text-align: center; line-height: 1.1; }
+        .progress-value span { display: block; font-size: 0.7rem; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; }
+
+        @keyframes loadProgress {
+            0% { background: conic-gradient(#ffffff 0%, rgba(255,255,255,0.2) 0deg); }
+            100% { background: conic-gradient(#ffffff 24%, rgba(255,255,255,0.2) 0deg); }
+        }
+
+        /* --- SPLIT ANALYTICS PANES --- */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            display: flex; flex-direction: column;
+        }
+
+        .panel-title { font-weight: 800; font-size: 1.1rem; color: var(--text-dark); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .panel-title i { color: var(--med-primary); }
+
+        /* Pending Claims List */
+        .claim-list-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: all 0.2s ease;
+        }
+        .claim-list-item:hover { transform: translateX(5px); border-color: var(--med-orange); box-shadow: 0 5px 15px rgba(251, 140, 0, 0.1); }
+
+        /* --- QUICK ACTION SIDEBAR --- */
+        .action-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .premium-btn {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 20px;
+            display: flex; align-items: center; gap: 18px;
+            text-decoration: none; color: var(--text-dark);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden;
+        }
+
+        .btn-icon-wrapper {
+            width: 50px; height: 50px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .premium-btn h6 { margin: 0 0 3px 0; font-weight: 800; font-size: 1rem; }
+        .premium-btn p { margin: 0; font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+
+        /* Specific Button Colors & Bounce/Ripple Effects */
+        .raise-claim .btn-icon-wrapper { color: var(--med-primary); background: rgba(30, 136, 229, 0.1); }
+        .add-dep .btn-icon-wrapper { color: var(--med-green); background: rgba(67, 160, 71, 0.1); }
+        .view-pol .btn-icon-wrapper { color: var(--med-orange); background: rgba(251, 140, 0, 0.1); }
+        .find-hosp .btn-icon-wrapper { color: var(--med-red); background: rgba(229, 57, 53, 0.1); }
+
+        .premium-btn:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0,0,0,0.08); background: #ffffff; }
+        .premium-btn:hover .btn-icon-wrapper { transform: scale(1.15) rotate(-5deg); color: white; }
+
+        .premium-btn.raise-claim:hover .btn-icon-wrapper { background: var(--med-primary); box-shadow: 0 8px 20px rgba(30, 136, 229, 0.3); }
+        .premium-btn.add-dep:hover .btn-icon-wrapper { background: var(--med-green); box-shadow: 0 8px 20px rgba(67, 160, 71, 0.3); }
+        .premium-btn.view-pol:hover .btn-icon-wrapper { background: var(--med-orange); box-shadow: 0 8px 20px rgba(251, 140, 0, 0.3); }
+        .premium-btn.find-hosp:hover .btn-icon-wrapper { background: var(--med-red); box-shadow: 0 8px 20px rgba(229, 57, 53, 0.3); }
+
+        /* Ripple Effect Core */
+        .premium-btn::after {
+            content: ""; position: absolute; width: 100px; height: 100px;
+            background: rgba(0,0,0,0.05); border-radius: 50%;
+            transform: scale(0); opacity: 0; pointer-events: none;
+            transition: transform 0.5s, opacity 1s;
+            top: 50%; left: 50%; margin-top: -50px; margin-left: -50px;
+        }
+        .premium-btn:active::after { transform: scale(4); opacity: 1; transition: 0s; }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .health-wallet-panel { flex-direction: column; text-align: center; gap: 30px; }
+            .sub-metrics-row { justify-content: center; }
+            .action-sidebar { display: grid; grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .analytics-grid { grid-template-columns: 1fr; }
+            .action-sidebar { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="med-nav">
+    <div class="brand-logo">
+        <i class="fas fa-shield-heart fs-3"></i> WhiteCircle Health
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+        <a href="/employee/mediclaim/notifications" class="text-decoration-none position-relative me-2">
+            <i class="fas fa-bell fs-5 text-muted"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">3</span>
+        </a>
+
+        <div class="d-flex align-items-center gap-2">
+            <a href="/employee/mediclaim/profile" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold shadow-sm">
+                <i class="fas fa-user-circle me-1"></i> My Profile
+            </a>
+
+            <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 rounded-pill fw-bold shadow-sm d-none d-md-inline-block">
+                <i class="fas fa-check-circle me-1"></i> Policy Active
+            </span>
+        </div>
+
+        <a href="/employee/dashboard" class="btn btn-light border btn-sm fw-bold rounded-pill px-3 shadow-sm">
+            <i class="fas fa-sign-out-alt me-1"></i> Exit Vault
+        </a>
+    </div>
+</nav>
+
+<div class="dashboard-grid">
+    <div>
+        <div class="health-wallet-panel">
+            <div class="wallet-metrics">
+                <div class="wallet-label">Available Balance</div>
+                <div class="wallet-balance">₹3,80,000</div>
+
+                <div class="sub-metrics-row">
+                    <div class="sub-metric">
+                        <span>Total Coverage</span>
+                        <h5>₹5,00,000</h5>
+                    </div>
+                    <div class="sub-metric">
+                        <span>Amount Used</span>
+                        <h5>₹1,20,000</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-circle">
+                <div class="progress-value">
+                    24%
+                    <span>Utilized</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-grid">
+            <div class="glass-panel">
+                <div class="panel-title"><i class="fas fa-chart-pie"></i> Claim Status Distribution</div>
+                <div class="flex-grow-1 d-flex justify-content-center align-items-center" style="position: relative; height: 220px;">
+                    <canvas id="claimsPieChart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-panel">
+                <div class="panel-title d-flex justify-content-between w-100">
+                    <span><i class="fas fa-file-medical-alt"></i> Active Claims</span>
+                    <span class="badge bg-warning text-dark rounded-pill">1 Pending</span>
+                </div>
+
+                <div class="d-flex flex-column gap-3 mt-2">
+                    <div class="claim-list-item">
+                        <div>
+                            <h6 class="fw-bold m-0" style="font-size: 0.95rem;">CLM-2026-8942</h6>
+                            <span class="text-muted small">Apollo Hospital • Consult</span>
+                        </div>
+                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning">In Review</span>
+                    </div>
+
+                    <div class="claim-list-item opacity-50">
+                        <div>
+                            <h6 class="fw-bold m-0" style="font-size: 0.95rem;">CLM-2025-1102</h6>
+                            <span class="text-muted small">Max Care • Pharmacy</span>
+                        </div>
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success">Settled</span>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-2 border-top">
+                    <a href="/employee/mediclaim/track/CLM-2026-8942"
+                       class="btn btn-outline-primary btn-sm w-100 fw-bold rounded-pill"
+                       style="padding: 8px; font-size: 0.85rem;">
+                        <i class="fas fa-eye me-2"></i>View Tracking Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-sidebar">
+        <h5 class="fw-bold mb-1 mt-2">Quick Actions</h5>
+
+        <a href="/employee/mediclaim/claim" class="premium-btn raise-claim">
+            <div class="btn-icon-wrapper"><i class="fas fa-plus"></i></div>
+            <div>
+                <h6>Raise New Claim</h6>
+                <p>Reimbursement & cashless</p>
+            </div>
+        </a>
+
+        <a href="/employee/mediclaim/dependents" class="premium-btn add-dep">
+            <div class="btn-icon-wrapper"><i class="fas fa-user-plus"></i></div>
+            <div>
+                <h6>Add Dependent</h6>
+                <p>Register family members</p>
+            </div>
+        </a>
+
+        <a href="/employee/mediclaim/policy" class="premium-btn view-pol">
+            <div class="btn-icon-wrapper"><i class="fas fa-file-contract"></i></div>
+            <div>
+                <h6>Insurance Policy</h6>
+                <p>View coverage details</p>
+            </div>
+        </a>
+
+        <a href="/employee/mediclaim/hospitals" class="premium-btn find-hosp">
+            <div class="btn-icon-wrapper"><i class="fas fa-hospital-symbol"></i></div>
+            <div>
+                <h6>Find Hospital</h6>
+                <p>Network & cashless clinics</p>
+            </div>
+        </a>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('claimsPieChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Approved', 'Pending', 'Rejected'],
+                datasets: [{
+                    data: [3, 1, 1],
+                    backgroundColor: ['#43A047', '#FB8C00', '#E53935'],
+                    borderWidth: 0,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { padding: 15, font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' } } }
+                },
+                animation: { animateScale: true, animateRotate: true, duration: 1500, easing: 'easeOutBounce' }
+            }
+        });
+    });
+</script>
+</body>
+</html>

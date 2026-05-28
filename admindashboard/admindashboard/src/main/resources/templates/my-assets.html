@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hardware Assets - WhiteCircle</title>
+    <title>Assets Form - WhiteCircle</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -11,741 +11,284 @@
 
     <style>
         :root {
-            --navy: #1e3a8a;
-            --navy-hover: #172a6b;
-            --bg-color: #f1f5f9;
-            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --primary-blue: #2563eb;
+            --hover-blue: #1d4ed8;
+            --border-color: #d1d5db;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: #0f172a;
-            padding-top: 120px;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 0;
+            padding: 0;
         }
 
-        .master-nav {
-            position: fixed; top: 0; left: 0; right: 0; height: 80px;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 45px; z-index: 1000; border-bottom: 2px solid var(--navy);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        /* --- HERO BANNER BACKGROUND --- */
+        .hero-banner-container {
+            position: relative;
+            width: 100%;
+            height: 310px;
+            background: linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.05)), 
+                        url('/images/report-issue.jpeg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .btn-navy { background-color: var(--navy); color: white; border: none; transition: all 0.3s ease; }
-        .btn-navy:hover { background-color: var(--navy-hover); color: white; transform: translateY(-1px); }
-
-        .btn-back {
-            background: #1e3a8a; color: white;
-            padding: 10px 24px; border-radius: 10px; font-size: 0.95rem; text-decoration: none;
-            border: none; transition: all 0.2s;
-            box-shadow: 0 2px 5px rgba(30, 58, 138, 0.2);
-        }
-        .btn-back:hover { background: #172554; color: white; transform: translateY(-1px); }
-
-        .main-container { max-width: 1400px; width: 96%; margin: 0 auto; padding: 0 20px; }
-
-        /* QUICK ACTION CARDS  */
-        .catalog-card {
-            background: white; border-radius: 12px; padding: 25px;
-            border: 1px solid #e2e8f0; border-top: 4px solid var(--navy);
-            transition: all 0.3s ease; cursor: pointer; height: 100%;
-            display: flex; flex-direction: column;
-        }
-        .catalog-card:hover {
-            transform: translateY(-5px); box-shadow: 0 10px 20px rgba(30, 58, 138, 0.08);
-            border-color: #cbd5e1;
-        }
-        .catalog-icon {
-            width: 50px; height: 50px; border-radius: 10px; background: #eff6ff;
-            color: var(--navy); display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; margin-bottom: 15px;
+        .hero-banner-container h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #000000;
+            z-index: 2;
+            margin: 0;
         }
 
-        /* INVENTORY ASSET CARDS */
-        .asset-card {
-            background: white; border-radius: 12px; border: 1px solid #e2e8f0;
-            overflow: hidden; box-shadow: var(--card-shadow); height: 100%;
-            transition: transform 0.2s;
+        .btn-back-dashboard {
+            position: absolute;
+            top: 25px;
+            right: 40px;
+            background-color: var(--primary-blue);
+            color: #ffffff !important;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 10px 22px;
+            border-radius: 6px;
+            text-decoration: none;
+            z-index: 10;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
         }
-        .asset-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
-        .asset-header {
-            background: var(--navy); padding: 15px 20px; border-bottom: none;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .asset-header h6, .asset-header i {
-            color: white !important;
-        }
-
-        .asset-body { padding: 20px; }
-        .asset-meta {
-            display: flex; justify-content: space-between; font-size: 0.85rem;
-            margin-bottom: 8px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px;
-        }
-        .asset-meta:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .meta-label { color: #64748b; font-weight: 600; }
-        .meta-value { color: #0f172a; font-weight: 700; font-family: monospace; }
-
-        /* TICKET TABLE  */
-        .ticket-container {
-            background: white; border-radius: 12px; border: 1px solid #e2e8f0;
-            overflow: hidden; box-shadow: var(--card-shadow);
-        }
-        .ticket-header {
-            background: var(--navy); padding: 18px 25px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .ticket-header h6 { color: white !important; margin: 0; font-weight: 700; }
-
-        .table-custom { margin-bottom: 0; }
-        .table-custom thead { background: #f8fafc; color: #64748b; font-size: 0.8rem; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
-        .table-custom th, .table-custom td { padding: 16px 25px; vertical-align: middle; }
-
-        .status-badge { padding: 5px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
-        .bg-active { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .bg-pending { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
-        .ticket-id { font-family: monospace; font-weight: 700; color: #64748b; background: #f1f5f9; padding: 4px 8px; border-radius: 4px; }
-
-        /* RICH MODAL STYLING */
-        .modal-content {
-            border: none; border-radius: 16px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); overflow: hidden;
-        }
-        .modal-header-custom {
-            background: var(--navy); padding: 20px 30px; color: white; border-bottom: none;
-        }
-        .modal-title-custom {
-            font-weight: 700; font-size: 1.25rem; margin: 0; display: flex; align-items: center; gap: 10px;
-        }
-        .btn-close-white { filter: invert(1) grayscale(100%) brightness(200%); opacity: 0.8; }
-        .btn-close-white:hover { opacity: 1; }
-
-        .modal-body-custom { padding: 30px; background: #ffffff; }
-
-        .custom-form-label {
-            font-weight: 600; color: #475569; font-size: 0.85rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .custom-form-control {
-            background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 15px; font-size: 0.95rem; transition: all 0.2s;
-        }
-        .custom-form-control:focus {
-            background-color: #ffffff; border-color: var(--navy); box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1); outline: none;
+        .btn-back-dashboard:hover {
+            background-color: var(--hover-blue);
         }
 
-        .modal-footer-custom {
-            padding: 20px 30px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 12px;
-        }
-        .btn-cancel {
-            background: white; color: #64748b; border: 1px solid #cbd5e1; padding: 10px 24px; border-radius: 10px; font-weight: 600; transition: all 0.2s;
-        }
-        .btn-cancel:hover { background: #f1f5f9; color: #0f172a; }
-
-        /* ELITE IT-PORTAL SWEETALERT STYLING  */
-        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
-        .swal2-popup {
-            border-radius: 24px !important;
-            padding: 2.5em !important;
-            border: 1px solid rgba(30, 58, 138, 0.2) !important;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2) !important;
-        }
-        .swal2-title { color: #1e3a8a !important; font-weight: 800 !important; font-size: 1.6rem !important; }
-        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; line-height: 1.6; }
-        .swal2-confirm {
-            border-radius: 12px !important; padding: 14px 35px !important;
-            font-weight: 700 !important; letter-spacing: 0.5px;
-            background-color: #1e3a8a !important;
-            box-shadow: 0 8px 15px rgba(30, 58, 138, 0.25) !important;
-        }
-        .swal2-cancel {
-            border-radius: 12px !important; padding: 14px 35px !important;
-            font-weight: 600 !important; background-color: #f1f5f9 !important; color: #64748b !important;
+        /* --- FORM CONTENT WRAPPER --- */
+        .form-content-area {
+            max-width: 1100px;
+            margin: 40px auto 80px auto;
+            padding: 0 40px;
         }
 
-        /* Emerald Green Success Ring */
-        .swal2-icon.swal2-success [class^=swal2-success-line] { background-color: #10b981 !important; }
-        .swal2-icon.swal2-success .swal2-success-ring { border-color: rgba(16, 185, 129, 0.3) !important; }
+        .instruction-text {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 40px;
+        }
 
-    </style>
-    <link href="/css/style.css" rel="stylesheet">
+        /* --- FORM STRUCTURE ALIGNMENT --- */
+        .form-label-custom {
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            height: 38px;
+        }
 
-    <style>
-        @media (max-width: 991px) {
+        .form-control-custom {
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 7px 12px;
+            font-size: 0.9rem;
+            color: #000000;
+            background-color: #ffffff;
+            box-sizing: border-box;
+        }
+        .form-control-custom:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            outline: none;
+        }
 
-            /* 1. COMPACT GLOBAL LAYOUT */
-            html, body {
-                padding-top: 0 !important;
-                margin-top: 0 !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                overflow-x: hidden !important;
-                width: 100% !important;
-            }
-            body { padding-top: 80px !important; }
-            .main-container { padding: 0 15px !important; width: 100% !important; }
+        select.form-control-custom {
+            color: #6b7280;
+        }
 
-            /* 2. SHRINK MASTER NAV & SHORTEN BUTTON */
-            .master-nav {
-                height: auto !important; padding: 12px 15px !important; display: grid !important;
-                grid-template-columns: 1fr auto !important; gap: 10px !important; align-items: center !important;
-            }
-            .master-nav > .d-flex { min-width: 0 !important; width: auto !important; flex: 1 !important; }
-            .master-nav i.fa-box-open { font-size: 1.5rem !important; margin-top: 2px !important; }
-            .master-nav span { font-size: 1.15rem !important; margin-left: 8px !important; padding-left: 8px !important; line-height: 1.1 !important; white-space: normal !important; }
-            .master-nav small { display: none !important; }
+        /* --- DRAG & DROP ZONE --- */
+        .upload-dropzone {
+            border: 1.5px dashed #9ca3af;
+            border-radius: 6px;
+            background-color: #ffffff;
+            padding: 24px;
+            text-align: center;
+            color: #4b5563;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-top: 25px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .upload-dropzone:hover {
+            background-color: #f9fafb;
+        }
+        .upload-dropzone span {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
 
-            /* Shorten Back Button to "Back" */
-            .btn-back {
-                padding: 6px 12px !important; font-size: 0px !important;
-                border-radius: 8px !important; display: inline-flex !important; align-items: center !important;
-            }
-            .btn-back i { font-size: 0.85rem !important; margin: 0 !important; }
-            .btn-back::after { content: "Back"; font-size: 0.85rem; margin-left: 5px; font-weight: 700; }
+        /* --- BUTTON CONTROLS ROW --- */
+        .form-actions-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            margin-top: 40px;
+        }
 
-            /* 3. CATALOG & ASSET CARDS (Stacking) */
-            .row.g-4.mb-5 { display: flex !important; flex-direction: column !important; gap: 12px !important; }
+        .btn-submit-custom {
+            background-color: var(--primary-blue);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 10px 28px;
+            border-radius: 6px;
+            border: none;
+            transition: background-color 0.2s;
+        }
+        .btn-submit-custom:hover {
+            background-color: var(--hover-blue);
+        }
 
-            /* Catalog Cards (Hardware Actions) */
-            .catalog-card { padding: 15px !important; border-radius: 12px !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; text-align: left !important; }
-            .catalog-icon { width: 45px !important; height: 45px !important; font-size: 1.2rem !important; margin-bottom: 0 !important; flex-shrink: 0 !important; }
-            .catalog-card h5 { font-size: 1rem !important; margin-bottom: 2px !important; }
-            .catalog-card p { font-size: 0.75rem !important; line-height: 1.3 !important; }
+        .btn-outline-custom {
+            background-color: #ffffff;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 10px 40px;
+            border-radius: 6px;
+            border: 1.5px solid var(--primary-blue);
+            transition: background-color 0.2s;
+        }
+        .btn-outline-custom:hover {
+            background-color: #f3f4f6;
+        }
 
-            /* Assigned Inventory Cards */
-            .asset-card { border-radius: 12px !important; }
-            .asset-header { padding: 10px 15px !important; }
-            .asset-header h6 { font-size: 0.85rem !important; }
-            .asset-body { padding: 15px !important; }
-            .asset-body h5 { font-size: 1rem !important; margin-bottom: 10px !important; }
-            .asset-meta { font-size: 0.75rem !important; padding-bottom: 6px !important; margin-bottom: 6px !important; }
-
-            /* 4. TICKET TABLE-TO-CARD CONVERSION & FILTER FIX */
-            .ticket-container { border-radius: 12px !important; margin-bottom: 30px !important; border: none !important; background: transparent !important;}
-            .ticket-header { padding: 12px 15px !important; border-radius: 12px 12px 0 0 !important; }
-            .ticket-header h6 { font-size: 0.9rem !important; }
-            #statusFilter { width: 130px !important; font-size: 0.75rem !important; height: 32px !important; padding: 0 10px !important; }
-
-            .table-custom thead { display: none !important; }
-            .table-custom tbody { display: flex !important; flex-direction: column !important; gap: 10px !important; padding: 10px 0 !important; }
-
-            /* Crucial: Using flex instead of block !important to ensure JS filter compatibility */
-            .ticket-row {
-                display: flex;
-                flex-direction: column;
-                background: white !important;
-                border: 1px solid #e2e8f0 !important;
-                border-radius: 12px !important;
-                padding: 12px !important;
-                position: relative !important;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.02) !important;
-            }
-
-            .table-custom td {
-                display: flex !important;
-                justify-content: space-between !important;
-                align-items: center !important;
-                padding: 4px 0 !important;
-                border: none !important;
-                font-size: 0.75rem !important;
-                width: 100% !important;
-            }
-
-            /* Re-order elements for better hierarchy */
-            .table-custom td:nth-child(1) { order: 1; margin-bottom: 4px; } /* ID */
-            .table-custom td:nth-child(5) { order: 2; width: auto !important; position: absolute; top: 12px; right: 12px; } /* Status */
-
-            /* Labels */
-            .table-custom td:nth-child(1)::before { content: "Ticket ID:"; font-weight: 700; color: #94a3b8; margin-right: 5px; text-transform: uppercase; }
-            .ticket-id { font-size: 0.7rem !important; padding: 2px 6px !important; }
-
-            /* Device / Subject (Main Text) */
-            .table-custom td:nth-child(3) {
-                order: 3;
-                font-size: 0.95rem !important;
-                font-weight: 800 !important;
-                color: var(--navy) !important;
-                justify-content: flex-start !important;
-                border-bottom: 1px dashed #f1f5f9 !important;
-                padding-bottom: 8px !important;
-                margin-bottom: 8px !important;
-                text-align: left !important;
-            }
-
-            /* Type and Date Labels */
-            .table-custom td:nth-child(2)::before { content: "Category:"; font-weight: 700; color: #64748b; margin-right: 8px; }
-            .table-custom td:nth-child(4)::before { content: "Submitted:"; font-weight: 700; color: #64748b; margin-right: 8px; }
-
-            .table-custom td:nth-child(2), .table-custom td:nth-child(4) {
-                order: 4;
-                justify-content: flex-start !important;
-                color: #475569 !important;
-                font-weight: 600 !important;
-            }
-
-            /* Action Button */
-            .table-custom td:nth-child(6) {
-                order: 5;
-                margin-top: 10px !important;
-                padding-top: 8px !important;
-                border-top: 1px solid #f1f5f9 !important;
-                justify-content: center !important;
-            }
-            .table-custom td:nth-child(6) button { width: 100% !important; padding: 8px !important; }
-
-            /* 5. MODAL FORM TIGHTENING */
-            .modal-body-custom { padding: 20px 15px !important; }
-            .custom-form-label { font-size: 0.7rem !important; margin-bottom: 5px !important; }
-            .custom-form-control { padding: 10px !important; font-size: 0.85rem !important; border-radius: 8px !important; }
-
-            /* Force side-by-side modal fields */
-            .modal-body-custom .col-md-4 { width: 50% !important; display: inline-block !important; }
-            .modal-body-custom .col-md-4:last-of-type { width: 100% !important; display: block !important; }
-
-            /* =========================================================
-               6. MOBILE-ONLY DARK MODE FIXES (ASSET CARDS & TICKET FEED)
-               ========================================================= */
-
-            /* Fix the Catalog and Assigned Inventory Cards */
-            [data-bs-theme="dark"] .catalog-card,
-            [data-bs-theme="dark"] .asset-card {
-                background-color: #1e1e1e !important;
-                border-color: #333333 !important;
-            }
-            [data-bs-theme="dark"] .catalog-card .text-dark,
-            [data-bs-theme="dark"] .asset-body h5.text-navy {
-                color: #ffffff !important;
-            }
-
-            /* Fix the white skeleton background on the ticket rows */
-            [data-bs-theme="dark"] .ticket-row {
-                background-color: #1e1e1e !important;
-                border-color: #333333 !important;
-                background: #1e1e1e !important; /* Overrides any underlying gradients */
-            }
-
-            /* Dim the dashed divider lines inside the cards */
-            [data-bs-theme="dark"] .table-custom td:nth-child(3) {
-                border-bottom-color: #333333 !important;
-            }
-            [data-bs-theme="dark"] .table-custom td:nth-child(6) {
-                border-top-color: #333333 !important;
-            }
-
-            /* Fix the custom injected labels (Ticket ID, Category, etc.) */
-            [data-bs-theme="dark"] .table-custom td::before {
-                color: #94a3b8 !important;
-            }
-
-            /* Fix the hardcoded text classes inside the ticket card */
-            [data-bs-theme="dark"] .table-custom td .text-dark,
-            [data-bs-theme="dark"] .table-custom td:nth-child(3) {
-                color: #ffffff !important; /* Device Name / Subject */
-            }
-            [data-bs-theme="dark"] .table-custom td .text-muted,
-            [data-bs-theme="dark"] .table-custom td:nth-child(2),
-            [data-bs-theme="dark"] .table-custom td:nth-child(4) {
-                color: #94a3b8 !important; /* Dates and Categories */
-            }
-
-            /* Make the "View" button match the dark UI perfectly */
-            [data-bs-theme="dark"] .table-custom td:nth-child(6) button {
-                background-color: #2d2d2d !important;
-                color: #bfdbfe !important; /* Soft light blue text */
-                border-color: #475569 !important;
-            }
-            [data-bs-theme="dark"] .table-custom td:nth-child(6) button:hover {
-                background-color: #3b82f6 !important;
-                color: #ffffff !important;
-            }
+        .hidden-tracker-feed {
+            display: none !important;
         }
     </style>
-
-    <link href="/css/dark-mode.css" rel="stylesheet">
-    <script src="/js/theme-engine.js"></script>
 </head>
 <body>
 
-<header class="master-nav">
-    <div class="d-flex align-items-center">
-        <i class="fas fa-box-open text-dark" style="font-size: 2.5rem;"></i>
-
-        <div style="border-left: 2px solid #cbd5e1; padding-left: 17px; margin-left: 15px;">
-            <span class="fw-bold text-dark d-block" style="font-size: 1.5rem; letter-spacing: 0.5px; line-height: 1.2;">MY ASSETS</span>
-            <small class="text-muted fw-bold" style="letter-spacing: 0.3px;">IT Inventory Portal</small>
-        </div>
-    </div>
-    <a href="/tickets" class="btn-back">
-        <i class="fas fa-arrow-left me-2"></i>Back to Helpdesk
-    </a>
-</header>
-
-<div class="main-container">
-
-    <div class="mb-4 d-flex justify-content-between align-items-end">
-        <div>
-            <h4 class="fw-bold text-navy">Hardware Requests</h4>
-            <p class="text-muted mb-0">Need new equipment or facing hardware issues? Raise a request below.</p>
-        </div>
-    </div>
-
-    <div class="row g-4 mb-5">
-        <div class="col-md-4">
-            <div class="catalog-card" onclick="openHardwareModal('Request Accessory')">
-                <div class="catalog-icon"><i class="fas fa-mouse"></i></div>
-                <h5 class="fw-bold text-dark mb-2">Request Accessories</h5>
-                <p class="text-muted small mb-0 mt-auto">Need a new wireless mouse, mechanical keyboard, adapters, or a headset for meetings.</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="catalog-card" style="border-top-color: #f59e0b;" onclick="openHardwareModal('Upgrade Hardware')">
-                <div class="catalog-icon" style="color: #f59e0b; background: #fffbeb;"><i class="fas fa-microchip"></i></div>
-                <h5 class="fw-bold text-dark mb-2">Upgrade Hardware</h5>
-                <p class="text-muted small mb-0 mt-auto">Request a RAM upgrade, an external monitor, or a dedicated graphics card for heavy workloads.</p>
-            </div>
-        </div>
-
-    </div>
-
-    <h5 class="fw-bold text-navy mb-3 border-bottom border-2 border-primary border-opacity-25 pb-2 d-inline-block"><i class="fas fa-box-open me-2"></i>My Assigned Inventory</h5>
-
-    <div class="row g-4 mb-5">
-        <div class="col-md-4">
-            <div class="asset-card">
-                <div class="asset-header">
-                    <h6 class="fw-bold m-0 text-dark"><i class="fas fa-laptop me-2 text-navy"></i>Primary Laptop</h6>
-                    <span class="status-badge bg-active">Active</span>
-                </div>
-                <div class="asset-body">
-                    <h5 class="fw-bold text-navy mb-3">Dell Latitude 7420</h5>
-                    <div class="asset-meta">
-                        <span class="meta-label">Asset Tag:</span>
-                        <span class="meta-value">WCG-LT-4092</span>
-                    </div>
-                    <div class="asset-meta">
-                        <span class="meta-label">Serial No:</span>
-                        <span class="meta-value">DL-98273X</span>
-                    </div>
-                    <div class="asset-meta">
-                        <span class="meta-label">Assigned:</span>
-                        <span class="meta-value" style="font-family: inherit;">14 Aug 2025</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="asset-card">
-                <div class="asset-header">
-                    <h6 class="fw-bold m-0 text-dark"><i class="fas fa-desktop me-2 text-navy"></i>External Display</h6>
-                    <span class="status-badge bg-active">Active</span>
-                </div>
-                <div class="asset-body">
-                    <h5 class="fw-bold text-navy mb-3">Dell 27" 4K Monitor</h5>
-                    <div class="asset-meta">
-                        <span class="meta-label">Asset Tag:</span>
-                        <span class="meta-value">WCG-MN-1104</span>
-                    </div>
-                    <div class="asset-meta">
-                        <span class="meta-label">Serial No:</span>
-                        <span class="meta-value">MON-4K-882</span>
-                    </div>
-                    <div class="asset-meta">
-                        <span class="meta-label">Assigned:</span>
-                        <span class="meta-value" style="font-family: inherit;">14 Aug 2025</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="asset-card">
-                <div class="asset-header">
-                    <h6 class="fw-bold m-0 text-dark"><i class="fas fa-keyboard me-2 text-navy"></i>Peripherals</h6>
-                    <span class="status-badge bg-active">Active</span>
-                </div>
-                <div class="asset-body">
-                    <h5 class="fw-bold text-navy mb-3">Logitech Wireless Combo</h5>
-                    <div class="asset-meta">
-                        <span class="meta-label">Type:</span>
-                        <span class="meta-value" style="font-family: inherit;">Mouse & Keyboard</span>
-                    </div>
-                    <div class="asset-meta">
-                        <span class="meta-label">Asset Tag:</span>
-                        <span class="meta-value">WCG-PR-9921</span>
-                    </div>
-                    <div class="asset-meta">
-                        <span class="meta-label">Assigned:</span>
-                        <span class="meta-value" style="font-family: inherit;">10 Jan 2026</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ticket-container mb-5">
-
-        <div class="ticket-header">
-            <h6>Recent Hardware Requests</h6>
-            <div class="d-flex gap-2">
-                <select id="statusFilter" class="form-select form-select-sm border-0 rounded-pill px-3 shadow-sm" style="width: 150px;" onchange="filterMyRequests()">
-                    <option value="All">All Statuses</option>
-                    <option value="Open">Open</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Closed">Closed</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table table-custom table-hover">
-                <thead>
-                <tr>
-                    <th>Ticket ID</th>
-                    <th>Request Type</th>
-                    <th>Device / Subject</th>
-                    <th>Submitted On</th>
-                    <th>Status</th>
-                    <th class="text-end">Action</th>
-                </tr>
-                </thead>
-                <tbody id="employeeTicketTableBody">
-
-                <tr th:each="req : ${myRequests}" th:if="${req.type == 'HARDWARE'}" th:data-status="${req.status}" class="ticket-row">
-
-                    <td><span class="ticket-id" th:text="${req.ticketId}">HW-0000</span></td>
-                    <td><span class="fw-bold text-dark" th:text="${req.category}">Accessory Request</span></td>
-
-                    <td class="text-muted">
-                        <span th:text="${req.detailItem}">Detail</span>
-                        <span th:if="${req.durationOrLevel != null and req.durationOrLevel != 'N/A' and req.durationOrLevel != ''}" th:text="${' (' + req.durationOrLevel + ')'}"></span>
-                    </td>
-
-                    <td class="text-muted fw-semibold" th:text="${#temporals.format(req.submissionDate, 'dd MMM yyyy')}">Date</td>
-
-                    <td>
-                            <span class="status-badge"
-                                  th:classappend="${req.status == 'Open' ? 'bg-pending' : (req.status == 'Closed' or req.status == 'Resolved' ? 'bg-active' : 'bg-primary text-white')}"
-                                  th:text="${req.status}">Status</span>
-                    </td>
-
-                    <td class="text-end">
-                        <button class="btn btn-sm btn-light border text-navy fw-bold rounded-pill px-3"
-                                th:onclick="'viewMyRequestDetails(' + ${req.id} + ')'">View</button>
-                    </td>
-                </tr>
-
-                <tr id="emptyFilterRow" style="display: none;">
-                    <td colspan="6" class="text-center py-5 text-muted">
-                        <i class="fas fa-search fa-2x mb-3 opacity-50"></i>
-                        <p class="mb-0 fw-bold">No requests match this filter.</p>
-                    </td>
-                </tr>
-
-                <tr th:if="${#lists.isEmpty(myRequests.?[type == 'HARDWARE'])}">
-                    <td colspan="6" class="text-center py-5 text-muted">
-                        <i class="fas fa-box-open fa-2x mb-3 opacity-50"></i>
-                        <p class="mb-0 fw-bold">No active hardware requests found.</p>
-                        <small>Your submitted accessory and upgrade requests will appear here.</small>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div class="hero-banner-container">
+    <!-- SYNC LOGIC: Routes back directly with active context channel parameter tracking -->
+    <a th:href="@{/ticket-dashboard(dept=${currentDept})}" class="btn-back-dashboard">Back to Dashboard</a>
+    <h1 th:text="${currentDept + ' Assets Form'}">Assets Form</h1>
 </div>
 
-<div class="modal fade" id="accessoryRequestModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
+<div class="form-content-area">
+    <div class="instruction-text">Fill the required details to request accessories / allocate hardware</div>
 
-            <div class="modal-header-custom d-flex justify-content-between align-items-center">
-                <h5 class="modal-title-custom">
-                    <i class="fas fa-mouse"></i> Request IT Accessories
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
+    <form id="assetsFormMain">
+        <!-- SYNC LOGIC: Tracker capturing current context parameters -->
+        <input type="hidden" id="assetDeptType" th:value="${currentDept}">
 
-            <div class="modal-body-custom">
-                <form id="accessoryRequestForm">
-                    <div class="row g-4">
-
-                        <div class="col-md-6">
-                            <label class="custom-form-label">Accessory Type <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="" selected disabled>Select item type...</option>
-                                <option value="Wireless Mouse">Wireless Mouse</option>
-                                <option value="Mechanical Keyboard">External Keyboard (Standard/Mechanical)</option>
-                                <option value="Headset">Noise-Cancelling Headset</option>
-                                <option value="Adapters">Adapters / Dongles (USB-C, HDMI, etc.)</option>
-                                <option value="Laptop Stand">Ergonomic Laptop Stand</option>
-                                <option value="Other">Other (Specify below)</option>
+        <div class="container-fluid p-0">
+            <div class="row g-4">
+                
+                <div class="col-md-6">
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Item Type*</label></div>
+                        <div class="col-sm-9">
+                            <!-- SYNC LOGIC: Iterates via categoriesList provided dynamically by backend switch map -->
+                            <select class="form-select form-control-custom" id="astItemType" required>
+                                <option value="" selected disabled hidden>Select Asset Type</option>
+                                <option th:each="cat : ${categoriesList}" th:value="${cat}" th:text="${cat}"></option>
                             </select>
                         </div>
+                    </div>
 
-                        <div class="col-md-6">
-                            <label class="custom-form-label">Delivery Location <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="" selected disabled>Where should we send this?</option>
-                                <option value="Office - Desk">Office - Leave at my desk</option>
-                                <option value="Office - Pickup">Office - I will pick up from IT Desk</option>
-                                <option value="WFH - Home Address">WFH - Ship to my registered home address</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="custom-form-label">Priority Level <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="Low">Low (Standard 3-5 days)</option>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Priority*</label></div>
+                        <div class="col-sm-9">
+                            <select class="form-select form-control-custom" id="astPriority" required>
+                                <option value="Low">Low</option>
                                 <option value="Medium" selected>Medium</option>
-                                <option value="High">High (Current equipment broken)</option>
+                                <option value="High">High</option>
                             </select>
                         </div>
-
-                        <div class="col-md-6">
-                            <label class="custom-form-label">Date Submitted</label>
-                            <input type="text" class="form-control custom-form-control text-muted fw-bold" id="accSubmissionDate" readonly style="background-color: #e2e8f0; cursor: not-allowed;">
-                        </div>
-
-                        <div class="col-12">
-                            <label class="custom-form-label">Business Justification & Details <span class="text-danger">*</span></label>
-                            <textarea class="form-control custom-form-control" rows="3" placeholder="Explain why this accessory is needed (e.g., 'Old mouse wheel is broken' or 'Need headset for daily client calls')..." required></textarea>
-                        </div>
                     </div>
-                </form>
-            </div>
 
-            <div class="modal-footer-custom">
-                <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-navy" style="padding: 10px 24px; border-radius: 10px; font-weight: 600;" onclick="submitAccessoryRequest()">
-                    <i class="fas fa-paper-plane me-2"></i>Submit Request
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Subject*</label></div>
+                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astSubject" placeholder="Brief allocation reason" required></div>
+                    </div>
 
-<div class="modal fade" id="upgradeHardwareModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Mobile No.*</label></div>
+                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astMobile" required pattern="[0-9]{10}" maxlength="10"></div>
+                    </div>
 
-            <div class="modal-header-custom d-flex justify-content-between align-items-center">
-                <h5 class="modal-title-custom">
-                    <i class="fas fa-microchip"></i> Request Hardware Upgrade
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Email ID*</label></div>
+                        <div class="col-sm-9"><input type="email" class="form-control form-control-custom" id="astEmail" required></div>
+                    </div>
+                </div>
 
-            <div class="modal-body-custom">
-                <form id="upgradeHardwareForm">
-                    <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Delivery Location*</label></div>
+                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astDeliveryLocation" placeholder="Desk No. or Remote Address" required></div>
+                    </div>
 
-                        <div class="col-md-6">
-                            <label class="custom-form-label">Target Asset Tag <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control custom-form-control" placeholder="e.g., WCG-LT-4092" required>
-                            <small class="text-muted mt-1 d-block" style="font-size: 0.75rem;">Check 'My Assigned Inventory' for your tag.</small>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="custom-form-label">Requested Upgrade <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="" selected disabled>Select upgrade type...</option>
-                                <option value="RAM Upgrade">Memory (RAM) Upgrade</option>
-                                <option value="Storage Upgrade">Storage (SSD) Upgrade</option>
-                                <option value="Monitor Upgrade">Secondary Monitor Addition</option>
-                                <option value="Full Device Replacement">Full Device Replacement (End of Life)</option>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Model / Spec*</label></div>
+                        <div class="col-sm-9">
+                            <!-- SYNC LOGIC: Changed input text field to select element parsing dynamic allocations map -->
+                            <select class="form-select form-control-custom" id="astSubcategory" required>
+                                <option value="" selected disabled hidden>Select Core Allocation / Upgrade Spec</option>
+                                <option th:each="item : ${itemsList}" th:value="${item}" th:text="${item}"></option>
                             </select>
                         </div>
-
-                        <div class="col-md-4">
-                            <label class="custom-form-label">Current Specs (Approx) <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control custom-form-control" placeholder="e.g., 16GB RAM" required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="custom-form-label">Requested Specs <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control custom-form-control" placeholder="e.g., 32GB RAM" required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="custom-form-label">Date Submitted</label>
-                            <input type="text" class="form-control custom-form-control text-muted fw-bold" id="upgSubmissionDate" readonly style="background-color: #e2e8f0; cursor: not-allowed;">
-                        </div>
-
-                        <div class="col-12">
-                            <label class="custom-form-label">Performance Bottleneck Justification <span class="text-danger">*</span></label>
-                            <textarea class="form-control custom-form-control" rows="3" placeholder="Please detail how your current hardware is negatively impacting your work (e.g., 'Docker containers crash due to insufficient RAM')..." required></textarea>
-                            <small class="text-muted mt-2 d-block"><i class="fas fa-exclamation-triangle me-1 text-warning"></i> Hardware upgrades over $100 require Department Head approval.</small>
-                        </div>
                     </div>
-                </form>
-            </div>
 
-            <div class="modal-footer-custom">
-                <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-navy" style="padding: 10px 24px; border-radius: 10px; font-weight: 600;" onclick="submitUpgradeRequest()">
-                    <i class="fas fa-paper-plane me-2"></i>Submit Request
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="viewMyRequestModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content" style="border: none; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
-            <div class="modal-header" style="background-color: #1e3a8a; color: white; border-bottom: none; padding: 20px 30px;">
-                <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
-                    <i class="fas fa-file-invoice"></i> Ticket Details: <span id="myModalTicketId" class="badge bg-light text-dark ms-2"></span>
-                </h5>
-                <button type="button" class="btn-close" style="filter: invert(1);" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="padding: 30px;">
-                <div class="row g-4">
-                    <div class="col-md-6 border-end">
-                        <p class="text-muted small mb-1 fw-bold text-uppercase">Submitted By</p>
-                        <h6 class="fw-bold text-dark mb-0" id="myModalEmpName"></h6>
-                        <p class="small text-muted mb-2" id="myModalEmpId"></p>
-                        <div class="d-flex align-items-center gap-2 text-muted small">
-                            <i class="fas fa-building"></i> <span id="myModalDept"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row g-3">
-                            <div class="col-6">
-                                <p class="text-muted small mb-1 fw-bold text-uppercase">Submitted On</p>
-                                <h6 class="fw-bold mb-0" id="myModalDate"></h6>
-                            </div>
-                            <div class="col-6">
-                                <p class="text-muted small mb-1 fw-bold text-uppercase">Priority</p>
-                                <span class="badge bg-secondary px-3 py-2" id="myModalPriority"></span>
-                            </div>
-                            <div class="col-6">
-                                <p class="text-muted small mb-1 fw-bold text-uppercase">Category</p>
-                                <h6 class="fw-bold text-navy mb-0" id="myModalCategory"></h6>
-                            </div>
-                            <div class="col-6">
-                                <p class="text-muted small mb-1 fw-bold text-uppercase">Current Status</p>
-                                <span class="badge px-3 py-2" id="myModalStatus"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12"><hr class="text-muted opacity-25"></div>
-                    <div class="col-12">
-                        <p class="text-muted small mb-1 fw-bold text-uppercase">Requested Item / Subject</p>
-                        <h5 class="fw-bold text-dark mb-1" id="myModalDetails"></h5>
-                        <p class="text-muted small mb-0" id="myModalDuration"></p>
-                    </div>
-                    <div class="col-12 mt-3">
-                        <div class="p-4 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #1e3a8a;">
-                            <p class="text-navy small mb-2 fw-bold"><i class="fas fa-comment-dots me-2"></i>MY JUSTIFICATION</p>
-                            <p class="mb-0 text-dark" id="myModalJustification" style="white-space: pre-wrap; line-height: 1.6;"></p>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Location*</label></div>
+                        <div class="col-sm-9">
+                            <select class="form-select form-control-custom" id="astLocation" required>
+                                <option value="" selected disabled hidden>Select Hub Facility</option>
+                                <option value="Noida">Noida</option>
+                                <option value="Pune">Pune</option>
+                                <option value="Remote">Remote</option>
+                            </select>
                         </div>
                     </div>
                 </div>
+
             </div>
-            <div class="modal-footer" style="background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 15px 30px;">
-                <button type="button" class="btn btn-light border fw-bold text-muted" data-bs-dismiss="modal">Close</button>
+
+            <div class="row mt-2">
+                <div class="col-md-12">
+                    <div class="d-flex flex-column gap-2">
+                        <label class="form-label-custom" style="height:auto;">Description*</label>
+                        <textarea class="form-control form-control-custom" id="astDescription" rows="5" placeholder="Specify explicit asset details or modification justifications..." required></textarea>
+                    </div>
+                </div>
             </div>
+
+			<div class="upload-dropzone" id="dropzoneContainer" onclick="document.getElementById('fileInputHidden').click()">
+			    <span id="dropzoneText">Browse files</span> or drag files here
+			    <input type="file" id="fileInputHidden" style="display: none;" onchange="displaySelectedFile(this)">
+			</div>
+
+            <div class="form-actions-row">
+                <button type="button" class="btn-submit-custom" onclick="executeAssetsFormSubmission()">Submit Request</button>
+                <button type="reset" class="btn-outline-custom">Reset</button>
+                <button type="button" class="btn-outline-custom" th:onclick="|window.location.href='/ticket-dashboard?dept=' + document.getElementById('assetDeptType').value|">Cancel</button>
+            </div>
+
         </div>
+    </form>
+</div>
+
+<div class="hidden-tracker-feed">
+    <div th:each="req : ${myRequests}" class="incident-row" th:data-status="${req.status}">
+        <span th:text="${req.detailItem}"></span>
     </div>
 </div>
 
@@ -753,239 +296,114 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script th:inline="javascript">
-
-    // FIXED: Safe Thymeleaf extraction using the EmployeeProfile vault
     const sessionUser = {
         id: /*[[${user != null ? user.username : 'EMP-0000'}]]*/ 'EMP-0000',
         name: /*[[${user != null ? user.fullName : 'Unknown User'}]]*/ 'Unknown User',
-        dept: /*[[${user?.employeeProfile?.businessUnit ?: 'General'}]]*/ 'General',
-        manager: /*[[${user?.employeeProfile?.reportingManager ?: 'Admin'}]]*/ 'Admin'
+        dept: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.businessUnit : 'General'}]]*/ 'General',
+        manager: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.reportingManager : 'Admin'}]]*/ 'Admin'
     };
 
-    function openHardwareModal(type) {
-        console.log("Card clicked! Opening modal for: " + type);
-
-        const today = new Date();
-        const options = { day: '2-digit', month: 'short', year: 'numeric' };
-        const formattedDate = today.toLocaleDateString('en-GB', options);
-
-        if (type === 'Request Accessory') {
-            document.getElementById('accSubmissionDate').value = formattedDate;
-            setupValidation('accessoryRequestForm');
-            let accessoryModal = new bootstrap.Modal(document.getElementById('accessoryRequestModal'));
-            accessoryModal.show();
-        } else if (type === 'Upgrade Hardware') {
-            document.getElementById('upgSubmissionDate').value = formattedDate;
-            setupValidation('upgradeHardwareForm');
-            let upgradeModal = new bootstrap.Modal(document.getElementById('upgradeHardwareModal'));
-            upgradeModal.show();
-        }
-    }
-
-    function setupValidation(formId) {
-        const form = document.getElementById(formId);
-        const submitBtn = form.closest('.modal-content').querySelector('.btn-navy');
-        submitBtn.disabled = true;
-        submitBtn.style.opacity = "0.5";
-
-        const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-        inputs.forEach(input => {
-            input.addEventListener('input', () => {
-                const allFilled = Array.from(inputs).every(i => i.value.trim() !== "");
-                submitBtn.disabled = !allFilled;
-                submitBtn.style.opacity = allFilled ? "1" : "0.5";
+    async function executeAssetsFormSubmission() {
+        const typeContext = document.getElementById('assetDeptType').value;
+        const itemType = document.getElementById('astItemType').value;
+        const priority = document.getElementById('astPriority').value;
+        const deliveryLoc = document.getElementById('astDeliveryLocation').value.trim();
+        const locationVal = document.getElementById('astLocation').value;
+        const mobile = document.getElementById('astMobile').value.trim();
+        const email = document.getElementById('astEmail').value.trim();
+        const subject = document.getElementById('astSubject').value.trim();
+        const description = document.getElementById('astDescription').value.trim();
+        const subcategory = document.getElementById('astSubcategory').value;
+        
+        if (!itemType || !priority || !deliveryLoc || !locationVal || !mobile || !email || !subject || !description || !subcategory) {
+            Swal.fire({ 
+                icon: 'warning', 
+                title: 'Required Fields Missing', 
+                text: 'Please populate all mandatory items marked with (*)', 
+                confirmButtonColor: '#2563eb' 
             });
-        });
-    }
-
-    async function handleSubmission(formId, category) {
-        const form = document.getElementById(formId);
-        const selects = form.querySelectorAll('select');
-        const inputs = form.querySelectorAll('input[type="text"]:not([readonly])');
-        const textarea = form.querySelector('textarea');
-
-        let priorityValue = "Medium";
-        const priorityDropdown = Array.from(selects).find(sel =>
-            Array.from(sel.options).some(opt => opt.value === 'Medium')
-        );
-        if (priorityDropdown) priorityValue = priorityDropdown.value;
-
-        let detailValue = "";
-        let durationLevel = "";
-        let assetTagVal = "";
-        let locVal = "";
-
-        if (category === 'Accessory Request') {
-            detailValue = selects[0].value;
-            locVal = selects[1].value;
-        } else if (category === 'Hardware Upgrade') {
-            assetTagVal = inputs[0].value;
-            detailValue = selects[0].value;
-            durationLevel = "From " + inputs[1].value + " to " + inputs[2].value;
+            return;
         }
 
-        const formData = {
+        const mobileRegex = /^[6-9]\d{9}$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!mobileRegex.test(mobile)) {
+            Swal.fire({ icon: 'error', title: 'Invalid Mobile Number', text: 'Please enter a valid 10-digit number.', confirmButtonColor: '#2563eb' });
+            return;
+        }
+        if (!emailRegex.test(email)) {
+            Swal.fire({ icon: 'error', title: 'Invalid Email Address', text: 'Please enter a valid email address.', confirmButtonColor: '#2563eb' });
+            return;
+        }
+
+        const payload = {
             employeeId: sessionUser.id,
             employeeName: sessionUser.name,
             department: sessionUser.dept,
             managerName: sessionUser.manager,
-            type: "HARDWARE",
-            category: category,
-            detailItem: detailValue,
-            durationOrLevel: durationLevel,
-            assetTag: assetTagVal,
-            location: locVal,
-            priority: priorityValue,
-            justification: textarea.value,
-            status: "Open"
+            type: typeContext, 
+            category: itemType,
+            detailItem: subject,
+            durationOrLevel: subcategory,
+            priority: priority,
+            justification: `Delivery Address: ${deliveryLoc} | Info: ${description}`,
+            location: locationVal,
+            status: "Open",
+            notificationEmailPrimary: /*[[${@environment.getProperty('app.notification.email.primary')}]]*/ 'primary_fallback@example.com',
+            notificationEmailSecondary: /*[[${@environment.getProperty('app.notification.email.secondary')}]]*/ 'secondary_fallback@example.com'
         };
 
-        const confirmResult = await Swal.fire({
-            title: `Submit Hardware Request?`,
-            html: `You are requesting a <b>${category}</b> for <b>${formData.detailItem}</b>.<br><br>Priority: <b>${priorityValue}</b>`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Confirm & Submit',
-            cancelButtonText: 'Edit Request',
-            reverseButtons: true
-        });
-
-        if (!confirmResult.isConfirmed) return;
-
         Swal.fire({
-            title: 'Processing Request...',
-            text: 'Allocating ticket and notifying IT Procurement...',
+            title: 'Processing Submission...',
+            text: 'Allocating inventory request transaction in records...',
             allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
+            didOpen: () => { Swal.showLoading(); }
         });
-
-        const startTime = Date.now();
 
         try {
             const response = await fetch('/api/requests/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload)
             });
-
-            const elapsedTime = Date.now() - startTime;
-            const minimumDisplayTime = 1500;
-            if (elapsedTime < minimumDisplayTime) {
-                await new Promise(resolve => setTimeout(resolve, minimumDisplayTime - elapsedTime));
-            }
 
             if (response.ok) {
                 await Swal.fire({
                     icon: 'success',
                     title: 'Request Logged!',
-                    html: `Your <b>${category}</b> has been successfully queued. IT will review your justification shortly.`,
-                    confirmButtonText: 'Understood',
-                    timer: 4000,
-                    timerProgressBar: true
+                    text: 'Your procurement hardware item ticket has been queued successfully.',
+                    confirmButtonColor: '#2563eb'
                 });
-                location.reload();
+                window.location.href = '/ticket-dashboard?dept=' + typeContext;
             } else {
-                throw new Error("Server Error");
+                throw new Error("Server Response Error");
             }
         } catch (error) {
             Swal.fire({
                 icon: 'error',
                 title: 'Submission Failed',
-                text: 'The Inventory Portal could not connect. Please check your connection.',
-                confirmButtonColor: '#1e3a8a'
+                text: 'Could not communicate with server database adapter pipelines.',
+                confirmButtonColor: '#2563eb'
             });
         }
     }
-
-    function submitAccessoryRequest() { handleSubmission('accessoryRequestForm', 'Accessory Request'); }
-    function submitUpgradeRequest() { handleSubmission('upgradeHardwareForm', 'Hardware Upgrade'); }
-
-    function filterMyRequests() {
-        const filterValue = document.getElementById('statusFilter').value;
-        const rows = document.querySelectorAll('.ticket-row');
-        let visibleCount = 0;
-
-        rows.forEach(row => {
-            const rowStatus = row.getAttribute('data-status');
-
-            // UPDATED: Cleaned up the filter logic to match exact statuses
-            if (filterValue === 'All' || rowStatus === filterValue) {
-                row.style.display = '';
-                visibleCount++;
-            } else {
-                row.style.display = 'none';
-            }
-        });
-
-        const emptyRow = document.getElementById('emptyFilterRow');
-        if (emptyRow) {
-            emptyRow.style.display = (visibleCount === 0 && rows.length > 0) ? '' : 'none';
-        }
-    }
-
-    async function viewMyRequestDetails(id) {
-        try {
-            const response = await fetch('/api/requests/' + id);
-
-            if (response.ok) {
-                const data = await response.json();
-
-                document.getElementById('myModalTicketId').textContent = data.ticketId;
-                document.getElementById('myModalEmpName').textContent = data.employeeName;
-                document.getElementById('myModalEmpId').textContent = data.employeeId;
-                document.getElementById('myModalDept').textContent = data.department || 'Department N/A';
-
-                document.getElementById('myModalCategory').textContent = data.category;
-                document.getElementById('myModalDetails').textContent = data.detailItem;
-
-                let subText = data.durationOrLevel !== 'N/A' ? data.durationOrLevel : '';
-                if (data.assetTag) subText += ` | Asset: ${data.assetTag}`;
-                if (data.location) subText += ` | Delivery: ${data.location}`;
-                document.getElementById('myModalDuration').textContent = subText;
-
-                document.getElementById('myModalDate').textContent = data.submissionDate;
-                document.getElementById('myModalJustification').textContent = data.justification;
-
-                const pBadge = document.getElementById('myModalPriority');
-                pBadge.textContent = data.priority;
-                pBadge.className = 'badge px-3 py-2 ' +
-                    (data.priority === 'High' ? 'bg-danger' : (data.priority === 'Medium' ? 'bg-warning text-dark' : 'bg-info text-dark'));
-
-                const statusBadge = document.getElementById('myModalStatus');
-                statusBadge.textContent = data.status;
-                statusBadge.className = 'badge px-3 py-2 ';
-
-                // UPDATED: Modal Status Colors mapped to the new workflow
-                if (data.status === 'Open') {
-                    statusBadge.style.backgroundColor = '#fef3c7';
-                    statusBadge.style.color = '#b45309';
-                    statusBadge.style.border = '1px solid #fde68a';
-                } else if (data.status === 'Closed' || data.status === 'Resolved') {
-                    statusBadge.style.backgroundColor = '#dcfce7';
-                    statusBadge.style.color = '#166534';
-                    statusBadge.style.border = '1px solid #bbf7d0';
-                } else if (data.status === 'In Progress') {
-                    statusBadge.style.backgroundColor = '#e0e7ff';
-                    statusBadge.style.color = '#4338ca';
-                    statusBadge.style.border = '1px solid #c7d2fe';
-                } else {
-                    statusBadge.style.backgroundColor = '#f1f5f9';
-                    statusBadge.style.color = '#64748b';
-                }
-
-                const detailsModal = new bootstrap.Modal(document.getElementById('viewMyRequestModal'));
-                detailsModal.show();
-            } else {
-                alert("Could not locate ticket details in the database.");
-            }
-        } catch (error) {
-            console.error("Error fetching ticket details:", error);
-            alert("Network connection error.");
-        }
-    }
-
+	function displaySelectedFile(input) {
+	    const dropzoneText = document.getElementById('dropzoneText');
+	    const container = document.getElementById('dropzoneContainer');
+	    
+	    if (input.files && input.files.length > 0) {
+	        const file = input.files[0];
+	        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+	        
+	        // Update the dropzone text to show the file icon, name, and size
+	        container.innerHTML = `<i class="fas fa-file-alt me-2" style="color: #2563eb;"></i> <strong>${file.name}</strong> (${fileSizeMB} MB) <span class="ms-3 text-secondary" style="font-size: 0.85rem; text-decoration: underline;">Change file</span>`;
+	        
+	        // Re-inject the hidden file input so the click listener still works if they want to change it
+	        const newInput = input.cloneNode(true);
+	        container.appendChild(newInput);
+	    }
+	}
 </script>
 </body>
 </html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My Profile – Payroll Portal</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/base/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/variables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/typography.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/dashboard-layout.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/sidebar.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/buttons.css}"/>
+
+    <style>
+        .profile-header-logo {
+            margin-bottom: 24px;
+        }
+        .top-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .page-title-large {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 40px;
+        }
+        /* Top Card */
+        .profile-top-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+        .profile-avatar-large {
+            width: 140px;
+            height: 140px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 72px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .profile-avatar-large i {
+            margin-top: 24px;
+        }
+        .profile-main-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-top: 12px;
+        }
+        .profile-name-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .profile-name {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .profile-meta {
+            font-size: 18px;
+            color: #444;
+        }
+        /* Columns */
+        .profile-details-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+        }
+        .column-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2b5dff;
+            margin-bottom: 32px;
+        }
+        .profile-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .profile-input-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #555;
+        }
+        .profile-input-readonly {
+            background-color: #e2e2e2;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 16px;
+            color: #333;
+            width: 100%;
+            max-width: 400px;
+        }
+        .update-bank-action {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 32px;
+            margin-bottom: 40px;
+        }
+        .view-profile-btn {
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #2b5dff;
+            color: white;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Modal Styles */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content { background: white; border-radius: var(--radius-lg); width: 100%; max-width: 480px; padding: 32px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); transform: translateY(-30px); transition: transform 0.3s ease; }
+        .modal-overlay.show .modal-content { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .modal-header h2 { font-size: 20px; font-weight: 700; color: var(--text-dark); }
+        .close-modal-btn { background: none; border: none; font-size: 24px; color: var(--text-light); cursor: pointer; }
+        .close-modal-btn:hover { color: var(--danger); }
+        .modal-form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+        .modal-form-group label { font-size: 14px; font-weight: 600; color: var(--text-dark); }
+        .modal-input, .modal-select { height: 46px; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 0 14px; font-size: 14px; width: 100%; outline: none; transition: var(--transition); background: white; color: var(--text-dark); }
+        .modal-input:focus, .modal-select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(47, 84, 235, 0.08); }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 28px; }
+        .modal-cancel-btn { height: 42px; padding: 0 20px; background: #F1F5F9; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: var(--transition); }
+        .modal-cancel-btn:hover { background: #E2E8F0; color: var(--text-dark); }
+        .modal-submit-btn { height: 42px; padding: 0 20px; background: var(--primary-blue); border: none; border-radius: 10px; font-size: 14px; font-weight: 600; color: white; cursor: pointer; transition: var(--transition); box-shadow: 0 4px 10px rgba(47, 84, 235, 0.15); }
+        .modal-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(47, 84, 235, 0.25); }
+        .modal-submit-btn:active { transform: translateY(0); }
+        @media (max-width: 900px) { .profile-details-columns { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+    <main class="main-content">
+        <div class="profile-header-logo">
+            <img th:src="@{/images/white-logo.png}" alt="Logo" class="top-logo">
+        </div>
+        <h1 class="page-title-large">My Profile</h1>
+
+        <!-- Top Card -->
+        <div class="profile-top-card">
+            <div class="profile-avatar-large">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            
+            <div class="profile-main-info">
+                <div class="profile-name-row">
+                    <h2 class="profile-name" th:text="${user != null ? user.fullName : 'Rohit Sharma'}">Rohit Sharma</h2>
+                    <button class="view-profile-btn" onclick="alert('Edit profile coming soon.')">Edit Profile</button>
+                </div>
+                <div class="profile-meta">
+                    <span th:text="${profile != null && profile.designation != null ? profile.designation : 'Trainee-Tester'}">Trainee-Tester</span>
+                    <span style="margin: 0 16px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span th:text="${user != null && user.role != null ? user.role.roleName : 'Quality Assurance Department'}">Quality Assurance Department</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Columns -->
+        <div class="profile-details-columns">
+            <!-- General Details -->
+            <div class="details-column">
+                <h3 class="column-title">General Details</h3>
+                
+                <div class="profile-input-group">
+                    <label class="profile-input-label">Employee ID</label>
+                    <div class="profile-input-readonly" th:text="${user != null ? user.username : '1000'}">1000</div>
+                </div>
+                
+                <div class="profile-input-group">
+                    <label class="profile-input-label">Joined Date</label>
+                    <div class="profile-input-readonly" th:text="${profile != null && profile.joiningDate != null ? #temporals.format(profile.joiningDate, 'dd/MM/yyyy') : '01/05/2025'}">01/05/2025</div>
+                </div>
+                
+                <div class="profile-input-group">
+                    <label class="profile-input-label">Email Address</label>
+                    <div class="profile-input-readonly" th:text="${user != null ? user.email : 'rohitsharma123@gmail.com'}">rohitsharma123@gmail.com</div>
+                </div>
+                
+                <div class="profile-input-group">
+                    <label class="profile-input-label">Employee Type</label>
+                    <div class="profile-input-readonly">Full-time</div>
+                </div>
+            </div>
+            
+            <!-- Financial Details -->
+            <div class="details-column">
+                <h3 class="column-title">Financial Details</h3>
+                
+                <div class="profile-input-group">
+                    <label class="profile-input-label">Bank Name</label>
+                    <div class="profile-input-readonly" th:text="${profile != null && profile.bankName != null ? profile.bankName : 'State Bank Of India'}">State Bank Of India</div>
+                </div>
+                
+                <div class="profile-input-group">
+                    <label class="profile-input-label">Branch Name</label>
+                    <div class="profile-input-readonly" th:text="${profile != null && profile.bankBranch != null ? profile.bankBranch : 'Raipur, Chhattisgarh'}">Raipur, Chhattisgarh</div>
+                </div>
+                
+                <div class="profile-input-group">
+                    <label class="profile-input-label">Account Number</label>
+                    <div class="profile-input-readonly" th:text="${profile != null && profile.bankAccountNumber != null ? profile.bankAccountNumber : '1234567891025'}">1234567891025</div>
+                </div>
+                
+                <div class="profile-input-group">
+                    <label class="profile-input-label">PF Number</label>
+                    <div class="profile-input-readonly">CG/BAN/1234567/000/7654321</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="update-bank-action">
+            <button class="view-profile-btn" onclick="openBankModal()">Update Bank Details</button>
+        </div>
+    </main>
+</div>
+
+<!-- Bank Details Edit Modal -->
+<div id="bankModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Update Bank Details</h2>
+            <button class="close-modal-btn" onclick="closeBankModal()">&times;</button>
+        </div>
+        <form id="bankDetailsForm" method="post" th:action="@{/payroll/update-bank-details}">
+            
+            <div class="modal-form-group">
+                <label for="modalAccountHolder">Account Holder Name</label>
+                <input type="text" id="modalAccountHolder" name="bankAccountHolder" class="modal-input" required 
+                       th:value="${profile != null && profile.bankAccountHolder != null ? profile.bankAccountHolder : (user != null ? user.fullName : 'Rohit Sharma')}"/>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="modalAccountNumber">Account Number</label>
+                <input type="text" id="modalAccountNumber" name="bankAccountNumber" class="modal-input" required 
+                       th:value="${profile != null && profile.bankAccountNumber != null ? profile.bankAccountNumber : '1234567891025'}"/>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="modalIfscCode">IFSC Code</label>
+                <input type="text" id="modalIfscCode" name="bankIfscCode" class="modal-input" required 
+                       th:value="${profile != null && profile.bankIfscCode != null ? profile.bankIfscCode : 'SBIN0001234'}"/>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="modalBankName">Bank Name</label>
+                <input type="text" id="modalBankName" name="bankName" class="modal-input" required 
+                       th:value="${profile != null && profile.bankName != null ? profile.bankName : 'State Bank Of India'}"/>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="modalBankBranch">Branch</label>
+                <input type="text" id="modalBankBranch" name="bankBranch" class="modal-input" required 
+                       th:value="${profile != null && profile.bankBranch != null ? profile.bankBranch : 'Raipur, Chhattisgarh'}"/>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="modalAccountType">Account Type</label>
+                <select id="modalAccountType" name="bankAccountType" class="modal-select">
+                    <option value="Savings" th:selected="${profile != null && profile.bankAccountType == 'Savings'}">Savings</option>
+                    <option value="Current" th:selected="${profile != null && profile.bankAccountType == 'Current'}">Current</option>
+                </select>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="modal-cancel-btn" onclick="closeBankModal()">Cancel</button>
+                <button type="submit" class="modal-submit-btn">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{/js/common/sidebar.js}"></script>
+<script>
+    function openBankModal() {
+        const modal = document.getElementById('bankModal');
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.classList.add('show');
+        }, 10);
+    }
+    
+    function closeBankModal() {
+        const modal = document.getElementById('bankModal');
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+    
+    // Close modal if user clicks outside the content box
+    window.onclick = function(event) {
+        const modal = document.getElementById('bankModal');
+        if (event.target === modal) {
+            closeBankModal();
+        }
+    }
+</script>
+</body>
+</html>

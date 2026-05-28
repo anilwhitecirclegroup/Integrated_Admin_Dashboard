@@ -24,9 +24,6 @@ src/main/resources/application-prod.properties
 .env
 *.env
 
-# If your team wants application.properties in Git,
-# then DO NOT ignore it. Instead create:
-# application-example.properties
 
 # =========================
 # Eclipse / STS
@@ -87,6 +84,7 @@ Thumbs.db
 *.tmp
 *.temp
 *.swp
+*.swo
 *.swo
 
 # Environment files

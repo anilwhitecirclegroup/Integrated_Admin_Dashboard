@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Knowledge Base - WhiteCircle</title>
+    <title>Solutions Form - WhiteCircle</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -11,413 +11,393 @@
 
     <style>
         :root {
-            --navy: #1e3a8a;
-            --navy-hover: #172a6b;
-            --bg-color: #f1f5f9;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            --primary-blue: #2563eb;
+            --hover-blue: #1d4ed8;
+            --border-color: #d1d5db;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: #0f172a;
-            padding-top: 120px;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 0;
+            padding: 0;
         }
 
-        .master-nav {
-            position: fixed; top: 0; left: 0; right: 0; height: 80px;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 45px; z-index: 1000; border-bottom: 2px solid var(--navy);
-            box-shadow: 0 8px 25px  rgba(0,0,0,0.06);
-        }
-        .btn-navy { background-color: var(--navy); color: white; border: none; transition: all 0.3s ease; }
-        .btn-navy:hover { background-color: var(--navy-hover); color: white; transform: translateY(-1px); }
-
-        .main-container { max-width: 1400px; width: 96%; margin: 0 auto; padding: 0 20px; }
-
-        .btn-back {
-            background: #1e3a8a; color: white;
-            padding: 10px 24px; border-radius: 10px; font-size: 0.95rem; text-decoration: none;
-            border: none; transition: all 0.2s;
-            box-shadow: 0 2px 5px rgba(30, 58, 138, 0.2);
-        }
-        .btn-back:hover { background: #172554; color: white; transform: translateY(-1px); }
-
-        .search-hero {
-            background: var(--navy);
-            border-radius: 12px;
-            padding: 20px 10px;
-            text-align: center;
-            color: white;
-            margin-bottom: 20px;
-            box-shadow: var(--card-shadow);
-            background-image: radial-gradient(circle at top right, #2563eb 0%, transparent 40%);
-        }
-
-        .search-bar-wrapper {
+        /* --- HERO BANNER BACKGROUND --- */
+        .hero-banner-container {
             position: relative;
-            max-width: 700px;
-            margin: 20px auto 0;
+            width: 100%;
+            height: 310px;
+            background: linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.05)), 
+                        url('/images/report-issue.jpeg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .search-bar-wrapper .form-control {
-            background-color: rgba(255, 255, 255, 0.15); /* Frosted transparent fill */
-            border: 1px solid rgba(255, 255, 255, 0.4); /* Crisp white outline */
-            border-radius: 8px; /* Soft edges */
-            padding: 14px 20px 14px 50px; /* Spaced out for the icon */
-            color: #ffffff; /* White typing text */
+        .hero-banner-container h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #000000;
+            z-index: 2;
+            margin: 0;
+        }
+
+        .btn-back-dashboard {
+            position: absolute;
+            top: 25px;
+            right: 40px;
+            background-color: var(--primary-blue);
+            color: #ffffff !important;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 10px 22px;
+            border-radius: 6px;
+            text-decoration: none;
+            z-index: 10;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+        }
+        .btn-back-dashboard:hover {
+            background-color: var(--hover-blue);
+        }
+
+        /* --- FORM CONTENT WRAPPER --- */
+        .form-content-area {
+            max-width: 1100px;
+            margin: 40px auto 80px auto;
+            padding: 0 40px;
+        }
+
+        .instruction-text {
             font-size: 1.05rem;
-            transition: all 0.3s ease;
-            box-shadow: none;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 40px;
         }
 
-        .search-bar-wrapper .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.7); /* Slightly faded white placeholder */
+        /* --- FORM STRUCTURE ALIGNMENT --- */
+        .form-label-custom {
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            height: 38px;
         }
 
-        .search-bar-wrapper .form-control:focus {
-            background-color: rgba(255, 255, 255, 0.25); /* Solidifies slightly on click */
-            border-color: #ffffff; /* Brighter border on click */
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1); /* Soft glow */
+        .form-control-custom {
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 7px 12px;
+            font-size: 0.9rem;
+            color: #000000;
+            background-color: #ffffff;
+            box-sizing: border-box;
+        }
+        .form-control-custom:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
             outline: none;
         }
 
-        .search-bar-wrapper .search-icon {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.9); /* White icon */
-            font-size: 1.1rem;
-            pointer-events: none; /* Allows clicking "through" the icon */
+        select.form-control-custom {
+            color: #6b7280;
         }
 
-        /*  CATEGORY CARDS  */
-        .kb-category-card {
-            background: white; border-radius: 12px; padding: 20px;
-            text-align: center; border: 1px solid #e2e8f0;
-            transition: all 0.3s ease; cursor: pointer; height: 100%;
+        /* --- DRAG & DROP ZONE --- */
+        .upload-dropzone {
+            border: 1.5px dashed #9ca3af;
+            border-radius: 6px;
+            background-color: #ffffff;
+            padding: 24px;
+            text-align: center;
+            color: #4b5563;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-top: 25px;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
-        .kb-category-card:hover {
-            transform: translateY(-5px); border-color: var(--navy);
-            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.08);
+        .upload-dropzone:hover {
+            background-color: #f9fafb;
         }
-        .kb-category-icon {
-            width: 60px; height: 60px; margin: 0 auto 15px;
-            background: #eff6ff; color: var(--navy);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; transition: all 0.3s ease;
+        .upload-dropzone span {
+            color: var(--primary-blue);
+            font-weight: 600;
         }
-        .kb-category-card:hover .kb-category-icon { background: var(--navy); color: white; }
 
-        /*  FAQ ACCORDION  */
-        .faq-section {
-            background: white; border-radius: 16px; box-shadow: var(--card-shadow);
-            border: 1px solid #e2e8f0; overflow: hidden;
+        /* --- BUTTON CONTROLS ROW --- */
+        .form-actions-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            margin-top: 40px;
         }
-        .faq-header {
-            background: var(--navy); padding: 18px 18px; color: white;
-            border-bottom: 3px solid #10b981;
+
+        .btn-submit-custom {
+            background-color: var(--primary-blue);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 10px 28px;
+            border-radius: 6px;
+            border: none;
+            transition: background-color 0.2s;
         }
-        .faq-body { padding: 25px 30px; }
-
-        .accordion-item { border: none; border-bottom: 1px solid #e2e8f0; margin-bottom: 10px; }
-        .accordion-item:last-child { border-bottom: none; margin-bottom: 0; }
-        .accordion-button {
-            font-weight: 600; color: #1e293b; background: transparent;
-            padding: 15px 0; box-shadow: none !important;
+        .btn-submit-custom:hover {
+            background-color: var(--hover-blue);
         }
-        .accordion-button:not(.collapsed) { color: var(--navy); background: transparent; }
-        .accordion-button::after { background-size: 1rem; }
-        .accordion-body { padding: 0 0 20px 0; color: #475569; font-size: 0.95rem; line-height: 1.6; }
 
-        /*  RAISE QUERY FORM  */
-        .query-card {
-            background: white; border-radius: 16px; border: 1px solid #e2e8f0;
-            box-shadow: var(--card-shadow); overflow: hidden;
+        .btn-outline-custom {
+            background-color: #ffffff;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 10px 40px;
+            border-radius: 6px;
+            border: 1.5px solid var(--primary-blue);
+            transition: background-color 0.2s;
         }
-        .query-header { background: #f8fafc; padding: 20px 25px; border-bottom: 1px solid #e2e8f0; }
-        .query-body { padding: 25px; }
-
-        .custom-input {
-            background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px;
-            padding: 10px 15px; font-weight: 500; transition: all 0.2s ease;
-            font-size: 0.9rem; color: #1e293b;
+        .btn-outline-custom:hover {
+            background-color: #f3f4f6;
         }
-        .custom-input:focus { background: white; border-color: var(--navy); box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.15); outline: none; }
-        .custom-input::placeholder { color: #94a3b8; font-size: 0.85rem; }
-        .form-label { font-weight: 700; color: #475569; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
 
-    </style>
-    <link href="/css/style.css" rel="stylesheet">
-
-    <style>
-        @media (max-width: 991px) {
-
-            /* 1. COMPACT GLOBAL LAYOUT */
-            html, body {
-                padding-top: 0 !important;
-                margin-top: 0 !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                overflow-x: hidden !important;
-                width: 100% !important;
-            }
-            body { padding-top: 80px !important; }
-            .main-container { padding: 0 15px !important; width: 100% !important; }
-
-            /* 2. MASTER NAV OVERHAUL */
-            .master-nav {
-                height: auto !important; padding: 12px 15px !important; display: flex !important;
-                flex-direction: row !important; justify-content: space-between !important; align-items: center !important;
-            }
-            .master-nav > .d-flex { min-width: 0 !important; width: auto !important; flex: 1 !important; }
-            .master-nav i.fa-book-open-reader { font-size: 1.5rem !important; margin-top: 2px !important; }
-            .master-nav span { font-size: 1.1rem !important; margin-left: 8px !important; padding-left: 8px !important; line-height: 1.1 !important; white-space: normal !important; }
-            .master-nav small { display: none !important; }
-
-            /* Shorten Back Button to "Back" */
-            .btn-back {
-                padding: 6px 12px !important; font-size: 0px !important;
-                border-radius: 8px !important; display: inline-flex !important; align-items: center !important;
-            }
-            .btn-back i { font-size: 0.75rem !important; margin: 0 !important; }
-            .btn-back::after { content: "Back"; font-size: 0.75rem; margin-left: 5px; font-weight: 700; font-family: 'Inter', sans-serif; }
-
-            /* 3. SEARCH HERO COMPRESSION */
-            .search-hero { padding: 25px 15px !important; margin-bottom: 15px !important; }
-            .search-bar-wrapper { margin-top: 10px !important; }
-            .search-bar-wrapper .form-control { padding: 10px 15px 10px 40px !important; font-size: 0.85rem !important; }
-            .search-bar-wrapper .search-icon { left: 15px !important; font-size: 0.9rem !important; }
-
-            /* 4. 2x2 GRID FOR TOPICS */
-            .main-container > h5 { font-size: 1rem !important; margin-bottom: 12px !important; }
-            .row.g-4.mb-5 {
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
-                gap: 10px !important;
-                margin-bottom: 25px !important;
-            }
-            .row.g-4.mb-5 > div { width: 100% !important; padding: 0 !important; }
-
-            .kb-category-card { padding: 15px 10px !important; }
-            .kb-category-icon { width: 40px !important; height: 40px !important; font-size: 1.1rem !important; margin-bottom: 8px !important; }
-            .kb-category-card h6 { font-size: 0.8rem !important; margin-bottom: 4px !important; }
-            .kb-category-card p { font-size: 0.65rem !important; line-height: 1.2 !important; }
-
-            /* 5. FAQ & ACCORDION TIGHTENING */
-            .faq-header { padding: 12px 15px !important; }
-            .faq-header h5 { font-size: 0.95rem !important; }
-            .faq-body { padding: 15px !important; }
-
-            .accordion-button { font-size: 0.85rem !important; padding: 12px 0 !important; line-height: 1.4 !important; }
-            .accordion-body { font-size: 0.8rem !important; padding-bottom: 15px !important; }
-
-            /* 6. QUERY FORM ADJUSTMENTS */
-            .query-card { margin-top: 10px !important; margin-bottom: 30px !important; }
-            .query-header { padding: 15px !important; }
-            .query-body { padding: 15px !important; }
-            .custom-input { font-size: 0.85rem !important; padding: 10px !important; }
-            .form-label { font-size: 0.65rem !important; }
+        .hidden-tracker-feed {
+            display: none !important;
         }
     </style>
-
-    <link href="/css/dark-mode.css" rel="stylesheet">
-    <script src="/js/theme-engine.js"></script>
 </head>
 <body>
 
-<header class="master-nav">
-    <div class="d-flex align-items-center">
-        <i class="fas fa-book-open-reader text-dark" style="font-size: 2.5rem;"></i>
+<div class="hero-banner-container">
+    <!-- FOLLOW LOGIC: Dynamic link targets backend department context view area cleanly -->
+    <a th:href="@{/ticket-dashboard(dept=${currentDept})}" class="btn-back-dashboard">Back to Dashboard</a>
+    <h1 th:text="${currentDept + ' Solutions Form'}">Solutions Form</h1>
+</div>
 
-        <div style="border-left: 2px solid #cbd5e1; padding-left: 17px; margin-left: 15px;">
-            <span class="fw-bold text-dark d-block" style="font-size: 1.5rem; letter-spacing: 0.5px; line-height: 1.2;">KNOWLEDGE BASE</span>
-            <small class="text-muted fw-bold" style="letter-spacing: 0.3px;">IT Self-Service Portal</small>
-        </div>
-    </div>
-    <a href="/tickets" class="btn-back">
-        <i class="fas fa-arrow-left me-2"></i>Back to Helpdesk
-    </a>
-</header>
+<div class="form-content-area">
+    <div class="instruction-text">Fill the required details to seek solutions from our expert team</div>
 
-<div class="main-container mb-5">
+    <form id="solutionsFormMain">
+        <!-- FOLLOW LOGIC: Hidden parameter cleanly tracking chosen workspace channel context -->
+        <input type="hidden" id="solDeptType" th:value="${currentDept}">
 
-    <div class="search-hero">
-        <div class="search-bar-wrapper">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" class="form-control" placeholder="Search for troubleshooting guides, setup manuals, and IT policies...">
-        </div>
-    </div>
-
-    <h5 class="fw-bold text-navy mb-3"><i class="fas fa-th-large me-2"></i>Browse Topics</h5>
-    <div class="row g-4 mb-5">
-        <div class="col-md-3 col-sm-6">
-            <div class="kb-category-card">
-                <div class="kb-category-icon"><i class="fas fa-unlock-alt"></i></div>
-                <h6 class="fw-bold text-dark">Account & Access</h6>
-                <p class="text-muted small mb-0">Password resets, 2FA setup, and Active Directory.</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="kb-category-card">
-                <div class="kb-category-icon"><i class="fas fa-wifi"></i></div>
-                <h6 class="fw-bold text-dark">Network & VPN</h6>
-                <p class="text-muted small mb-0">GlobalProtect, Office Wi-Fi, and remote access.</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="kb-category-card">
-                <div class="kb-category-icon"><i class="fas fa-desktop"></i></div>
-                <h6 class="fw-bold text-dark">Hardware Setup</h6>
-                <p class="text-muted small mb-0">Monitors, docking stations, and peripherals.</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="kb-category-card">
-                <div class="kb-category-icon"><i class="fas fa-envelope"></i></div>
-                <h6 class="fw-bold text-dark">Email & Software</h6>
-                <p class="text-muted small mb-0">Outlook configuration, Office 365, and Zoom.</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-4">
-
-        <div class="col-lg-8">
-            <div class="faq-section">
-                <div class="faq-header">
-                    <h5 class="fw-bold m-0"><i class="fas fa-question-circle me-2 text-warning"></i>Frequently Asked Questions</h5>
-                </div>
-
-                <div class="faq-body">
-                    <div class="accordion" id="kbAccordion">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                    How do I reset my company email password?
-                                </button>
-                            </h2>
-                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#kbAccordion">
-                                <div class="accordion-body">
-                                    To reset your password, visit the <a href="#" class="text-navy fw-bold">Self-Service Password Portal</a>. Enter your Employee ID and click "Forgot Password". A reset link will be sent to your registered alternate email address and mobile number via SMS. Remember, your new password must be at least 12 characters long and contain a mix of uppercase, lowercase, numbers, and symbols.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                    How do I connect to the GlobalProtect VPN?
-                                </button>
-                            </h2>
-                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#kbAccordion">
-                                <div class="accordion-body">
-                                    1. Open the GlobalProtect app from your system tray (bottom right).<br>
-                                    2. Ensure the portal address is set to <strong>vpn.whitecircle.com</strong>.<br>
-                                    3. Click "Connect" and enter your standard Windows login credentials.<br>
-                                    4. Approve the Microsoft Authenticator prompt on your mobile phone.<br>
-                                    <em>If the connection fails, please ensure your home network is stable and restart the application.</em>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                    How do I map the office network printer to my laptop?
-                                </button>
-                            </h2>
-                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#kbAccordion">
-                                <div class="accordion-body">
-                                    While connected to the office network (or VPN), press <code>Win + R</code> on your keyboard. Type <code>\\wcg-print-server</code> and hit Enter. Find the printer matching your floor (e.g., "Floor-3-Color-Laser"), right-click it, and select "Connect". Windows will automatically download the required drivers.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
-                                    What do I do if my laptop is stolen or lost?
-                                </button>
-                            </h2>
-                            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#kbAccordion">
-                                <div class="accordion-body">
-                                    <strong class="text-danger">Report this immediately.</strong> Call the 24/7 IT Emergency Hotline at <strong>+1 (800) 555-0199</strong> so we can remotely wipe the device and secure company data. After calling, file a formal incident report using the "Report Incident" tab in this portal.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center mt-4 pt-4 border-top">
-                        <button class="btn btn-navy fw-bold rounded-pill px-5 py-2 shadow-sm">
-                            View All Articles <i class="fas fa-arrow-right ms-2"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="query-card">
-                <div class="query-header">
-                    <h6 class="fw-bold text-navy m-0"><i class="fas fa-headset me-2"></i>Still need help?</h6>
-                    <small class="text-muted">Raise a query and IT will get back to you.</small>
-                </div>
-                <div class="query-body">
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Related Topic</label>
-                            <select class="form-select custom-input">
-                                <option>Software & Applications</option>
-                                <option>Hardware & Devices</option>
-                                <option>Network & Access</option>
-                                <option>General IT Query</option>
+        <div class="container-fluid p-0">
+            <div class="row g-4">
+                
+                <div class="col-md-6">
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Category*</label></div>
+                        <div class="col-sm-9">
+                            <!-- FOLLOW LOGIC: Populates iteratively via backend dataset values lists arrays -->
+                            <select class="form-select form-control-custom" id="solCategory" required>
+                                <option value="" selected disabled hidden>Select Category</option>
+                                <option th:each="cat : ${categoriesList}" th:value="${cat}" th:text="${cat}"></option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Subject</label>
-                            <input type="text" class="form-control custom-input" placeholder="Brief summary of your question">
+                    </div>
+
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Severity Level*</label></div>
+                        <div class="col-sm-9">
+                            <select class="form-select form-control-custom" id="solSeverity" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                            </select>
                         </div>
-                        <div class="mb-4">
-                            <label class="form-label">Your Question</label>
-                            <textarea class="form-control custom-input" rows="4" placeholder="How can we help you?"></textarea>
+                    </div>
+
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Subject*</label></div>
+                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="solSubject" placeholder="Brief statement of query" required></div>
+                    </div>
+
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Mobile No.*</label></div>
+                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="solMobile" required pattern="[0-9]{10}" maxlength="10"></div>
+                    </div>
+
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Email ID*</label></div>
+                        <div class="col-sm-9"><input type="email" class="form-control form-control-custom" id="solEmail" required></div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Item*</label></div>
+                        <div class="col-sm-9">
+                            <!-- FOLLOW LOGIC: Converted to a dynamic dropdown using backend itemsList loop arrays -->
+                            <select class="form-select form-control-custom" id="solItem" required>
+                                <option value="" selected disabled hidden>Select Specific Component</option>
+                                <option th:each="item : ${itemsList}" th:value="${item}" th:text="${item}"></option>
+                            </select>
                         </div>
-                        <button type="button" class="btn btn-navy w-100 fw-bold py-2 rounded-pill shadow-sm" onclick="submitQuery()">
-                            Send Query <i class="fas fa-paper-plane ms-2"></i>
-                        </button>
-                    </form>
+                    </div>
+
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-3"><label class="form-label-custom">Location*</label></div>
+                        <div class="col-sm-9">
+                            <select class="form-select form-control-custom" id="solLocation" required>
+                                <option value="" selected disabled hidden>Select Location</option>
+                                <option value="Noida">Noida</option>
+                                <option value="Pune">Pune</option>
+                                <option value="Remote">Remote</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-md-12">
+                    <div class="d-flex flex-column gap-2">
+                        <label class="form-label-custom" style="height:auto;">Description*</label>
+                        <textarea class="form-control form-control-custom" id="solDescription" rows="5" placeholder="Provide description details here..." required></textarea>
+                    </div>
                 </div>
             </div>
-        </div>
 
+			<div class="upload-dropzone" id="dropzoneContainer" onclick="document.getElementById('fileInputHidden').click()">
+			    <span id="dropzoneText">Browse files</span> or drag files here
+			    <input type="file" id="fileInputHidden" style="display: none;" onchange="displaySelectedFile(this)">
+			</div>
+
+            <div class="form-actions-row">
+                <button type="button" class="btn-submit-custom" onclick="executeSolutionsSubmission()">Submit Solutions Ticket</button>
+                <button type="reset" class="btn-outline-custom">Reset</button>
+                <button type="button" class="btn-outline-custom" th:onclick="|window.location.href='/ticket-dashboard?dept=' + document.getElementById('solDeptType').value|">Cancel</button>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<div class="hidden-tracker-feed">
+    <div th:each="req : ${myRequests}" class="incident-row" th:data-status="${req.status}">
+        <span th:text="${req.detailItem}"></span>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    function submitQuery() {
-        const btn = document.querySelector('.btn-navy.w-100');
-        const originalText = btn.innerHTML;
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Sending...';
-        btn.classList.add('opacity-75');
+<script th:inline="javascript">
+    const sessionUser = {
+        id: /*[[${user != null ? user.username : 'EMP-0000'}]]*/ 'EMP-0000',
+        name: /*[[${user != null ? user.fullName : 'Unknown User'}]]*/ 'Unknown User',
+        dept: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.businessUnit : 'General'}]]*/ 'General',
+        manager: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.reportingManager : 'Admin'}]]*/ 'Admin'
+    };
 
-        setTimeout(() => {
-            btn.innerHTML = '<i class="fas fa-check-circle me-2"></i> Query Sent!';
-            btn.classList.replace('btn-navy', 'btn-success');
+    async function executeSolutionsSubmission() {
+        const typeContext = document.getElementById('solDeptType').value;
+        const category = document.getElementById('solCategory').value;
+        const severity = document.getElementById('solSeverity').value;
+        const locationVal = document.getElementById('solLocation').value;
+        const mobile = document.getElementById('solMobile').value.trim();
+        const email = document.getElementById('solEmail').value.trim();
+        const subject = document.getElementById('solSubject').value.trim();
+        const description = document.getElementById('solDescription').value.trim();
+        const item = document.getElementById('solItem').value;
 
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.classList.replace('btn-success', 'btn-navy');
-                btn.classList.remove('opacity-75');
-                // Clear inputs
-                document.querySelectorAll('.query-body input, .query-body textarea').forEach(el => el.value = '');
-            }, 2000);
-        }, 800);
+        if (!category || !severity || !locationVal || !mobile || !email || !subject || !description || !item) {
+            Swal.fire({ 
+                icon: 'warning', 
+                title: 'Required Fields Missing', 
+                text: 'Please populate all mandatory items marked with (*)', 
+                confirmButtonColor: '#2563eb' 
+            });
+            return;
+        }
+
+        const mobileRegex = /^[6-9]\d{9}$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!mobileRegex.test(mobile)) {
+            Swal.fire({ icon: 'error', title: 'Invalid Mobile Number', text: 'Please enter a valid 10-digit number.', confirmButtonColor: '#2563eb' });
+            return;
+        }
+        if (!emailRegex.test(email)) {
+            Swal.fire({ icon: 'error', title: 'Invalid Email Address', text: 'Please enter a valid email address.', confirmButtonColor: '#2563eb' });
+            return;
+        }
+
+        const payload = {
+            employeeId: sessionUser.id,
+            employeeName: sessionUser.name,
+            department: sessionUser.dept,
+            managerName: sessionUser.manager,
+            type: typeContext, 
+            category: category,
+            detailItem: subject,
+            durationOrLevel: item,
+            priority: severity,
+            justification: description,
+            location: locationVal,
+            status: "Open",
+            notificationEmailPrimary: /*[[${@environment.getProperty('app.notification.email.primary')}]]*/ 'primary_fallback@example.com',
+            notificationEmailSecondary: /*[[${@environment.getProperty('app.notification.email.secondary')}]]*/ 'secondary_fallback@example.com'
+        };
+
+        Swal.fire({
+            title: 'Processing Submission...',
+            text: 'Logging your tracking metrics inside database records...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        try {
+            const response = await fetch('/api/requests/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Query Logged!',
+                    text: 'Your solutions ticket has been recorded successfully.',
+                    confirmButtonColor: '#2563eb'
+                });
+                window.location.href = '/ticket-dashboard?dept=' + typeContext;
+            } else {
+                throw new Error("Server Response Error");
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Submission Failed',
+                text: 'Could not communicate with server database adapter pipelines.',
+                confirmButtonColor: '#2563eb'
+            });
+        }
     }
+	function displaySelectedFile(input) {
+	    const dropzoneText = document.getElementById('dropzoneText');
+	    const container = document.getElementById('dropzoneContainer');
+	    
+	    if (input.files && input.files.length > 0) {
+	        const file = input.files[0];
+	        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+	        
+	        // Update the dropzone text to show the file icon, name, and size
+	        container.innerHTML = `<i class="fas fa-file-alt me-2" style="color: #2563eb;"></i> <strong>${file.name}</strong> (${fileSizeMB} MB) <span class="ms-3 text-secondary" style="font-size: 0.85rem; text-decoration: underline;">Change file</span>`;
+	        
+	        // Re-inject the hidden file input so the click listener still works if they want to change it
+	        const newInput = input.cloneNode(true);
+	        container.appendChild(newInput);
+	    }
+	}
 </script>
-
 </body>
 </html>

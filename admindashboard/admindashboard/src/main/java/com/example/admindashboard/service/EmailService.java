@@ -226,4 +226,48 @@ public class EmailService {
         }
     }
 
+    // =========================================================================
+    // ADDED: DYNAMIC SEAMLESS ROUTING FOR SENDING EMPLOYEE TICKETS
+    // =========================================================================
+    @Async
+    public void sendHelpdeskNotifications(String departmentCode, String employeeName, String employeeEmail, String formSubject, Map<String, Object> templateModel) {
+        try {
+            String cleanDept = (departmentCode != null) ? departmentCode.trim().toUpperCase() : "IT";
+
+            // 1. Resolve Department Head Email via dynamic environment system variables (Render / System OS)
+            String deptHeadEmail = System.getenv("DEPT_HEAD_" + cleanDept);
+            if (deptHeadEmail == null || deptHeadEmail.trim().isEmpty()) {
+                deptHeadEmail = "support@whitecircle.com"; // Smart fallback
+            }
+
+            // 2. Resolve Admin Target utilizing company's active properties registration variable
+            String adminEmail = this.systemEmail;
+
+            // 3. Construct HTML Payload using the shared template layout
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setFrom(systemEmail, "WhiteCircle Helpdesk");
+            helper.setReplyTo(employeeEmail, employeeName);
+            helper.setSubject("New Helpdesk Submission [" + cleanDept + "]: " + formSubject);
+
+            Context thymeleafContext = new Context();
+            thymeleafContext.setVariables(templateModel);
+            String htmlBody = templateEngine.process("emails/ticket-submission-email", thymeleafContext);
+            helper.setText(htmlBody, true);
+
+            // 4. Send to Department Head
+            helper.setTo(deptHeadEmail);
+            mailSender.send(message);
+
+            // 5. Send to Admin
+            helper.setTo(adminEmail);
+            mailSender.send(message);
+
+            System.out.println("✅ Helpdesk Notification successfully pushed to Admin & Head of " + cleanDept);
+
+        } catch (Exception e) {
+            System.err.println("❌ Helpdesk Notification Delivery Error: " + e.getMessage());
+        }
+    }
 }

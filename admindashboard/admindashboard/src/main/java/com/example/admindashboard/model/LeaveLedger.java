@@ -12,7 +12,7 @@ public class LeaveLedger {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "employee_id", nullable = false)
     private User user;
 
 	@Column(name = "days")

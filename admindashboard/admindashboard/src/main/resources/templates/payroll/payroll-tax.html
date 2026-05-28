@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Payroll & Tax – WhiteCircle Group</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+    <link rel="stylesheet" th:href="@{/css/base/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/variables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/typography.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/dashboard-layout.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/sidebar.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components/buttons.css}"/>
+    
+    <style>
+        .tax-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .tax-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .tax-user-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tax-user-icon {
+            width: 48px;
+            height: 48px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            overflow: hidden;
+        }
+        .tax-user-icon i {
+            margin-top: 10px;
+        }
+        
+        .tax-user-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .page-title-large {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 60px;
+        }
+        
+        .payroll-items-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 80px 40px;
+        }
+        
+        .payroll-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .item-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .item-icon {
+            font-size: 26px;
+            color: #2b5dff;
+        }
+        
+        .item-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+        }
+        
+        .item-selects {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .item-select {
+            height: 40px;
+            border: 1px solid #b0b0b0;
+            border-radius: 20px;
+            padding: 0 16px;
+            font-size: 14px;
+            color: #555;
+            outline: none;
+            flex: 1;
+            background-color: white;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 10px;
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .action-btn-blue {
+            background-color: #2b5dff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 24px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-btn-eye {
+            width: 44px;
+            height: 40px;
+            background-color: #c4c4c4;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 1200px) {
+            .payroll-items-grid { grid-template-columns: repeat(2, 1fr); gap: 60px 40px; }
+        }
+        @media (max-width: 768px) {
+            .payroll-items-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-layout">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+    <main class="main-content">
+        
+        <div class="tax-header">
+            <img th:src="@{/images/white-logo.png}" alt="Logo" class="tax-logo">
+            
+            <a href="/payroll/my-profile" class="tax-user-profile" style="text-decoration: none; cursor: pointer;">
+                <div class="tax-user-icon"><i class="fa-solid fa-user"></i></div>
+                <div class="tax-user-name" th:text="${user != null ? user.fullName : 'Rohit Sharma'}">Rohit Sharma</div>
+            </a>
+        </div>
+        
+        <h1 class="page-title-large">Payroll & Tax</h1>
+
+        <div class="payroll-items-grid">
+            
+            <!-- Payslip -->
+            <div class="payroll-item">
+                <div class="item-header">
+                    <i class="fa-regular fa-file-lines item-icon"></i>
+                    <div class="item-title">Payslip</div>
+                </div>
+                <div class="item-selects">
+                    <select class="item-select">
+                        <option>Year</option>
+                        <option>2026</option>
+                    </select>
+                    <select class="item-select">
+                        <option>Month</option>
+                        <option>May</option>
+                    </select>
+                </div>
+                <div class="item-actions">
+                    <button class="action-btn-blue">Download Slip</button>
+                    <button class="action-btn-eye"><i class="fa-solid fa-eye"></i></button>
+                </div>
+            </div>
+            
+            <!-- Tax Computation -->
+            <div class="payroll-item">
+                <div class="item-header">
+                    <i class="fa-solid fa-calculator item-icon"></i>
+                    <div class="item-title">Tax Computation</div>
+                </div>
+                <div class="item-selects">
+                    <select class="item-select">
+                        <option>Year</option>
+                        <option>2026</option>
+                    </select>
+                    <select class="item-select">
+                        <option>Month</option>
+                        <option>May</option>
+                    </select>
+                </div>
+                <div class="item-actions">
+                    <button class="action-btn-blue">Download Report</button>
+                    <button class="action-btn-eye"><i class="fa-solid fa-eye"></i></button>
+                </div>
+            </div>
+            
+            <!-- PF Contribution -->
+            <div class="payroll-item">
+                <div class="item-header">
+                    <i class="fa-solid fa-shield-halved item-icon"></i>
+                    <div class="item-title">PF Contribution</div>
+                </div>
+                <div class="item-selects">
+                    <select class="item-select">
+                        <option>Select Year</option>
+                        <option>2026</option>
+                    </select>
+                </div>
+                <div class="item-actions">
+                    <a href="/payroll/pf-contribution" class="action-btn-blue">Transaction History</a>
+                    <button class="action-btn-eye"><i class="fa-solid fa-eye"></i></button>
+                </div>
+            </div>
+            
+            <!-- Compensation -->
+            <div class="payroll-item">
+                <div class="item-header">
+                    <i class="fa-solid fa-briefcase item-icon"></i>
+                    <div class="item-title">Compensation</div>
+                </div>
+                <div class="item-selects">
+                    <select class="item-select">
+                        <option>Current</option>
+                        <option>Previous</option>
+                    </select>
+                </div>
+                <div class="item-actions">
+                    <button class="action-btn-blue">View Details</button>
+                    <button class="action-btn-eye"><i class="fa-solid fa-eye"></i></button>
+                </div>
+            </div>
+            
+            <!-- Form 16 -->
+            <div class="payroll-item">
+                <div class="item-header">
+                    <i class="fa-regular fa-file-lines item-icon"></i>
+                    <div class="item-title">Form 16</div>
+                </div>
+                <div class="item-actions">
+                    <button class="action-btn-blue">Download Form 16</button>
+                    <button class="action-btn-eye"><i class="fa-solid fa-eye"></i></button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+</div>
+<script th:src="@{/js/common/sidebar.js}"></script>
+</body>
+</html>

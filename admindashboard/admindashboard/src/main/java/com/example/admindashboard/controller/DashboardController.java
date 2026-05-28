@@ -334,7 +334,26 @@ public class DashboardController {
     public String showPasswordResetPage() { return "password-reset"; }
 
     @GetMapping("/my-whitecircle")
-    public String showMyWhiteCircle() { return "my-whitecircle"; }
+    public String showMyWhiteCircle(Model model, Principal principal) { 
+        if (principal != null) {
+            String username = principal.getName();
+            User currentUser = userRepository.findByUsername(username).orElse(new User());
+            
+            model.addAttribute("user", currentUser);
+            model.addAttribute("savedPassword", currentUser.getPassword()); 
+        } else {
+            model.addAttribute("user", new User());
+            model.addAttribute("savedPassword", "");
+        }
+        // 1. Shows your crisp split login screen first when clicked from the dashboard
+        return "my-whitecircle-login"; 
+    }
+
+    @PostMapping("/my-whitecircle/login")
+    public String processMyWhiteCircleLogin() {
+        // 2. When they click "Continue with My WhiteCircle", they instantly land on your Quick Actions hub
+        return "my-whitecircle"; 
+    }
 
     @GetMapping("/coming-soon")
     public String comingSoonPage() {
@@ -360,56 +379,338 @@ public class DashboardController {
         return "my-timeoff";
     }
 
-    @GetMapping("/tickets")
-    public String showTicketsPage() { return "tickets"; }
+ // 1. THIS ALWAYS SHOWS THE LOGIN GATE FIRST WHEN CLICKED FROM THE MAIN DASHBOARD
+    @GetMapping("/tickets/authenticate")
+    public String showTicketLoginGate(Model model, Principal principal) {
+        if (principal != null) {
+            String loginId = principal.getName();
+            User currentUser = userRepository.findByUsername(loginId).orElse(new User());
+            
+            model.addAttribute("user", currentUser);
+            model.addAttribute("savedPassword", currentUser.getPassword()); 
+        } else {
+            model.addAttribute("user", new User());
+            model.addAttribute("savedPassword", "");
+        }
+        // Always force the split login page view first
+        return "ticket-login"; 
+    }
 
-    @GetMapping("/service-requests")
-    public String showServiceRequests(Model model, Principal principal) {
+    // 2. THE POST ROUTE TARGETS TICKETS.HTML ONCE THEY CLICK CONTINUE
+    @PostMapping("/tickets")
+    public String processTicketAuthentication(Model model, Principal principal) {
         if (principal != null) {
             String loginId = principal.getName();
             User currentUser = userRepository.findByUsername(loginId).orElse(new User());
             model.addAttribute("user", currentUser);
+            
+            List<ServiceRequest> userRequests = serviceRequestRepository.findByEmployeeIdOrderBySubmissionDateDesc(loginId);
+            model.addAttribute("myRequests", userRequests);
+        }
+        return "tickets"; 
+    }
+
+    // 3. NEW STEP: A SPECIFIC ROUTE FOR THE BACK BUTTON TO BYPASS THE GATE SECURELY
+    @GetMapping("/tickets/hub")
+    public String backToTicketsHub(Model model, Principal principal) {
+        if (principal != null) {
+            String loginId = principal.getName();
+            User currentUser = userRepository.findByUsername(loginId).orElse(new User());
+            model.addAttribute("user", currentUser);
+        }
+        // Directly renders the tickets.html screen without showing the gate
+        return "tickets";
+    }
+    @GetMapping("/ticket-dashboard")
+    public String showTicketDashboard(@RequestParam(name = "dept", required = false, defaultValue = "IT") String dept, 
+                                      Model model, Principal principal) {
+        if (principal != null) {
+            String loginId = principal.getName();
+            User currentUser = userRepository.findByUsername(loginId).orElse(new User());
+            model.addAttribute("user", currentUser);
+            
+            // Fetch all requests for the user from your database baseline
+            List<ServiceRequest> allUserRequests = serviceRequestRepository.findByEmployeeIdOrderBySubmissionDateDesc(loginId);
+            
+            // FILTER logic: Only show tickets in the activity table that match the clicked department context
+            List<ServiceRequest> filteredRequests = allUserRequests.stream()
+                    .filter(req -> {
+                        if (req.getType() == null) return false;
+                        
+                        switch (dept.toUpperCase()) {
+                            case "HR":
+                                return "HR".equalsIgnoreCase(req.getType());
+                            case "FACILITIES":
+                                return "FACILITIES".equalsIgnoreCase(req.getType()) || "HARDWARE".equalsIgnoreCase(req.getType());
+                            case "PAYROLL":
+                                return "PAYROLL".equalsIgnoreCase(req.getType()) || "FINANCE".equalsIgnoreCase(req.getType());
+                            case "ALUMNI":
+                                return "ALUMNI".equalsIgnoreCase(req.getType());
+                            case "ENTERPRISE":
+                                return "ENTERPRISE".equalsIgnoreCase(req.getType()) || "ACCESS".equalsIgnoreCase(req.getType());
+                            case "LEARNING":
+                                return "LEARNING".equalsIgnoreCase(req.getType()) || "TRAINING".equalsIgnoreCase(req.getType());
+                            case "IT":
+                            default:
+                                return "IT".equalsIgnoreCase(req.getType()) || "SOFTWARE".equalsIgnoreCase(req.getType());
+                        }
+                    })
+                    .collect(Collectors.toList());
+            
+            model.addAttribute("myRequests", filteredRequests);
+        } else {
+            model.addAttribute("user", new User());
+            model.addAttribute("myRequests", new ArrayList<ServiceRequest>());
+        }
+        
+        // CRITICAL: This sends the context string to ticket-dashboard.html
+        model.addAttribute("currentDept", dept.toUpperCase());
+        return "ticket-dashboard";
+    }
+    @GetMapping("/service-requests")
+    public String showServiceRequests(@RequestParam(name = "dept", required = false, defaultValue = "IT") String dept, 
+                                     Model model, Principal principal) {
+        if (principal != null) {
+            String loginId = principal.getName();
+            User currentUser = userRepository.findByUsername(loginId).orElse(new User());
+            model.addAttribute("user", currentUser);
+            
             List<ServiceRequest> userRequests = serviceRequestRepository.findByEmployeeIdOrderBySubmissionDateDesc(loginId);
             model.addAttribute("myRequests", userRequests);
         } else {
             model.addAttribute("user", new User());
         }
+
+        // Initialize our dynamic array data nodes
+        List<String> dynamicCategories = new ArrayList<>();
+        List<String> dynamicItems = new ArrayList<>();
+
+        // Match your clean string check fallback logic from the working incident controller
+        String activeDept = (dept != null && !dept.trim().isEmpty()) ? dept.trim().toUpperCase() : "IT";
+
+        // Distribute data options perfectly customized for NEW service requirements
+        switch (activeDept) {
+            case "HR":
+                dynamicCategories = Arrays.asList("ID Card Management", "Benefits Enrollment", "Transfer Request", "Onboarding Help");
+                dynamicItems = Arrays.asList("New Smart ID Badge", "Health Insurance Addition", "Inter-Office Relocation", "Buddy Assignment Request");
+                break;
+            case "FACILITIES":
+                dynamicCategories = Arrays.asList("Space Allocation", "Passes & Access", "Furniture Request", "Event Setup");
+                dynamicItems = Arrays.asList("Permanent Cabin Allocation", "Vehicle Parking Sticker", "Ergonomic Standing Desk", "Conference Room AV Setup");
+                break;
+            case "PAYROLL":
+                dynamicCategories = Arrays.asList("Tax Declarations", "Bank Profile Change", "Reimbursement Pre-Approval", "Advance Salary");
+                dynamicItems = Arrays.asList("Investment Proof Upload", "Salary Account Migration", "Travel Allowance Approval", "Festival Advance Request");
+                break;
+            case "ALUMNI":
+                dynamicCategories = Arrays.asList("Portal Credentials", "Event Registrations", "Merchandise Orders", "Donation Receipts");
+                dynamicItems = Arrays.asList("Reset Portal Access", "Annual Meet Pass", "Alumni Lapel Pin", "Tax Exemption Certificate");
+                break;
+            case "ENTERPRISE":
+                dynamicCategories = Arrays.asList("Account Provisioning", "License Upgrades", "Environment Creation", "Database Schema");
+                dynamicItems = Arrays.asList("Production SAP License", "Salesforce Pro Seat Tier", "Staging SandBox Instance", "New Table Allocation");
+                break;
+            case "LEARNING":
+                dynamicCategories = Arrays.asList("External Sponsorship", "Learning Content Access", "Bootcamp Nomination", "Exam Voucher");
+                dynamicItems = Arrays.asList("AWS Certification Funding", "Coursera Enterprise License", "Full-Stack BootCamp Entry", "RedHat Exam Voucher Code");
+                break;
+            case "IT":
+            default:
+                dynamicCategories = Arrays.asList("Hardware Asset Allocation", "Software Provisioning", "Cloud Sandbox Provisioning", "Network Config");
+                dynamicItems = Arrays.asList("MacBook Pro M3 Pro 16GB", "IntelliJ IDEA Ultimate Seat", "AWS Sandbox Budget Increase", "Static IP Reservation");
+                break;
+        }
+
+        // Send the exact properties your updated service-requests.html template relies on
+        model.addAttribute("categoriesList", dynamicCategories);
+        model.addAttribute("itemsList", dynamicItems);
+        model.addAttribute("currentDept", activeDept);
+
         return "service-requests";
     }
 
     @GetMapping("/my-assets")
-    public String showMyAssets(Model model, Principal principal) {
+    public String showMyAssets(@RequestParam(name = "dept", required = false, defaultValue = "IT") String dept, 
+                               Model model, Principal principal) {
         if (principal != null) {
             String loginId = principal.getName();
             User currentUser = userRepository.findByUsername(loginId).orElse(new User());
             model.addAttribute("user", currentUser);
+            
             List<ServiceRequest> userRequests = serviceRequestRepository.findByEmployeeIdOrderBySubmissionDateDesc(loginId);
             model.addAttribute("myRequests", userRequests);
         } else {
             model.addAttribute("user", new User());
         }
+
+        List<String> dynamicCategories = new ArrayList<>();
+        List<String> dynamicItems = new ArrayList<>();
+
+        String activeDept = (dept != null && !dept.trim().isEmpty()) ? dept.trim().toUpperCase() : "IT";
+
+        // Asset Form dataset allocation map tailored for item types & spec updates
+        switch (activeDept) {
+            case "HR":
+                dynamicCategories = Arrays.asList("Biometric Tokens", "Office Stationary Kits", "Training Handbooks", "Welcome Kits");
+                dynamicItems = Arrays.asList("RFID KeyFob Pro", "Premium Executive Pen & Note Diary", "Employee Handbook Version 2026", "Standard Joining Swag Box");
+                break;
+            case "FACILITIES":
+                dynamicCategories = Arrays.asList("Locker Allocations", "Desk Comfort Hardware", "Safety Equipment", "Storage Solutions");
+                dynamicItems = Arrays.asList("Heavy Duty Pedestal Locker Key", "Ergonomic Lumbar Support Pillow", "High-Visibility Vest & Safety Shoes", "3-Tier Desk Document Organizer File");
+                break;
+            case "PAYROLL":
+                dynamicCategories = Arrays.asList("Token Generator", "Physical Ledger Logs", "Secure Document Sleeves", "Encryption Hardware");
+                dynamicItems = Arrays.asList("RSA SecurID Hard Token PIN", "Confidential Audit Binder", "Tamper-Proof Financial Envelopes", "Encrypted IronKey USB Module");
+                break;
+            case "ALUMNI":
+                dynamicCategories = Arrays.asList("Souvenirs & Merch", "Archival File Folders", "Event Presentation Displays", "Badge Printers");
+                dynamicItems = Arrays.asList("Silver Plated Shield Emblem", "Premium Certificate Leather Folder", "Retractable Banner Stand (Rollup)", "Zebra Desktop ID Card Ribbon Kit");
+                break;
+            case "ENTERPRISE":
+                dynamicCategories = Arrays.asList("Server Node Allocation", "Dedicated Hardware Hubs", "Network Testing Gear", "Storage Extensions");
+                dynamicItems = Arrays.asList("Blade Server Bay Tier-3 Unit", "Cisco Hardware Router Module", "Fluke Network LAN Cable Tester", "1TB SSD Expansion Module");
+                break;
+            case "LEARNING":
+                dynamicCategories = Arrays.asList("Lab VR Headsets", "Training Tablet Kits", "Audio Capture Gear", "Smart Board Peripherals");
+                dynamicItems = Arrays.asList("Meta Quest 3 Enterprise DevKit", "Samsung Galaxy Tab S9 Training Edition", "Jabra Wireless Podcaster Mic", "Stylus Pen Pro Pack");
+                break;
+            case "IT":
+            default:
+                dynamicCategories = Arrays.asList("Input Peripherals", "Display Components", "System Computing Upgrades", "Portable Data Storage");
+                dynamicItems = Arrays.asList("Logitech MX Master 3S Mouse", "Dell UltraSharp 27-inch 4K Monitor", "Crucial 16GB DDR5 RAM Stick Module", "SanDisk 1TB Extreme Portable SSD");
+                break;
+        }
+
+        model.addAttribute("categoriesList", dynamicCategories);
+        model.addAttribute("itemsList", dynamicItems);
+        model.addAttribute("currentDept", activeDept);
+
         return "my-assets";
     }
 
     @GetMapping("/report-incident")
-    public String showReportIncident(Model model, Principal principal) {
+    public String showReportIncident(@RequestParam(name = "dept", required = false, defaultValue = "IT") String dept, 
+                                     Model model, Principal principal) {
         if (principal != null) {
             String loginId = principal.getName();
             User currentUser = userRepository.findByUsername(loginId).orElse(new User());
             model.addAttribute("user", currentUser);
+            
+            // Keeps your original table feed tracking intact
             List<ServiceRequest> userRequests = serviceRequestRepository.findByEmployeeIdOrderBySubmissionDateDesc(loginId);
             model.addAttribute("myRequests", userRequests);
         } else {
             model.addAttribute("user", new User());
         }
+
+        // Initialize lists for the dropdown menus
+        List<String> dynamicCategories = new ArrayList<>();
+        List<String> dynamicItems = new ArrayList<>();
+
+        // Safe fallback block to check for null parameters safely
+        String activeDept = (dept != null && !dept.trim().isEmpty()) ? dept.trim().toUpperCase() : "IT";
+
+        switch (activeDept) {
+            case "HR":
+                dynamicCategories = Arrays.asList("Employee Policies", "Onboarding", "Grievances", "Documentation");
+                dynamicItems = Arrays.asList("Letter of Recommendation", "Leave Balance Correction", "Policy Clarification", "PF Query");
+                break;
+            case "FACILITIES":
+                dynamicCategories = Arrays.asList("Office Maintenance", "Workstation Layout", "Power & Lighting", "Access Control");
+                dynamicItems = Arrays.asList("Broken Chair Replacement", "Desk Relocation", "AC Adjustment", "Physical Key Request");
+                break;
+            case "PAYROLL":
+                dynamicCategories = Arrays.asList("Salary Discrepancy", "Reimbursements", "Tax / Form 16", "Bank Details Update");
+                dynamicItems = Arrays.asList("Upload Fuel Bill Claims", "CTC Structure Revision", "Form 16 Download", "Update Direct Deposit");
+                break;
+            case "ALUMNI":
+                dynamicCategories = Arrays.asList("Background Verification", "Experience Certificates", "Network Access");
+                dynamicItems = Arrays.asList("Former Employee Verification", "Relieving Letter Copy", "Transcript Request");
+                break;
+            case "ENTERPRISE":
+                dynamicCategories = Arrays.asList("ERP Access", "CRM Systems", "Database Permissions", "Cloud Consoles");
+                dynamicItems = Arrays.asList("SAP Login Issue", "Salesforce Seat Allocation", "MySQL Environment Setup", "AWS Sandbox Access");
+                break;
+            case "LEARNING":
+                dynamicCategories = Arrays.asList("Upskilling Requests", "Certification Reimbursements", "Training Portals");
+                dynamicItems = Arrays.asList("Udemy License Assignment", "Certification Exam Voucher", "Java Bootcamp Enrollment");
+                break;
+            case "IT":
+            default:
+                dynamicCategories = Arrays.asList("Software", "Hardware", "Network Infrastructure", "Access/Permissions");
+                dynamicItems = Arrays.asList("Operating System Install", "IDE Configuration", "Reset AD Password", "VPN Access Allocation");
+                break;
+        }
+
+        // Send the generated dropdown datasets to the view
+        model.addAttribute("categoriesList", dynamicCategories);
+        model.addAttribute("itemsList", dynamicItems);
+        model.addAttribute("currentDept", activeDept);
+
         return "report-incident";
     }
 
     @GetMapping("/knowledge-base")
-    public String showKnowledgeBasePage() { return "knowledge-base"; }
+    public String showKnowledgeBase(@RequestParam(name = "dept", required = false, defaultValue = "IT") String dept, 
+                                   Model model, Principal principal) {
+        if (principal != null) {
+            String loginId = principal.getName();
+            User currentUser = userRepository.findByUsername(loginId).orElse(new User());
+            model.addAttribute("user", currentUser);
+            
+            List<ServiceRequest> userRequests = serviceRequestRepository.findByEmployeeIdOrderBySubmissionDateDesc(loginId);
+            model.addAttribute("myRequests", userRequests);
+        } else {
+            model.addAttribute("user", new User());
+        }
+
+        List<String> dynamicCategories = new ArrayList<>();
+        List<String> dynamicItems = new ArrayList<>();
+
+        String activeDept = (dept != null && !dept.trim().isEmpty()) ? dept.trim().toUpperCase() : "IT";
+
+        // Solutions Form dataset logic tailored for Troubleshooting/Knowledge Queries
+        switch (activeDept) {
+            case "HR":
+                dynamicCategories = Arrays.asList("Policy Clarification", "Leave Disputes", "Appraisal Queries", "Provident Fund");
+                dynamicItems = Arrays.asList("Maternity/Paternity Guidelines", "Loss of Pay Reversal", "Rating Grievance Form", "PF Withdrawal Documentation");
+                break;
+            case "FACILITIES":
+                dynamicCategories = Arrays.asList("Office Safety", "Access Control Issues", "Cafeteria Feedback", "Workspace Maintenance");
+                dynamicItems = Arrays.asList("Fire Warden Nominations", "ID Badge Demagnetized", "Vendor Hygiene Issue", "AC Vent Adjustment Request");
+                break;
+            case "PAYROLL":
+                dynamicCategories = Arrays.asList("Tax Projection Error", "Payslip Discrepancy", "Bonus Calculations", "Reimbursement Rejections");
+                dynamicItems = Arrays.asList("Form 16 Revision Request", "Missing HRA Allowance", "Variable Pay Breakdown", "Fuel Bill Resubmission");
+                break;
+            case "ALUMNI":
+                dynamicCategories = Arrays.asList("Verification Request", "Legacy Records Lookup", "Networking Events", "Chapter Membership");
+                dynamicItems = Arrays.asList("Background Verification Form", "Graduation Batch 2022 List", "Global Meet Core Agenda", "Pune Chapter Registration");
+                break;
+            case "ENTERPRISE":
+                dynamicCategories = Arrays.asList("ERP Lag/Timeout", "Integration Pipeline", "Data Recovery", "Access Audit Sync");
+                dynamicItems = Arrays.asList("SAP GUI Freeze Fix", "Jenkins WebHook Mismatch", "Lost Lead Record Restoration", "AD Group Reconciliation");
+                break;
+            case "LEARNING":
+                dynamicCategories = Arrays.asList("Course Completion Status", "Exam Scheduling Trouble", "Platform License Expiry", "Skill Badges Missing");
+                dynamicItems = Arrays.asList("Udemy Completion Sync Error", "PearsonVue Voucher Failure", "Pluralsight Renewal Delay", "Java Core Badge Upload");
+                break;
+            case "IT":
+            default:
+                dynamicCategories = Arrays.asList("Operating System Error", "VPN Connectivity Failure", "Local Environment Crash", "Peripheral Malfunction");
+                dynamicItems = Arrays.asList("Windows Blue Screen (BSOD)", "FortiClient Connection Timeout", "MySQL Workbench Port Lockout", "Logitech Wireless Mouse Exchange");
+                break;
+        }
+
+        model.addAttribute("categoriesList", dynamicCategories);
+        model.addAttribute("itemsList", dynamicItems);
+        model.addAttribute("currentDept", activeDept);
+
+        return "knowledge-base";
+    }
 
     @GetMapping("/payroll")
-    public String showPayrollPage() { return "payroll"; }
+    public String showPayrollPage() { return "redirect:/payroll-login"; }
 
     @GetMapping("/holiday-list")
     public String showHolidayList() { return "holiday-list"; }

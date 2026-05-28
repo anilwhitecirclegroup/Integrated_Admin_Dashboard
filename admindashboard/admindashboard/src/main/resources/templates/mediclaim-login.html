@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mediclaim Portal Login | WhiteCircle</title>
+
+    <meta name="_csrf" th:content="${_csrf?.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --med-primary: #1E88E5;   /* Medical Blue */
+            --med-dark: #1565C0;
+            --med-green: #43A047;     /* Health Green */
+            --med-red: #E53935;       /* Danger/Heartbeat */
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f8fafc;
+            display: flex;
+        }
+
+        /* --- LEFT SIDE: VISUAL SECTION --- */
+        .visual-section {
+            width: 55%;
+            background: linear-gradient(135deg, #0d47a1 0%, #1E88E5 50%, #64b5f6 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .visual-content {
+            z-index: 10;
+            text-align: center;
+            padding: 0 40px;
+        }
+
+        .visual-content h1 {
+            font-weight: 800;
+            font-size: 3rem;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .visual-content p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* Animated EKG Heartbeat Line */
+        .heartbeat-container {
+            position: absolute;
+            bottom: 20%;
+            width: 100%;
+            opacity: 0.3;
+            z-index: 1;
+        }
+        .heartbeat-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 4s linear infinite;
+        }
+        @keyframes dash {
+            0% { stroke-dashoffset: 1000; }
+            50% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -1000; }
+        }
+
+        /* Floating Medical Icons */
+        .floating-icon {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.2);
+            animation: float 6s ease-in-out infinite;
+            z-index: 2;
+        }
+        .icon-1 { top: 15%; left: 20%; font-size: 4rem; animation-delay: 0s; }
+        .icon-2 { top: 30%; right: 15%; font-size: 3rem; animation-delay: 1.5s; }
+        .icon-3 { bottom: 25%; left: 15%; font-size: 5rem; animation-delay: 3s; color: rgba(255, 255, 255, 0.15); }
+        .icon-4 { top: 10%; right: 30%; font-size: 2.5rem; animation-delay: 4.5s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+
+        /* --- RIGHT SIDE: LOGIN FORM --- */
+        .login-section {
+            width: 45%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at top right, #ffffff, #f1f5f9);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            padding: 50px 40px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .login-header i {
+            color: var(--med-primary);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .login-header h3 {
+            font-weight: 800;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        /* Floating Inputs */
+        .form-floating > .form-control {
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            background-color: #f8fafc;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .form-floating > .form-control:focus {
+            border-color: var(--med-primary);
+            box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.1);
+            background-color: #ffffff;
+        }
+        .form-floating > label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Glow Button */
+        .btn-medical {
+            background: linear-gradient(135deg, var(--med-primary) 0%, var(--med-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+            width: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(30, 136, 229, 0.25);
+        }
+        .btn-medical:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(30, 136, 229, 0.4);
+            color: white;
+        }
+        .btn-medical:active {
+            transform: translateY(1px);
+        }
+
+        /* Shake Animation for Invalid Login */
+        .shake-error {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+            40%, 60% { transform: translate3d(8px, 0, 0); }
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+        .back-link a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .back-link a:hover {
+            color: var(--med-primary);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 991px) {
+            body { flex-direction: column; overflow-y: auto; }
+            .visual-section { width: 100%; height: 40vh; padding: 40px 20px; }
+            .login-section { width: 100%; height: 60vh; align-items: flex-start; padding-top: 40px; }
+            .login-card { box-shadow: none; border: none; background: transparent; padding: 20px; }
+            .heartbeat-container { bottom: 10%; }
+            .visual-content h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="visual-section">
+    <i class="fas fa-heartbeat floating-icon icon-1"></i>
+    <i class="fas fa-pills floating-icon icon-2"></i>
+    <i class="fas fa-plus-square floating-icon icon-3"></i>
+    <i class="fas fa-file-medical floating-icon icon-4"></i>
+
+    <div class="visual-content">
+        <h1>Corporate Health Hub</h1>
+        <p>Secure, transparent, and seamless access to your employee mediclaim benefits and family coverage.</p>
+    </div>
+
+    <div class="heartbeat-container">
+        <svg viewBox="0 0 1000 100" preserveAspectRatio="none">
+            <path class="heartbeat-path" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="3"
+                  d="M0,50 L300,50 L320,20 L350,90 L380,10 L410,70 L430,50 L1000,50" />
+        </svg>
+    </div>
+</div>
+
+<div class="login-section">
+    <div class="login-card" id="loginCard">
+        <div class="login-header">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Mediclaim Portal</h3>
+            <p class="text-muted small mt-1">Authenticate to access your policy</p>
+        </div>
+
+        <form id="mediclaimLoginForm">
+            <div class="form-floating mb-4">
+                <input type="text" class="form-control" id="empId" placeholder="EMP101" required>
+                <label for="empId"><i class="far fa-user me-2 text-muted"></i>Employee ID or Email</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" placeholder="Password" required>
+                <label for="password"><i class="fas fa-lock me-2 text-muted"></i>Secure Password</label>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4 px-1">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="rememberMe">
+                    <label class="form-check-label small fw-medium text-muted" for="rememberMe">
+                        Remember me
+                    </label>
+                </div>
+                <a href="#" class="small fw-bold text-decoration-none" style="color: var(--med-primary);">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn-medical" id="loginBtn">
+                <span id="btnText">Secure Login <i class="fas fa-arrow-right ms-2"></i></span>
+                <span id="btnLoader" class="d-none">
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Checking Insurance Access...
+                    </span>
+            </button>
+        </form>
+
+        <div class="back-link">
+            <a href="/employee/dashboard"><i class="fas fa-arrow-left me-1"></i> Back to Main HRMS</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('mediclaimLoginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const empId = document.getElementById('empId').value;
+        const password = document.getElementById('password').value;
+        const loginCard = document.getElementById('loginCard');
+
+        const btnText = document.getElementById('btnText');
+        const btnLoader = document.getElementById('btnLoader');
+        const loginBtn = document.getElementById('loginBtn');
+
+        // 1. UI Loading State
+        loginBtn.disabled = true;
+        btnText.classList.add('d-none');
+        btnLoader.classList.remove('d-none');
+
+        try {
+                // 1. Safely grab the CSRF tokens
+                const csrfMeta = document.querySelector("meta[name='_csrf']");
+                const csrfHeaderMeta = document.querySelector("meta[name='_csrf_header']");
+
+                const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : '';
+                const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute("content") : '';
+
+                // 2. Prepare headers dynamically
+                const requestHeaders = {
+                    'Content-Type': 'application/json'
+                };
+
+                // Only attach CSRF header if it actually exists
+                if (csrfHeader && csrfToken) {
+                    requestHeaders[csrfHeader] = csrfToken;
+                }
+
+                // 3. Real API Call to Backend
+                const response = await fetch('/employee/mediclaim/verify-login', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: requestHeaders,
+                    body: JSON.stringify({ empId: empId, password: password })
+                });
+
+                if (response.ok) {
+                    // Success -> Redirect to the new Portal route
+                    window.location.href = '/employee/mediclaim/portal';
+                } else {
+                    // Trigger Error Shake Animation
+                    loginCard.classList.add('shake-error');
+
+                    // Reset Button UI
+                    loginBtn.disabled = false;
+                    btnText.classList.remove('d-none');
+                    btnLoader.classList.add('d-none');
+
+                    setTimeout(() => {
+                        loginCard.classList.remove('shake-error');
+                    }, 500);
+                }
+            } catch (error) {
+                console.error("Login verification failed:", error);
+                loginBtn.disabled = false;
+                btnText.classList.remove('d-none');
+                btnLoader.classList.add('d-none');
+            }
+    });
+</script>
+</body>
+</html>

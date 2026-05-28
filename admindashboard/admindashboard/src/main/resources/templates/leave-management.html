@@ -770,9 +770,13 @@
                 'LOP':      { gradient: 'linear-gradient(135deg, #ef4444, #b91c1c)', icon: 'fa-circle-exclamation', iconBg: 'rgba(255,255,255,0.2)' }
             };
 
-            let html = '';
+          const displayTypes = ['CL', 'SL', 'EL', 'COMP_OFF', 'LOP'];  
+          let html = '';
             walletData.forEach(w => {
+              if (!displayTypes.includes(w.leaveCode)) return;
                 const t = themes[w.leaveCode] || { gradient: 'linear-gradient(135deg, #64748b, #475569)', icon: 'fa-calendar', iconBg: 'rgba(255,255,255,0.2)' };
+              const isLOP = w.leaveCode === 'LOP';
+                const total = w.openingBalance || 0;
                 const isLOP = w.leaveCode === 'LOP';
                 const total = w.openingBalance || 0;
                 const used = w.used || 0;
@@ -856,7 +860,11 @@
             '<th style="padding:8px 6px; text-align:center; font-size:0.68rem; color:#475569; text-transform:uppercase; background:#f8fafc; white-space:nowrap;">Balance</th>' +
             '</tr></thead><tbody>';
 
+        const displayTypes = ['CL', 'SL', 'EL', 'COMP_OFF', 'LOP'];
+
         walletData.forEach(w => {
+            if (!displayTypes.includes(w.leaveCode)) return;
+
             const isLOP = w.leaveCode === 'LOP';
             const balColor = isLOP ? '#7c3aed' : (w.balance > 0 ? '#16a34a' : '#dc2626');
             const balText = isLOP ? 'Auto' : (w.balance || 0);
