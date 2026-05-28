@@ -294,15 +294,15 @@
         </div>
 
 		<div class="action-box box-solutions"
-		th:attr="data-url=@{/service-requests(dept=${currentDept ?: 'IT'})}"
-		onclick="window.location.href=this.dataset.url">
-            <div class="action-icon-wrap"><i class="fas fa-lightbulb"></i></div>
-            <div class="action-meta-content">
-                <small>I am looking for</small>
-                <h4>Solutions</h4>
-                <div class="action-tag-btn">View Solutions</div>
-            </div>
-        </div>
+		     th:attr="data-url=@{/knowledge-base(dept=${currentDept ?: 'IT'})}"
+		     onclick="window.location.href=this.dataset.url">
+		    <div class="action-icon-wrap"><i class="fas fa-lightbulb"></i></div>
+		    <div class="action-meta-content">
+		        <small>I am looking for</small>
+		        <h4>Solutions</h4>
+		        <div class="action-tag-btn">View Solutions</div>
+		    </div>
+		</div>
 
 		<div class="action-box box-assets"
 		th:attr="data-url=@{/my-assets(dept=${currentDept ?: 'IT'})}"
@@ -320,7 +320,7 @@
 <div class="main-content-area">
 
     <div class="section-header-flex">
-        <h4><span th:text="${currentDept ?: 'IT'}">IT</span> Active Service Requests</h4>
+        <h4>My Active Service Requests</h4>
         <select id="statusFilter" class="select-filter-dropdown" onchange="filterMyRequests()">
             <option value="All">All Statuses</option>
             <option value="Open">Open</option>

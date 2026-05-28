@@ -23,13 +23,38 @@
             margin: 0;
             padding: 0;
         }
+		
+		.form-grid-container .col-sm-3, 
+		.form-content-area .col-sm-3 {
+		    text-align: right !important;
+		    display: flex;
+		    justify-content: flex-end;
+		    align-items: center;
+		}
 
-        /* --- HERO BANNER BACKGROUND --- */
+		.form-label-custom, 
+		.custom-form-label {
+		    text-shadow: none;
+		    white-space: nowrap !important; 
+		    word-break: keep-all !important;
+		    margin-bottom: 0 !important;
+		    justify-content: flex-end;
+		}
+		.textarea-block-group label,
+		.row.mt-2 label.form-label-custom {
+		    text-align: left !important;
+		    justify-content: flex-start !important;
+		    white-space: nowrap !important;
+		}
+
+
+        /* ---------- HERO SECTION ---------- */
+
         .hero-banner-container {
             position: relative;
             width: 100%;
             height: 310px;
-            background: linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.05)), 
+            background: linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)),
                         url('/images/report-issue.jpeg');
             background-size: cover;
             background-position: center;
@@ -39,66 +64,95 @@
         }
 
         .hero-banner-container h1 {
-            font-size: 2.8rem;
+            font-size: 3rem;
             font-weight: 800;
             color: #000000;
-            z-index: 2;
             margin: 0;
         }
 
         .btn-back-dashboard {
             position: absolute;
-            top: 25px;
+            top: 28px;
             right: 40px;
             background-color: var(--primary-blue);
             color: #ffffff !important;
             font-size: 0.85rem;
             font-weight: 600;
-            padding: 10px 22px;
+            padding: 10px 24px;
             border-radius: 6px;
             text-decoration: none;
-            z-index: 10;
-            transition: background-color 0.2s;
+            transition: 0.2s ease;
             box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
         }
+
         .btn-back-dashboard:hover {
             background-color: var(--hover-blue);
         }
 
-        /* --- FORM CONTENT WRAPPER --- */
-        .form-content-area {
-            max-width: 1100px;
-            margin: 40px auto 80px auto;
-            padding: 0 40px;
-        }
+        /* ---------- FORM WRAPPER ---------- */
+
+		.form-content-area {
+		     max-width: 1100px;
+		    margin: 40px auto 80px auto;
+		    padding: 0 6px;
+		}
 
         .instruction-text {
             font-size: 1.05rem;
             font-weight: 700;
             color: #000000;
-            margin-bottom: 40px;
+            margin-bottom: 34px;
         }
 
-        /* --- FORM STRUCTURE ALIGNMENT --- */
-        .form-label-custom {
-            font-weight: 600;
-            color: #6b7280;
-            font-size: 0.95rem;
+        /* ---------- FORM GRID ---------- */
+
+        .main-form-grid {
+            row-gap: 10px;
+        }
+
+        .form-section-column {
+            padding-left: 5px;
+            padding-right: 10px;
+        }
+
+        .form-row-custom {
             display: flex;
             align-items: center;
-            height: 38px;
+            margin-bottom: 16px;
+        }
+
+        .form-label-wrapper {
+            width: 34%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-right: 14px;
+        }
+
+        .form-input-wrapper {
+            width: 76%;
+        }
+
+        .form-label-custom {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #6b7280;
+            margin: 0;
+            white-space: nowrap;
         }
 
         .form-control-custom {
             width: 100%;
+            height: 38px;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 7px 12px;
+            border-radius: 4px;
+            padding: 6px 12px;
             font-size: 0.9rem;
-            color: #000000;
             background-color: #ffffff;
+            color: #000000;
             box-sizing: border-box;
         }
+
         .form-control-custom:focus {
             border-color: var(--primary-blue);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
@@ -109,7 +163,35 @@
             color: #6b7280;
         }
 
-        /* --- DRAG & DROP ZONE --- */
+        /* ---------- DESCRIPTION ---------- */
+
+		.description-section {
+		    margin-top: 6px;
+		}
+		.description-section textarea{
+		    margin-left: 25px;
+		}
+
+		.description-section .form-label-custom {
+		    justify-content: flex-end;
+			padding-right: 8px;
+		    height: auto;
+		}
+
+		.description-section textarea.form-control-custom {
+		    min-height: 115px;
+		    height: 115px;
+		    resize: none;
+		    padding-top: 10px;
+		}
+        textarea.form-control-custom {
+            min-height: 120px;
+            resize: vertical;
+            padding-top: 10px;
+        }
+
+        /* ---------- UPLOAD ---------- */
+
         .upload-dropzone {
             border: 1.5px dashed #9ca3af;
             border-radius: 6px;
@@ -119,37 +201,42 @@
             color: #4b5563;
             font-size: 1rem;
             font-weight: 500;
-            margin-top: 25px;
+            margin-top: 24px;
             cursor: pointer;
             transition: background-color 0.2s;
         }
+
         .upload-dropzone:hover {
             background-color: #f9fafb;
         }
+
         .upload-dropzone span {
             color: var(--primary-blue);
             font-weight: 600;
         }
 
-        /* --- BUTTON CONTROLS ROW --- */
+        /* ---------- BUTTONS ---------- */
+
         .form-actions-row {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 24px;
-            margin-top: 40px;
+            gap: 34px;
+            margin-top: 42px;
+            flex-wrap: wrap;
         }
 
         .btn-submit-custom {
             background-color: var(--primary-blue);
             color: #ffffff;
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 10px 28px;
-            border-radius: 6px;
             border: none;
-            transition: background-color 0.2s;
+            border-radius: 6px;
+            padding: 10px 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: 0.2s ease;
         }
+
         .btn-submit-custom:hover {
             background-color: var(--hover-blue);
         }
@@ -157,13 +244,14 @@
         .btn-outline-custom {
             background-color: #ffffff;
             color: var(--primary-blue);
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 10px 40px;
-            border-radius: 6px;
             border: 1.5px solid var(--primary-blue);
-            transition: background-color 0.2s;
+            border-radius: 6px;
+            padding: 10px 42px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: 0.2s ease;
         }
+
         .btn-outline-custom:hover {
             background-color: #f3f4f6;
         }
@@ -171,126 +259,267 @@
         .hidden-tracker-feed {
             display: none !important;
         }
+
+        /* ---------- RESPONSIVE ---------- */
+
+        @media (max-width: 768px) {
+
+            .hero-banner-container {
+                height: 250px;
+            }
+
+            .hero-banner-container h1 {
+                font-size: 2.2rem;
+            }
+
+            .btn-back-dashboard {
+                top: 18px;
+                right: 18px;
+                padding: 8px 16px;
+            }
+
+            .form-section-column {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .form-row-custom {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+			.form-label-wrapper {
+			    width: 24%;
+			    display: flex;
+			    justify-content: flex-end;
+			    align-items: center;
+			    padding-right: 6px;
+			}
+
+            .form-input-wrapper {
+                width: 100%;
+            }
+
+            .form-actions-row {
+                gap: 16px;
+            }
+        }
     </style>
 </head>
+
 <body>
 
-<div class="hero-banner-container">
-    <!-- SYNC LOGIC: Routes back directly with active context channel parameter tracking -->
-    <a th:href="@{/ticket-dashboard(dept=${currentDept})}" class="btn-back-dashboard">Back to Dashboard</a>
-    <h1 th:text="${currentDept + ' Assets Form'}">Assets Form</h1>
-</div>
+    <div class="hero-banner-container">
+        <a th:href="@{/ticket-dashboard(dept=${currentDept})}" class="btn-back-dashboard">
+            Back to Dashboard
+        </a>
 
-<div class="form-content-area">
-    <div class="instruction-text">Fill the required details to request accessories / allocate hardware</div>
-
-    <form id="assetsFormMain">
-        <!-- SYNC LOGIC: Tracker capturing current context parameters -->
-        <input type="hidden" id="assetDeptType" th:value="${currentDept}">
-
-        <div class="container-fluid p-0">
-            <div class="row g-4">
-                
-                <div class="col-md-6">
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-sm-3"><label class="form-label-custom">Item Type*</label></div>
-                        <div class="col-sm-9">
-                            <!-- SYNC LOGIC: Iterates via categoriesList provided dynamically by backend switch map -->
-                            <select class="form-select form-control-custom" id="astItemType" required>
-                                <option value="" selected disabled hidden>Select Asset Type</option>
-                                <option th:each="cat : ${categoriesList}" th:value="${cat}" th:text="${cat}"></option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-sm-3"><label class="form-label-custom">Priority*</label></div>
-                        <div class="col-sm-9">
-                            <select class="form-select form-control-custom" id="astPriority" required>
-                                <option value="Low">Low</option>
-                                <option value="Medium" selected>Medium</option>
-                                <option value="High">High</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-sm-3"><label class="form-label-custom">Subject*</label></div>
-                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astSubject" placeholder="Brief allocation reason" required></div>
-                    </div>
-
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-sm-3"><label class="form-label-custom">Mobile No.*</label></div>
-                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astMobile" required pattern="[0-9]{10}" maxlength="10"></div>
-                    </div>
-
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-sm-3"><label class="form-label-custom">Email ID*</label></div>
-                        <div class="col-sm-9"><input type="email" class="form-control form-control-custom" id="astEmail" required></div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-sm-3"><label class="form-label-custom">Delivery Location*</label></div>
-                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="astDeliveryLocation" placeholder="Desk No. or Remote Address" required></div>
-                    </div>
-
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-sm-3"><label class="form-label-custom">Model / Spec*</label></div>
-                        <div class="col-sm-9">
-                            <!-- SYNC LOGIC: Changed input text field to select element parsing dynamic allocations map -->
-                            <select class="form-select form-control-custom" id="astSubcategory" required>
-                                <option value="" selected disabled hidden>Select Core Allocation / Upgrade Spec</option>
-                                <option th:each="item : ${itemsList}" th:value="${item}" th:text="${item}"></option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-sm-3"><label class="form-label-custom">Location*</label></div>
-                        <div class="col-sm-9">
-                            <select class="form-select form-control-custom" id="astLocation" required>
-                                <option value="" selected disabled hidden>Select Hub Facility</option>
-                                <option value="Noida">Noida</option>
-                                <option value="Pune">Pune</option>
-                                <option value="Remote">Remote</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="row mt-2">
-                <div class="col-md-12">
-                    <div class="d-flex flex-column gap-2">
-                        <label class="form-label-custom" style="height:auto;">Description*</label>
-                        <textarea class="form-control form-control-custom" id="astDescription" rows="5" placeholder="Specify explicit asset details or modification justifications..." required></textarea>
-                    </div>
-                </div>
-            </div>
-
-			<div class="upload-dropzone" id="dropzoneContainer" onclick="document.getElementById('fileInputHidden').click()">
-			    <span id="dropzoneText">Browse files</span> or drag files here
-			    <input type="file" id="fileInputHidden" style="display: none;" onchange="displaySelectedFile(this)">
-			</div>
-
-            <div class="form-actions-row">
-                <button type="button" class="btn-submit-custom" onclick="executeAssetsFormSubmission()">Submit Request</button>
-                <button type="reset" class="btn-outline-custom">Reset</button>
-                <button type="button" class="btn-outline-custom" th:onclick="|window.location.href='/ticket-dashboard?dept=' + document.getElementById('assetDeptType').value|">Cancel</button>
-            </div>
-
-        </div>
-    </form>
-</div>
-
-<div class="hidden-tracker-feed">
-    <div th:each="req : ${myRequests}" class="incident-row" th:data-status="${req.status}">
-        <span th:text="${req.detailItem}"></span>
+        <h1>Assets Form</h1>
     </div>
-</div>
+
+    <div class="form-content-area">
+
+        <div class="instruction-text">
+            Fill the required details to request accessories / upgrade hardware
+        </div>
+
+        <form id="assetsFormMain">
+
+            <input type="hidden" id="assetDeptType" th:value="${currentDept}">
+
+            <div class="container-fluid p-0">
+
+                <div class="row gx-5 gy-2 main-form-grid">
+
+                    <div class="col-md-6 form-section-column">
+
+                        <div class="form-row-custom">
+                            <div class="form-label-wrapper">
+                                <label class="form-label-custom">Item Type*</label>
+                            </div>
+
+                            <div class="form-input-wrapper">
+                                <select class="form-select form-control-custom" id="astItemType" required>
+                                    <option value="" selected disabled hidden>Select</option>
+
+                                    <option th:each="cat : ${categoriesList}"
+                                            th:value="${cat}"
+                                            th:text="${cat}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row-custom">
+                            <div class="form-label-wrapper">
+                                <label class="form-label-custom">Priority*</label>
+                            </div>
+
+                            <div class="form-input-wrapper">
+                                <select class="form-select form-control-custom" id="astPriority" required>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium" selected>Select</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row-custom">
+                            <div class="form-label-wrapper">
+                                <label class="form-label-custom">Subject</label>
+                            </div>
+
+                            <div class="form-input-wrapper">
+                                <input type="text"
+                                       class="form-control form-control-custom"
+                                       id="astSubject"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="form-row-custom">
+                            <div class="form-label-wrapper">
+                                <label class="form-label-custom">Mobile No.*</label>
+                            </div>
+
+                            <div class="form-input-wrapper">
+                                <input type="text"
+                                       class="form-control form-control-custom"
+                                       id="astMobile"
+                                       required
+                                       pattern="[0-9]{10}"
+                                       maxlength="10">
+                            </div>
+                        </div>
+
+                        <div class="form-row-custom">
+                            <div class="form-label-wrapper">
+                                <label class="form-label-custom">Email ID*</label>
+                            </div>
+
+                            <div class="form-input-wrapper">
+                                <input type="email"
+                                       class="form-control form-control-custom"
+                                       id="astEmail"
+                                       required>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 form-section-column">
+
+                        <div class="form-row-custom">
+                            <div class="form-label-wrapper">
+                                <label class="form-label-custom">Delivery Location*</label>
+                            </div>
+
+                            <div class="form-input-wrapper">
+                                <input type="text"
+                                       class="form-control form-control-custom"
+                                       id="astDeliveryLocation"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="form-row-custom">
+                            <div class="form-label-wrapper">
+                                <label class="form-label-custom">Subcategory</label>
+                            </div>
+
+                            <div class="form-input-wrapper">
+                                <input type="text"
+                                       class="form-control form-control-custom"
+                                       id="astSubcategory"
+                                       placeholder="">
+                            </div>
+                        </div>
+
+                        <div class="form-row-custom">
+                            <div class="form-label-wrapper">
+                                <label class="form-label-custom">Location*</label>
+                            </div>
+
+                            <div class="form-input-wrapper">
+                                <select class="form-select form-control-custom"
+                                        id="astLocation"
+                                        required>
+
+                                    <option value="" selected disabled hidden>Select</option>
+                                    <option value="Noida">Noida</option>
+                                    <option value="Pune">Pune</option>
+                                    <option value="Remote">Remote</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+				<div class="description-section">
+
+				    <div class="row align-items-start">
+
+				        <div class="col-md-1 pe-0">
+				            <label class="form-label-custom pt-2">
+				                Description
+				            </label>
+				        </div>
+
+				        <div class="col-md-11 ps-0">
+				            <textarea class="form-control form-control-custom"
+				                      id="astDescription"
+				                      rows="5"
+				                      required></textarea>
+				        </div>
+
+				    </div>
+
+				</div>
+
+                <div class="upload-dropzone"
+                     id="dropzoneContainer"
+                     onclick="document.getElementById('fileInputHidden').click()">
+
+                    <span id="dropzoneText">Browse files</span> or drag files here
+
+                    <input type="file"
+                           id="fileInputHidden"
+                           style="display: none;"
+                           onchange="displaySelectedFile(this)">
+                </div>
+
+                <div class="form-actions-row">
+
+                    <button type="button"
+                            class="btn-submit-custom"
+                            onclick="executeAssetsFormSubmission()">
+
+                        Submit Request
+                    </button>
+
+                    <button type="reset"
+                            class="btn-outline-custom"
+                            onclick="resetAssetsFormContent()">
+
+                        Reset
+                    </button>
+
+                    <button type="button"
+                            class="btn-outline-custom"
+                            th:onclick="|window.location.href='/ticket-dashboard?dept=' + document.getElementById('assetDeptType').value|">
+
+                        Cancel
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -299,9 +528,20 @@
     const sessionUser = {
         id: /*[[${user != null ? user.username : 'EMP-0000'}]]*/ 'EMP-0000',
         name: /*[[${user != null ? user.fullName : 'Unknown User'}]]*/ 'Unknown User',
-        dept: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.businessUnit : 'General'}]]*/ 'General',
-        manager: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.reportingManager : 'Admin'}]]*/ 'Admin'
+        dept: /*[[${user?.employeeProfile?.businessUnit ?: 'General'}]]*/ 'General',
+        manager: /*[[${user?.employeeProfile?.reportingManager ?: 'Admin'}]]*/ 'Admin'
     };
+
+    function resetAssetsFormContent() {
+        // Clear out chosen hidden file input stream completely
+        if (document.getElementById('fileInputHidden')) {
+            document.getElementById('fileInputHidden').value = "";
+        }
+        // Revert custom dropzone text back to its clean default state
+        if (document.getElementById('dropzoneText')) {
+            document.getElementById('dropzoneText').innerHTML = "Browse files";
+        }
+    }
 
     async function executeAssetsFormSubmission() {
         const typeContext = document.getElementById('assetDeptType').value;
@@ -313,9 +553,9 @@
         const email = document.getElementById('astEmail').value.trim();
         const subject = document.getElementById('astSubject').value.trim();
         const description = document.getElementById('astDescription').value.trim();
-        const subcategory = document.getElementById('astSubcategory').value;
+        const subcategory = document.getElementById('astSubcategory').value.trim();
         
-        if (!itemType || !priority || !deliveryLoc || !locationVal || !mobile || !email || !subject || !description || !subcategory) {
+        if (!itemType || !priority || !deliveryLoc || !locationVal || !mobile || !email || !subject || !description) {
             Swal.fire({ 
                 icon: 'warning', 
                 title: 'Required Fields Missing', 
@@ -337,6 +577,7 @@
             return;
         }
 
+        // JSON formatting payload mapping strategy to cleanly bypass multipart form stream anomalies
         const payload = {
             employeeId: sessionUser.id,
             employeeName: sessionUser.name,
@@ -345,7 +586,7 @@
             type: typeContext, 
             category: itemType,
             detailItem: subject,
-            durationOrLevel: subcategory,
+            durationOrLevel: subcategory || "N/A",
             priority: priority,
             justification: `Delivery Address: ${deliveryLoc} | Info: ${description}`,
             location: locationVal,
@@ -388,20 +629,13 @@
             });
         }
     }
+
 	function displaySelectedFile(input) {
-	    const dropzoneText = document.getElementById('dropzoneText');
-	    const container = document.getElementById('dropzoneContainer');
-	    
+	    const textWrapper = document.getElementById('dropzoneText');
 	    if (input.files && input.files.length > 0) {
 	        const file = input.files[0];
 	        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-	        
-	        // Update the dropzone text to show the file icon, name, and size
-	        container.innerHTML = `<i class="fas fa-file-alt me-2" style="color: #2563eb;"></i> <strong>${file.name}</strong> (${fileSizeMB} MB) <span class="ms-3 text-secondary" style="font-size: 0.85rem; text-decoration: underline;">Change file</span>`;
-	        
-	        // Re-inject the hidden file input so the click listener still works if they want to change it
-	        const newInput = input.cloneNode(true);
-	        container.appendChild(newInput);
+	        textWrapper.innerHTML = `<i class="fas fa-file-alt me-2" style="color: #2563eb;"></i> <strong>${file.name}</strong> (${fileSizeMB} MB) <span class="ms-3 text-secondary" style="font-size: 0.85rem; text-decoration: underline;">Change file</span>`;
 	    }
 	}
 </script>
