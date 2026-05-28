@@ -1,0 +1,187 @@
+<div th:fragment="spiralCalendar">
+    <style>
+        .spiral-wrapper {
+            width: 100%;
+            background: #f8fafc;
+            border-radius: 8px 8px 12px 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            position: relative;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .spiral-binder {
+            height: 28px;
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            position: relative;
+            border-radius: 8px 8px 0 0;
+            background-image: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 20px,
+                #94a3b8 20px,
+                #94a3b8 22px,
+                #cbd5e1 22px,
+                #cbd5e1 26px,
+                #94a3b8 26px,
+                #94a3b8 28px,
+                transparent 28px,
+                transparent 40px
+            );
+            box-shadow: inset 0 -4px 8px rgba(0,0,0,0.02);
+        }
+        .spiral-binder::after {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background-image: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 21px,
+                #1e293b 21px,
+                #1e293b 27px,
+                transparent 27px,
+                transparent 40px
+            );
+            opacity: 0.7;
+        }
+
+        .spiral-header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px 15px;
+        }
+
+        .spiral-month-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .spiral-nav-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            color: #1e3a8a;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 0 10px;
+        }
+        .spiral-nav-btn:hover {
+            color: #2563eb;
+            transform: scale(1.1);
+        }
+
+        .spiral-days-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            padding: 0 20px;
+            margin-bottom: 10px;
+        }
+        .spiral-day-name {
+            background: #2563eb;
+            color: white;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            text-align: center;
+            padding: 8px 0;
+            border-radius: 4px;
+        }
+
+        .spiral-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            padding: 0 20px 10px;
+        }
+        
+        /* Flat colored buttons matching existing logic */
+        .spiral-grid .calendar-day {
+            height: 42px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1e293b;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .spiral-grid .calendar-day:hover:not(.cal-empty) {
+            transform: scale(1.08);
+            z-index: 2;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Logic Classes inherited from LMS */
+        .spiral-grid .cal-today { background: #3b82f6 !important; color: white !important; border-color: #2563eb !important; font-weight: 800; }
+        .spiral-grid .cal-weekend { background: #f1f5f9 !important; color: #94a3b8 !important; border-color: #f1f5f9 !important;}
+        .spiral-grid .cal-approved { background: #22c55e !important; color: white !important; border-color: #16a34a !important; }
+        .spiral-grid .cal-floater-holiday { background: #f97316 !important; color: white !important; border-color: #ea580c !important; }
+        .spiral-grid .cal-fixed-holiday { background: #93c5fd !important; color: #1e293b !important; border-color: #60a5fa !important; }
+        .spiral-grid .cal-pending { background: #eab308 !important; color: white !important; border-color: #ca8a04 !important; }
+        .spiral-grid .cal-rejected { background: #ef4444 !important; color: white !important; border-color: #dc2626 !important; }
+        .spiral-grid .cal-empty { background: transparent !important; border: none !important; cursor: default; }
+
+        .spiral-legend {
+            display: flex; flex-wrap: wrap; gap: 12px; padding: 15px 20px 20px;
+            border-top: 1px solid #e2e8f0; margin-top: 10px; justify-content: center;
+        }
+        .spiral-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; color: #64748b; font-weight: 600; }
+        .spiral-legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+        
+        [data-bs-theme="dark"] .spiral-wrapper { background: #1e293b; border-color: #334155; }
+        [data-bs-theme="dark"] .spiral-binder { background: #0f172a; border-bottom-color: #334155; }
+        [data-bs-theme="dark"] .spiral-month-title { color: #e2e8f0; }
+        [data-bs-theme="dark"] .spiral-nav-btn { color: #94a3b8; }
+        [data-bs-theme="dark"] .spiral-day-name { background: #1e3a8a; }
+        [data-bs-theme="dark"] .spiral-grid .calendar-day { background: #0f172a; border-color: #334155; color: #e2e8f0; }
+        [data-bs-theme="dark"] .spiral-legend { border-top-color: #334155; }
+    </style>
+
+    <div class="spiral-wrapper">
+        <div class="spiral-binder"></div>
+        <div class="spiral-header-nav">
+            <button class="spiral-nav-btn" onclick="navigateMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+            <div class="d-flex align-items-center gap-3">
+                <i class="fas fa-bars text-muted d-none d-sm-block"></i>
+                <h6 class="spiral-month-title" id="calendarMonthTitle">Loading...</h6>
+            </div>
+            <button class="spiral-nav-btn" onclick="navigateMonth(1)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        
+        <div class="spiral-days-header">
+            <div class="spiral-day-name">Mon</div>
+            <div class="spiral-day-name">Tue</div>
+            <div class="spiral-day-name">Wed</div>
+            <div class="spiral-day-name">Thu</div>
+            <div class="spiral-day-name">Fri</div>
+            <div class="spiral-day-name">Sat</div>
+            <div class="spiral-day-name">Sun</div>
+        </div>
+        
+        <div class="spiral-grid" id="calendarDaysGrid"></div>
+        
+        <div class="spiral-legend">
+            <div class="spiral-legend-item"><div class="spiral-legend-dot" style="background:#3b82f6;"></div>Today</div>
+            <div class="spiral-legend-item"><div class="spiral-legend-dot" style="background:#22c55e;"></div>Approved</div>
+            <div class="spiral-legend-item"><div class="spiral-legend-dot" style="background:#eab308;"></div>Pending</div>
+            <div class="spiral-legend-item"><div class="spiral-legend-dot" style="background:#ef4444;"></div>Rejected</div>
+            <div class="spiral-legend-item"><div class="spiral-legend-dot" style="background:#f97316;"></div>Floater</div>
+            <div class="spiral-legend-item"><div class="spiral-legend-dot" style="background:#93c5fd;"></div>Fixed Holiday</div>
+            <div class="spiral-legend-item"><div class="spiral-legend-dot" style="background:#f1f5f9; border:1px solid #cbd5e1;"></div>Weekend</div>
+        </div>
+    </div>
+</div>

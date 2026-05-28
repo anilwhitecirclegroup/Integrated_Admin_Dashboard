@@ -110,12 +110,6 @@ public class AdminLeaveController {
                 case "Sick": leaveCode = "SL"; break;
                 case "Earned": leaveCode = "EL"; break;
                 case "CompOff": leaveCode = "COMP_OFF"; break;
-                case "Maternity": leaveCode = "MATERNITY"; break;
-                case "Paternity": leaveCode = "PATERNITY"; break;
-                case "Marriage": leaveCode = "MARRIAGE"; break;
-                case "Bereavement": leaveCode = "BEREAVEMENT"; break;
-                case "WFH": leaveCode = "WFH"; break;
-                case "Floater": leaveCode = "FLOATER"; break;
                 default: leaveCode = leave.getLeaveType().toUpperCase(); break;
             }
 
