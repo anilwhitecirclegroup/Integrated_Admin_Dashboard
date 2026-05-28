@@ -382,6 +382,7 @@ public class DashboardController {
     
     @PostMapping("/erp-timesheet")
     public String processErpTimesheetAuthentication(
+            @RequestParam("username") String typedUsername,
             @RequestParam("password") String typedPassword,
             Model model, 
             Principal principal,
@@ -401,7 +402,8 @@ public class DashboardController {
         String cleanDbPassword = dbPassword != null ? dbPassword.replace("{noop}", "") : "";
 
         // STRICT CREDENTIAL VERIFICATION MATCH:
-        if (dbPassword != null && typedPassword.trim().equals(cleanDbPassword.trim())) {
+        if (typedUsername != null && typedUsername.trim().equalsIgnoreCase(loginId) && 
+            dbPassword != null && typedPassword.trim().equals(cleanDbPassword.trim())) {
             System.out.println("[ERP-PORTAL] Verification successful for user: " + loginId);
             
             model.addAttribute("user", currentUser);
@@ -422,22 +424,9 @@ public class DashboardController {
 
     @GetMapping("/employee/create-timesheet")
     public String showCreateTimesheet() { return "create-timesheet"; }
-    @GetMapping("/employee/use-template")
-    public String showUseTemplatePage(Model model, java.security.Principal principal) {
-        if (principal == null) {
-            return "redirect:/login";
-        }
 
-        // Fetch user data to match your current security session variables
-        String loginId = principal.getName();
-        User currentUser = userRepository.findByUsername(loginId).orElse(new User());
-        
-        // Pass user details down if needed by your common sub-layouts
-        model.addAttribute("user", currentUser);
-
-        // This returns the exact name of your template file "use-template.html"
-        return "use-template"; 
-    }
+    @GetMapping("/employee/timecard-entry")
+    public String showTimecardEntry() { return "timecard-entry"; }
 
     @GetMapping("/employee/timesheet-report")
     public String showTimesheetReport() { return "timesheet-report"; }

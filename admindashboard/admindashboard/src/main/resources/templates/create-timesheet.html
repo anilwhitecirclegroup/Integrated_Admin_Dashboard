@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Timecard - WhiteCircle</title>
+    <title>Create Timesheet - WhiteCircle</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <style>
         :root {
-            --bs-primary: #1e3a8a; /* Navy Blue Theme */
-            --bs-primary-hover: #172554;
+            --bs-primary: #1e3a8a; 
             --bg-color: #ffffff;
             --border-color: #cbd5e1;
         }
@@ -25,18 +25,17 @@
             padding: 0;
         }
 
-        /* --- FIX: ADJUST BANNER IMAGE POSITION AND BLEND SCALE --- */
-		.erp-hero-banner {
-	        width: 100%;
-	        height: 380px; 
-	        background: url('/images/timesheet-banner.jpeg') no-repeat center center;
-	        background-size: cover;
-	        position: relative;
-	        box-sizing: border-box;
-	        padding: 40px 55px; 
-	    }
+        /* --- HERO BANNER --- */
+        .erp-hero-banner {
+            width: 100%;
+            height: 380px; 
+            background: url('/images/timesheet-banner.jpeg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            box-sizing: border-box;
+            padding: 40px 55px; 
+        }
 
-        /* Adjusted gradient blur overlay to match the rendering in image_ba1dca.jpg */
         .erp-hero-banner::after {
             content: '';
             position: absolute;
@@ -48,123 +47,72 @@
             pointer-events: none;
         }
 
-        .erp-banner-text-stack {
-            position: relative;
-            z-index: 2;
-        }
-
-        .erp-banner-raw-title {
-            color: #1e3a8a;
-            font-size: 1.7rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            margin: 0 0 4px 0;
-        }
-
-        .erp-banner-subtitle {
-            color: #475569;
-            font-size: 0.82rem;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        /* --- FLOATING BACK TO HOME BUTTON (image_ba3127.png Perfect Match) --- */
+        .erp-banner-text-stack { position: relative; z-index: 2; }
+        .erp-banner-raw-title { color: #1e3a8a; font-size: 1.7rem; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 4px 0; }
+        .erp-banner-subtitle { color: #475569; font-size: 0.82rem; font-weight: 600; margin: 0; }
         .btn-floating-back-home {
-            position: absolute;
-            top: 40px;
-            right: 55px;
-            background-color: #ffffff;
-            color: #1e3a8a !important;
-            font-weight: 700;
-            font-size: 0.85rem;
-            padding: 10px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            border: none;
-            transition: background-color 0.2s;
-            z-index: 10;
-        }
-        .btn-floating-back-home:hover {
-            background-color: #f8fafc;
+            position: absolute; top: 40px; right: 55px; background-color: #ffffff; color: #1e3a8a !important;
+            font-weight: 700; font-size: 0.85rem; padding: 10px 24px; border-radius: 8px; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); border: none; z-index: 10;
         }
 
         /* --- CORE CENTRALIZED WORKSPACE --- */
-        .central-workspace-container {
-            width: 90vw;
-            max-width: 90vw;
-            margin: 20px auto 50px auto;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
+        .central-workspace-container { width: 95vw; max-width: 95vw; margin: 20px auto 50px auto; padding: 0; }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
         }
 
-        /* --- METADATA SECTIONS --- */
-        .metadata-section-title {
-            font-size: 1.3rem;
+        .section-title {
+            font-size: 1.15rem;
             font-weight: 800;
             color: #1e3a8a;
-            margin-bottom: 18px;
-            letter-spacing: -0.2px;
+            margin-bottom: 20px;
         }
 
-        .info-block-item {
-            margin-bottom: 14px;
+        .detail-row {
             display: flex;
-            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
         }
-
-        .info-label {
-            font-size: 0.88rem;
+        .detail-label {
+            width: 150px;
             color: #64748b;
             font-weight: 500;
-            width: 160px;
-            flex-shrink: 0;
         }
-
-        .info-value {
-            font-size: 0.88rem;
+        .detail-value {
+            color: #000000;
             font-weight: 700;
-            color: #000000;
         }
 
-        .period-selector-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 5px;
-        }
-
-        .form-control-date {
-            border: 1px solid #94a3b8;
-            border-radius: 6px;
-            padding: 6px 10px;
-            color: #000000;
-            font-weight: 600;
-            font-size: 0.85rem;
-            background: #ffffff;
-            text-align: center;
-        }
-
-        .btn-load-week-accent {
+        .date-box { width: 130px; text-align: center; border: 1px solid #94a3b8; border-radius: 6px; padding: 6px; font-size: 0.85rem; color: #000000; font-weight: 600;}
+        .btn-load-week {
             background-color: #2563eb;
-            color: #ffffff !important;
-            font-weight: 700;
-            font-size: 0.78rem;
-            padding: 7px 16px;
-            border-radius: 6px;
+            color: white;
             border: none;
-            box-shadow: 0 2px 6px rgba(37,99,235,0.15);
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-left: 10px;
+        }
+        .status-badge {
+            background-color: #64748b;
+            color: white;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
         }
 
-        /* --- OVERVIEW MATRIX TABLE MATCH --- */
         .table-responsive {
             overflow-x: auto;
             border: 1px solid var(--border-color);
             background-color: #ffffff;
+            margin-bottom: 30px;
         }
         
         .timecard-table {
@@ -174,94 +122,55 @@
             text-align: center;
             margin-bottom: 0;
         }
-
         .timecard-table th {
             background-color: #ffffff !important;
             color: #000000 !important;
             font-weight: 700 !important;
-            font-size: 0.88rem !important;
+            font-size: 0.85rem !important;
             padding: 14px 12px !important;
             border: 1px solid var(--border-color) !important;
         }
-
         .timecard-table td {
             padding: 14px 12px !important;
-            font-size: 0.85rem !important;
+            font-size: 0.82rem !important;
             color: #000000 !important;
             border: 1px solid var(--border-color) !important;
             vertical-align: middle !important;
-            background-color: #ffffff !important;
-            font-weight: 500 !important;
+            font-weight: 600 !important;
         }
 
-        .status-txt-rejected { color: #ff0000 !important; font-weight: 700 !important; }
-        .status-txt-approved { color: #16a34a !important; font-weight: 700 !important; }
-
-        .table-action-icon-btn {
-            background: none;
+        .btn-create-timecard {
+            background-color: #3b82f6;
+            color: white;
             border: none;
-            color: #000000;
-            font-size: 1.1rem;
-            cursor: pointer;
-            padding: 2px 6px;
-        }
-        .icon-folder-accent { color: #f59e0b; }
-
-        /* --- CREATE TIMECARD BUTTON --- */
-        .btn-timecard-action-solid {
-            background-color: #2563eb;
-            color: #ffffff !important;
-            font-weight: 600;
-            font-size: 0.85rem;
-            padding: 8px 18px;
             border-radius: 6px;
-            border: none;
-            align-self: flex-start;
-            margin-top: 20px;
-            margin-bottom: 50px;
-            box-shadow: 0 2px 6px rgba(37,99,235,0.15);
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 40px;
         }
 
-        /* --- 5-BUTTON OPERATIONAL COMMAND LAYOUT ROW --- */
-        .operational-command-row {
+        .bottom-action-bar {
             display: flex;
-            flex-wrap: wrap;
             gap: 15px;
-            margin-top: 10px;
-            align-items: center;
         }
-
-        .btn-command-action {
-            padding: 8px 24px;
-            background-color: #2563eb;
-            color: #ffffff !important;
-            font-weight: 600;
-            font-size: 0.85rem;
-            border-radius: 6px;
+        .btn-action-solid {
+            background-color: #3b82f6;
+            color: white;
             border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            cursor: pointer;
-            min-width: 110px;
+            border-radius: 6px;
+            padding: 8px 24px;
+            font-size: 0.85rem;
+            font-weight: 700;
         }
-        .btn-cmd-cancel { background-color: #3b82f6; }
-
-        /* SweetAlert Styling Overrides */
-        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
-        .swal2-popup { border-radius: 20px !important; box-shadow: 0 25px 50px -12px rgba(30, 58, 138, 0.25) !important; padding: 2em !important; border: 1px solid #e2e8f0; }
-        .swal2-title { color: #1e3a8a !important; font-weight: 800 !important; font-size: 1.5rem !important; }
-        .swal2-confirm { border-radius: 10px !important; padding: 12px 30px !important; font-weight: 700 !important; }
-        .swal2-cancel { border-radius: 10px !important; padding: 12px 30px !important; font-weight: 600 !important; }
-        .slim-toast-popup { width: auto !important; min-width: 250px !important; padding: 0.7rem 1.2rem !important; border-radius: 12px !important; box-shadow: 0 8px 20px rgba(30, 58, 138, 0.15) !important; border: 1px solid #e2e8f0 !important; }
-        .slim-toast-title { font-size: 0.9rem !important; font-weight: 600 !important; margin: 0 0 0 10px !important; color: #334155 !important; }
-
-        @media (max-width: 991px) {
-            .central-workspace-container { width: 95vw; max-width: 95vw; }
-            .operational-command-row { flex-direction: column; align-items: stretch; gap: 10px; }
-            .btn-command-action { width: 100%; }
+        .btn-floating-back-home i {
+            color: #1e3a8a;
         }
+
+        /* Flatpickr highlight styles */
+        .flatpickr-day.is-holiday { background-color: #fef3c7 !important; color: #b45309 !important; font-weight: bold; border-color: #fde68a !important; }
+        .flatpickr-day.is-leave { background-color: #f3e8ff !important; color: #7e22ce !important; font-weight: bold; border-color: #e9d5ff !important; }
+
     </style>
 </head>
 <body>
@@ -272,62 +181,82 @@
         <p class="erp-banner-subtitle">Weekly work log entry for project tracking and approval</p>
     </div>
     <a href="/erp-timesheet" class="btn-floating-back-home">
-        <i class="fas fa-arrow-left"></i> Back to Home
+        <i class="fas fa-arrow-left"></i> Back to Timesheet
     </a>
 </div>
 
 <div class="central-workspace-container">
-
-    <div class="row g-5 mb-5">
-        <div class="col-md-5">
-            <h3 class="metadata-section-title">Employee Details</h3>
-            <div class="info-block-item">
-                <span class="info-label">Employee Name:</span>
-                <span class="info-value" id="displayEmpName">Loading...</span>
+    <div class="info-grid">
+        <div>
+            <div class="section-title">Employee Details</div>
+            <div class="detail-row">
+                <div class="detail-label">Employee Name:</div>
+                <div class="detail-value" th:text="${user != null and user.firstName != null ? user.firstName + ' ' + (user.lastName != null ? user.lastName : '') : 'Saumya Katare'}">Saumya Katare</div>
             </div>
-            <div class="info-block-item">
-                <span class="info-label">Employee ID:</span>
-                <span class="info-value" id="displayEmpId">Loading...</span>
+            <div class="detail-row">
+                <div class="detail-label">Employee ID:</div>
+                <div class="detail-value" th:text="${user != null ? user.username : 'EMP129'}">EMP129</div>
             </div>
-            <div class="info-block-item">
-                <span class="info-label">Department:</span>
-                <span class="info-value">ERP / HRMS</span>
+            <div class="detail-row">
+                <div class="detail-label">Department:</div>
+                <div class="detail-value">ERP / HRMS</div>
             </div>
-            <div class="info-block-item">
-                <span class="info-label">Role:</span>
-                <span class="info-value">Software Developer</span>
+            <div class="detail-row">
+                <div class="detail-label">Role:</div>
+                <div class="detail-value" th:text="${user != null and user.role != null ? user.role.roleName : 'Software Developer'}">Software Developer</div>
             </div>
-            <div class="info-block-item">
-                <span class="info-label">Reporting Manager:</span>
-                <span class="info-value">Auto Assigned</span>
+            <div class="detail-row">
+                <div class="detail-label">Reporting Manager:</div>
+                <div class="detail-value">Auto Assigned</div>
             </div>
         </div>
-
-        <div class="col-md-7">
-            <h3 class="metadata-section-title">Timesheet Period</h3>
-            <div class="info-block-item">
-                <span class="info-label">Period Type:</span>
-                <span class="info-value">Weekly (Sunday - Saturday)</span>
+        <div>
+            <div class="section-title">Timesheet Period</div>
+            <div class="detail-row" style="align-items: center;">
+                <div class="detail-label">Period Type:</div>
+                <div class="detail-value">Weekly (Sunday - Saturday)</div>
             </div>
-            <div class="info-block-item align-items-center">
-                <span class="info-label">Select Week Start:</span>
-                <div class="period-selector-row">
-                    <input type="date" class="form-control-date" id="startDate" max="9999-12-31" value="2026-02-15">
-                    <span class="fw-bold text-muted px-1">to</span>
-                    <input type="date" class="form-control-date" id="endDate" max="9999-12-31" value="2026-02-21">
-                    <button id="loadWeekBtn" class="btn-load-week-accent">Load Week</button>
+            <div class="detail-row" style="align-items: center; margin-top: 15px;">
+                <div class="detail-label">Select Week Start:</div>
+                <div class="detail-value d-flex align-items-center">
+                    <input type="date" id="weekStart" class="date-box" value="2026-05-24">
+                    <span class="mx-3" style="color: #64748b; font-weight: 500; font-size: 0.85rem;">to</span>
+                    <input type="date" id="weekEnd" class="date-box" value="2026-05-30" disabled style="background-color: #f1f5f9; color: #94a3b8;">
+                    <button class="btn-load-week">Load Week</button>
                 </div>
             </div>
-            <div class="info-block-item mt-2">
-                <span class="info-label">Status:</span>
-                <span class="badge bg-secondary text-white rounded-pill px-4 py-2 fw-bold shadow-sm" id="timesheetStatusBadge">Status: New</span>
+            <div class="detail-row" style="align-items: center; margin-top: 15px;">
+                <div class="detail-label">Status:</div>
+                <div class="detail-value"><span class="status-badge">Status: New</span></div>
             </div>
         </div>
     </div>
 
-    <h3 class="metadata-section-title mb-3">Weekly Task Breakdown</h3>
+    <div class="section-title">Weekly Task Breakdown</div>
     
-    <div class="table-responsive mb-4">
+    <div class="table-responsive" style="margin-bottom: 30px;">
+        <table class="table timecard-table mb-0">
+            <thead>
+                <tr>
+                    <th>Timecard Status</th>
+                    <th>Transferred to</th>
+                    <th>Period Starting</th>
+                    <th>Period Ending</th>
+                    <th>Record hours</th>
+                    <th>Submission Date</th>
+                    <th>Update</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Empty state for testing -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section-title">Recent Timecards</div>
+    
+    <div class="table-responsive">
         <table class="table timecard-table mb-0">
             <thead>
                 <tr>
@@ -342,410 +271,171 @@
                 </tr>
             </thead>
             <tbody id="matrixTableBody">
-                <tr>
-                    <td class="status-txt-rejected">Rejected</td>
-                    <td>None</td>
-                    <td>01-Apr-2026</td>
-                    <td>07-Apr-2026</td>
-                    <td>54</td>
-                    <td>05-Apr-2026</td>
-                    <td><button class="table-action-icon-btn"><i class="fas fa-pencil-alt"></i></button></td>
-                    <td><button class="table-action-icon-btn icon-folder-accent"><i class="fas fa-folder"></i></button></td>
-                </tr>
-                <tr>
-                    <td class="status-txt-approved">Approved</td>
-                    <td>Project</td>
-                    <td>01-Apr-2026</td>
-                    <td>01-Apr-2026</td>
-                    <td>54</td>
-                    <td>01-Apr-2026</td>
-                    <td><button class="table-action-icon-btn"><i class="fas fa-pencil-alt"></i></button></td>
-                    <td><button class="table-action-icon-btn icon-folder-accent"><i class="fas fa-folder"></i></button></td>
-                </tr>
             </tbody>
         </table>
     </div>
 
-    <button class="btn-timecard-action-solid" id="btnCreateTimecard">Create Timecard</button>
+    <button class="btn-create-timecard" onclick="triggerTimecard()">Create Timecard</button>
 
-    <div style="display:none;">
-        <textarea id="overallComments"></textarea>
-        <table>
-            <tbody class="timecard-table">
-                <tr>
-                    <td>
-                        <select class="grid-select"><option selected>1</option></select>
-                        <select class="grid-select"><option selected>1</option></select>
-                        <select class="grid-select"><option selected>Billable</option></select>
-                        <input type="number" class="grid-input-hours" value="0">
-                        <input type="number" class="grid-input-hours" value="8">
-                        <input type="number" class="grid-input-hours" value="8">
-                        <input type="number" class="grid-input-hours" value="8">
-                        <input type="number" class="grid-input-hours" value="8">
-                        <input type="number" class="grid-input-hours" value="8">
-                        <input type="number" class="grid-input-hours" value="0">
-                        <span class="col-total">40.0</span>
-                        <input type="text" class="grid-input-text" value="System allocation placeholder log">
-                        <button class="btn-delete-row"></button>
-                    </td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr class="row-totals">
-                    <td class="total-val">0</td><td class="total-val">0</td><td class="total-val">0</td>
-                    <td class="total-val">0</td><td class="total-val">0</td><td class="total-val">0</td>
-                    <td class="total-val">0</td><td class="total-val">0</td>
-                </tr>
-            </tfoot>
-        </table>
-        <select id="templateSelect"><option value="1"></option></select>
-        <button id="btnApplyTemplate"></button>
-    </div>
-
-    <div class="operational-command-row">
-        <button class="btn-command-action" id="btnAddRowAnchor">Add Row</button>
-        <button class="btn-command-action" id="btnSaveDraft">Save Draft</button>
-        <button class="btn-command-action" id="btnSubmit">Submit Timesheet</button>
-        <button class="btn-command-action" id="btnRecalculateTrigger" style="background-color: #2563eb;">Reset</button>
-        <button class="btn-command-action btn-cmd-cancel" id="btnCancel" onclick="window.location.href='/employee/erp-timesheet'" style="background-color: #3b82f6;">Cancel</button>
-    </div>
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    // =========================================================================
-    // --- ORIGINAL BACKEND TELEMETRY SCRIPT PIPELINES (100% UNTOUCHED LOGIC) ---
-    // =========================================================================
+    let fpData = {};
+    let fpInstance = null;
 
-    document.addEventListener('DOMContentLoaded', function() {
-
-        // 1. Fetch user details immediately on load
-        fetchCurrentUserDetails();
-
-        const btnSaveDraft = document.getElementById('btnSaveDraft');
-        const btnSubmit = document.getElementById('btnSubmit');
-        const addRowBtn = document.getElementById('btnAddRowAnchor');
-        const recalcBtn = document.getElementById('btnRecalculateTrigger');
-
-        if(btnSaveDraft) btnSaveDraft.addEventListener('click', () => submitTimesheet('DRAFT'));
-        if(btnSubmit) btnSubmit.addEventListener('click', () => submitTimesheet('SUBMITTED'));
-        if(addRowBtn) addRowBtn.addEventListener('click', addRow);
-
-        if(recalcBtn) {
-            recalcBtn.addEventListener('click', function() {
-                calculateTotals();
-                document.querySelectorAll('.col-total, .total-val').forEach(cell => {
-                    cell.style.transition = 'none';
-                    cell.style.backgroundColor = '#dcfce7';
-                    setTimeout(() => {
-                        cell.style.transition = 'background-color 0.8s ease';
-                        cell.style.backgroundColor = '';
-                    }, 200);
-                });
-            });
-        }
-        setupDateSelectors();
-
-        // 2. CHECK FOR EXISTING DATA ON LOAD!
-        const startDateInput = document.getElementById('startDate');
-        if (startDateInput && startDateInput.value) {
-            loadTimesheetForWeek(startDateInput.value);
-        } else {
-            resetTimesheetBoard();
-        }
-    });
-
-    //  FETCH LOGGED IN USER DETAILS
-    function fetchCurrentUserDetails() {
-        fetch('/api/weekly-timesheet/current-user')
-            .then(response => {
-                if (!response.ok) throw new Error("Session expired or user not logged in");
-                return response.json();
-            })
-            .then(data => {
-                const nameEl = document.getElementById('displayEmpName');
-                const idEl = document.getElementById('displayEmpId');
-                if (nameEl) nameEl.textContent = data.employeeName || 'Unknown Employee';
-                if (idEl) idEl.textContent = data.employeeId || 'N/A';
-            })
-            .catch(err => {
-                console.error("Error fetching user details:", err);
-                const nameEl = document.getElementById('displayEmpName');
-                const idEl = document.getElementById('displayEmpId');
-                if (nameEl) nameEl.textContent = 'Not Logged In';
-                if (idEl) idEl.textContent = 'N/A';
-            });
-    }
-
-    // FETCH AND POPULATE LOGIC
-    function loadTimesheetForWeek(startDateStr) {
-        fetch(`/api/weekly-timesheet/week?startDate=${startDateStr}`)
-        .then(response => {
-            if (response.status === 204) {
-                // No draft exists for this week -> wipe board clean
-                resetTimesheetBoard();
-                updateStatusBadge('New', 'bg-secondary text-white');
-                return null;
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data) populateTimesheetBoard(data);
-        })
-        .catch(error => console.error("Error loading timesheet:", error));
-    }
-
-    function populateTimesheetBoard(data) {
-        if (data.status === 'DRAFT') updateStatusBadge(data.status, 'bg-warning text-dark border-warning');
-        else if (data.status === 'SUBMITTED') updateStatusBadge(data.status, 'bg-primary text-white');
-        else if (data.status === 'APPROVED') updateStatusBadge(data.status, 'bg-success text-white');
-        else updateStatusBadge(data.status, 'bg-secondary text-white');
-
-        const commentsArea = document.getElementById('overallComments');
-        if (commentsArea) commentsArea.value = data.overallComments || '';
-
-        if (data.entries && data.entries.length > 0) {
-            const tbody = document.getElementById('matrixTableBody');
-            tbody.innerHTML = '';
-            data.entries.forEach(ts => {
-                const startStr = ts.weekStartDate || '01-Apr-2026';
-                const endStr = ts.weekEndDate || '01-Apr-2026';
-                const subStr = ts.submissionDate || 'Pending';
-                let cellClass = ts.status === 'APPROVED' ? 'class="status-txt-approved"' : 'class="status-txt-rejected"';
-
-                const row = `
-                    <tr>
-                        <td ${cellClass}>${ts.status || 'Pending'}</td>
-                        <td>Project</td>
-                        <td>${startStr}</td>
-                        <td>${endStr}</td>
-                        <td>${ts.totalWeekHours || 54}</td>
-                        <td>${subStr}</td>
-                        <td><button class="table-action-icon-btn"><i class="fas fa-pencil-alt"></i></button></td>
-                        <td><button class="table-action-icon-btn icon-folder-accent"><i class="fas fa-folder"></i></button></td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
-
-        setupRowEvents();
-        calculateTotals();
-    }
-
-    function updateStatusBadge(text, classes) {
-        const badge = document.getElementById('timesheetStatusBadge');
-        if (badge) {
-            badge.textContent = 'Status: ' + text;
-            badge.className = `badge rounded-pill px-4 py-2 fw-bold shadow-sm ${classes}`;
-        }
-    }
-
-    function resetTimesheetBoard() {
-        const overallCommentsArea = document.getElementById('overallComments');
-        if(overallCommentsArea) overallCommentsArea.value = '';
-        setupRowEvents();
-        calculateTotals();
-    }
-
-    function setupRowEvents() {
-        document.querySelectorAll('.timecard-table tbody tr').forEach(row => {
-            row.querySelectorAll('.grid-input-hours').forEach(input => {
-                input.removeEventListener('input', calculateTotals);
-                input.addEventListener('input', calculateTotals);
-            });
-        });
-    }
-
-    function calculateTotals() {
-        let dailyTotals = [0, 0, 0, 0, 0, 0, 0];
-        let grandTotal = 0;
-
-        document.querySelectorAll('.timecard-table tbody tr').forEach(row => {
-            let rowTotal = 0;
-            row.querySelectorAll('.grid-input-hours').forEach((input, index) => {
-                const val = parseFloat(input.value) || 0;
-                rowTotal += val;
-                if(index < 7) dailyTotals[index] += val;
-            });
-            grandTotal += rowTotal;
-        });
-    }
-
-    function addRow() { setupRowEvents(); calculateTotals(); }
-
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 2500,
-        timerProgressBar: true,
-        background: '#ffffff',
-        customClass: { popup: 'slim-toast-popup', title: 'slim-toast-title', icon: 'slim-toast-icon' }
-    });
-
-    function deleteRow(event) { calculateTotals(); }
-
-    async function submitTimesheet(status) {
-        const startDate = document.getElementById('startDate').value;
-        const endDate = document.getElementById('endDate').value;
-        const overallComments = document.getElementById('overallComments')?.value || '';
-        const footerTotals = document.querySelectorAll('.timecard-table tfoot .total-val');
-        const grandTotal = footerTotals.length > 0 ? parseFloat(footerTotals[footerTotals.length - 1].textContent) : 42.5;
-
-        const rowData = [];
-        document.querySelectorAll('.timecard-table tbody tr').forEach(row => {
-            const selects = row.querySelectorAll('select');
-            const inputs = row.querySelectorAll('.grid-input-hours');
-            if(inputs.length >= 7) {
-                rowData.push({
-                    projectId: selects[0] ? selects[0].selectedIndex : 1,
-                    taskId: selects[1] ? selects[1].selectedIndex : 1,
-                    type: selects[2] ? selects[2].value : "Billable",
-                    sun: parseFloat(inputs[0].value) || 0,
-                    mon: parseFloat(inputs[1].value) || 0,
-                    tue: parseFloat(inputs[2].value) || 0,
-                    wed: parseFloat(inputs[3].value) || 0,
-                    thu: parseFloat(inputs[4].value) || 0,
-                    fri: parseFloat(inputs[5].value) || 0,
-                    sat: parseFloat(inputs[6].value) || 0,
-                    rowTotal: 40.0,
-                    details: "System matching profile construction lines"
-                });
-            }
-        });
-
-        if (status === 'SUBMITTED') {
-            const confirmResult = await Swal.fire({
-                title: 'Submit to Admin?',
-                text: "Once submitted, you won't be able to edit this week's hours.",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#1e3a8a',
-                cancelButtonColor: '#94a3b8',
-                confirmButtonText: 'Yes, submit it!',
-                cancelButtonText: 'Wait, go back'
-            });
-            if (!confirmResult.isConfirmed) return;
-        }
-
-        if (status === 'SUBMITTED') {
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we sync your timesheet.',
-                allowOutsideClick: false,
-                didOpen: () => { Swal.showLoading(); }
-            });
-        }
-
-        const payload = { weekStartDate: startDate, weekEndDate: endDate, status: status, overallComments: overallComments, totalWeekHours: grandTotal, rows: rowData };
-
-        fetch('/api/weekly-timesheet/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        })
-        .then(response => response.json())
-        .then(async data => {
-            if(data.status === 'success') {
-                if(status === 'DRAFT') {
-                    Toast.fire({ icon: 'success', title: 'Draft saved successfully!' });
-                } else {
-                    await Swal.fire({
-                        icon: 'success',
-                        title: 'Timesheet Submitted!',
-                        text: 'Your timesheet has been sent to the admin for review.',
-                        confirmButtonColor: '#1e3a8a',
-                        timer: 2500,
-                        timerProgressBar: true,
-                        showConfirmButton: false
-                    });
-                    window.location.href = '/employee/erp-timesheet';
+    document.addEventListener('DOMContentLoaded', async () => {
+        // Initialize Flatpickr
+        fpInstance = flatpickr("#weekStart", {
+            dateFormat: "Y-m-d",
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                const dateStr = dayElem.dateObj.getFullYear() + '-' + String(dayElem.dateObj.getMonth()+1).padStart(2,'0') + '-' + String(dayElem.dateObj.getDate()).padStart(2,'0');
+                const data = fpData[dateStr];
+                if (data) {
+                    if (data.type === 'holiday') {
+                        dayElem.classList.add("is-holiday");
+                        dayElem.title = data.reason;
+                    } else if (data.type === 'leave') {
+                        dayElem.classList.add("is-leave");
+                        dayElem.title = data.reason;
+                    }
                 }
-            } else {
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Error saving: ' + data.message, confirmButtonColor: '#1e3a8a' });
+            },
+            onMonthChange: function(selectedDates, dateStr, instance) {
+                fetchFlatpickrData(instance.currentMonth + 1, instance.currentYear, instance);
+            },
+            onYearChange: function(selectedDates, dateStr, instance) {
+                fetchFlatpickrData(instance.currentMonth + 1, instance.currentYear, instance);
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({ icon: 'error', title: 'Network Error', text: 'A connection error occurred.', confirmButtonColor: '#1e3a8a' });
         });
-    }
 
-    function setupDateSelectors() {
-        const startDateInput = document.getElementById('startDate');
-        const endDateInput = document.getElementById('endDate');
-        const loadWeekBtn = document.getElementById('loadWeekBtn');
-
-        const formatDate = (date) => {
-            return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
-        };
+        // Pre-fetch Flatpickr data for current month
+        fetchFlatpickrData(new Date().getMonth() + 1, new Date().getFullYear(), fpInstance);
 
         const today = new Date();
-        const todayStr = formatDate(today);
-        const currentDay = today.getDay(); 
-        const sunday = new Date(today);
-        sunday.setDate(today.getDate() - currentDay);
-        const saturday = new Date(sunday);
-        saturday.setDate(sunday.getDate() + 6);
-        const sundayStr = formatDate(sunday);
+        const day = today.getDay();
+        const startDate = new Date(today);
+        startDate.setDate(today.getDate() - day);
+        
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6);
+        
+        const sStr = `${startDate.getFullYear()}-${String(startDate.getMonth()+1).padStart(2,'0')}-${String(startDate.getDate()).padStart(2,'0')}`;
+        const eStr = `${endDate.getFullYear()}-${String(endDate.getMonth()+1).padStart(2,'0')}-${String(endDate.getDate()).padStart(2,'0')}`;
+        
+        document.getElementById('weekStart').value = sStr;
+        document.getElementById('weekEnd').value = eStr;
 
-        if (startDateInput) {
-            startDateInput.setAttribute('max', todayStr);
-            startDateInput.setAttribute('min', sundayStr);
-            startDateInput.value = sundayStr;
+        // Fetch recent timecards
+        initHubDataFetchPipeline();
+    });
 
-            if (endDateInput) {
-                endDateInput.value = formatDate(saturday);
-                endDateInput.setAttribute('readonly', true);
-                endDateInput.style.backgroundColor = '#f8fafc';
-                endDateInput.style.pointerEvents = 'none';
+    async function initHubDataFetchPipeline() {
+        try {
+            const response = await fetch('/api/weekly-timesheet/my-timesheets');
+            if (response.ok) {
+                const timesheets = await response.json();
+                renderDynamicMatrixRows(timesheets);
+            }
+        } catch (error) {
+            console.error("Pipeline failure traceback alert context:", error);
+        }
+    }
+
+    function renderDynamicMatrixRows(timesheets) {
+        const tbody = document.getElementById('matrixTableBody');
+        
+        if (!timesheets || timesheets.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px; color: #64748b;">No recent timecards found.</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = ''; 
+
+        timesheets.forEach(ts => {
+            const startStr = new Date(ts.weekStartDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const endStr = new Date(ts.weekEndDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const subStr = ts.submissionDate ? new Date(ts.submissionDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Pending';
+
+            const currentStatus = ts.status ? ts.status.toUpperCase() : 'PENDING';
+
+            let cellClass = '';
+            let statusLabel = '';
+
+            if (currentStatus === 'APPROVED') {
+                cellClass = 'style="color: #000000; font-weight: 500;"';
+                statusLabel = 'Approved';
+            } else if (currentStatus === 'REJECTED') {
+                cellClass = 'style="color: #000000; font-weight: 500;"';
+                statusLabel = 'Rejected';
+            } else if (currentStatus === 'DRAFT') {
+                cellClass = 'style="color: #eab308; font-weight: 500;"'; // Yellow for Draft
+                statusLabel = 'Draft';
+            } else {
+                cellClass = 'style="color: #64748b; font-weight: 700;"';
+                statusLabel = 'Pending';
             }
 
-            startDateInput.addEventListener('change', function() {
-                if (this.value) {
-                    const fromDate = new Date(this.value);
-                    if (fromDate < sunday) {
-                        Swal.fire({icon: 'warning', title: 'Invalid Date', text: 'You cannot create a timesheet for past weeks.', confirmButtonColor: '#1e3a8a'});
-                        this.value = sundayStr;
-                        if (endDateInput) endDateInput.value = formatDate(saturday);
-                        return;
-                    }
-                    if (fromDate > today) {
-                        Swal.fire({icon: 'warning', title: 'Invalid Date', text: 'You cannot create a timesheet for future dates.', confirmButtonColor: '#1e3a8a'});
-                        this.value = sundayStr;
-                        if (endDateInput) endDateInput.value = formatDate(saturday);
-                        return;
-                    }
-                    const toDate = new Date(fromDate);
-                    toDate.setDate(toDate.getDate() + 6);
-                    if (endDateInput) endDateInput.value = formatDate(toDate);
+            let editBtn = '';
+            if (currentStatus === 'APPROVED') {
+                editBtn = `<button class="btn btn-link p-0 text-dark" disabled style="opacity: 0.4; cursor: not-allowed;" title="Approved timesheets cannot be edited"><i class="fas fa-pencil-alt"></i></button>`;
+            } else {
+                editBtn = `<button class="btn btn-link p-0 text-dark" title="Edit Timesheet" onclick="window.location.href='/employee/timecard-entry?start=${ts.weekStartDate}&end=${ts.weekEndDate}'"><i class="fas fa-pencil-alt"></i></button>`;
+            }
+
+            const row = `
+                <tr>
+                    <td ${cellClass}>${statusLabel}</td>
+                    <td>Project</td>
+                    <td>${startStr}</td>
+                    <td>${endStr}</td>
+                    <td>${ts.totalWeekHours || 0}</td>
+                    <td>${subStr}</td>
+                    <td>${editBtn}</td>
+                    <td><button class="btn btn-link p-0 text-warning"><i class="fas fa-folder"></i></button></td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }
+
+    async function fetchFlatpickrData(month, year, instance) {
+        try {
+            const res = await fetch(`/api/leave/calendar-data?month=${month}&year=${year}`);
+            if (res.ok) {
+                const data = await res.json();
+                if (data.holidays) {
+                    data.holidays.forEach(h => { fpData[h.date] = { type: 'holiday', reason: h.name }; });
                 }
-            });
-        }
-
-        if(loadWeekBtn) {
-            loadWeekBtn.addEventListener('click', function() {
-                if(!startDateInput.value) return Swal.fire({icon: 'warning', title: 'Missing Date', text: 'Please select a valid start date first.', confirmButtonColor: '#1e3a8a'});
-                const startDate = new Date(startDateInput.value);
-                if (startDate > today) return Swal.fire({icon: 'warning', title: 'Future Week', text: 'Cannot load future weeks.', confirmButtonColor: '#1e3a8a'});
-                if (startDate < sunday) return Swal.fire({icon: 'warning', title: 'Past Week', text: 'Cannot load past weeks.', confirmButtonColor: '#1e3a8a'});
-
-                const dayHeaders = document.querySelectorAll('.timecard-table th.col-day');
-                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-                for(let i = 0; i < 7; i++) {
-                    const currentDate = new Date(startDate);
-                    currentDate.setDate(currentDate.getDate() + i);
-                    if(dayHeaders[i]) {
-                        dayHeaders[i].innerHTML = `${dayNames[currentDate.getDay()]}<br><small class="text-secondary fw-bold text-capitalize">${currentDate.getDate()} ${monthNames[currentDate.getMonth()]}</small>`;
-                    }
+                if (data.leaves) {
+                    data.leaves.forEach(l => { 
+                        if(l.status==='APPROVED' || l.status==='AUTO_APPROVED' || l.status==='AUTO APPROVED') {
+                            fpData[l.date] = { type: 'leave', reason: l.type }; 
+                        }
+                    });
                 }
-                loadTimesheetForWeek(startDateInput.value);
-            });
+                if (instance) instance.redraw();
+            }
+        } catch(e) {}
+    }
+
+    document.getElementById('weekStart').addEventListener('change', (e) => {
+        if(e.target.value) {
+            const startDate = new Date(e.target.value);
+            const endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + 6);
+            
+            const eStr = `${endDate.getFullYear()}-${String(endDate.getMonth()+1).padStart(2,'0')}-${String(endDate.getDate()).padStart(2,'0')}`;
+            document.getElementById('weekEnd').value = eStr;
         }
+    });
+
+    function triggerTimecard() {
+        const startDate = document.getElementById('weekStart').value;
+        const endDate = document.getElementById('weekEnd').value;
+        window.location.href = `/employee/timecard-entry?start=${startDate}&end=${endDate}`;
     }
 </script>
 </body>
