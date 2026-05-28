@@ -360,11 +360,84 @@ public class DashboardController {
         return "work-in-progress"; // Work In Progress page for static cards
     }
 
-    @GetMapping("/employee/erp-timesheet")
-    public String showErpAndTimesheet() { return "erp-and-timesheet"; }
+    @GetMapping("/erp/authenticate")
+    public String showErpTimesheetLoginGate(Model model, Principal principal) {
+        if (principal != null) {
+            String loginId = principal.getName();
+            User currentUser = userRepository.findByUsername(loginId).orElse(new User());
+            
+            model.addAttribute("user", currentUser);
+            model.addAttribute("savedPassword", currentUser.getPassword() != null ? currentUser.getPassword() : ""); 
+        } else {
+            model.addAttribute("user", new User());
+            model.addAttribute("savedPassword", "");
+        }
+        // Always force the split login page view first
+        return "erp-login"; 
+    }
+    @GetMapping("/erp-timesheet") 
+    public String erpTimesheetHub() {
+        return "erp-and-timesheet"; // This should match your main dashboard HTML filename exactly!
+    }
+    
+    @PostMapping("/erp-timesheet")
+    public String processErpTimesheetAuthentication(
+            @RequestParam("password") String typedPassword,
+            Model model, 
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
+        
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        String loginId = principal.getName();
+        User currentUser = userRepository.findByUsername(loginId).orElse(new User());
+
+        // Get the real password hash/string stored in your DB
+        String dbPassword = currentUser.getPassword(); 
+
+        // Clean up prefixes like {noop} if your security config uses them for raw matching
+        String cleanDbPassword = dbPassword != null ? dbPassword.replace("{noop}", "") : "";
+
+        // STRICT CREDENTIAL VERIFICATION MATCH:
+        if (dbPassword != null && typedPassword.trim().equals(cleanDbPassword.trim())) {
+            System.out.println("[ERP-PORTAL] Verification successful for user: " + loginId);
+            
+            model.addAttribute("user", currentUser);
+            model.addAttribute("activeProjects", new ArrayList<>());
+            model.addAttribute("submittedTimesheets", new ArrayList<>());
+            
+            return "erp-and-timesheet"; 
+        } else {
+            System.out.println("[ERP-PORTAL] FAILED verification attempt for user: " + loginId);
+            
+            // Send back an error signal to the frontend login view
+            model.addAttribute("user", currentUser);
+            model.addAttribute("authError", "Invalid credentials. Access Denied.");
+            
+            return "erp-login"; 
+        }
+    }
 
     @GetMapping("/employee/create-timesheet")
     public String showCreateTimesheet() { return "create-timesheet"; }
+    @GetMapping("/employee/use-template")
+    public String showUseTemplatePage(Model model, java.security.Principal principal) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        // Fetch user data to match your current security session variables
+        String loginId = principal.getName();
+        User currentUser = userRepository.findByUsername(loginId).orElse(new User());
+        
+        // Pass user details down if needed by your common sub-layouts
+        model.addAttribute("user", currentUser);
+
+        // This returns the exact name of your template file "use-template.html"
+        return "use-template"; 
+    }
 
     @GetMapping("/employee/timesheet-report")
     public String showTimesheetReport() { return "timesheet-report"; }

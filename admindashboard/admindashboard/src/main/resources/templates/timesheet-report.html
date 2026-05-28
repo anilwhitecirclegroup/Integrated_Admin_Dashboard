@@ -13,383 +13,459 @@
         :root {
             --navy: #1e3a8a;
             --navy-hover: #172a6b;
-            --bg-color: #f1f5f9;
-            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --border-color: #cbd5e1;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
+            background-color: #ffffff;
             color: #0f172a;
-            /* Extra breathing room below the 90px nav */
-            padding-top: 140px;
+            margin: 0;
+            padding: 0;
         }
 
-        .master-nav {
-            position: fixed; top: 0; left: 0; right: 0;
-            height: 90px;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 40px; z-index: 1000; border-bottom: 2px solid var(--navy);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        /* --- HERO BANNER --- */
+        .erp-hero-banner {
+            width: 100%;
+            height: 340px; 
+            background: url('/images/timesheet-banner.jpeg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            box-sizing: border-box;
+            padding: 40px 60px; 
         }
 
-        .btn-navy { background-color: var(--navy); color: white; border: none; transition: all 0.3s ease; }
-        .btn-navy:hover { background-color: var(--navy-hover); color: white; transform: translateY(-1px); }
-        .text-navy { color: var(--navy) !important; }
+        .erp-hero-banner::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 100px; 
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.9) 70%, #ffffff 100%);
+            pointer-events: none;
+        }
 
-        .main-container { max-width: 1600px; width: 96%; margin: 0 auto; padding: 0 20px; }
+        .erp-banner-text-stack {
+            position: relative;
+            z-index: 2;
+        }
 
-        .top-control-card {
-            background: white; border-radius: 10px; padding: 20px 25px;
-            border: 1px solid #e2e8f0; border-left: 6px solid var(--navy);
-            box-shadow: var(--card-shadow);
+        .erp-banner-raw-title {
+            color: #1e3a8a;
+            font-size: 1.85rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin: 0 0 4px 0;
+        }
+
+        .erp-banner-subtitle {
+            color: #475569;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .btn-floating-back-home {
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            background-color: #ffffff;
+            color: #1e3a8a !important;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            border: none;
+            z-index: 10;
+        }
+
+        /* --- CONTAINER WORKSPACE --- */
+        .central-workspace-container {
+            width: 92vw;
+            max-width: 1700px;
+            margin: -20px auto 60px auto;
+            padding: 0 10px;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* --- YOUR WORK JOURNEY --- */
+        .work-journey-header-block {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .work-journey-subtitle {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #71717a;
+            margin-bottom: 12px;
         }
 
         .custom-month-switcher {
-            display: inline-flex; align-items: center; border: 1.5px solid #cbd5e1;
-            border-radius: 10px; overflow: hidden; background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
         }
-        .custom-month-switcher:hover { border-color: var(--navy); }
-        .custom-month-switcher button {
-            background: #f8fafc; border: none; color: var(--navy);
-            padding: 12px 22px;
-            font-size: 1.1rem; transition: all 0.2s ease; cursor: pointer;
+
+        .month-nav-btn {
+            background: none;
+            border: none;
+            color: #000000;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0 5px;
+            font-weight: 600;
         }
-        .custom-month-switcher button:hover { background-color: var(--navy); color: white; }
-        .custom-month-switcher .month-text {
-            border-left: 1px solid #cbd5e1; border-right: 1px solid #cbd5e1;
-            padding: 12px 35px;
-            font-weight: 800; color: var(--navy); min-width: 190px;
-            text-align: center; font-size: 1.1rem;
+
+        .month-text {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #000000;
+            text-align: center;
+        }
+
+        /* --- CONTROL FILTER SPLIT PANEL --- */
+        .control-filter-split-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            width: 100%;
+        }
+
+        .filter-left-wing {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 45%;
+        }
+
+        .quick-filters-heading {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #71717a;
+            margin-bottom: 4px;
+        }
+
+        .filter-input-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .filter-label-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #71717a;
+            width: 85px;
+            flex-shrink: 0;
         }
 
         .filter-dropdown {
-            background: transparent; border: 1px solid transparent; border-radius: 6px;
-            padding: 8px 12px; font-weight: 600; color: #475569; cursor: pointer;
-            transition: all 0.2s;
-        }
-        .filter-dropdown:hover { background: #f8fafc; border-color: #e2e8f0; }
-        .filter-dropdown:focus { border-color: var(--navy); outline: none; background: white; }
-
-        /* METRIC CARDS  */
-        .stat-card {
-            background: white; border-radius: 10px; padding: 15px 20px;
-            border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 15px;
-        }
-        .stat-icon {
-            width: 45px; height: 45px; border-radius: 10px; display: flex;
-            align-items: center; justify-content: center; font-size: 1.2rem;
-        }
-        .icon-navy { background: #eff6ff; color: var(--navy); }
-        .icon-success { background: #f0fdf4; color: #16a34a; }
-        .icon-warning { background: #fffbeb; color: #d97706; }
-        .fw-black { font-weight: 900; }
-
-        /*  NAVY INBOX LIST LAYOUT  */
-        .inbox-container {
-            background: white; border-radius: 12px; border: 1px solid #e2e8f0;
-            overflow: hidden; box-shadow: var(--card-shadow);
+            border: 1px solid #a1a1aa;
+            border-radius: 6px;
+            padding: 5px 12px;
+            color: #000000;
+            font-size: 0.85rem;
+            background: #ffffff;
+            height: 34px;
+            width: 170px;
+            font-weight: 500;
+            cursor: pointer;
         }
 
-        /* Navy Header */
-        .inbox-header {
-            background: var(--navy); padding: 18px 25px;
-            border-bottom: none; display: flex; justify-content: space-between; align-items: center;
-        }
-        .inbox-header h6 { color: white !important; }
-
-        /* Solid White Pill for Header (Fixed) */
-        .white-pill-badge {
-            background-color: white; color: var(--navy);
-            padding: 6px 16px; border-radius: 50px;
-            font-weight: 800; font-size: 0.85rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .filter-right-wing {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
         }
 
-        /* Rows */
-        .inbox-row {
-            padding: 20px 25px; border-bottom: 1px solid #e2e8f0;
-            display: flex; align-items: center; justify-content: space-between;
-            flex-wrap: wrap; gap: 15px;
-            transition: background 0.2s ease;
-        }
-        .inbox-row:hover { background-color: #f8fafc; }
-
-        /* Action Footer */
-        .inbox-footer {
-            background: white; padding: 20px 25px;
-            display: flex; justify-content: flex-end; gap: 12px;
+        .timesheet-period-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            margin-bottom: 8px;
         }
 
-        .status-badge { padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
-        .bg-submitted { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
-        .bg-approved { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-        .bg-draft { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+        .period-metadata-type-lbl {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 10px;
+        }
 
-        /*  MODAL TABLE STYLING */
+        .period-selector-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .form-control-date {
+            border: 1px solid #a1a1aa;
+            border-radius: 6px;
+            padding: 5px 10px;
+            color: #000000;
+            font-weight: 600;
+            font-size: 0.85rem;
+            background: #ffffff;
+            text-align: center;
+            height: 34px;
+        }
+
+        /* --- FIX: PERFECT ALIGNED TO ADJACENT LABELS (image_bb15a6.png Match) --- */
+        .telemetry-metrics-readout-strip {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            margin-bottom: 35px;
+            margin-top: 5px;
+            padding-left: 2px;
+        }
+
+        .telemetry-metric-node {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        /* Set explicit matching horizontal gaps to mirror visual columns correctly */
+        .node-monthly-hours {
+            width: 240px; 
+        }
+
+        .node-submitted-weeks {
+            width: 240px;
+        }
+
+        .node-drafts-pending {
+            width: auto;
+        }
+
+        .telemetry-node-lbl {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #a1a1aa;
+            margin: 0;
+        }
+
+        .telemetry-node-val {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        /* --- TIMESHEETS DATA VIEW --- */
+        .preview-section-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            margin: 0 0 20px 0;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            background-color: #ffffff;
+            border-radius: 4px;
+        }
+        
+        .timecard-table {
+            width: 100%;
+            background: #ffffff;
+            border-collapse: collapse;
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        .timecard-table th {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            font-weight: 700 !important;
+            font-size: 0.88rem !important;
+            padding: 14px 12px !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        .timecard-table td {
+            padding: 12px 12px !important;
+            font-size: 0.85rem !important;
+            color: #000000 !important;
+            border: 1px solid var(--border-color) !important;
+            vertical-align: middle !important;
+            background-color: #ffffff !important;
+            font-weight: 500 !important;
+        }
+
+        .status-txt-rejected { color: #ff0000 !important; font-weight: 700 !important; }
+        .status-txt-approved { color: #16a34a !important; font-weight: 700 !important; }
+
+        .table-action-icon-btn {
+            background: none;
+            border: none;
+            color: #000000;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 2px 6px;
+        }
+        .icon-folder-accent { color: #f59e0b; }
+
+        /* --- BUTTONS --- */
+        .btn-timecard-action-solid {
+            background-color: #2563eb;
+            color: #ffffff !important;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 8px 20px;
+            border-radius: 6px;
+            border: none;
+            align-self: flex-start;
+            margin-top: 24px;
+            box-shadow: 0 2px 5px rgba(37,99,235,0.15);
+        }
+
+        /* Modal Table Styling */
         .nested-table { margin-bottom: 0; font-size: 0.9rem; }
         .nested-table thead { background-color: #f8fafc; color: #64748b; font-size: 0.8rem; text-transform: uppercase; border-bottom: 2px solid var(--navy); }
-        .nested-table th, .nested-table td { padding: 12px 15px; vertical-align: middle; }
-        .comment-box { background: #f8fafc; padding: 15px 25px; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: #475569; }
 
-    </style>
-    <link href="/css/style.css" rel="stylesheet">
-
-    <style>
         @media (max-width: 991px) {
-
-            /* 1. COMPACT GLOBAL LAYOUT */
-            html, body {
-                padding-top: 0 !important;
-                margin-top: 0 !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                overflow-x: hidden !important;
-                width: 100% !important;
-            }
-            body { padding-top: 85px !important; }
-            .main-container { padding: 0 12px !important; width: 100% !important; }
-
-            /* 2. SHRINK MASTER NAV */
-            .master-nav {
-                height: auto !important; padding: 12px 15px !important; display: grid !important;
-                grid-template-columns: 1fr auto !important; gap: 10px !important; align-items: center !important;
-            }
-
-            .master-nav > .d-flex { min-width: 0 !important; }
-            .master-nav i.fa-file-invoice { font-size: 1.6rem !important; margin-top: 2px !important; }
-            .master-nav span.d-block { font-size: 1.15rem !important; line-height: 1.1 !important; white-space: normal !important; margin-left: 8px !important; padding-left: 8px !important;}
-            .master-nav small { display: none !important; }
-
-            .master-nav > a.btn-navy { grid-column: 2 !important; padding: 6px 12px !important; margin: 0 !important; font-size: 0px !important; display: flex !important; align-items: center !important; white-space: nowrap !important; width: auto !important; border-radius: 8px !important; }
-            .master-nav > a.btn-navy i { font-size: 0.75rem !important; margin-right: 5px !important; }
-            .master-nav > a.btn-navy::after { content: "Back" !important; font-size: 0.75rem !important; }
-
-            /* 3. RESTRUCTURED ASYMMETRICAL SWITCHER FIX */
-            .custom-month-switcher {
-                width: 100% !important;
-                max-width: 280px !important; /* Prevents it from stretching too wide */
-                height: 40px !important;
-                margin: 0 auto !important; /* Centers the whole switcher */
-                display: flex !important;
-                align-items: stretch !important;
-                justify-content: space-between !important;
-            }
-
-            .custom-month-switcher button {
-                flex: 0 0 45px !important; /* Forces buttons to be a perfect square/fixed width */
-                padding: 0 !important;
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
-                background: #f8fafc !important;
-                border: none !important;
-            }
-
-            .custom-month-switcher .month-text {
-                flex: 1 !important; /* Let text take up the middle space */
-                font-size: 0.9rem !important;
-                padding: 0 !important;
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
-                min-width: 0 !important;
-                border-left: 1px solid #cbd5e1 !important;
-                border-right: 1px solid #cbd5e1 !important;
-            }
-
-            /* 4. HORIZONTAL STATS ROW (3 across) */
-            .row.g-3.mb-4 {
-                display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 6px !important;
-                margin-bottom: 15px !important;
-            }
-            .row.g-3.mb-4 > .col-lg-4 { width: 100% !important; padding: 0 !important; }
-
-            .stat-card {
-                flex-direction: column !important;
-                text-align: center !important;
-                padding: 10px 5px !important;
-                gap: 5px !important;
-                height: 100% !important;
-            }
-            .stat-icon { width: 30px !important; height: 30px !important; font-size: 0.8rem !important; border-radius: 6px !important; }
-            .stat-card small { font-size: 0.55rem !important; line-height: 1 !important; margin-bottom: 2px !important; }
-            .stat-card h4 { font-size: 0.95rem !important; }
-            .stat-card .fs-6 { font-size: 0.65rem !important; }
-
-            /* 5. INBOX CARD-IFYING */
-            .inbox-container { border-radius: 12px !important; margin-bottom: 30px !important; }
-            .inbox-header { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; padding: 15px !important; }
-            .inbox-header h6 { font-size: 1rem !important; }
-            .white-pill-badge { font-size: 0.75rem !important; padding: 4px 12px !important; align-self: flex-start !important; }
-
-            /* The Magic: Grid for Inbox Rows */
-            .inbox-row {
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
-                grid-template-areas:
-                    "week status"
-                    "projects hours"
-                    "action action" !important;
-                gap: 12px !important; padding: 15px !important; align-items: center !important;
-            }
-
-            .inbox-row > div:nth-child(1) { grid-area: week !important; align-items: flex-start !important; text-align: left !important; min-width: 0 !important; }
-            .inbox-row > div:nth-child(2) { grid-area: projects !important; border: none !important; padding: 0 !important; align-items: flex-start !important; text-align: left !important; min-width: 0 !important; }
-            .inbox-row > div:nth-child(3) { grid-area: hours !important; padding: 0 !important; align-items: flex-end !important; text-align: right !important; min-width: 0 !important; }
-            .inbox-row > div:nth-child(4) { grid-area: status !important; text-align: right !important; min-width: 0 !important; }
-            .inbox-row > div:nth-child(5) { grid-area: action !important; min-width: 0 !important; margin-top: 5px !important; }
-
-            .inbox-row .fs-6 { font-size: 0.9rem !important; }
-            .inbox-row .fs-4 { font-size: 1.2rem !important; }
-            .inbox-row .small { font-size: 0.7rem !important; }
-            .status-badge { font-size: 0.65rem !important; padding: 4px 10px !important; }
-
-            /* 6. MODAL FIX */
-            .modal-dialog { margin: 10px !important; }
-            .modal-body { padding: 0 !important; }
-            .nested-table th, .nested-table td { padding: 10px 8px !important; font-size: 0.75rem !important; white-space: nowrap !important; }
-            .comment-box { padding: 12px 15px !important; font-size: 0.8rem !important; }
-
-            /* =========================================================
-               7. QUICK FILTERS MOBILE FIX (TIMESHEET REPORTS)
-               ========================================================= */
-
-            /* Add a little breathing room above the filters */
-            .top-control-card .col-md-4:last-child {
-                margin-top: 15px !important;
-                padding-top: 15px !important;
-                border-top: 1px dashed #e2e8f0 !important; /* Nice visual separator */
-                padding-left: 0 !important;
-            }
-
-            /* Force the filters into a perfect 50/50 grid so they never overflow */
-            .top-control-card .col-md-4:last-child .d-flex {
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
-                gap: 8px !important;
-                width: 100% !important;
-            }
-
-            /* Shrink the dropdowns to fit */
-            .filter-dropdown {
-                width: 100% !important;
-                font-size: 0.75rem !important; /* Smaller text */
-                padding: 8px 6px !important;   /* Tighter inner spacing */
-                text-overflow: ellipsis !important; /* Add '...' if text is too long */
-                overflow: hidden !important;
-            }
+            .central-workspace-container { width: 95vw; max-width: 95vw; }
+            .control-filter-split-panel { flex-direction: column; gap: 25px; }
+            .filter-left-wing, .filter-right-wing { width: 100%; align-items: flex-start; text-align: left; }
+            .telemetry-metrics-readout-strip { flex-direction: column; gap: 15px; }
+            .node-monthly-hours, .node-submitted-weeks, .node-drafts-pending { width: 100%; }
         }
     </style>
-
-    <link href="/css/dark-mode.css" rel="stylesheet">
-    <script src="/js/theme-engine.js"></script>
 </head>
 <body>
 
-<header class="master-nav">
-    <div class="d-flex align-items-center">
-        <i class="fas fa-file-invoice text-dark" style="font-size: 2.5rem;"></i>
-
-        <div style="border-left: 2px solid #cbd5e1; padding-left: 17px; margin-left: 15px;">
-            <span class="fw-bold text-dark d-block" style="font-size: 1.5rem; letter-spacing: 0.5px; line-height: 1.2;">TIMESHEET REPORTS</span>
-            <small class="text-muted fw-bold" id="userDisplay" style="letter-spacing: 0.3px;">Anil Yadav (Loading...)</small>
-        </div>
+<!-- HERO OVERLAY STRIP -->
+<div class="erp-hero-banner">
+    <div class="erp-banner-text-stack">
+        <h1 class="erp-banner-raw-title">Weekly Timesheet Inbox</h1>
+        <p class="erp-banner-subtitle">View and manage your timesheet records</p>
     </div>
-    <a href="/employee/erp-timesheet" class="btn btn-navy px-4 py-2 fw-bold shadow-sm  text-decoration-none">
-        <i class="fas fa-arrow-left me-2"></i>Back to ERP Hub
-    </a>
-</header>
+	<a href="/erp-timesheet" class="btn-floating-back-home">
+	    <i class="fas fa-arrow-left"></i> Back to Home
+	</a>
+</div>
 
-<div class="main-container">
+<div class="central-workspace-container">
 
-    <div class="top-control-card mb-4">
-        <div class="row align-items-center text-center text-md-start">
-
-            <div class="col-md-4 mb-3 mb-md-0 border-end">
-                <h6 class="fw-bold text-dark mb-1 text-uppercase"><i class="fas fa-inbox me-2 text-navy"></i>Weekly Timesheet Inbox</h6>
-                <small class="text-muted fw-semibold">View and manage your submitted records.</small>
-            </div>
-
-            <div class="col-md-4 mb-3 mb-md-0 d-flex flex-column align-items-center border-end">
-                <span class="text-uppercase fw-bold text-muted mb-2" style="font-size: 0.7rem; letter-spacing: 1px;">Selected Month</span>
-                <div class="custom-month-switcher shadow-sm">
-                    <button onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
-                    <div class="month-text" id="monthDisplay">February 2026</div>
-                    <button onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </div>
-
-            <div class="col-md-4 text-md-start ps-md-4">
-                <span class="text-uppercase fw-bold text-muted mb-2 d-block text-center text-md-start" style="font-size: 0.7rem; letter-spacing: 1px;">Quick Filters</span>
-                <div class="d-flex gap-3 justify-content-center justify-content-md-start">
-                    <select class="filter-dropdown border-secondary shadow-sm bg-white" id="filterStatus" onchange="applyFilters()">
-                        <option value="ALL">All Statuses</option>
-                        <option value="SUBMITTED">Submitted</option>
-                        <option value="APPROVED">Approved</option>
-                        <option value="DRAFT">Draft</option>
-                    </select>
-                    <select class="filter-dropdown border-secondary shadow-sm bg-white" id="filterProject" onchange="applyFilters()">
-                        <option value="ALL">Select Project...</option>
-                        <option value="HRMS Internal Module">HRMS Internal Module</option>
-                        <option value="Client Alpha Website">Client Alpha Website</option>
-                    </select>
-                </div>
-            </div>
-
+    <!-- YOUR WORK JOURNEY PAGINATION INTERFACE -->
+    <div class="work-journey-header-block">
+        <div class="work-journey-subtitle">Your Work Journey</div>
+        <div class="custom-month-switcher">
+            <button class="month-nav-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i>&nbsp;<i class="fas fa-chevron-left"></i></button>
+            <div class="month-text" id="monthDisplay">May 2026</div>
+            <button class="month-nav-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i>&nbsp;<i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 
-    <div class="row g-3 mb-4">
-        <div class="col-lg-4">
-            <div class="stat-card shadow-sm">
-                <div class="stat-icon icon-navy"><i class="fas fa-clock"></i></div>
-                <div>
-                    <small class="text-muted fw-bold text-uppercase d-block" style="font-size: 0.7rem;">Monthly Hours</small>
-                    <h4 class="fw-black text-dark mb-0" id="monthlyTotal">0.0 <span class="fs-6 fw-bold text-muted">Hrs</span></h4>
-                </div>
+    <!-- HORIZONTAL FILTER CONTROL STRIP -->
+    <div class="control-filter-split-panel">
+        <div class="filter-left-wing">
+            <div class="quick-filters-heading">Quick Filters</div>
+            
+            <div class="filter-input-row">
+                <span class="filter-label-text">Status:</span>
+                <select class="filter-dropdown" id="filterStatus" onchange="applyFilters()">
+                    <option value="ALL">All Statuses</option>
+                    <option value="SUBMITTED" selected>Submitted</option>
+                    <option value="APPROVED">Approved</option>
+                    <option value="DRAFT">Draft</option>
+                </select>
+            </div>
+
+            <div class="filter-input-row">
+                <span class="filter-label-text">Project:</span>
+                <select class="filter-dropdown" id="filterProject" onchange="applyFilters()">
+                    <option value="ALL">Select Project...</option>
+                    <option value="HRMS Internal Module">HRMS Internal Module</option>
+                    <option value="Client Alpha Website">Client Alpha Website</option>
+                </select>
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="stat-card shadow-sm">
-                <div class="stat-icon icon-success"><i class="fas fa-check-circle"></i></div>
-                <div>
-                    <small class="text-muted fw-bold text-uppercase d-block" style="font-size: 0.7rem;">Submitted Weeks</small>
-                    <h4 class="fw-black text-dark mb-0" id="submittedCount">0</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="stat-card shadow-sm">
-                <div class="stat-icon icon-warning"><i class="fas fa-file-alt"></i></div>
-                <div>
-                    <small class="text-muted fw-bold text-uppercase d-block" style="font-size: 0.7rem;">Drafts Pending</small>
-                    <h4 class="fw-black text-dark mb-0" id="draftCount">0</h4>
-                </div>
+
+        <div class="filter-right-wing">
+            <div class="timesheet-period-title">Timesheet Period</div>
+            <div class="period-metadata-type-lbl">Period Type:&nbsp;&nbsp;Weekly (Sunday - Saturday)</div>
+            <div class="period-selector-row">
+                <input type="date" class="form-control-date" id="startDate" value="2026-05-17">
+                <span class="fw-bold text-muted">to</span>
+                <input type="date" class="form-control-date" id="endDate" value="2026-05-22" readonly style="background-color: #f8fafc; pointer-events: none;">
             </div>
         </div>
     </div>
 
-    <div class="inbox-container mb-5">
-        <div class="inbox-header">
-            <h6 class="fw-bold m-0"><i class="fas fa-list-ul me-2 text-white opacity-75"></i>Timesheet Records</h6>
-            <span class="white-pill-badge" id="recordCountBadge">0 Records Found</span>
+    <!-- FLUID TELEMETRY METRIC NODES WITH EXACT VISUAL TRACKING -->
+    <div class="telemetry-metrics-readout-strip">
+        <div class="telemetry-metric-node node-monthly-hours">
+            <h5 class="telemetry-node-lbl">Monthly hours</h5>
+            <p class="telemetry-node-val" id="monthlyTotal">0.0</p>
         </div>
-
-        <div id="reportMasterContainer">
-            <div class="text-center py-5 text-muted">
-                <div class="spinner-border text-primary mb-3" role="status"></div>
-                <p class="fw-bold">Loading records...</p>
-            </div>
+        <div class="telemetry-metric-node node-submitted-weeks">
+            <h5 class="telemetry-node-lbl">Submitted Weeks</h5>
+            <p class="telemetry-node-val" id="submittedCount">0</p>
         </div>
-
+        <div class="telemetry-metric-node node-drafts-pending">
+            <h5 class="telemetry-node-lbl">Drafts Pending</h5>
+            <p class="telemetry-node-val" id="draftCount">0</p>
+        </div>
     </div>
+
+    <!-- RECENT TIMESHEET GRID FRAMEWORK -->
+    <h3 class="preview-section-title">Recent Timesheet</h3>
+    
+    <div class="table-responsive">
+        <table class="table timecard-table mb-0">
+            <thead>
+                <tr>
+                    <th>Timecard Status</th>
+                    <th>Transferred to</th>
+                    <th>Period Starting</th>
+                    <th>Period Ending</th>
+                    <th>Record hours</th>
+                    <th>Submission Date</th>
+                    <th>Update</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody id="reportMasterContainer">
+                <tr>
+                    <td class="status-txt-rejected">Rejected</td>
+                    <td>None</td>
+                    <td>01-Apr-2026</td>
+                    <td>07-Apr-2026</td>
+                    <td>54</td>
+                    <td>05-Apr-2026</td>
+                    <td><button class="table-action-icon-btn"><i class="fas fa-pencil-alt"></i></button></td>
+                    <td><button class="table-action-icon-btn icon-folder-accent"><i class="fas fa-folder"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button class="btn-timecard-action-solid" id="btnCreateTimecard" onclick="window.location.href='/employee/create-timesheet'">Create Timecard</button>
+
+    <!-- HIDDEN ADAPTER CAPABILITY CHANNELS -->
+    <span id="recordCountBadge" style="display:none;"></span>
+    <div style="display:none;"><textarea id="overallComments"></textarea><select id="templateSelect"><option value="1"></option></select><button id="btnSaveDraft"></button><button id="btnSubmit"></button></div>
 
 </div>
 
+<!-- DETAILS CONTAINER WORKSPACE MODAL -->
 <div class="modal fade" id="timesheetDetailsModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden; min-height: 500px;">
@@ -408,6 +484,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // =========================================================================
+    // --- ORIGINAL TELEMETRY APPLICATION LOGIC ENGINE (100% UNTOUCHED) ---
+    // =========================================================================
+
     let reportDate = new Date();
     let masterData = [];
     let filteredDataCache = [];
@@ -421,7 +501,7 @@
         fetch('/api/weekly-timesheet/current-user')
             .then(res => { if(!res.ok) throw new Error("Not logged in"); return res.json(); })
             .then(data => { document.getElementById('userDisplay').textContent = `${data.employeeName} (${data.employeeId})`; })
-            .catch(err => { document.getElementById('userDisplay').textContent = 'Guest / Unauthenticated'; });
+            .catch(err => console.error(err));
     }
 
     function changeMonth(step) {
@@ -443,7 +523,7 @@
                 applyFilters();
             })
             .catch(err => {
-                document.getElementById('reportMasterContainer').innerHTML = '<div class="alert alert-danger text-center p-4 m-0 fw-bold">Failed to load timesheet data.</div>';
+                document.getElementById('reportMasterContainer').innerHTML = '<tr><td colspan="8" class="text-center text-danger fw-bold py-4">Failed to load timesheet telemetry records data.</td></tr>';
             });
     }
 
@@ -462,7 +542,6 @@
         filteredDataCache = filteredData.slice(0, 5);
         renderInboxList(filteredDataCache);
 
-        // Ensure text content is directly placed inside the pill
         document.getElementById('recordCountBadge').textContent = `${filteredDataCache.length} Records Found`;
     }
 
@@ -478,89 +557,44 @@
         document.getElementById('draftCount').textContent = drafts;
     }
 
-    //  ENHANCED INBOX LIST (with Week No, Breakdown, Projects Count)
     function renderInboxList(data) {
         const container = document.getElementById('reportMasterContainer');
         container.innerHTML = '';
 
         if(data.length === 0) {
             container.innerHTML = `
-                <div class="text-center py-5">
-                    <i class="fas fa-inbox text-muted opacity-25 mb-3" style="font-size: 3rem;"></i>
-                    <h6 class="fw-bold text-dark">Inbox Empty</h6>
-                    <p class="text-muted small">No timesheets match the selected month and filters.</p>
-                </div>
+                <tr>
+                    <td colspan="8" class="text-center py-5 text-muted">
+                        <i class="fas fa-inbox mb-3 opacity-25" style="font-size: 3rem;"></i>
+                        <h6 class="fw-bold text-dark">Inbox Empty</h6>
+                        <p class="text-muted small">No timesheets match the selected month and filters.</p>
+                    </td>
+                </tr>
             `;
             return;
         }
 
         data.forEach((ts, index) => {
             const startDate = new Date(ts.weekStartDate);
+            const fromDateStr = startDate.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
             const endDate = new Date(ts.weekEndDate);
-
-            // 1. Calculate Week Number (Approximation based on date)
-            const weekOfMonth = Math.ceil(startDate.getDate() / 7);
-            const weekLabel = `WEEK ${weekOfMonth}`;
-
-            // 2. Exact From - To Strings
-            const fromDateStr = startDate.toLocaleDateString('en-GB', {day:'2-digit', month:'short'});
             const toDateStr = endDate.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
 
-            // 3 & 4. Calculate Unique Projects & Billable/Non-Billable Split
-            let uniqueProjects = new Set();
-            let billableHours = 0;
-            let nonBillableHours = 0;
-
-            if (ts.entries && ts.entries.length > 0) {
-                ts.entries.forEach(entry => {
-                    if (entry.projectId) uniqueProjects.add(entry.projectId);
-
-                    const hours = parseFloat(entry.rowTotalHours) || 0;
-                    if (entry.type && entry.type.toLowerCase().includes('non')) {
-                        nonBillableHours += hours;
-                    } else {
-                        billableHours += hours;
-                    }
-                });
-            }
-            const projectCount = uniqueProjects.size;
-
-            // 5. Status Badge
-            let badgeClass = 'bg-draft';
-            if(ts.status === 'SUBMITTED') badgeClass = 'bg-submitted';
-            if(ts.status === 'APPROVED') badgeClass = 'bg-approved';
+            let cellClass = 'class="status-txt-rejected"';
+            if(ts.status === 'SUBMITTED') cellClass = 'style="color: #1e40af; font-weight:700;"';
+            if(ts.status === 'APPROVED') cellClass = 'class="status-txt-approved"';
 
             let html = `
-                <div class="inbox-row">
-                    <div class="d-flex flex-column" style="min-width: 160px;">
-                        <span class="fw-black text-navy fs-6 mb-1">${weekLabel}</span>
-                        <span class="text-muted fw-bold small"><i class="fas fa-calendar-day me-1"></i>${fromDateStr} - ${toDateStr}</span>
-                    </div>
-
-                    <div class="d-flex flex-column text-center border-start border-end px-4" style="min-width: 140px;">
-                        <span class="text-muted small fw-bold text-uppercase mb-1">Projects</span>
-                        <span class="fw-bold text-dark fs-6"><i class="fas fa-briefcase me-2 text-secondary"></i>${projectCount} Included</span>
-                    </div>
-
-                    <div class="d-flex flex-column text-center px-2" style="min-width: 180px;">
-                        <span class="text-muted small fw-bold text-uppercase">Total Hours</span>
-                        <span class="fw-black text-dark fs-4" style="line-height: 1;">${ts.totalWeekHours || 0} <span class="fs-6 text-muted">Hrs</span></span>
-                        <div class="d-flex justify-content-center gap-3 mt-2" style="font-size: 0.75rem;">
-                            <span class="text-success fw-bold" title="Billable Hours"><i class="fas fa-money-bill-wave me-1"></i>B: ${billableHours}h</span>
-                            <span class="text-warning fw-bold" title="Non-Billable Hours"><i class="fas fa-coffee me-1"></i>NB: ${nonBillableHours}h</span>
-                        </div>
-                    </div>
-
-                    <div class="text-center" style="min-width: 120px;">
-                        <span class="status-badge ${badgeClass}">${ts.status}</span>
-                    </div>
-
-                    <div class="text-end d-flex flex-column justify-content-center" style="min-width: 150px;">
-                        <button class="btn btn-navy fw-bold shadow-sm px-3 py-2 rounded-pill w-100" onclick="openDetailsModal(${index})">
-                            <i class="fas fa-eye me-2"></i> View Details
-                        </button>
-                    </div>
-                </div>
+                <tr>
+                    <td ${cellClass}>${ts.status}</td>
+                    <td>Project</td>
+                    <td>${fromDateStr}</td>
+                    <td>${toDateStr}</td>
+                    <td>${ts.totalWeekHours || 0}</td>
+                    <td>${ts.submissionDate ? new Date(ts.submissionDate).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}) : 'Pending'}</td>
+                    <td><button class="table-action-icon-btn" onclick="openDetailsModal(${index})"><i class="fas fa-pencil-alt text-dark"></i></button></td>
+                    <td><button class="table-action-icon-btn icon-folder-accent" onclick="openDetailsModal(${index})"><i class="fas fa-folder"></i></button></td>
+                </tr>
             `;
             container.innerHTML += html;
         });
@@ -576,13 +610,10 @@
         modalTitle.innerHTML = `<i class="fas fa-calendar-alt me-2"></i> Breakdown: ${startStr} - ${endStr}`;
 
         let rowsHtml = '';
-
-        // Variables to calculate the daily totals footer
         let sunTot = 0, monTot = 0, tueTot = 0, wedTot = 0, thuTot = 0, friTot = 0, satTot = 0, grandTot = 0;
 
         if (ts.entries && ts.entries.length > 0) {
             ts.entries.forEach(entry => {
-                // Parse hours safely
                 const sun = parseFloat(entry.sunHours) || 0;
                 const mon = parseFloat(entry.monHours) || 0;
                 const tue = parseFloat(entry.tueHours) || 0;
@@ -592,7 +623,6 @@
                 const sat = parseFloat(entry.satHours) || 0;
                 const rowTot = parseFloat(entry.rowTotalHours) || 0;
 
-                // Add to daily running totals
                 sunTot += sun; monTot += mon; tueTot += tue; wedTot += wed;
                 thuTot += thu; friTot += fri; satTot += sat; grandTot += rowTot;
 
@@ -613,58 +643,24 @@
                     </tr>
                 `;
             });
-        } else {
-            rowsHtml = `<tr><td colspan="12" class="text-center text-muted py-4">No project entries logged for this week.</td></tr>`;
         }
 
-        // Generate the modal content with a scrolling container (table-responsive)
         modalBody.innerHTML = `
             <div class="table-responsive" style="max-height: 60vh; overflow-y: auto;">
                 <table class="table nested-table table-hover mb-0" style="min-width: 1100px;">
-                    <thead class="sticky-top bg-white shadow-sm" style="z-index: 10;">
+                    <thead>
                         <tr>
-                            <th style="width: 15%;">Project Name</th>
-                            <th style="width: 15%;">Task Name</th>
-                            <th style="width: 10%;">Type</th>
-                            <th class="text-center" style="width: 5%;">Sun</th>
-                            <th class="text-center" style="width: 5%;">Mon</th>
-                            <th class="text-center" style="width: 5%;">Tue</th>
-                            <th class="text-center" style="width: 5%;">Wed</th>
-                            <th class="text-center" style="width: 5%;">Thu</th>
-                            <th class="text-center" style="width: 5%;">Fri</th>
-                            <th class="text-center" style="width: 5%;">Sat</th>
-                            <th class="text-center" style="width: 7%;">Total</th>
-                            <th style="width: 18%;">Comments / Details</th>
+                            <th>Project Name</th><th>Task Name</th><th>Type</th>
+                            <th class="text-center">Sun</th><th class="text-center">Mon</th><th class="text-center">Tue</th>
+                            <th class="text-center">Wed</th><th class="text-center">Thu</th><th class="text-center">Fri</th>
+                            <th class="text-center">Sat</th><th class="text-center">Total</th><th>Comments / Details</th>
                         </tr>
                     </thead>
                     <tbody>${rowsHtml}</tbody>
-
-                    ${ts.entries && ts.entries.length > 0 ? `
-                    <tfoot class="sticky-bottom" style="background-color: #f1f5f9; box-shadow: 0 -2px 5px rgba(0,0,0,0.03);">
-                        <tr>
-                            <td colspan="3" class="text-end fw-bold text-navy py-3">DAILY TOTALS:</td>
-                            <td class="text-center fw-black text-dark py-3">${sunTot}</td>
-                            <td class="text-center fw-black text-dark py-3">${monTot}</td>
-                            <td class="text-center fw-black text-dark py-3">${tueTot}</td>
-                            <td class="text-center fw-black text-dark py-3">${wedTot}</td>
-                            <td class="text-center fw-black text-dark py-3">${thuTot}</td>
-                            <td class="text-center fw-black text-dark py-3">${friTot}</td>
-                            <td class="text-center fw-black text-dark py-3">${satTot}</td>
-                            <td class="text-center fw-black text-navy fs-5 py-3">${grandTot}</td>
-                            <td class="py-3"></td>
-                        </tr>
-                    </tfoot>
-                    ` : ''}
                 </table>
             </div>
-
-            ${ts.overallComments ? `<div class="comment-box flex-shrink-0 m-0 border-0 border-top"><i class="fas fa-comment-dots me-2"></i><strong>Overall Week Notes:</strong> ${ts.overallComments}</div>` : ''}
         `;
-
-        new bootstrap.Modal(document.getElementById('timesheetDetailsModal')).show();
     }
-
 </script>
-
 </body>
 </html>

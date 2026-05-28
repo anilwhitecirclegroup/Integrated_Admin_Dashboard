@@ -61,11 +61,10 @@
 
         /* --- CORE BASE WRAPPER --- */
         .form-content-wrapper {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 40px auto 80px auto;
-            padding: 0 30px;
+            padding: 0 6px;
         }
-
         .instruction-headline {
             font-size: 1.1rem;
             font-weight: 700;
@@ -75,8 +74,8 @@
 
         /* --- STYLING FORM LABELS & CONTROL NODES --- */
         .form-grid-container .row {
-            --bs-gutter-x: 60px; 
-            --bs-gutter-y: 20px;
+            --bs-gutter-x: 28px;
+            --bs-gutter-y: 6px;
         }
 
         .custom-form-group {
@@ -86,16 +85,18 @@
         }
 
         .custom-form-label {
-            width: 160px;
+            width: 24%;
             font-weight: 600;
             color: #666666;
             font-size: 0.95rem;
             flex-shrink: 0;
-            padding-right: 10px;
+            padding-right: 14px;
+            text-align: right;
+            white-space: nowrap !important;
         }
 
         .input-box-field {
-            width: 100%;
+            width: 76%;
             background-color: #ffffff;
             border: 1px solid #cccccc;
             border-radius: 6px;
@@ -105,6 +106,13 @@
             outline: none;
             transition: border-color 0.2s;
         }
+        .form-grid-container .col-md-6:first-child {
+            padding-right: 6px;
+        }
+
+        .form-grid-container .col-md-6:last-child {
+            padding-left: 6px;
+        }
         .input-box-field:focus {
             border-color: #2563eb;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
@@ -113,30 +121,39 @@
         select.input-box-field {
             color: #666666;
         }
+        .description-section {
+            margin-bottom: 34px;
+        }
+        .description-section textarea{
+            margin-left: 15px;
+        }
 
-        /* --- LARGE FULL-WIDTH TEXTAREA --- */
-        .textarea-block-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-            margin-bottom: 30px;
-        }
-        .textarea-block-group .custom-form-label {
+        .description-section .form-label-custom {
+            display: inline-block;
             width: 100%;
+            text-align: right;
+            padding-right: 18px;
+            font-weight: 600;
+            color: #666666;
+            font-size: 0.95rem;
         }
-        .custom-textarea {
-            width: 100%;
+
+        .description-section textarea.form-control-custom {
+            min-height: 115px;
+            height: 115px;
+            resize: none;
+            padding-top: 10px;
             border: 1px solid #cccccc;
             border-radius: 6px;
-            padding: 15px;
-            font-size: 0.9rem;
-            resize: none;
             outline: none;
+        }
+        .description-section textarea.form-control-custom:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         /* --- DASHED DROPZONE FILE AREA --- */
-        .file-upload-dropzone {
+        .upload-dropzone {
             width: 100%;
             border: 1.5px dashed #999999;
             border-radius: 6px;
@@ -148,11 +165,14 @@
             font-size: 1.05rem;
             margin-bottom: 45px;
             cursor: pointer;
+            transition: background-color 0.2s;
         }
-        .file-upload-dropzone span {
+        .upload-dropzone:hover {
+            background-color: #f9fafb;
+        }
+        .upload-dropzone span {
             color: #2563eb;
             font-weight: 600;
-            text-decoration: none;
         }
 
         /* --- ACTIONS INTERACTION GROUP BUTTONS --- */
@@ -192,17 +212,13 @@
         .btn-action-outline:hover {
             background-color: #f3f7ff;
         }
-
-        .hidden-tracker-feed {
-            display: none !important;
-        }
     </style>
 </head>
 <body>
 
 <div class="form-hero-banner">
     <a th:href="@{/ticket-dashboard(dept=${currentDept})}" class="btn-back-dashboard">Back to Helpdesk</a>
-    <h1 th:text="${currentDept + ' Issue Form'}">IT Issue Form</h1>
+    <h1>Report Issue Form</h1>
 </div>
 
 <div class="form-content-wrapper">
@@ -217,7 +233,7 @@
                     <div class="custom-form-group">
                         <label class="custom-form-label">Category*</label>
                         <select class="form-select input-box-field" id="incidentCategory" required>
-                            <option value="" selected disabled hidden>Select Category</option>
+                            <option value="" selected disabled hidden>Select</option>
                             <option th:each="cat : ${categoriesList}" th:value="${cat}" th:text="${cat}"></option>
                         </select>
                     </div>
@@ -225,16 +241,16 @@
                     <div class="custom-form-group">
                         <label class="custom-form-label">Severity Level*</label>
                         <select class="form-select input-box-field" id="incidentSeverity">
-                            <option value="" disabled hidden>Select</option>
+                            <option value="" selected disabled hidden>Select</option>
                             <option value="Low">Low (Can still work)</option>
-                            <option value="Medium" selected>Medium (Hindering work)</option>
+                            <option value="Medium">Medium (Hindering work)</option>
                             <option value="High">High (Completely blocked)</option>
                         </select>
                     </div>
 
                     <div class="custom-form-group">
-                        <label class="custom-form-label">Subject*</label>
-                        <input type="text" class="form-control input-box-field" id="incidentSubject" placeholder="Brief statement of issue">
+                        <label class="custom-form-label">Subject</label>
+                        <input type="text" class="form-control input-box-field" id="incidentSubject" placeholder="">
                     </div>
 
                     <div class="custom-form-group">
@@ -250,16 +266,18 @@
 
                 <div class="col-md-6">
                     <div class="custom-form-group">
-                        <label class="custom-form-label">Item*</label>
-                        <select class="form-select input-box-field" id="incidentSubCategory" required>
-                            <option value="" selected disabled hidden>Select Specific Component</option>
-                            <option th:each="item : ${itemsList}" th:value="${item}" th:text="${item}"></option>
-                        </select>
+                        <label class="custom-form-label">Item</label>
+                        <input type="text" class="form-control input-box-field" id="incItemField" placeholder="Select category first">
+                    </div>
+
+                    <div class="custom-form-group">
+                        <label class="custom-form-label">Subcategory</label>
+                        <input type="text" class="form-control input-box-field" id="incSubcategoryField" placeholder="">
                     </div>
 
                     <div class="custom-form-group">
                         <label class="custom-form-label">Location*</label>
-                        <select class="form-select input-box-field" id="incidentLocation" required>
+                        <select class="form-select input-box-field" id="incLocation" required>
                             <option value="" selected disabled hidden>Select</option>
                             <option value="Noida">Noida</option>
                             <option value="Pune">Pune</option>
@@ -270,21 +288,27 @@
             </div>
         </div>
 
-        <div class="textarea-block-group">
-            <label class="custom-form-label">Description*</label>
-            <textarea class="form-control custom-textarea" id="incidentDescription" rows="6" placeholder="Provide details here..."></textarea>
+        <div class="description-section">
+            <div class="row align-items-start">
+                <div class="col-md-1 pe-0">
+                    <label class="form-label-custom pt-1">Description</label>
+                </div>
+                <div class="col-md-11 ps-0">
+                    <textarea class="form-control form-control-custom" id="incidentDescription" rows="5" required></textarea>
+                </div>
+            </div>
         </div>
 
-		<div class="upload-dropzone" id="dropzoneContainer" onclick="document.getElementById('fileInputHidden').click()">
-		    <span id="dropzoneText">Browse files</span> or drag files here
-		    <input type="file" id="fileInputHidden" style="display: none;" onchange="displaySelectedFile(this)">
-		</div>
+        <div class="upload-dropzone" id="dropzoneContainer" onclick="document.getElementById('fileInputHidden').click()">
+            <span id="innerDropzoneContent"><span>Browse files</span> or drag files here</span>
+            <input type="file" id="fileInputHidden" style="display: none;" onchange="displaySelectedFile(this)">
+        </div>
 
         <div class="bottom-actions-center-row">
             <button type="button" class="btn-action-solid" onclick="submitIncident()">Submit Incident Ticket</button>
-            <button type="reset" class="btn-action-outline">Reset</button>
+            <button type="reset" class="btn-action-outline" onclick="resetFormContent()">Reset</button>
             <button type="button" class="btn-action-outline" th:attr="data-url=@{/ticket-dashboard(dept=${currentDept})}"
-			onclick="window.location.href=this.dataset.url">Cancel</button>
+                    onclick="window.location.href=this.dataset.url">Cancel</button>
         </div>
     </form>
 </div>
@@ -296,22 +320,37 @@
     const sessionUser = {
         id: /*[[${user != null ? user.username : 'EMP-0000'}]]*/ 'EMP-0000',
         name: /*[[${user != null ? user.fullName : 'Unknown User'}]]*/ 'Unknown User',
-		dept: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.businessUnit : 'General'}]]*/ 'General',
-		manager: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.reportingManager : 'Admin'}]]*/ 'Admin'
+        dept: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.businessUnit : 'General'}]]*/ 'General',
+        manager: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.reportingManager : 'Admin'}]]*/ 'Admin'
     };
 
-    async function submitIncident() {
+	function resetFormContent() {
+	    // 1. Clears out the chosen hidden file input stream completely
+	    if (document.getElementById('fileInputHidden')) {
+	        document.getElementById('fileInputHidden').value = "";
+	    }
+	    
+	    // 2. Reverts the custom dropzone text back to its exact original design layout
+	    if (document.getElementById('innerDropzoneContent')) {
+	        document.getElementById('innerDropzoneContent').innerHTML = `<span>Browse files</span> or drag files here`;
+	    }
+	}
+
+	async function submitIncident() {
         const typeContext = document.getElementById('incidentType').value;
         const category = document.getElementById('incidentCategory').value;
-        const item = document.getElementById('incidentSubCategory').value;
         const subject = document.getElementById('incidentSubject').value.trim();
         const description = document.getElementById('incidentDescription').value.trim();
         const severity = document.getElementById('incidentSeverity').value || 'Medium';
         const mobile = document.getElementById('incidentMobile').value.trim();
         const email = document.getElementById('incidentEmail').value.trim();
-        const location = document.getElementById('incidentLocation').value;
+        const locationVal = document.getElementById('incLocation').value;
+        
+        // Safely extract from your new, beautifully aligned text fields
+        const itemVal = document.getElementById('incItemField').value.trim();
+        const subcategoryVal = document.getElementById('incSubcategoryField').value.trim();
 
-        if (!category || !item || !subject || !description || !mobile || !email || !location) {
+        if (!category || !subject || !description || !mobile || !email || !locationVal) {
             Swal.fire({ icon: 'info', title: 'Missing Info', text: 'Please fill in all required fields.', confirmButtonColor: '#2563eb' });
             return;
         }
@@ -328,7 +367,8 @@
             return;
         }
 
-        const formData = {
+        // Reverted completely back to your working JSON structure
+        const jsonData = {
             employeeId: sessionUser.id,
             employeeName: sessionUser.name,
             department: sessionUser.dept,
@@ -336,9 +376,14 @@
             type: typeContext,
             category: category,
             detailItem: subject,
-            durationOrLevel: item,
+            
+            // Re-mapping your inputs into the original expected backend slot keys
+            durationOrLevel: itemVal || "N/A",
+            operatingSystem: subcategoryVal || "N/A",
+            
             priority: severity,
             justification: description,
+            location: locationVal,
             status: "Open",
             notificationEmailPrimary: /*[[${@environment.getProperty('app.notification.email.primary')}]]*/ 'primary_fallback@example.com',
             notificationEmailSecondary: /*[[${@environment.getProperty('app.notification.email.secondary')}]]*/ 'secondary_fallback@example.com'
@@ -346,7 +391,7 @@
 
         const confirmResult = await Swal.fire({
             title: 'Report Incident?',
-            html: `Logging a <b>${formData.priority} Priority</b> ticket for:<br><br><b>${formData.detailItem}</b>`,
+            html: `Logging a <b>${severity} Priority</b> ticket for:<br><br><b>${subject}</b>`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Submit Ticket',
@@ -366,10 +411,11 @@
         const startTime = Date.now();
 
         try {
+            // Firing standard JSON request just like before
             const response = await fetch('/api/requests/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(jsonData)
             });
 
             const elapsedTime = Date.now() - startTime;
@@ -386,7 +432,6 @@
                     timer: 4000,
                     timerProgressBar: true
                 });
-                // FIXED: Direct redirection strictly aligned with hyphen path syntax
                 window.location.href = '/ticket-dashboard?dept=' + typeContext;
             } else {
                 throw new Error("Log failed");
@@ -400,22 +445,14 @@
             });
         }
     }
-	function displaySelectedFile(input) {
-	    const dropzoneText = document.getElementById('dropzoneText');
-	    const container = document.getElementById('dropzoneContainer');
-	    
-	    if (input.files && input.files.length > 0) {
-	        const file = input.files[0];
-	        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-	        
-	        // Update the dropzone text to show the file icon, name, and size
-	        container.innerHTML = `<i class="fas fa-file-alt me-2" style="color: #2563eb;"></i> <strong>${file.name}</strong> (${fileSizeMB} MB) <span class="ms-3 text-secondary" style="font-size: 0.85rem; text-decoration: underline;">Change file</span>`;
-	        
-	        // Re-inject the hidden file input so the click listener still works if they want to change it
-	        const newInput = input.cloneNode(true);
-	        container.appendChild(newInput);
-	    }
-	}
+    function displaySelectedFile(input) {
+        const textWrapper = document.getElementById('innerDropzoneContent');
+        if (input.files && input.files.length > 0) {
+            const file = input.files[0];
+            const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            textWrapper.innerHTML = `<i class="fas fa-file-alt me-2" style="color: #2563eb;"></i> <strong>${file.name}</strong> (${fileSizeMB} MB) <span class="ms-3 text-secondary" style="font-size: 0.85rem; text-decoration: underline;">Change file</span>`;
+        }
+    }
 </script>
 </body>
 </html>

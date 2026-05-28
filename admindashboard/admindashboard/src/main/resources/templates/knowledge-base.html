@@ -23,6 +23,28 @@
             margin: 0;
             padding: 0;
         }
+		.form-grid-container .col-sm-3, 
+		.form-content-area .col-sm-3 {
+		    text-align: right !important;
+		    display: flex;
+		    justify-content: flex-end;
+		    align-items: center;
+		}
+
+		.form-label-custom, 
+		.custom-form-label {
+		    text-shadow: none;
+		    white-space: nowrap !important; 
+		    word-break: keep-all !important;
+		    margin-bottom: 0 !important;
+		    justify-content: flex-end;
+		}
+		.textarea-block-group label,
+		.row.mt-2 label.form-label-custom {
+		    text-align: left !important;
+		    justify-content: flex-start !important;
+		    white-space: nowrap !important;
+		}
 
         /* --- HERO BANNER BACKGROUND --- */
         .hero-banner-container {
@@ -66,11 +88,11 @@
         }
 
         /* --- FORM CONTENT WRAPPER --- */
-        .form-content-area {
-            max-width: 1100px;
-            margin: 40px auto 80px auto;
-            padding: 0 40px;
-        }
+		.form-content-area {
+		     max-width: 1100px;
+		    margin: 40px auto 80px auto;
+		    padding: 0 6px;
+		}
 
         .instruction-text {
             font-size: 1.05rem;
@@ -108,6 +130,26 @@
         select.form-control-custom {
             color: #6b7280;
         }
+		.description-section {
+		    margin-top: 6px;
+		}
+		.description-section textarea{
+		    margin-left: 10px;
+		}
+
+		.description-section .form-label-custom {
+		    justify-content: flex-end;
+			padding-right: 18px;
+		    height: auto;
+		}
+
+		.description-section textarea.form-control-custom {
+		    min-height: 115px;
+		    height: 115px;
+		    resize: none;
+		    padding-top: 10px;
+		}
+
 
         /* --- DRAG & DROP ZONE --- */
         .upload-dropzone {
@@ -176,16 +218,14 @@
 <body>
 
 <div class="hero-banner-container">
-    <!-- FOLLOW LOGIC: Dynamic link targets backend department context view area cleanly -->
     <a th:href="@{/ticket-dashboard(dept=${currentDept})}" class="btn-back-dashboard">Back to Dashboard</a>
-    <h1 th:text="${currentDept + ' Solutions Form'}">Solutions Form</h1>
+    <h1><h1>Solutions Form</h1></h1>
 </div>
 
 <div class="form-content-area">
     <div class="instruction-text">Fill the required details to seek solutions from our expert team</div>
 
     <form id="solutionsFormMain">
-        <!-- FOLLOW LOGIC: Hidden parameter cleanly tracking chosen workspace channel context -->
         <input type="hidden" id="solDeptType" th:value="${currentDept}">
 
         <div class="container-fluid p-0">
@@ -195,9 +235,8 @@
                     <div class="row mb-3 align-items-center">
                         <div class="col-sm-3"><label class="form-label-custom">Category*</label></div>
                         <div class="col-sm-9">
-                            <!-- FOLLOW LOGIC: Populates iteratively via backend dataset values lists arrays -->
                             <select class="form-select form-control-custom" id="solCategory" required>
-                                <option value="" selected disabled hidden>Select Category</option>
+                                <option value="" selected disabled hidden>Select</option>
                                 <option th:each="cat : ${categoriesList}" th:value="${cat}" th:text="${cat}"></option>
                             </select>
                         </div>
@@ -207,16 +246,17 @@
                         <div class="col-sm-3"><label class="form-label-custom">Severity Level*</label></div>
                         <div class="col-sm-9">
                             <select class="form-select form-control-custom" id="solSeverity" required>
+								<option value="" selected disabled hidden>Select</option>
                                 <option value="Low">Low</option>
-                                <option value="Medium" selected>Medium</option>
+                                <option value="Medium">Medium</option>
                                 <option value="High">High</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="row mb-3 align-items-center">
-                        <div class="col-sm-3"><label class="form-label-custom">Subject*</label></div>
-                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="solSubject" placeholder="Brief statement of query" required></div>
+                        <div class="col-sm-3"><label class="form-label-custom">Subject</label></div>
+                        <div class="col-sm-9"><input type="text" class="form-control form-control-custom" id="solSubject" placeholder="" required></div>
                     </div>
 
                     <div class="row mb-3 align-items-center">
@@ -230,41 +270,53 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-sm-3"><label class="form-label-custom">Item*</label></div>
-                        <div class="col-sm-9">
-                            <!-- FOLLOW LOGIC: Converted to a dynamic dropdown using backend itemsList loop arrays -->
-                            <select class="form-select form-control-custom" id="solItem" required>
-                                <option value="" selected disabled hidden>Select Specific Component</option>
-                                <option th:each="item : ${itemsList}" th:value="${item}" th:text="${item}"></option>
-                            </select>
-                        </div>
-                    </div>
+				<div class="col-md-6">
+				    <div class="row mb-3 align-items-center">
+				        <div class="col-sm-3">
+				            <label class="form-label-custom">Item</label>
+				        </div>
+				        <div class="col-sm-9">
+				            <input type="text" class="form-control form-control-custom" id="solItemField" placeholder="Select category first">
+				        </div>
+				    </div>
 
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-sm-3"><label class="form-label-custom">Location*</label></div>
-                        <div class="col-sm-9">
-                            <select class="form-select form-control-custom" id="solLocation" required>
-                                <option value="" selected disabled hidden>Select Location</option>
-                                <option value="Noida">Noida</option>
-                                <option value="Pune">Pune</option>
-                                <option value="Remote">Remote</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+				    <div class="row mb-3 align-items-center">
+				        <div class="col-sm-3">
+				            <label class="form-label-custom">Subcategory</label>
+				        </div>
+				        <div class="col-sm-9">
+				            <input type="text" class="form-control form-control-custom" id="solSubcategoryField" placeholder="">
+				        </div>
+				    </div>
+
+				    <div class="row mb-3 align-items-center">
+				        <div class="col-sm-3">
+				            <label class="form-label-custom">Location*</label>
+				        </div>
+				        <div class="col-sm-9">
+				            <select class="form-select form-control-custom" id="solLocation" required>
+				                <option value="" selected disabled hidden>Select</option>
+				                <option value="Noida">Noida</option>
+				                <option value="Pune">Pune</option>
+				                <option value="Remote">Remote</option>
+				            </select>
+				        </div>
+				    </div>
+				</div>
 
             </div>
 
-            <div class="row mt-2">
-                <div class="col-md-12">
-                    <div class="d-flex flex-column gap-2">
-                        <label class="form-label-custom" style="height:auto;">Description*</label>
-                        <textarea class="form-control form-control-custom" id="solDescription" rows="5" placeholder="Provide description details here..." required></textarea>
-                    </div>
-                </div>
-            </div>
+			<div class="description-section">
+			    <div class="row align-items-start">
+			        <div class="col-md-1 pe-0">
+			            <label class="form-label-custom pt-2">Description</label>
+			        </div>
+			        <div class="col-md-11 ps-0">
+			            
+			            <textarea class="form-control form-control-custom" id="solDescription" rows="5" required></textarea>
+			        </div>
+			    </div>
+			</div>
 
 			<div class="upload-dropzone" id="dropzoneContainer" onclick="document.getElementById('fileInputHidden').click()">
 			    <span id="dropzoneText">Browse files</span> or drag files here
@@ -272,8 +324,8 @@
 			</div>
 
             <div class="form-actions-row">
-                <button type="button" class="btn-submit-custom" onclick="executeSolutionsSubmission()">Submit Solutions Ticket</button>
-                <button type="reset" class="btn-outline-custom">Reset</button>
+                <button type="button" class="btn-submit-custom" onclick="executeSolutionsSubmission()">Submit Incident Ticket</button>
+                <button type="reset" class="btn-outline-custom" onclick="resetSolutionsFormContent()">Reset</button>
                 <button type="button" class="btn-outline-custom" th:onclick="|window.location.href='/ticket-dashboard?dept=' + document.getElementById('solDeptType').value|">Cancel</button>
             </div>
 
@@ -298,7 +350,16 @@
         manager: /*[[${user != null && user.employeeProfile != null ? user.employeeProfile.reportingManager : 'Admin'}]]*/ 'Admin'
     };
 
-    async function executeSolutionsSubmission() {
+    function resetSolutionsFormContent() {
+        if (document.getElementById('fileInputHidden')) {
+            document.getElementById('fileInputHidden').value = "";
+        }
+        if (document.getElementById('dropzoneText')) {
+            document.getElementById('dropzoneText').innerHTML = "Browse files";
+        }
+    }
+
+	async function executeSolutionsSubmission() {
         const typeContext = document.getElementById('solDeptType').value;
         const category = document.getElementById('solCategory').value;
         const severity = document.getElementById('solSeverity').value;
@@ -307,9 +368,11 @@
         const email = document.getElementById('solEmail').value.trim();
         const subject = document.getElementById('solSubject').value.trim();
         const description = document.getElementById('solDescription').value.trim();
-        const item = document.getElementById('solItem').value;
+        
+        const itemVal = document.getElementById('solItemField').value.trim();
+        const subcategoryVal = document.getElementById('solSubcategoryField').value.trim();
 
-        if (!category || !severity || !locationVal || !mobile || !email || !subject || !description || !item) {
+        if (!category || !severity || !locationVal || !mobile || !email || !subject || !description) {
             Swal.fire({ 
                 icon: 'warning', 
                 title: 'Required Fields Missing', 
@@ -331,6 +394,7 @@
             return;
         }
 
+        // Restructured back into your original JSON layout properties
         const payload = {
             employeeId: sessionUser.id,
             employeeName: sessionUser.name,
@@ -339,7 +403,8 @@
             type: typeContext, 
             category: category,
             detailItem: subject,
-            durationOrLevel: item,
+            durationOrLevel: itemVal || "N/A", 
+            operatingSystem: subcategoryVal || "N/A", 
             priority: severity,
             justification: description,
             location: locationVal,
@@ -356,6 +421,7 @@
         });
 
         try {
+            // Reverted back to application/json transmission mode
             const response = await fetch('/api/requests/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -382,20 +448,13 @@
             });
         }
     }
+
 	function displaySelectedFile(input) {
-	    const dropzoneText = document.getElementById('dropzoneText');
-	    const container = document.getElementById('dropzoneContainer');
-	    
+	    const textWrapper = document.getElementById('dropzoneText');
 	    if (input.files && input.files.length > 0) {
 	        const file = input.files[0];
 	        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-	        
-	        // Update the dropzone text to show the file icon, name, and size
-	        container.innerHTML = `<i class="fas fa-file-alt me-2" style="color: #2563eb;"></i> <strong>${file.name}</strong> (${fileSizeMB} MB) <span class="ms-3 text-secondary" style="font-size: 0.85rem; text-decoration: underline;">Change file</span>`;
-	        
-	        // Re-inject the hidden file input so the click listener still works if they want to change it
-	        const newInput = input.cloneNode(true);
-	        container.appendChild(newInput);
+	        textWrapper.innerHTML = `<i class="fas fa-file-alt me-2" style="color: #2563eb;"></i> <strong>${file.name}</strong> (${fileSizeMB} MB) <span class="ms-3 text-secondary" style="font-size: 0.85rem; text-decoration: underline;">Change file</span>`;
 	    }
 	}
 </script>
