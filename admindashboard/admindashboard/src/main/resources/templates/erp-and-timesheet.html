@@ -174,96 +174,7 @@
             box-shadow: 0 2px 6px rgba(37,99,235,0.15);
         }
 
-        /* --- 3. FLOATING MONTH CALENDAR FRAMEWORK --- */
-        .calendar-card-wrapper {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.03);
-            border: 1px solid #f1f5f9;
-            width: 100%;
-            max-width: 420px;
-            margin: 0 auto 30px auto;
-        }
-
-        .calendar-nav-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 25px;
-            margin-bottom: 25px;
-        }
-
-        .calendar-nav-btn {
-            background: none;
-            border: none;
-            color: #334155;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-
-        #monthYearDisplay {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #0f172a;
-            min-width: 130px;
-            text-align: center;
-        }
-
-        .cal-grid-header {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            text-align: center;
-            margin-bottom: 12px;
-        }
-        .cal-head {
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: #94a3b8;
-            text-transform: uppercase;
-        }
-
-        .cal-grid-body {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            row-gap: 12px;
-            column-gap: 8px;
-            text-align: center;
-        }
-
-        .cal-day {
-            min-height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            font-weight: 700;
-            font-size: 1rem;
-            color: #000000;
-        }
-
-        .day-off-slate {
-            background-color: #94a3b8 !important;
-            color: #ffffff !important;
-        }
-        .day-absent-crimson {
-            background-color: #ff0000 !important;
-            color: #ffffff !important;
-        }
-
-        .calendar-indicator-legend {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 25px;
-            font-size: 0.62rem;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-        }
-        .legend-item { display: flex; align-items: center; gap: 4px; }
-        .dot-off { width: 5px; height: 5px; background-color: #94a3b8; border-radius: 50%; }
-        .dot-absent { width: 5px; height: 5px; background-color: #ff0000; border-radius: 50%; }
+        /* --- 3. FLOATING MONTH CALENDAR FRAMEWORK (REMOVED, USING SPIRAL FRAGMENT) --- */
 
         /* --- ACTION HUB BUTTON STRIP --- */
         .calendar-action-button-group {
@@ -338,53 +249,20 @@
             </tr>
         </thead>
         <tbody id="matrixTableBody">
-            <tr>
-                <td class="status-txt-rejected">Rejected</td>
-                <td>None</td>
-                <td>01-Apr-2026</td>
-                <td>07-Apr-2026</td>
-                <td>54</td>
-                <td>05-Apr-2026</td>
-                <td><button class="table-action-icon-btn"><i class="fas fa-pencil-alt"></i></button></td>
-                <td><button class="table-action-icon-btn icon-folder-accent"><i class="fas fa-folder"></i></button></td>
-            </tr>
+            <!-- Empty state injected by JS if no records -->
         </tbody>
     </table>
 
     <button class="btn-timecard-action-solid" onclick="window.location.href='#">Create Timecard</button>
 
     <!-- CALENDAR CORE MODULE -->
-    <div class="calendar-card-wrapper">
-        <div class="calendar-nav-header">
-            <button class="calendar-nav-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
-            <div id="monthYearDisplay">May 2026</div>
-            <button class="calendar-nav-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
-        </div>
-
-        <div class="cal-grid-header">
-            <div class="cal-head">Sun</div>
-            <div class="cal-head">Mon</div>
-            <div class="cal-head">Tue</div>
-            <div class="cal-head">Wed</div>
-            <div class="cal-head">Thu</div>
-            <div class="cal-head">Fri</div>
-            <div class="cal-head">Sat</div>
-        </div>
-
-        <div class="cal-grid-body" id="calendarGrid">
-            <!-- Embedded elements render dynamically via script -->
-        </div>
-
-        <div class="calendar-indicator-legend">
-            <div class="legend-item"><span class="dot-off"></span> Off</div>
-            <div class="legend-item"><span class="dot-absent"></span> Absent</div>
-        </div>
+    <div class="calendar-card-wrapper" style="width: 100%; max-width: 480px; margin: 0 auto 30px auto;">
+        <div th:replace="~{fragments/spiral-calendar :: spiralCalendar}"></div>
     </div>
 
     <!-- OPERATIONS STRIP MOUNTED BENEATH THE CALENDAR FRAMEWORK -->
     <div class="calendar-action-button-group">
-        <a href="/employee/create-timesheet" class="btn-action-hub-solid">Create Timesheet</a>
-        <a href="/employee/use-template" class="btn-action-hub-solid">Use Template</a>
+        <button onclick="window.location.href='/employee/create-timesheet'" class="btn-action-hub-solid">Create Timesheet</button>
         <a href="/employee/timesheet-report" class="btn-action-hub-solid">Timesheet Report</a>
     </div>
 
@@ -394,7 +272,9 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    let currentDate = new Date(2026, 4, 28); 
+    let calendarMonth = new Date().getMonth(); 
+    let calendarYear = new Date().getFullYear();
+    let calendarData = { leaves: [], holidays: [] };
 
     document.addEventListener('DOMContentLoaded', initHubDataFetchPipeline);
 
@@ -408,56 +288,131 @@
         } catch (error) {
             console.error("Pipeline failure traceback alert context:", error);
         } finally {
-            renderCalendar();
+            fetchCalendarData(calendarMonth, calendarYear);
         }
     }
 
-    function renderCalendar() {
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    async function fetchCalendarData(month, year) {
+        try {
+            const res = await fetch('/api/leave/calendar-data?month=' + (month + 1) + '&year=' + year);
+            if (!res.ok) throw new Error('Failed');
+            calendarData = await res.json();
+        } catch (e) {
+            calendarData = { leaves: [], holidays: [] };
+        }
+        renderCalendar(month, year);
+    }
 
-        document.getElementById('monthYearDisplay').innerText = `${monthNames[month]} ${year}`;
+    function renderCalendar(month, year) {
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const title = document.getElementById('calendarMonthTitle');
+        if (title) title.innerText = `${monthNames[month]} ${year}`;
 
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
         const totalDays = lastDay.getDate();
-        const startDayIndex = firstDay.getDay();
+        let startDayIndex = firstDay.getDay() - 1;
+        if (startDayIndex < 0) startDayIndex = 6; // Spiral calendar starts on Monday
+
+        const today = new Date();
+        const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+
+        const leaveMap = {};
+        (calendarData.leaves || []).forEach(l => { leaveMap[l.date] = l; });
+        const holidayMap = {};
+        (calendarData.holidays || []).forEach(h => { holidayMap[h.date] = h; });
 
         let html = '';
 
         for (let i = 0; i < startDayIndex; i++) {
-            html += `<div class="cal-day"></div>`;
+            html += `<div class="calendar-day cal-empty"></div>`;
         }
 
         for (let day = 1; day <= totalDays; day++) {
             const currentLoopDate = new Date(year, month, day);
+            const dateStr = year + '-' + String(month+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
             const dayOfWeek = currentLoopDate.getDay();
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
             
-            let formattingStyleClass = '';
+            let cssClass = '';
+            let tooltipText = '';
             
-            if (dayOfWeek === 0 || dayOfWeek === 6 || day === 31) {
-                formattingStyleClass = 'day-off-slate'; 
-            } else if (year === 2026 && month === 4) {
-                if (day === 15 || day === 20) {
-                    formattingStyleClass = 'day-absent-crimson'; 
+            if (dateStr === todayStr) {
+                cssClass = 'cal-today'; tooltipText = 'Today';
+            } else if (leaveMap[dateStr]) {
+                const leave = leaveMap[dateStr];
+                const st = (leave.status || '').toUpperCase();
+                if (st === 'APPROVED' || st === 'AUTO_APPROVED' || st === 'AUTO APPROVED') {
+                    cssClass = 'cal-approved'; tooltipText = (leave.type || 'Leave') + ' \u2014 Approved';
+                } else if (st === 'PENDING' || st === 'PENDING_APPROVAL') {
+                    cssClass = 'cal-pending'; tooltipText = (leave.type || 'Leave') + ' \u2014 Pending';
+                } else if (st === 'REJECTED') {
+                    cssClass = 'cal-rejected'; tooltipText = (leave.type || 'Leave') + ' \u2014 Rejected';
                 }
+            } else if (holidayMap[dateStr]) {
+                const hol = holidayMap[dateStr];
+                if ((hol.type || '').toLowerCase() === 'floater') {
+                    cssClass = 'cal-floater-holiday'; tooltipText = hol.name + ' (Floater)';
+                } else {
+                    cssClass = 'cal-fixed-holiday'; tooltipText = hol.name;
+                }
+            } else if (isWeekend) {
+                cssClass = 'cal-weekend';
             }
 
+            const safeTooltip = tooltipText.replace(/'/g, "\\'");
+            const tooltipAttr = tooltipText ? ` onmouseenter="showCalTooltip(event, '${safeTooltip}')" onmouseleave="hideCalTooltip(event)"` : '';
             html += `
-                <div class="cal-day ${formattingStyleClass}">
-                    <span class="day-num">${day}</span>
+                <div class="calendar-day ${cssClass}"${tooltipAttr}>
+                    ${day}
                 </div>
             `;
         }
 
-        document.getElementById('calendarGrid').innerHTML = html;
+        const grid = document.getElementById('calendarDaysGrid');
+        if (grid) grid.innerHTML = html;
     }
 
+    window.showCalTooltip = function(e, text) {
+        const el = e.target; 
+        const tip = document.createElement('div');
+        tip.className = 'cal-tooltip'; 
+        tip.textContent = text;
+        tip.style.position = 'absolute';
+        tip.style.bottom = '100%';
+        tip.style.left = '50%';
+        tip.style.transform = 'translateX(-50%)';
+        tip.style.background = '#1e293b';
+        tip.style.color = '#fff';
+        tip.style.padding = '4px 8px';
+        tip.style.borderRadius = '4px';
+        tip.style.fontSize = '0.75rem';
+        tip.style.whiteSpace = 'nowrap';
+        tip.style.zIndex = '100';
+        el.style.position = 'relative'; 
+        el.appendChild(tip);
+    }
+
+    window.hideCalTooltip = function(e) {
+        const tip = e.target.querySelector('.cal-tooltip'); 
+        if (tip) tip.remove();
+    }
+
+    window.navigateMonth = function(dir) {
+        calendarMonth += dir;
+        if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+        if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+        fetchCalendarData(calendarMonth, calendarYear);
+    };
+
 	function renderDynamicMatrixRows(timesheets) {
-        if (!timesheets || timesheets.length === 0) return;
-        
         const tbody = document.getElementById('matrixTableBody');
+        
+        if (!timesheets || timesheets.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px; color: #64748b;">No recent timesheets found.</td></tr>';
+            return;
+        }
+        
         tbody.innerHTML = ''; // Clear placeholder row to inject real data
 
         timesheets.forEach(ts => {
@@ -478,10 +433,20 @@
             } else if (currentStatus === 'REJECTED') {
                 cellClass = 'class="status-txt-rejected"';
                 statusLabel = 'Rejected';
+            } else if (currentStatus === 'DRAFT') {
+                cellClass = 'style="color: #eab308; font-weight: 500;"';
+                statusLabel = 'Draft';
             } else {
                 // Captures 'PENDING', 'SUBMITTED', or any initial saved state as Pending
                 cellClass = 'style="color: #64748b; font-weight: 700;"'; // Clean slate-gray for Pending states
                 statusLabel = 'Pending';
+            }
+
+            let editBtn = '';
+            if (currentStatus === 'APPROVED') {
+                editBtn = `<button class="table-action-icon-btn" disabled style="opacity: 0.4; cursor: not-allowed;" title="Approved timesheets cannot be edited"><i class="fas fa-pencil-alt"></i></button>`;
+            } else {
+                editBtn = `<button class="table-action-icon-btn" title="Edit Timesheet" onclick="window.location.href='/employee/timecard-entry?start=${ts.weekStartDate}&end=${ts.weekEndDate}'"><i class="fas fa-pencil-alt"></i></button>`;
             }
 
             const row = `
@@ -492,14 +457,14 @@
                     <td>${endStr}</td>
                     <td>${ts.totalWeekHours || 0}</td>
                     <td>${subStr}</td>
-                    <td><button class="table-action-icon-btn"><i class="fas fa-pencil-alt"></i></button></td>
+                    <td>${editBtn}</td>
                     <td><button class="table-action-icon-btn icon-folder-accent"><i class="fas fa-folder"></i></button></td>
                 </tr>
             `;
             tbody.innerHTML += row;
         });
     }
-    function changeMonth(step) {
+    function navigateMonth(step) {
         currentDate.setMonth(currentDate.getMonth() + step);
         renderCalendar();
     }

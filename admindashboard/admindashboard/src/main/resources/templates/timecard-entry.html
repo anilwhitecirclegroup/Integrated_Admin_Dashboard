@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Timesheet - WhiteCircle</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+        :root {
+            --bs-primary: #1e3a8a; 
+            --bg-color: #ffffff;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: #334155;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- HERO BANNER --- */
+        .erp-hero-banner {
+            width: 100%;
+            height: 380px; 
+            background: url('/images/timesheet-banner.jpeg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            box-sizing: border-box;
+            padding: 40px 55px; 
+        }
+
+        .erp-hero-banner::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 90px; 
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 65%, #ffffff 100%);
+            pointer-events: none;
+        }
+
+        .erp-banner-text-stack { position: relative; z-index: 2; }
+        .erp-banner-raw-title { color: #1e3a8a; font-size: 1.7rem; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 4px 0; }
+        .erp-banner-subtitle { color: #475569; font-size: 0.82rem; font-weight: 600; margin: 0; }
+        .btn-floating-back-home {
+            position: absolute; top: 40px; right: 55px; background-color: #ffffff; color: #1e3a8a !important;
+            font-weight: 700; font-size: 0.85rem; padding: 10px 24px; border-radius: 8px; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); border: none; z-index: 10;
+        }
+
+        /* --- CORE CENTRALIZED WORKSPACE --- */
+        .central-workspace-container { width: 95vw; max-width: 95vw; margin: 20px auto 50px auto; padding: 0; display: flex; flex-direction: column; }
+        
+        .template-form-row { display: flex; align-items: center; gap: 15px; margin-bottom: 16px; flex-wrap: wrap; }
+        .date-range-container { display: inline-flex; align-items: center; gap: 12px; font-size: 0.95rem; font-weight: 600; color: #475569; }
+        .date-box { width: 140px; text-align: center; border: 1px solid #94a3b8; border-radius: 6px; padding: 6px; font-size: 0.85rem; }
+
+        .preview-section-title { font-size: 1.3rem; font-weight: 800; color: #1e3a8a; margin: 35px 0 18px 0; letter-spacing: -0.2px; }
+
+        /* --- SPREADSHEET STYLES --- */
+        .spreadsheet-container { overflow-x: auto; background: white; margin-bottom: 20px; border: 1px solid var(--border-color); }
+        .spreadsheet-table { width: 100%; border-collapse: collapse; min-width: 1400px; }
+        .spreadsheet-table th, .spreadsheet-table td { border: 1px solid #94a3b8; padding: 6px; text-align: center; vertical-align: middle; }
+        .spreadsheet-table th { background: #d8dee9; font-size: 0.85rem; font-weight: 700; color: #000; padding: 10px 6px; }
+        
+        .form-control-cell { width: 100%; border: none; outline: none; text-align: left; font-size: 0.85rem; padding: 4px; padding-right: 20px; }
+        .form-control-cell:focus { background-color: #f8fafc; }
+        
+        .input-group-cell { position: relative; display: flex; align-items: center; height: 100%; width: 100%; }
+        .input-group-cell select { width: 100%; border: none; outline: none; font-size: 0.85rem; appearance: none; -webkit-appearance: none; background: transparent; cursor: pointer; color: #475569; }
+        .input-group-cell .fa-search { position: absolute; right: 4px; color: #2563eb; font-size: 0.8rem; pointer-events: none; }
+        
+        .numeric-input { width: 100%; text-align: center; border: none; outline: none; font-size: 0.85rem; }
+        
+        .action-btn { background: none; border: none; color: #475569; font-size: 1.1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; width: 100%; }
+        .action-btn:hover { color: #1e293b; }
+        .folder-btn { color: #f59e0b; }
+        .folder-btn:hover { color: #d97706; }
+        
+        .total-cell { font-weight: bold; font-size: 0.9rem; }
+        
+        .footer-action-cell { background: #94a3b8 !important; color: #000; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: background-color 0.2s; text-align: center !important; }
+        .footer-action-cell:hover { background: #cbd5e1 !important; }
+        
+        .bottom-action-bar { display: flex; gap: 15px; margin-top: 20px; }
+        .btn-action-solid { background-color: #3b82f6; color: white; border: none; border-radius: 6px; padding: 10px 24px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s;}
+        .btn-action-solid:hover { background-color: #2563eb; }
+
+        /* Flatpickr highlight styles */
+        .flatpickr-day.is-holiday { background-color: #fef3c7 !important; color: #b45309 !important; font-weight: bold; border-color: #fde68a !important; }
+        .flatpickr-day.is-leave { background-color: #f3e8ff !important; color: #7e22ce !important; font-weight: bold; border-color: #e9d5ff !important; }
+    </style>
+</head>
+<body>
+
+<div class="erp-hero-banner">
+    <div class="erp-banner-text-stack">
+        <h1 class="erp-banner-raw-title">Create Timecard</h1>
+        <p class="erp-banner-subtitle">Log your working hours across projects and tasks directly.</p>
+    </div>
+    <a href="/erp-timesheet" class="btn-floating-back-home">
+        <i class="fas fa-arrow-left"></i> Back to Timesheet
+    </a>
+</div>
+
+<div class="central-workspace-container">
+
+    <div class="template-form-row">
+        <div class="date-range-container">
+            <span>Period Starting:</span>
+            <input type="date" class="form-control-inline date-box" id="displayStartDate">
+            <span class="ms-3">Period Ending:</span>
+            <input type="date" class="form-control-inline date-box" id="displayEndDate" disabled style="background-color: #e2e8f0;">
+        </div>
+    </div>
+
+    <h3 class="preview-section-title">Timecard Entry</h3>
+    
+    <div class="spreadsheet-container">
+        <table class="spreadsheet-table" id="timecardTable">
+            <thead>
+                <tr id="daysHeaderRow"></tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="border-right: 1px solid #94a3b8;"></td>
+                    <td id="footDay0"></td><td id="footDay1"></td><td id="footDay2"></td>
+                    <td id="footDay3"></td><td id="footDay4"></td><td id="footDay5"></td><td id="footDay6"></td>
+                    <td id="grandTotal" class="total-cell">0</td>
+                    <td colspan="2"></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="bottom-action-bar">
+        <button class="btn-action-solid" onclick="addRow()">Add Row</button>
+        <button class="btn-action-solid" onclick="submitTimecard('DRAFT')">Save Draft</button>
+        <button class="btn-action-solid" onclick="submitTimecard('SUBMITTED')">Submit Timesheet</button>
+        <button class="btn-action-solid" onclick="resetAll()">Reset</button>
+        <button class="btn-action-solid" style="background-color: #60a5fa;" onclick="window.location.href='/employee/create-timesheet'">Cancel</button>
+    </div>
+
+</div>
+
+<!-- Modal for Additional Details -->
+<div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <textarea id="modalComment" class="form-control border-0 rounded-0 border-bottom" rows="3" placeholder="comment"></textarea>
+                <div class="p-2 d-flex align-items-center gap-2">
+                    <span style="font-size: 0.9rem;">Attach</span> <i class="fas fa-folder text-warning"></i>
+                </div>
+            </div>
+            <div class="modal-footer p-1 border-0">
+                <button type="button" class="btn btn-sm btn-primary" onclick="saveDetails()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    let startDate = new Date(); 
+    let endDate = new Date();
+    let currentRowIndexForModal = null;
+    let detailsData = {};
+    let nonWorkingDays = {};
+    let fpData = {};
+    let fpInstance = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        
+        // Initialize Flatpickr
+        fpInstance = flatpickr("#displayStartDate", {
+            dateFormat: "Y-m-d",
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                const dateStr = dayElem.dateObj.getFullYear() + '-' + String(dayElem.dateObj.getMonth()+1).padStart(2,'0') + '-' + String(dayElem.dateObj.getDate()).padStart(2,'0');
+                const data = fpData[dateStr];
+                if (data) {
+                    if (data.type === 'holiday') {
+                        dayElem.classList.add("is-holiday");
+                        dayElem.title = data.reason;
+                    } else if (data.type === 'leave') {
+                        dayElem.classList.add("is-leave");
+                        dayElem.title = data.reason;
+                    }
+                }
+            },
+            onMonthChange: function(selectedDates, dateStr, instance) {
+                fetchFlatpickrData(instance.currentMonth + 1, instance.currentYear, instance);
+            },
+            onYearChange: function(selectedDates, dateStr, instance) {
+                fetchFlatpickrData(instance.currentMonth + 1, instance.currentYear, instance);
+            }
+        });
+
+        // Pre-fetch Flatpickr data for current month
+        fetchFlatpickrData(new Date().getMonth() + 1, new Date().getFullYear(), fpInstance);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('start') && urlParams.get('end')) {
+            startDate = new Date(urlParams.get('start'));
+            endDate = new Date(urlParams.get('end'));
+            
+            syncDatePickers();
+            await fetchCalendarData(startDate, endDate);
+            generateHeaders();
+            
+            fetch(`/api/weekly-timesheet/week?startDate=${urlParams.get('start')}`)
+                .then(res => res.status === 204 ? null : res.json())
+                .then(data => {
+                    if (data && data.entries && data.entries.length > 0) {
+                        populateTable(data.entries);
+                    } else {
+                        addRow();
+                    }
+                })
+                .catch(() => addRow());
+        } else {
+            // Initialize default dates (Current week Sunday to Saturday)
+            const today = new Date();
+            const day = today.getDay();
+            startDate = new Date(today);
+            startDate.setDate(today.getDate() - day);
+            endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + 6);
+
+            syncDatePickers();
+            await fetchCalendarData(startDate, endDate);
+            generateHeaders();
+            addRow();
+        }
+
+        // Attach listener to Start Date to auto-calc End Date and regenerate table
+        document.getElementById('displayStartDate').addEventListener('change', async (e) => {
+            if(e.target.value) {
+                startDate = new Date(e.target.value);
+                const day = startDate.getDay();
+                // Ensure start date is always a Sunday
+                if (day !== 0) {
+                    startDate.setDate(startDate.getDate() - day);
+                }
+                endDate = new Date(startDate);
+                endDate.setDate(startDate.getDate() + 6);
+                
+                syncDatePickers();
+                await fetchCalendarData(startDate, endDate);
+                generateHeaders();
+                
+                // Clear and recreate rows for new dates
+                document.getElementById('tableBody').innerHTML = '';
+                addRow();
+            }
+        });
+    });
+
+    async function fetchCalendarData(start, end) {
+        nonWorkingDays = {};
+        const monthsToFetch = [];
+        monthsToFetch.push({ m: start.getMonth() + 1, y: start.getFullYear() });
+        
+        if (start.getMonth() !== end.getMonth() || start.getFullYear() !== end.getFullYear()) {
+            monthsToFetch.push({ m: end.getMonth() + 1, y: end.getFullYear() });
+        }
+
+        for (let req of monthsToFetch) {
+            try {
+                const res = await fetch(`/api/leave/calendar-data?month=${req.m}&year=${req.y}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.holidays) {
+                        data.holidays.forEach(h => {
+                            nonWorkingDays[h.date] = { isHoliday: true, reason: h.name };
+                        });
+                    }
+                    if (data.leaves) {
+                        data.leaves.forEach(l => {
+                            if (l.status === 'APPROVED') {
+                                nonWorkingDays[l.date] = { isLeave: true, reason: l.type + ' Leave' };
+                            }
+                        });
+                    }
+                }
+            } catch(e) {
+                console.error("Failed to fetch calendar data", e);
+            }
+        }
+    }
+
+    async function fetchFlatpickrData(month, year, instance) {
+        try {
+            const res = await fetch(`/api/leave/calendar-data?month=${month}&year=${year}`);
+            if (res.ok) {
+                const data = await res.json();
+                if (data.holidays) {
+                    data.holidays.forEach(h => { fpData[h.date] = { type: 'holiday', reason: h.name }; });
+                }
+                if (data.leaves) {
+                    data.leaves.forEach(l => { 
+                        if(l.status==='APPROVED' || l.status==='AUTO_APPROVED' || l.status==='AUTO APPROVED') {
+                            fpData[l.date] = { type: 'leave', reason: l.type }; 
+                        }
+                    });
+                }
+                if (instance) instance.redraw();
+            }
+        } catch(e) {}
+    }
+
+    function getGlobalDateStringForCol(i) {
+        const d = new Date(startDate);
+        d.setDate(d.getDate() + i);
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
+
+    function syncDatePickers() {
+        const sStr = `${startDate.getFullYear()}-${String(startDate.getMonth()+1).padStart(2,'0')}-${String(startDate.getDate()).padStart(2,'0')}`;
+        const eStr = `${endDate.getFullYear()}-${String(endDate.getMonth()+1).padStart(2,'0')}-${String(endDate.getDate()).padStart(2,'0')}`;
+        document.getElementById('displayStartDate').value = sStr;
+        document.getElementById('displayEndDate').value = eStr;
+    }
+
+    function generateHeaders() {
+        const daysHeaderRow = document.getElementById('daysHeaderRow');
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        
+        let headerHtml = `
+            <th style="width: 15%;">Project</th>
+            <th style="width: 15%;">Task</th>
+            <th style="width: 12%;">Type</th>
+        `;
+
+        for (let i = 0; i < 7; i++) {
+            const current = new Date(startDate);
+            current.setDate(startDate.getDate() + i);
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const lbl = `${days[current.getDay()]}, ${current.getDate()} ${months[current.getMonth()]}, ${current.getFullYear()}`;
+            
+            const dStr = getGlobalDateStringForCol(i);
+            const isNonWorking = nonWorkingDays[dStr];
+            let infoIcon = '';
+            
+            if (isNonWorking) {
+                infoIcon = ` <i class="fas fa-info-circle text-primary" title="${isNonWorking.reason}" style="cursor:help;" onclick="alert('${isNonWorking.reason}')"></i>`;
+            }
+
+            headerHtml += `<th style="width: 7%;">${lbl}${infoIcon}</th>`;
+            const footDay = document.getElementById('footDay' + i);
+            if (footDay) footDay.innerText = '';
+        }
+        
+        headerHtml += `
+            <th style="width: 6%;">Total</th>
+            <th style="width: 5%;">Details</th>
+            <th style="width: 5%;">Delete</th>
+        `;
+        if (daysHeaderRow) daysHeaderRow.innerHTML = headerHtml;
+    }
+
+    function addRow() {
+        const tbody = document.getElementById('tableBody');
+        const rowId = 'row_' + Date.now() + Math.floor(Math.random() * 1000);
+        detailsData[rowId] = '';
+        
+        const tr = document.createElement('tr');
+        tr.id = rowId;
+        let inputHtmlString = '';
+        for (let i = 0; i < 7; i++) {
+            const dStr = getGlobalDateStringForCol(i);
+            const isNonWorking = nonWorkingDays[dStr];
+            if (isNonWorking) {
+                inputHtmlString += `<td><input type="number" class="numeric-input day-input" data-col="${i}" value="0" readonly style="background-color: #f1f5f9; cursor: not-allowed;" title="${isNonWorking.reason}"></td>`;
+            } else {
+                inputHtmlString += `<td><input type="number" class="numeric-input day-input" data-col="${i}" onchange="calcTotals()" onkeyup="calcTotals()" min="0" max="24"></td>`;
+            }
+        }
+
+        tr.innerHTML = `
+            <td>
+                <div class="input-group-cell">
+                    <select class="form-control-cell project-select">
+                        <option value="">Select Project...</option>
+                        <option value="1">1001555 - WCG - Automation</option>
+                        <option value="2">Client Alpha Workspace</option>
+                    </select>
+                    <i class="fas fa-search"></i>
+                </div>
+            </td>
+            <td>
+                <div class="input-group-cell">
+                    <select class="form-control-cell task-select">
+                        <option value="">Select Task...</option>
+                        <option value="1">Billable</option>
+                        <option value="2">Non Billable</option>
+                    </select>
+                    <i class="fas fa-search"></i>
+                </div>
+            </td>
+            <td>
+                <div class="input-group-cell">
+                    <select class="form-control-cell type-select">
+                        <option value="">Select Type...</option>
+                        <option value="Regular Shift">Regular Shift</option>
+                        <option value="Night Shift">Night Shift</option>
+                    </select>
+                    <i class="fas fa-search"></i>
+                </div>
+            </td>
+            ${inputHtmlString}
+            <td class="total-cell row-total">0</td>
+            <td><button class="action-btn folder-btn" onclick="openDetails('${rowId}')"><i class="fas fa-folder"></i></button></td>
+            <td><button class="action-btn" onclick="deleteRow('${rowId}')"><i class="fas fa-trash"></i></button></td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    function populateTable(entries) {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        detailsData = {};
+        
+        entries.forEach(entry => {
+            const rowId = 'row_' + Date.now() + Math.floor(Math.random() * 1000);
+            detailsData[rowId] = entry.comments || '';
+            
+            const tr = document.createElement('tr');
+            tr.id = rowId;
+
+            let inputHtmlString = '';
+            const values = [entry.sunHours, entry.monHours, entry.tueHours, entry.wedHours, entry.thuHours, entry.friHours, entry.satHours];
+            for (let i = 0; i < 7; i++) {
+                const dStr = getGlobalDateStringForCol(i);
+                const isNonWorking = nonWorkingDays[dStr];
+                const val = values[i] || '';
+                if (isNonWorking) {
+                    inputHtmlString += `<td><input type="number" class="numeric-input day-input" data-col="${i}" value="0" readonly style="background-color: #f1f5f9; cursor: not-allowed;" title="${isNonWorking.reason}"></td>`;
+                } else {
+                    inputHtmlString += `<td><input type="number" class="numeric-input day-input" data-col="${i}" onchange="calcTotals()" onkeyup="calcTotals()" min="0" max="24" value="${val}"></td>`;
+                }
+            }
+
+            tr.innerHTML = `
+                <td>
+                    <div class="input-group-cell">
+                        <select class="form-control-cell project-select">
+                            <option value="">Select Project...</option>
+                            <option value="1" ${entry.projectId == 1 ? 'selected' : ''}>1001555 - WCG - Automation</option>
+                            <option value="2" ${entry.projectId == 2 ? 'selected' : ''}>Client Alpha Workspace</option>
+                        </select>
+                        <i class="fas fa-search"></i>
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group-cell">
+                        <select class="form-control-cell task-select">
+                            <option value="">Select Task...</option>
+                            <option value="1" ${entry.taskId == 1 ? 'selected' : ''}>Billable</option>
+                            <option value="2" ${entry.taskId == 2 ? 'selected' : ''}>Non Billable</option>
+                        </select>
+                        <i class="fas fa-search"></i>
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group-cell">
+                        <select class="form-control-cell type-select">
+                            <option value="">Select Type...</option>
+                            <option value="Regular Shift" ${entry.type === 'Regular Shift' ? 'selected' : ''}>Regular Shift</option>
+                            <option value="Night Shift" ${entry.type === 'Night Shift' ? 'selected' : ''}>Night Shift</option>
+                        </select>
+                        <i class="fas fa-search"></i>
+                    </div>
+                </td>
+                ${inputHtmlString}
+                <td class="total-cell row-total">${entry.rowTotalHours || 0}</td>
+                <td><button class="action-btn folder-btn" onclick="openDetails('${rowId}')"><i class="fas fa-folder"></i></button></td>
+                <td><button class="action-btn" onclick="deleteRow('${rowId}')"><i class="fas fa-trash"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+        
+        calcTotals();
+    }
+
+    function deleteRow(rowId) {
+        document.getElementById(rowId).remove();
+        delete detailsData[rowId];
+        calcTotals();
+    }
+
+    function resetAll() {
+        document.getElementById('tableBody').innerHTML = '';
+        detailsData = {};
+        addRow();
+        calcTotals();
+    }
+
+    function calcTotals() {
+        let grandTotal = 0;
+        let colTotals = [0,0,0,0,0,0,0];
+        
+        document.querySelectorAll('#tableBody tr').forEach(tr => {
+            let rowSum = 0;
+            tr.querySelectorAll('.day-input').forEach(input => {
+                const val = parseFloat(input.value) || 0;
+                const colIdx = parseInt(input.getAttribute('data-col'));
+                rowSum += val;
+                colTotals[colIdx] += val;
+            });
+            tr.querySelector('.row-total').innerText = rowSum;
+            grandTotal += rowSum;
+        });
+        
+        for (let i = 0; i < 7; i++) {
+            document.getElementById('footDay' + i).innerText = colTotals[i] > 0 ? colTotals[i] : '';
+        }
+        document.getElementById('grandTotal').innerText = grandTotal;
+    }
+
+    function openDetails(rowId) {
+        currentRowIndexForModal = rowId;
+        document.getElementById('modalComment').value = detailsData[rowId] || '';
+        const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+        modal.show();
+    }
+
+    function saveDetails() {
+        if (currentRowIndexForModal) {
+            detailsData[currentRowIndexForModal] = document.getElementById('modalComment').value;
+        }
+        const modal = bootstrap.Modal.getInstance(document.getElementById('detailsModal'));
+        modal.hide();
+    }
+
+    async function submitTimecard(status = 'SUBMITTED') {
+        const rows = [];
+        let grandTotal = 0;
+        let isValid = true;
+        
+        document.querySelectorAll('#tableBody tr').forEach(tr => {
+            const rowId = tr.id;
+            const projectId = tr.querySelector('.project-select').value;
+            const taskId = tr.querySelector('.task-select').value;
+            const type = tr.querySelector('.type-select').value;
+            
+            const inputs = Array.from(tr.querySelectorAll('.day-input'));
+            const hasHours = inputs.some(i => (parseFloat(i.value) || 0) > 0);
+            
+            if (!hasHours && !projectId && !taskId && !type) return; 
+            
+            if (!projectId || !taskId || !type) {
+                isValid = false;
+            }
+
+            const rowSum = parseFloat(tr.querySelector('.row-total').innerText) || 0;
+            grandTotal += rowSum;
+            
+            rows.push({
+                projectId: projectId ? parseInt(projectId) : null,
+                taskId: taskId ? parseInt(taskId) : null,
+                type: type,
+                sun: parseFloat(inputs[0].value) || 0,
+                mon: parseFloat(inputs[1].value) || 0,
+                tue: parseFloat(inputs[2].value) || 0,
+                wed: parseFloat(inputs[3].value) || 0,
+                thu: parseFloat(inputs[4].value) || 0,
+                fri: parseFloat(inputs[5].value) || 0,
+                sat: parseFloat(inputs[6].value) || 0,
+                rowTotal: rowSum,
+                details: detailsData[rowId] || ''
+            });
+        });
+
+        if (rows.length === 0) {
+            Swal.fire('Error', 'Please add at least one row with hours.', 'error');
+            return;
+        }
+
+        if (!isValid) {
+            Swal.fire('Error', 'Please ensure Project, Task, and Type are selected for all rows with hours.', 'error');
+            return;
+        }
+
+        const startDateString = `${startDate.getFullYear()}-${String(startDate.getMonth()+1).padStart(2,'0')}-${String(startDate.getDate()).padStart(2,'0')}`;
+        const endDateString = `${endDate.getFullYear()}-${String(endDate.getMonth()+1).padStart(2,'0')}-${String(endDate.getDate()).padStart(2,'0')}`;
+
+        const payload = {
+            weekStartDate: startDateString,
+            weekEndDate: endDateString,
+            status: status,
+            overallComments: "Submitted via Spreadsheet UI",
+            totalWeekHours: grandTotal,
+            rows: rows
+        };
+
+        try {
+            const response = await fetch('/api/weekly-timesheet/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                Swal.fire('Success', 'Timecard submitted successfully!', 'success').then(() => {
+                    window.location.href = '/erp-timesheet';
+                });
+            } else {
+                Swal.fire('Error', 'Failed to submit timecard.', 'error');
+            }
+        } catch (e) {
+            Swal.fire('Error', 'Network error.', 'error');
+        }
+    }
+</script>
+</body>
+</html>
