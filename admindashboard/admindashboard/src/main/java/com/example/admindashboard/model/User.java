@@ -45,6 +45,14 @@ public class User {
     @JsonIgnore
     private Client clientProfile;
 
+    // LINK TO MY-THANKS WALLET
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private ThanksWallet thanksWallet;
+
+    public ThanksWallet getThanksWallet() { return thanksWallet; }
+    public void setThanksWallet(ThanksWallet thanksWallet) { this.thanksWallet = thanksWallet; }
+
     // GETTERS AND SETTERS
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
