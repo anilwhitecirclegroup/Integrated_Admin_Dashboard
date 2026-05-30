@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Redemption Store – WhiteCircle Group</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+    <style>
+        /* Base Resets & Variables */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        :root {
+            --sidebar-bg: #0f1c3f;
+            --primary-blue: #1d4ed8;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --bg-light: #ffffff;
+            --border-color: #e2e8f0;
+            --success-green: #22c55e;
+            --danger-red: #ef4444;
+        }
+
+        body { background-color: var(--bg-light); color: var(--text-dark); display: flex; height: 100vh; overflow: hidden; }
+
+        /* Sidebar Styling */
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; padding: 20px 0; border-right: 4px solid #6366f1; }
+        .sidebar-logo { display: flex; justify-content: center; margin-bottom: 40px; }
+        .sidebar-logo img { width: 80px; height: 80px; border-radius: 12px; }
+        .sidebar-menu { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 0 16px; }
+        .sidebar-link { display: flex; align-items: center; gap: 12px; color: #cbd5e1; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-weight: 500; font-size: 15px; transition: 0.2s; }
+        .sidebar-link:hover { color: white; background-color: rgba(255,255,255,0.05); }
+        .sidebar-link.active { background-color: var(--primary-blue); color: white; }
+        .logout-link { color: var(--danger-red); margin-top: auto; }
+        .logout-link:hover { background-color: rgba(239, 68, 68, 0.1); color: var(--danger-red); }
+
+        /* Main Content */
+        .main-content { flex: 1; overflow-y: auto; padding: 30px 40px; }
+
+        /* Top Header & Controls */
+        .store-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .header-title { font-size: 24px; font-weight: 700; color: var(--primary-blue); }
+        .profile-info { display: flex; align-items: center; gap: 12px; text-align: right; }
+        .profile-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+        .profile-info h2 { font-size: 14px; font-weight: 700; margin: 0; }
+        .profile-info p { font-size: 12px; color: var(--text-muted); margin: 0; }
+
+        .store-controls { display: flex; gap: 16px; align-items: center; margin-bottom: 24px; }
+        .search-bar { flex: 1; max-width: 400px; display: flex; align-items: center; background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 0 16px; height: 40px; }
+        .search-bar input { border: none; outline: none; width: 100%; margin-left: 12px; font-size: 14px; }
+        .category-select { border: 1px solid var(--border-color); border-radius: 8px; padding: 0 16px; height: 40px; font-size: 14px; outline: none; background: white; min-width: 180px; }
+        .wallet-btn, .cart-btn { border: 1px solid var(--border-color); border-radius: 8px; padding: 0 16px; height: 40px; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; background: white; }
+        .wallet-btn i { color: var(--success-green); }
+        .cart-btn i, .cart-btn span { color: var(--primary-blue); }
+
+        /* Tabs */
+        .store-tabs { display: flex; gap: 32px; border-bottom: 1px solid var(--border-color); margin-bottom: 24px; }
+        .tab { padding-bottom: 12px; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; }
+        .tab.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
+
+        /* Product Grid */
+        .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+
+        .product-card { text-align: center; }
+        .product-img-wrapper { background-color: #e2e8f0; border-radius: 12px; padding: 12px; height: 160px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; transition: transform 0.2s; }
+        .product-card:hover .product-img-wrapper { transform: translateY(-4px); }
+        .product-img-wrapper img { max-width: 90%; max-height: 90%; object-fit: contain; mix-blend-mode: multiply; }
+
+        .product-title { font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+        .product-points { font-size: 14px; font-weight: 700; color: var(--primary-blue); margin-bottom: 12px; }
+        .product-points span { font-weight: 500; font-size: 12px; }
+
+        .redeem-btn { width: 100%; border: 1px solid var(--primary-blue); background: white; color: var(--primary-blue); font-weight: 600; padding: 8px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 13px; }
+        .redeem-btn:hover { background: var(--primary-blue); color: white; }
+
+        /* Modal Subsystem */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+        .modal-box { background: white; border-radius: 16px; width: 500px; max-width: 90%; padding: 32px; position: relative; display: none; }
+        .modal-box.active { display: block; }
+
+        .modal-close { position: absolute; top: 20px; right: 20px; font-size: 20px; cursor: pointer; color: var(--text-muted); }
+
+        /* Confirm Modal specific styles */
+        .confirm-header { text-align: center; margin-bottom: 24px; }
+        .confirm-header h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+        .confirm-header p { font-size: 14px; color: var(--text-muted); }
+
+        .confirm-content { display: flex; gap: 24px; margin-bottom: 24px; }
+        .confirm-img-box { background: #e2e8f0; border-radius: 8px; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
+        .confirm-img-box img { max-width: 80%; max-height: 80%; mix-blend-mode: multiply; }
+
+        .confirm-details { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 12px; font-size: 14px; font-weight: 600; }
+        .detail-row { display: flex; justify-content: space-between; align-items: center; }
+        .detail-label { display: flex; align-items: center; gap: 8px; color: var(--text-muted); }
+        .detail-value.text-blue { color: var(--primary-blue); }
+        .detail-value.text-green { color: var(--success-green); }
+
+        .info-section { background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+        .info-header { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+        .info-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+        .modal-actions { display: flex; gap: 16px; }
+        .modal-btn { flex: 1; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 15px; border: none; text-align: center; transition: 0.2s; }
+        .btn-cancel { border: 1px solid var(--danger-red); color: var(--danger-red); background: white; }
+        .btn-cancel:hover { background: #fef2f2; }
+        .btn-confirm { background: var(--primary-blue); color: white; }
+        .btn-confirm:hover { background: #1e40af; }
+
+        /* Success Modal specific styles */
+        .success-box { text-align: center; }
+        .success-icon { width: 64px; height: 64px; background: #dcfce7; color: var(--success-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 16px auto; }
+        .success-illustration { margin: 24px auto; max-width: 150px; }
+        .success-list { text-align: left; font-size: 13px; color: var(--text-dark); font-weight: 500; margin: 24px 0; display: flex; flex-direction: column; gap: 12px; }
+        .success-list div { display: flex; gap: 12px; align-items: flex-start; }
+        .success-list i { color: var(--primary-blue); font-size: 16px; margin-top: 2px; }
+        .success-list .text-green { color: var(--success-green); }
+
+        @media (max-width: 1200px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+
+<div class="app-layout" style="display: flex; width: 100%;">
+
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img th:src="@{/images/wcg-logo.jpg}" alt="Logo">
+        </div>
+        <div class="sidebar-menu">
+            <a th:href="@{/thanks-dashboard}" class="sidebar-link"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a th:href="@{/thanks-store}" class="sidebar-link active"><i class="fa-solid fa-store"></i> Redemption Store</a>
+            <a th:href="@{/thanks-transactions}" class="sidebar-link"><i class="fa-solid fa-money-bill-transfer"></i> Transaction History</a>
+            <a th:href="@{/thanks-send}" class="sidebar-link"><i class="fa-solid fa-gift"></i> Send Thanks</a>
+            <a th:href="@{/thanks-faqs}" class="sidebar-link"><i class="fa-regular fa-circle-question"></i> FAQs</a>
+            <a th:href="@{/thanks/logout}" class="sidebar-link logout-link">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="store-header">
+            <h1 class="header-title">Redemption Store</h1>
+            <div class="profile-info">
+                <div>
+                    <h2 th:text="${user != null ? user.fullName : 'Rohit Sharma'}">Rohit Sharma</h2>
+                    <p th:text="${profile != null ? profile.designation : 'Trainee-Tester'}">Trainee-Tester</p>
+                </div>
+                <img th:src="@{/images/user-profile.jpg}" alt="Profile" class="profile-img"
+                     th:data-name="${user != null ? user.fullName : 'Employee'}"
+                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=' + this.getAttribute('data-name') + '&amp;background=0D8ABC&amp;color=fff'">
+            </div>
+        </div>
+
+        <div class="store-controls">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass text-muted"></i>
+                <input type="text" placeholder="Search rewards...">
+            </div>
+            <select class="category-select">
+                <option>All Categories</option>
+                <option>Merchandise</option>
+                <option>Gift Cards</option>
+            </select>
+            <div class="wallet-btn">
+                <i class="fa-solid fa-wallet"></i> 1,000 PTS
+            </div>
+            <button class="cart-btn">
+                <i class="fa-solid fa-cart-shopping"></i> <span>Cart</span>
+            </button>
+        </div>
+
+        <div class="store-tabs">
+            <span class="tab active">All</span>
+            <span class="tab">Merchandise</span>
+            <span class="tab">Gift Cards</span>
+            <span class="tab">Vouchers</span>
+        </div>
+
+        <div class="product-grid">
+
+            <div class="product-card">
+                <div class="product-img-wrapper"><img th:src="@{/images/store-tshirt.png}" alt="T-Shirt"></div>
+                <div class="product-title">White Circle T-shirt</div>
+                <div class="product-points">600 <span>PTS</span></div>
+                <button class="redeem-btn" data-name="White Circle T-shirt" data-points="600" data-img="/images/store-tshirt.png" data-type="physical">Redeem Now</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-img-wrapper"><img th:src="@{/images/store-cup.png}" alt="Cup"></div>
+                <div class="product-title">White Circle Cup</div>
+                <div class="product-points">200 <span>PTS</span></div>
+                <button class="redeem-btn" data-name="White Circle Cup" data-points="200" data-img="/images/store-cup.png" data-type="physical">Redeem Now</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-img-wrapper"><img th:src="@{/images/store-bottle.png}" alt="Bottle"></div>
+                <div class="product-title">White Circle Bottle</div>
+                <div class="product-points">150 <span>PTS</span></div>
+                <button class="redeem-btn" data-name="White Circle Bottle" data-points="150" data-img="/images/store-bottle.png" data-type="physical">Redeem Now</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-img-wrapper"><img th:src="@{/images/store-keychain.png}" alt="Keychain"></div>
+                <div class="product-title">White Circle Key Chain</div>
+                <div class="product-points">100 <span>PTS</span></div>
+                <button class="redeem-btn" data-name="White Circle Key Chain" data-points="100" data-img="/images/store-keychain.png" data-type="physical">Redeem Now</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-img-wrapper"><img th:src="@{/images/store-amazon.png}" alt="Amazon"></div>
+                <div class="product-title">Amazon Gift Card</div>
+                <div class="product-points">500 <span>PTS</span></div>
+                <button class="redeem-btn" data-name="Amazon Gift Card" data-points="500" data-img="/images/store-amazon.png" data-type="digital">Redeem Now</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-img-wrapper"><img th:src="@{/images/store-flipkart.png}" alt="Flipkart"></div>
+                <div class="product-title">Flipkart Gift Card</div>
+                <div class="product-points">500 <span>PTS</span></div>
+                <button class="redeem-btn" data-name="Flipkart Gift Card" data-points="500" data-img="/images/store-flipkart.png" data-type="digital">Redeem Now</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-img-wrapper"><img th:src="@{/images/store-zomato.png}" alt="Zomato"></div>
+                <div class="product-title">Zomato Gift Card</div>
+                <div class="product-points">500 <span>PTS</span></div>
+                <button class="redeem-btn" data-name="Zomato Gift Card" data-points="500" data-img="/images/store-zomato.png" data-type="digital">Redeem Now</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-img-wrapper"><img th:src="@{/images/store-swiggy.png}" alt="Swiggy"></div>
+                <div class="product-title">Swiggy Gift Voucher</div>
+                <div class="product-points">500 <span>PTS</span></div>
+                <button class="redeem-btn" data-name="Swiggy Gift Voucher" data-points="500" data-img="/images/store-swiggy.png" data-type="digital">Redeem Now</button>
+            </div>
+
+        </div>
+
+    </main>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+
+    <div class="modal-box" id="confirmModal">
+        <i class="fa-solid fa-xmark modal-close" onclick="closeModals()"></i>
+
+        <div class="confirm-header">
+            <h2>Confirm Redemption</h2>
+            <p>Please review your order once</p>
+        </div>
+
+        <div class="confirm-content">
+            <div class="confirm-img-box">
+                <img id="modalProductImg" src="" alt="Product">
+            </div>
+            <div class="confirm-details">
+                <div class="detail-row">
+                    <span class="detail-label"><i class="fa-solid fa-gift"></i> Product</span>
+                    <span class="detail-value" id="modalProductName"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label"><i class="fa-solid fa-tag"></i> Points Required</span>
+                    <span class="detail-value text-blue" id="modalProductPoints"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label"><i class="fa-solid fa-wallet"></i> Wallet Balance</span>
+                    <span class="detail-value text-green">1000 PTS</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section" id="physicalInfo" style="display: none;">
+            <div class="info-header">
+                <span><i class="fa-solid fa-location-dot"></i> Delivery Address:</span>
+                <a href="#" class="text-blue" style="text-decoration: none;"><i class="fa-solid fa-pen"></i> Edit</a>
+            </div>
+            <div class="info-text">
+                1st Floor of Swastik Galaxy Apartments,<br>
+                A Block, near Indra Square, Bhatnagar,<br>
+                Shahdol, MP (484001)
+            </div>
+        </div>
+
+        <div class="info-section" id="digitalInfo" style="display: none;">
+            <div class="info-header">
+                <span><i class="fa-solid fa-circle-info text-blue"></i> Important Information:</span>
+            </div>
+            <ul class="info-text" style="padding-left: 16px; margin: 0;">
+                <li style="margin-bottom: 8px;">Gift Card will be sent to your registered email.</li>
+                <li>Points credit after 5 business days after redemption.</li>
+            </ul>
+        </div>
+
+        <div class="modal-actions">
+            <button class="modal-btn btn-cancel" onclick="closeModals()">Cancel</button>
+            <button class="modal-btn btn-confirm" onclick="showSuccessModal()">Confirm & Redeem</button>
+        </div>
+    </div>
+
+    <div class="modal-box success-box" id="successModal">
+        <i class="fa-solid fa-xmark modal-close" onclick="closeModals()"></i>
+
+        <div class="success-icon"><i class="fa-solid fa-check"></i></div>
+        <h2>Redemption Successful!</h2>
+
+        <div style="background: #dcfce7; padding: 24px; border-radius: 8px; margin: 16px 0; display: flex; justify-content: center;">
+            <i class="fa-solid fa-envelope-circle-check" style="font-size: 64px; color: var(--success-green);"></i>
+        </div>
+
+        <p style="font-size: 14px; font-weight: 500;">Your redemption request has been placed successfully</p>
+
+        <div class="success-list">
+            <div>
+                <i class="fa-regular fa-envelope"></i>
+                <span>A confirmation mail will be sent to your registered mail.</span>
+            </div>
+            <div>
+                <i class="fa-solid fa-truck-fast text-green"></i>
+                <span>Your order will be delivered within <span class="text-green">5 business days</span>.</span>
+            </div>
+        </div>
+
+        <button class="modal-btn btn-confirm" style="width: 100%;" onclick="closeModals()">Continue Shopping</button>
+    </div>
+
+</div>
+
+<script>
+    const overlay = document.getElementById('modalOverlay');
+    const confirmModal = document.getElementById('confirmModal');
+    const successModal = document.getElementById('successModal');
+
+    // Attach listener to all redeem buttons
+    document.querySelectorAll('.redeem-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            // Read data attributes from the clicked button
+            const name = this.getAttribute('data-name');
+            const points = this.getAttribute('data-points');
+            const imgSrc = this.getAttribute('data-img');
+            const type = this.getAttribute('data-type');
+
+            // Inject data into Confirm Modal
+            document.getElementById('modalProductName').textContent = name;
+            document.getElementById('modalProductPoints').textContent = points + ' PTS';
+
+            // Note: Thymeleaf dynamically sets context paths. For raw JS updates, we prepend the context path if necessary.
+            // Since we are referencing the static folder, mapping the exact string from data-img works cleanly.
+            document.getElementById('modalProductImg').src = imgSrc;
+
+            // Toggle delivery sections based on product type
+            if (type === 'physical') {
+                document.getElementById('physicalInfo').style.display = 'block';
+                document.getElementById('digitalInfo').style.display = 'none';
+            } else {
+                document.getElementById('physicalInfo').style.display = 'none';
+                document.getElementById('digitalInfo').style.display = 'block';
+            }
+
+            // Show Confirm Modal
+            overlay.classList.add('active');
+            confirmModal.classList.add('active');
+            successModal.classList.remove('active');
+        });
+    });
+
+    function showSuccessModal() {
+        confirmModal.classList.remove('active');
+        successModal.classList.add('active');
+    }
+
+    function closeModals() {
+        overlay.classList.remove('active');
+        setTimeout(() => {
+            confirmModal.classList.remove('active');
+            successModal.classList.remove('active');
+        }, 200); // Wait for fade out animation
+    }
+</script>
+
+</body>
+</html>

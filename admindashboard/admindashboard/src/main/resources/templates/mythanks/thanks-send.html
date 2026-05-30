@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Send Thanks – WhiteCircle Group</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+    <style>
+        /* Base Resets & Variables */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        :root {
+            --sidebar-bg: #0f1c3f;
+            --primary-blue: #1d4ed8;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --bg-light: #ffffff;
+            --border-color: #e2e8f0;
+            --danger-red: #ef4444;
+            --card-bg: #f8fafc;
+        }
+
+        body { background-color: #f8f9fc; color: var(--text-dark); display: flex; height: 100vh; overflow: hidden; }
+
+        /* Sidebar Styling */
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; padding: 20px 0; border-right: 4px solid #6366f1; }
+        .sidebar-logo { display: flex; justify-content: center; margin-bottom: 40px; }
+        .sidebar-logo img { width: 80px; height: 80px; border-radius: 12px; }
+        .sidebar-menu { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 0 16px; }
+        .sidebar-link { display: flex; align-items: center; gap: 12px; color: #cbd5e1; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-weight: 500; font-size: 15px; transition: 0.2s; }
+        .sidebar-link:hover { color: white; background-color: rgba(255,255,255,0.05); }
+        .sidebar-link.active { background-color: var(--primary-blue); color: white; }
+        .logout-link { color: var(--danger-red); margin-top: auto; }
+        .logout-link:hover { background-color: rgba(239, 68, 68, 0.1); color: var(--danger-red); }
+
+        /* Main Content Layout - BALANCED */
+        .main-content { flex: 1; overflow-y: auto; padding: 32px 40px; background-color: var(--bg-light); }
+
+        /* Top Header */
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .header-title { font-size: 20px; font-weight: 700; color: var(--primary-blue); margin: 0; }
+
+        .profile-section { display: flex; align-items: center; gap: 12px; }
+        .profile-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color); }
+        .profile-info { text-align: right; }
+        .profile-info h2 { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; }
+        .profile-info p { font-size: 13px; color: var(--text-muted); }
+
+        /* Page Content */
+        .page-greeting { font-size: 24px; font-weight: 800; color: var(--text-dark); margin-bottom: 28px; }
+
+        /* Form Card Styling - BALANCED */
+        .form-card { max-width: 600px; margin: 0 auto; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px 40px; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-weight: 700; font-size: 15px; color: var(--text-dark); margin-bottom: 8px; }
+        .required { color: var(--danger-red); }
+
+        .form-control { width: 100%; background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 16px; font-size: 14px; color: var(--text-dark); outline: none; transition: border-color 0.2s; }
+        .form-control:focus { border-color: var(--primary-blue); }
+        .form-control::placeholder { color: #94a3b8; }
+
+        /* Input with Icon */
+        .input-with-icon { position: relative; }
+        .input-with-icon i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; }
+        .input-with-icon input { padding-left: 40px; }
+
+        .helper-text { display: block; font-size: 13px; color: var(--text-muted); margin-top: 6px; font-weight: 500; }
+
+        /* Textarea and Counter - BALANCED */
+        .textarea-wrapper { position: relative; }
+        textarea.form-control { resize: none; min-height: 100px; padding-bottom: 28px; }
+        .char-counter { position: absolute; bottom: 10px; right: 14px; font-size: 12px; color: #94a3b8; font-weight: 500; }
+
+        /* Buttons - BALANCED */
+        .button-group { display: flex; justify-content: center; gap: 16px; margin-top: 28px; }
+        .btn { padding: 12px 32px; border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer; transition: 0.2s; border: none; }
+        .btn-reset { background-color: #e0e7ff; color: var(--primary-blue); border: 1px solid #c7d2fe; }
+        .btn-reset:hover { background-color: #c7d2fe; }
+        .btn-submit { background-color: var(--primary-blue); color: white; }
+        .btn-submit:hover { background-color: #1e40af; }
+
+    </style>
+</head>
+<body>
+
+<div class="app-layout" style="display: flex; width: 100%;">
+
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img th:src="@{/images/wcg-logo.jpg}" alt="Logo">
+        </div>
+        <div class="sidebar-menu">
+            <a th:href="@{/thanks-dashboard}" class="sidebar-link"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a th:href="@{/thanks-store}" class="sidebar-link"><i class="fa-solid fa-store"></i> Redemption Store</a>
+            <a th:href="@{/thanks-transactions}" class="sidebar-link"><i class="fa-solid fa-money-bill-transfer"></i> Transaction History</a>
+            <a th:href="@{/thanks-send}" class="sidebar-link active"><i class="fa-solid fa-gift"></i> Send Thanks</a>
+            <a th:href="@{/thanks-faqs}" class="sidebar-link"><i class="fa-regular fa-circle-question"></i> FAQs</a>
+
+            <a th:href="@{/thanks/logout}" class="sidebar-link logout-link">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="dashboard-header">
+            <h1 class="header-title">Send Thanks</h1>
+
+            <div class="profile-section">
+                <div class="profile-info">
+                    <h2 th:text="${user != null ? user.fullName : 'Rohit Sharma'}">Rohit Sharma</h2>
+                    <p th:text="${profile != null ? profile.designation : 'Trainee-Tester'}">Trainee-Tester</p>
+                </div>
+                <img th:src="@{/images/user-profile.jpg}" alt="Profile" class="profile-img"
+                     th:data-name="${user != null ? user.fullName : 'Employee'}"
+                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=' + this.getAttribute('data-name') + '&amp;background=0D8ABC&amp;color=fff'">
+            </div>
+        </div>
+
+        <h2 class="page-greeting">Send Thanks, <span th:text="${user != null ? #strings.arraySplit(user.fullName, ' ')[0] : 'Rohit'}">Rohit</span>!</h2>
+
+        <div class="form-card">
+            <form action="#" method="POST">
+
+                <div class="form-group">
+                    <label class="form-label">Select Employee <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" class="form-control" placeholder="Search Employee by Name or Email" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Category <span class="required">*</span></label>
+                    <select class="form-control" required style="cursor: pointer;">
+                        <option value="" disabled selected>Select Category</option>
+                        <option value="Teamwork">Teamwork</option>
+                        <option value="Leadership">Leadership</option>
+                        <option value="Innovation">Innovation</option>
+                        <option value="Helpfulness">Helpfulness</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Points <span class="required">*</span></label>
+                    <input type="number" class="form-control" placeholder="Enter Points" required min="1">
+                    <span class="helper-text">Available Wallet Balance: 1000 Pts</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Message <span class="required">*</span></label>
+                    <div class="textarea-wrapper">
+                        <textarea class="form-control" placeholder="Write your appreciation message here." maxlength="300" required onkeyup="document.getElementById('charCount').innerText = this.value.length + '/300'"></textarea>
+                        <span class="char-counter" id="charCount">0/300</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="reset" class="btn btn-reset" onclick="document.getElementById('charCount').innerText = '0/300'">Reset</button>
+                    <button type="submit" class="btn btn-submit">Send Thanks</button>
+                </div>
+
+            </form>
+        </div>
+
+    </main>
+</div>
+
+</body>
+</html>

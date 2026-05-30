@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My Thanks Dashboard – WhiteCircle Group</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+    <style>
+        /* Base Resets & Variables */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        :root {
+            --sidebar-bg: #0f1c3f;
+            --primary-blue: #1d4ed8;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --bg-light: #ffffff;
+            --border-color: #e2e8f0;
+            --success-green: #22c55e;
+            --danger-red: #ef4444;
+        }
+
+        body { background-color: #f8f9fc; color: var(--text-dark); display: flex; height: 100vh; overflow: hidden; }
+
+        /* Sidebar Styling */
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; padding: 20px 0; border-right: 4px solid #6366f1; }
+        .sidebar-logo { display: flex; justify-content: center; margin-bottom: 40px; }
+        .sidebar-logo img { width: 80px; height: 80px; border-radius: 12px; }
+        .sidebar-menu { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 0 16px; }
+        .sidebar-link { display: flex; align-items: center; gap: 12px; color: #cbd5e1; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-weight: 500; font-size: 15px; transition: 0.2s; }
+        .sidebar-link:hover { color: white; background-color: rgba(255,255,255,0.05); }
+        .sidebar-link.active { background-color: var(--primary-blue); color: white; }
+        .logout-link { color: #ef4444; margin-top: auto; }
+        .logout-link:hover { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+        /* Main Content Layout */
+        .main-content { flex: 1; overflow-y: auto; padding: 40px; background-color: var(--bg-light); }
+
+        /* Top Header */
+        .dashboard-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+        .header-title { font-size: 24px; font-weight: 700; color: var(--primary-blue); margin-bottom: 20px; }
+
+        .profile-section { display: flex; align-items: center; gap: 16px; }
+        .profile-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; }
+        .profile-info h2 { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+        .profile-info p { font-size: 14px; color: var(--text-muted); }
+
+        .header-actions { display: flex; align-items: center; gap: 16px; margin-top: 10px; }
+        .action-btn { display: flex; align-items: center; gap: 8px; background: white; border: 1px solid var(--border-color); padding: 10px 16px; border-radius: 8px; font-weight: 600; color: var(--text-dark); cursor: pointer; text-decoration: none; transition: 0.2s; }
+        .action-btn:hover { border-color: var(--primary-blue); }
+        .action-btn i { font-size: 18px; }
+        .action-btn.icon-only { padding: 10px 14px; }
+        .points-text { color: var(--success-green); }
+        .cart-text { color: var(--primary-blue); }
+
+        /* Summary Cards */
+        .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+        .summary-card { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .summary-card-title { font-size: 14px; font-weight: 600; color: var(--text-dark); margin-bottom: 16px; }
+        .summary-card-value { display: flex; align-items: center; gap: 12px; font-size: 28px; font-weight: 800; color: var(--text-dark); margin-bottom: 16px; }
+        .card-icon { font-size: 32px; }
+        .icon-blue { color: #60a5fa; }
+        .icon-green { color: #4ade80; }
+        .icon-yellow { color: #fbbf24; }
+        .pts-label { font-size: 16px; font-weight: 700; color: var(--text-muted); }
+        .summary-card-footer { font-size: 14px; font-weight: 600; color: var(--primary-blue); margin-top: auto; }
+
+        /* Table Section */
+        .section-title { font-size: 20px; font-weight: 700; color: var(--text-dark); margin-bottom: 20px; }
+
+        .mockup-header-bar { background-color: #e0e7ff; border: 1px solid #c7d2fe; border-radius: 8px; padding: 12px 24px; display: grid; grid-template-columns: 1fr 1fr 1fr 2fr 1fr; font-size: 14px; font-weight: 600; color: var(--primary-blue); margin-bottom: 16px; text-align: center; }
+        .mockup-header-bar div:first-child { text-align: left; }
+
+        .rewards-table { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+        .rewards-table thead { background-color: #f1f5f9; }
+        .rewards-table th { padding: 16px; text-align: center; font-size: 14px; font-weight: 700; color: var(--primary-blue); border-bottom: 1px solid var(--border-color); }
+        .rewards-table th:first-child { text-align: left; }
+        .rewards-table td { padding: 16px; text-align: center; font-size: 15px; font-weight: 600; border-bottom: 1px solid var(--border-color); }
+        .rewards-table td:first-child { text-align: left; color: var(--text-dark); }
+        .rewards-table tr:last-child td { border-bottom: none; }
+
+        .text-credit { color: var(--success-green); }
+        .text-debit { color: var(--danger-red); }
+        .desc-text { color: var(--text-dark); font-weight: 500; }
+
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600; }
+        .status-completed { color: var(--success-green); border: 1px solid var(--success-green); background: transparent; }
+
+    </style>
+</head>
+<body>
+
+<div class="app-layout" style="display: flex; width: 100%;">
+
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img th:src="@{/images/wcg-logo.jpg}" alt="Logo">
+        </div>
+        <div class="sidebar-menu">
+            <a th:href="@{/thanks-dashboard}" class="sidebar-link active"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a th:href="@{/thanks-store}" class="sidebar-link"><i class="fa-solid fa-store"></i> Redemption Store</a>
+            <a th:href="@{/thanks-transactions}" class="sidebar-link"><i class="fa-solid fa-money-bill-transfer"></i> Transaction History</a>
+            <a th:href="@{/thanks-send}" class="sidebar-link"><i class="fa-solid fa-gift"></i> Send Thanks</a>
+            <a th:href="@{/thanks-faqs}" class="sidebar-link"><i class="fa-regular fa-circle-question"></i> FAQs</a>
+
+            <a th:href="@{/thanks/logout}" class="sidebar-link logout-link">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="dashboard-header">
+            <div>
+                <h1 class="header-title">Dashboard</h1>
+                <div class="profile-section">
+                    <img th:src="@{/images/user-profile.jpg}" alt="Profile" class="profile-img"
+                         th:data-name="${user != null ? user.fullName : 'Employee'}"
+                         onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=' + this.getAttribute('data-name') + '&amp;background=0D8ABC&amp;color=fff'">
+                    <div class="profile-info">
+                        <h2 th:text="${user != null ? user.fullName : 'Rohit Sharma'}">Rohit Sharma</h2>
+                        <p th:text="${profile != null ? profile.designation : 'Trainee-Tester'}">Trainee-Tester</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <a href="#" class="action-btn icon-only"><i class="fa-regular fa-bell text-muted"></i></a>
+                <div class="action-btn">
+                    <i class="fa-solid fa-wallet points-text"></i>
+                    <span>1,000 PTS</span>
+                </div>
+                <a href="#" class="action-btn">
+                    <i class="fa-solid fa-cart-shopping cart-text"></i>
+                    <span class="cart-text">Cart</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="summary-card-title">Total Points Earned</div>
+                <div class="summary-card-value">
+                    <i class="fa-solid fa-award card-icon icon-blue"></i>
+                    <span>2500 <span class="pts-label">PTS</span></span>
+                </div>
+                <div class="summary-card-footer">Lifetime</div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-card-title">Wallet Balance</div>
+                <div class="summary-card-value">
+                    <i class="fa-solid fa-wallet card-icon icon-green"></i>
+                    <span>1000 <span class="pts-label">PTS</span></span>
+                </div>
+                <div class="summary-card-footer">Available To Redeem</div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-card-title">Rewards Received</div>
+                <div class="summary-card-value">
+                    <i class="fa-solid fa-gift card-icon icon-yellow"></i>
+                    <span>12</span>
+                </div>
+                <div class="summary-card-footer">Appreciations</div>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="section-title">Recent Rewards Received</h2>
+
+            <div class="mockup-header-bar">
+                <div>From</div>
+                <div>Category</div>
+                <div>Points</div>
+                <div>Message</div>
+                <div>Date</div>
+            </div>
+
+            <table class="rewards-table">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Points</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>29/05/2026</td>
+                    <td>Credit</td>
+                    <td class="text-credit">+150</td>
+                    <td class="desc-text">Appreciation from Virat</td>
+                    <td><span class="status-badge status-completed">Completed</span></td>
+                </tr>
+                <tr>
+                    <td>30/05/2026</td>
+                    <td>Credit</td>
+                    <td class="text-credit">+200</td>
+                    <td class="desc-text">Appreciation from Virat</td>
+                    <td><span class="status-badge status-completed">Completed</span></td>
+                </tr>
+                <tr>
+                    <td>28/05/2026</td>
+                    <td>Debit</td>
+                    <td class="text-debit">-500</td>
+                    <td class="desc-text">Redeemed Amazon Voucher</td>
+                    <td><span class="status-badge status-completed">Completed</span></td>
+                </tr>
+                <tr>
+                    <td>25/05/2026</td>
+                    <td>Credit</td>
+                    <td class="text-credit">+150</td>
+                    <td class="desc-text">Appreciation from Virat</td>
+                    <td><span class="status-badge status-completed">Completed</span></td>
+                </tr>
+                <tr>
+                    <td>29/05/2026</td>
+                    <td>Credit</td>
+                    <td class="text-credit">+150</td>
+                    <td class="desc-text">Appreciation from Virat</td>
+                    <td><span class="status-badge status-completed">Completed</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</div>
+
+</body>
+</html>
