@@ -3,576 +3,471 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Timesheet - WhiteCircle</title>
+    <title>ERP & Timesheet Portal - WhiteCircle</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bs-primary: #1e3a8a; /* Navy Blue Theme */
-            --bg-color: #f8fafc;
+            --bs-primary: #1e3a8a;
+            --bg-color: #ffffff;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: #334155;
+            margin: 0;
+            padding: 0;
         }
 
-        .top-header {
-            background: white; border-bottom: 1px solid #e2e8f0;
-            padding: 22px 40px;
-            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-            height: 80px;
-        }
-        .btn-back-home {
-            background-color: var(--bs-primary); color: white;
-            border-radius: 10px; padding: 10px 24px; font-weight: 600;
-            font-size: 0.85rem; text-decoration: none; display: flex; align-items: center;
-            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.2); transition: all 0.3s ease;
-        }
-        .btn-back-home:hover { background-color: #172554; transform: translateY(-2px); color: white; }
-
-        /*  CONTAINER  */
-        .main-container {
-            max-width: 1200px; margin: 100px auto 40px; padding: 0 20px;
-        }
-
-        /*  GLOBAL CARD STYLES (Hover & Shadow)  */
-        .hover-card {
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        /* --- 1. EXPANDED BANNER WITH RAW TOP-LEFT HEADING & BLUR EFFECT --- */
+        .erp-hero-banner {
+            width: 100%;
+            height: 380px; 
+            background: url('/images/timesheet-banner.jpeg') no-repeat center center;
+            background-size: cover;
             position: relative;
-        }
-        .hover-card:hover {
-            transform: translateY(-8px); /* Lift effect */
-            box-shadow: 0 15px 30px rgba(30, 58, 138, 0.15); /* Deep shadow */
-            z-index: 10;
+            box-sizing: border-box;
+            padding: 40px 55px; 
         }
 
-        /*  1. ACTION CARDS (Top Row)  */
-        .action-card {
-            background: white;
-            border: 3px solid var(--bs-primary);
-            border-radius: 12px;
-            padding: 35px 25px;
-            height: 100%;
-            display: flex; align-items: center; gap: 20px;
-            cursor: pointer;
-            /* Added transition so the hover effect isn't jerky */
-            transition: all 0.3s ease;
+        /* Soft blurred bottom gradient transition */
+        .erp-hero-banner::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 110px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 60%, #ffffff 100%);
+            pointer-events: none;
         }
 
-        .ac-icon {
-            width: 60px; height: 60px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; flex-shrink: 0;
-            /* Ensure the icon color transition is smooth */
-            transition: all 0.3s ease;
+        /* Raw typography heading over the top left corner */
+        .erp-banner-raw-title {
+            color: #1e3a8a; 
+            font-size: 1.85rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+            display: inline-block;
         }
 
-        /*  Default State (Light Backgrounds)  */
-        .ac-create .ac-icon { background: #eff6ff; color: var(--bs-primary); }
-        .ac-template .ac-icon { background: #fdf2f8; color: #db2777; }
-        .ac-report .ac-icon { background: #f0fdf4; color: #15803d; }
-
-        /*  Hover State (Dark Backgrounds)  */
-        .ac-create:hover .ac-icon { background: var(--bs-primary); color: white; }
-        .ac-template:hover .ac-icon { background: #db2777; color: white; }
-        .ac-report:hover .ac-icon { background: #15803d; color: white; }
-
-        /*  2. CALENDAR VIEW  */
-        .calendar-card {
-            background: white; border: 1px solid #e2e8f0; border-radius: 16px;
-            overflow: hidden; height: 100%;
-        }
-        .calendar-header {
-            background: var(--bs-primary); color: white; padding: 10px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        /* Grid */
-        .cal-grid-header {
-            display: grid; grid-template-columns: repeat(7, 1fr); gap: 0;
-            background: #f8fafc; border-bottom: 1px solid #e2e8f0;
-        }
-        .cal-grid-body {
-            display: grid; grid-template-columns: repeat(7, 1fr); gap: 0;
+        .btn-back-home-floating {
+            position: absolute;
+            top: 40px;
+            right: 55px;
+            background-color: #ffffff;
+            color: #0c1a30 !important;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: none;
+            z-index: 2;
         }
 
-        .cal-head {
-            text-align: center; padding: 8px; font-weight: 600; color: #64748b; font-size: 0.8rem;
-        }
-
-        /* CLASSY MINIMALIST CALENDAR DAYS  */
-        .cal-day {
-            min-height: 90px; /* Good height for breathing room */
-            padding: 12px;
-            border-right: 1px solid #f1f5f9;
-            border-bottom: 1px solid #f1f5f9;
+        /* --- CENTRAL CONTROL WORKSPACE LAYOUT (EXPANDED TO 90% SCREEN WIDTH) --- */
+        .central-workspace-container {
+            width: 90vw; 
+            max-width: 90vw; 
+            margin: 10px auto 40px;
+            padding: 0;
             display: flex;
             flex-direction: column;
-            background-color: white;
-            transition: all 0.2s ease;
-            position: relative;
         }
-        .cal-day:hover { background-color: #f8fafc; }
 
-        /* The Date Number - prominent but clean */
-        .day-num {
+        /* --- 2. RECENT TIMESHEETS GRID MATRIX --- */
+        .matrix-section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 22px;
+            padding-left: 2px;
+        }
+
+        .matrix-section-title {
+            font-size: 1.45rem;
             font-weight: 800;
-            font-size: 1.15rem;
-            color: #334155; /* Dark slate gray */
-            margin-bottom: 8px;
-            line-height: 1;
+            color: #1e3a8a;
+            margin: 0;
+            letter-spacing: -0.3px;
         }
 
-        /* The Status Text container */
-        .day-info {
+        .btn-plus-square {
+            width: 28px;
+            height: 28px;
+            background-color: #1e3a8a;
+            color: #ffffff !important;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
             font-size: 0.85rem;
-            font-weight: 600;
-            display: flex; align-items: center;
+            border: none;
         }
 
-        /* Typography-based Status Styles */
-        .info-present {
-            color: var(--bs-primary); /* Navy theme color */
+        .timesheet-matrix-table {
+            width: 100%; 
+            background: #ffffff;
+            border-collapse: collapse;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 0; /* Cleared to let the down-shifted button handle spacing */
+            text-align: center;
         }
-        .info-absent {
-            color: #dc2626; /* Professional muted red */
+
+        .timesheet-matrix-table th {
+            background-color: #ffffff;
+            color: #1e293b;
+            font-weight: 700; 
+            font-size: 0.85rem;
+            padding: 14px 10px;
+            border: 1px solid #cbd5e1;
+            letter-spacing: -0.1px;
         }
-        .info-off {
-            color: #94a3b8; /* Subtle gray */
+
+        .timesheet-matrix-table td {
+            padding: 14px 10px;
+            font-size: 0.85rem;
+            color: #334155;
+            border: 1px solid #cbd5e1;
             font-weight: 500;
         }
 
-        /* Tiny icons next to text */
-        .info-icon { margin-right: 5px; font-size: 0.8rem; opacity: 0.8; }
+        .status-txt-rejected { color: #ff0000 !important; font-weight: 700; }
+        .status-txt-approved { color: #16a34a !important; font-weight: 700; }
+        .status-txt-draft { color: #2563eb !important; font-weight: 700; }
 
-        /* Today Highlight - Cleaner Navy accents */
-        .current-day {
-            background-color: #f0f5ff !important; /* Very subtle navy tint */
-            box-shadow: inset 0 0 0 2px var(--bs-primary); /* Inner navy border */
-            z-index: 5;
+        .table-action-icon-btn {
+            background: none;
+            border: none;
+            color: #0f172a;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 2px 6px;
         }
-        .current-day .day-num { color: var(--bs-primary); }
+        .icon-folder-accent { color: #f59e0b; }
 
-        /* RESTORED: RECENT TIMECARDS CSS  */
-        .recent-card {
-            background: white; border: 1.5px solid var(--bs-primary);
-            border-radius: 16px; overflow: hidden; height: 100%;
-        }
-        .recent-header {
-            background: var(--bs-primary); color: white; padding: 15px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .view-all-link {
-            font-size: 0.85rem; color: #bfdbfe; text-decoration: none; font-weight: 600;
-        }
-        .view-all-link:hover {
-            color: white; text-decoration: underline; text-underline-offset: 4px;
-        }
-        .recent-item {
-            padding: 15px 20px; border-bottom: 1px solid #f1f5f9; display: flex;
-            justify-content: space-between; align-items: center; transition: background 0.2s; cursor: pointer;
-        }
-        .recent-item:hover { background: #f8fafc; }
-        .recent-item:last-child { border-bottom: none; }
-
-        .ri-date { font-weight: 600; color: #1e293b; font-size: 0.95rem; }
-        .ri-hours { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
-
-        /* RESTORED: Status Pills */
-        .status-pill { padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
-        .st-approved { background: #dcfce7; color: #15803d; }
-        .st-submitted { background: #e0e7ff; color: #3730a3; }
-        .st-draft { background: #fff7ed; color: #c2410c; }
-
-        /*  CLICK EFFECT FOR TOP CARDS  */
-        .action-card:active {
-            transform: scale(0.98); /* Slight shrink on click */
-            background-color: #f1f5f9; /* Flash color */
-            border-color: #1e3a8a;
+        /* CREATED TIMECARD BUTTON: SHIFTED SLIGHTLY DOWN */
+        .btn-timecard-action-solid {
+            background-color: #2563eb;
+            color: #ffffff !important;
+            font-weight: 700;
+            font-size: 0.82rem;
+            padding: 8px 18px;
+            border-radius: 6px;
+            border: none;
+            align-self: flex-start;
+            margin-top: 20px; /* Shifts the button slightly down away from the table */
+            margin-bottom: 55px;
+            box-shadow: 0 2px 6px rgba(37,99,235,0.15);
         }
 
-        .ri-date { font-weight: 600; color: #1e293b; font-size: 0.95rem; }
-        .ri-hours { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+        /* --- 3. FLOATING MONTH CALENDAR FRAMEWORK (REMOVED, USING SPIRAL FRAGMENT) --- */
 
-        .status-pill {
-            padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700;
+        /* --- ACTION HUB BUTTON STRIP --- */
+        .calendar-action-button-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            width: 100%;
+            margin-bottom: 40px;
         }
-        .st-approved { background: #dcfce7; color: #15803d; }
-        .st-submitted { background: #e0e7ff; color: #3730a3; }
-        .st-draft { background: #fff7ed; color: #c2410c; }
 
-    </style>
-    <link href="/css/style.css" rel="stylesheet">
+        .btn-action-hub-solid {
+            background-color: #2563eb;
+            color: #ffffff !important;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            border: none;
+            transition: background-color 0.15s;
+        }
+        .btn-action-hub-solid:hover {
+            background-color: #1d4ed8;
+        }
 
-    <style>
-        @media (max-width: 991px) {
+        @media(max-width: 991px) {
+            .central-workspace-container { width: 95vw; max-width: 95vw; }
+        }
 
-            /* 1. COMPACT GLOBAL LAYOUT */
-            html, body {
-                padding-top: 0 !important;
-                margin-top: 0 !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                overflow-x: hidden !important;
-                width: 100% !important;
-            }
-            body { padding-top: 75px !important; }
-
-            /* 2. SHRINK THE TOP NAV BAR */
-            .top-header {
-                height: auto !important; padding: 12px 15px !important; display: flex !important;
-                flex-direction: row !important; justify-content: space-between !important; align-items: center !important; flex-wrap: nowrap !important;
-            }
-
-            .top-header > .d-flex { min-width: 0 !important; width: auto !important; flex: 1 !important; }
-            .top-header i.fa-business-time { font-size: 1.6rem !important; }
-            .top-header span { font-size: 1.2rem !important; margin-left: 8px !important; padding-left: 8px !important; line-height: 1.1 !important; white-space: nowrap !important; }
-
-            .btn-back-home {
-                flex: 0 0 auto !important; margin: 0 0 0 10px !important; width: auto !important;
-                padding: 6px 12px !important; font-size: 0.75rem !important; border-radius: 8px !important; white-space: nowrap !important;
-            }
-
-            /* 3. MAIN CONTAINER & ACTION CARDS */
-            .main-container { margin-top: 15px !important; padding: 0 15px !important; margin-bottom: 30px !important; }
-            .row.g-4 { gap: 12px !important; }
-
-            .action-card { padding: 15px !important; border-radius: 12px !important; border-width: 2px !important; gap: 15px !important; }
-            .ac-icon { width: 45px !important; height: 45px !important; font-size: 1.2rem !important; border-radius: 10px !important; }
-            .action-card h5 { font-size: 1rem !important; margin-bottom: 2px !important; }
-            .action-card small { font-size: 0.75rem !important; }
-
-            /* 4. CALENDAR RESPONSIVE FIXES */
-            .calendar-card { border-radius: 12px !important; }
-
-            /* Reorganize Calendar Header */
-            .calendar-header { position: relative !important; padding: 35px 10px 15px 10px !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; }
-            .calendar-header > div:nth-child(2) { display: contents !important; }
-
-            #monthYearDisplay { order: 2 !important; font-size: 1.05rem !important; margin: 0 15px !important; }
-            .calendar-header > div:nth-child(2) > button:nth-child(1) { order: 1 !important; padding: 5px 10px !important; font-size: 1.1rem !important; }
-            .calendar-header > div:nth-child(2) > button:nth-child(2) { order: 3 !important; padding: 5px 10px !important; font-size: 1.1rem !important; }
-
-            /* Move 'Today' button to top right corner */
-            .calendar-header > div:nth-child(2) > button:nth-child(3) { position: absolute !important; top: 10px !important; right: 12px !important; margin: 0 !important; padding: 4px 10px !important; font-size: 0.7rem !important; }
-
-            /* Shrink Calendar Grid Cells */
-            .cal-head { padding: 8px 2px !important; font-size: 0.65rem !important; }
-            .cal-day { min-height: 55px !important; padding: 6px 2px !important; align-items: center !important; }
-            .day-num { font-size: 0.85rem !important; margin-bottom: 4px !important; }
-
-            /* Stack icons and text in the cells */
-            .day-info { font-size: 0.55rem !important; text-align: center !important; flex-direction: column !important; line-height: 1.2 !important; }
-            .info-icon { margin-right: 0 !important; margin-bottom: 2px !important; font-size: 0.55rem !important; }
-
-            /* 5. RECENT TIMECARDS */
-            .card-body .p-3 { padding: 12px 15px !important; }
-            .card-body h6 { font-size: 0.85rem !important; }
-            .card-body small { font-size: 0.7rem !important; }
-            .card-body .badge { font-size: 0.65rem !important; padding: 4px 10px !important; }
+        @media(max-width: 767px) {
+            .erp-hero-banner { height: 220px; padding: 25px; }
+            .erp-banner-raw-title { font-size: 1.4rem; }
+            .btn-back-home-floating { top: 25px; right: 25px; }
+            .timesheet-matrix-table { display: block; overflow-x: auto; }
+            .calendar-action-button-group { flex-direction: column; gap: 10px; }
+            .btn-action-hub-solid { width: 100%; text-align: center; }
         }
     </style>
-
-    <link href="/css/dark-mode.css" rel="stylesheet">
-    <script src="/js/theme-engine.js"></script>
 </head>
 <body>
 
-<header class="top-header">
-    <div class="d-flex align-items-center">
-        <i class="fas fa-business-time text-dark" style="font-size: 2.5rem;"></i>
-        <span class="fw-bold text-dark" style="border-left: 2px solid #cbd5e1; padding-left: 17px; margin-left: 15px; font-size: 1.5rem; letter-spacing: 0.5px;">
-            ERP & TIMESHEET
-        </span>
-    </div>
-    <a href="/employee/dashboard" class="btn-back-home">
-        <i class="fas fa-arrow-left me-2"></i> Back to Home
+<!-- HERO BANNER WRAPPER WITH RAW TOP LEFT CORNER TITLE -->
+<div class="erp-hero-banner">
+    <h1 class="erp-banner-raw-title">ERP & Timesheet</h1>
+    <a href="/employee/dashboard" class="btn-back-home-floating">
+        <i class="fas fa-arrow-left me-1"></i> Back to Home
     </a>
-</header>
-
-<div class="main-container">
-
-    <div class="row g-4 mb-4">
-
-        <div class="col-md-4">
-            <div class="action-card hover-card ac-create" onclick="window.location.href='/employee/create-timesheet'">
-                <div class="ac-icon"><i class="fas fa-plus"></i></div>
-                <div>
-                    <h5 class="fw-bold text-dark mb-1">Create Timesheet</h5>
-                    <small class="text-muted">Log hours for this week</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="action-card hover-card ac-template">
-                <div class="ac-icon"><i class="fas fa-copy"></i></div>
-                <div>
-                    <h5 class="fw-bold text-dark mb-1">Use Template</h5>
-                    <small class="text-muted">Pre-fill from projects</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="action-card hover-card ac-report" onclick="window.location.href='/employee/timesheet-report'">
-                <div class="ac-icon"><i class="fas fa-file-invoice"></i></div>
-                <div>
-                    <h5 class="fw-bold text-dark mb-1">Timesheet Report</h5>
-                    <small class="text-muted">Monthly summary</small>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-4">
-
-        <div class="col-lg-8">
-            <div class="calendar-card hover-card">
-                <div class="calendar-header">
-                    <div class="fw-bold" id="monthYearDisplay" style="font-size: 1.1rem;">
-                        <i class="fas fa-calendar-alt me-2"></i> January 2026
-                    </div>
-                    <div>
-                        <button class="btn btn-sm btn-outline-light border-0" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
-                        <button class="btn btn-sm btn-outline-light border-0" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
-                        <button class="btn btn-sm btn-light text-primary fw-bold ms-2" onclick="goToToday()" style="font-size: 0.75rem;">Today</button>
-                    </div>
-                </div>
-
-                <div class="cal-grid-header">
-                    <div class="cal-head">Sun</div>
-                    <div class="cal-head">Mon</div>
-                    <div class="cal-head">Tue</div>
-                    <div class="cal-head">Wed</div>
-                    <div class="cal-head">Thu</div>
-                    <div class="cal-head">Fri</div>
-                    <div class="cal-head">Sat</div>
-                </div>
-
-                <div class="cal-grid-body" id="calendarGrid">
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px; overflow: hidden;">
-                <div class="p-3 d-flex justify-content-between align-items-center" style="background-color: var(--bs-primary);">
-                    <h6 class="m-0 fw-bold text-white"><i class="fas fa-history me-2"></i>Recent Timesheets</h6>
-                </div>
-
-                <div class="card-body p-0" id="recentTimecardsContainer">
-                    <div class="p-5 text-center text-muted">
-                        <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                        <br><small>Loading timesheets...</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
+<div class="central-workspace-container">
+
+    <!-- RECENT MATRIX ENGINE -->
+    <div class="matrix-section-header">
+        <h2 class="matrix-section-title">Recent Timesheets</h2>
+        <a href="/employee/create-timesheet" class="btn-plus-square" title="Add Log">
+            <i class="fas fa-plus"></i>
+        </a>
+    </div>
+
+    <table class="timesheet-matrix-table">
+        <thead>
+            <tr>
+                <th>Timecard Status</th>
+                <th>Transferred to</th>
+                <th>Period Starting</th>
+                <th>Period Ending</th>
+                <th>Record hours</th>
+                <th>Submission Date</th>
+                <th>Update</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody id="matrixTableBody">
+            <!-- Empty state injected by JS if no records -->
+        </tbody>
+    </table>
+
+    <button class="btn-timecard-action-solid" onclick="window.location.href='#">Create Timecard</button>
+
+    <!-- CALENDAR CORE MODULE -->
+    <div class="calendar-card-wrapper" style="width: 100%; max-width: 480px; margin: 0 auto 30px auto;">
+        <div th:replace="~{fragments/spiral-calendar :: spiralCalendar}"></div>
+    </div>
+
+    <!-- OPERATIONS STRIP MOUNTED BENEATH THE CALENDAR FRAMEWORK -->
+    <div class="calendar-action-button-group">
+        <button onclick="window.location.href='/employee/create-timesheet'" class="btn-action-hub-solid">Create Timesheet</button>
+        <a href="/employee/timesheet-report" class="btn-action-hub-solid">Timesheet Report</a>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-    let currentDate = new Date(); // Start with today
-    let timesheetDataMap = {}; // Stores { "2026-02-23": 8.5 }
+    let calendarMonth = new Date().getMonth(); 
+    let calendarYear = new Date().getFullYear();
+    let calendarData = { leaves: [], holidays: [] };
 
-    // Initialize on load
-    document.addEventListener('DOMContentLoaded', fetchHubData);
+    document.addEventListener('DOMContentLoaded', initHubDataFetchPipeline);
 
-    // 1. Fetch ALL data from our new API once
-    async function fetchHubData() {
+    async function initHubDataFetchPipeline() {
         try {
             const response = await fetch('/api/weekly-timesheet/my-timesheets');
-
             if (response.ok) {
                 const timesheets = await response.json();
-
-                // A. Render the Recent Timecards panel immediately
-                renderRecentTimecards(timesheets);
-
-                // B. Process the data for the Calendar
-                timesheetDataMap = {}; // Reset map
-
-                timesheets.forEach(ts => {
-                    if (!ts.entries || ts.entries.length === 0) return;
-
-                    const startDate = new Date(ts.weekStartDate);
-                    let dailySums = [0, 0, 0, 0, 0, 0, 0]; // Sun to Sat
-
-                    // Add up the hours from every row for that week
-                    ts.entries.forEach(entry => {
-                        dailySums[0] += entry.sunHours || 0;
-                        dailySums[1] += entry.monHours || 0;
-                        dailySums[2] += entry.tueHours || 0;
-                        dailySums[3] += entry.wedHours || 0;
-                        dailySums[4] += entry.thuHours || 0;
-                        dailySums[5] += entry.friHours || 0;
-                        dailySums[6] += entry.satHours || 0;
-                    });
-
-                    // Map those sums to actual calendar dates (YYYY-MM-DD)
-                    for (let i = 0; i < 7; i++) {
-                        if (dailySums[i] > 0) {
-                            let currentLoopDate = new Date(startDate);
-                            currentLoopDate.setDate(startDate.getDate() + i);
-
-                            // Format strictly as YYYY-MM-DD
-                            let dateString = currentLoopDate.getFullYear() + '-' +
-                                             String(currentLoopDate.getMonth() + 1).padStart(2, '0') + '-' +
-                                             String(currentLoopDate.getDate()).padStart(2, '0');
-
-                            // Save the hours to our map
-                            timesheetDataMap[dateString] = dailySums[i];
-                        }
-                    }
-                });
-            } else {
-                console.error("API Error. Status:", response.status);
-                document.getElementById('recentTimecardsContainer').innerHTML = '<div class="p-4 text-center text-danger">Failed to load data.</div>';
+                renderDynamicMatrixRows(timesheets);
             }
         } catch (error) {
-            console.error("Error fetching timesheets:", error);
-            document.getElementById('recentTimecardsContainer').innerHTML = '<div class="p-4 text-center text-danger">Network Error: Failed to load data.</div>';
+            console.error("Pipeline failure traceback alert context:", error);
         } finally {
-            // C. Render the calendar regardless of success or failure!
-            renderCalendar();
+            fetchCalendarData(calendarMonth, calendarYear);
         }
     }
 
-    // 2. Render the Calendar
-    function renderCalendar() {
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    async function fetchCalendarData(month, year) {
+        try {
+            const res = await fetch('/api/leave/calendar-data?month=' + (month + 1) + '&year=' + year);
+            if (!res.ok) throw new Error('Failed');
+            calendarData = await res.json();
+        } catch (e) {
+            calendarData = { leaves: [], holidays: [] };
+        }
+        renderCalendar(month, year);
+    }
 
-        document.getElementById('monthYearDisplay').innerHTML = `<i class="fas fa-calendar-alt me-2"></i> ${monthNames[month]} ${year}`;
+    function renderCalendar(month, year) {
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const title = document.getElementById('calendarMonthTitle');
+        if (title) title.innerText = `${monthNames[month]} ${year}`;
 
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
         const totalDays = lastDay.getDate();
-        const startDayIndex = firstDay.getDay();
+        let startDayIndex = firstDay.getDay() - 1;
+        if (startDayIndex < 0) startDayIndex = 6; // Spiral calendar starts on Monday
 
-        // Reset time to midnight for accurate "past vs future" checking
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+
+        const leaveMap = {};
+        (calendarData.leaves || []).forEach(l => { leaveMap[l.date] = l; });
+        const holidayMap = {};
+        (calendarData.holidays || []).forEach(h => { holidayMap[h.date] = h; });
 
         let html = '';
 
-        // Empty cells for days before the 1st
         for (let i = 0; i < startDayIndex; i++) {
-            html += `<div class="cal-day bg-light"></div>`;
+            html += `<div class="calendar-day cal-empty"></div>`;
         }
 
-        // Days 1 to Total
         for (let day = 1; day <= totalDays; day++) {
             const currentLoopDate = new Date(year, month, day);
-            const isToday = (currentLoopDate.getTime() === today.getTime());
-            const dayClass = isToday ? 'cal-day current-day' : 'cal-day';
+            const dateStr = year + '-' + String(month+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
             const dayOfWeek = currentLoopDate.getDay();
-
-            const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-            // Default empty content
-            let dayContent = `<span class="day-num">${day}</span>`;
-
-            if (dayOfWeek === 0 || dayOfWeek === 6) {
-                // Saturday & Sunday
-                dayContent += `<div class="day-info info-off">Off</div>`;
-            } else if (currentLoopDate <= today) {
-                // Past or Today (Weekdays)
-                const loggedHours = timesheetDataMap[dateString];
-
-                if (loggedHours !== undefined && loggedHours > 0) {
-                    // Use theme color (navy) for logged hours with a subtle clock icon
-                    dayContent += `<div class="day-info info-present"><i class="fas fa-clock info-icon"></i>${loggedHours}h</div>`;
-                } else {
-                    // absent marker
-                    dayContent += `<div class="day-info info-absent">Absent</div>`;
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+            
+            let cssClass = '';
+            let tooltipText = '';
+            
+            if (dateStr === todayStr) {
+                cssClass = 'cal-today'; tooltipText = 'Today';
+            } else if (leaveMap[dateStr]) {
+                const leave = leaveMap[dateStr];
+                const st = (leave.status || '').toUpperCase();
+                if (st === 'APPROVED' || st === 'AUTO_APPROVED' || st === 'AUTO APPROVED') {
+                    cssClass = 'cal-approved'; tooltipText = (leave.type || 'Leave') + ' \u2014 Approved';
+                } else if (st === 'PENDING' || st === 'PENDING_APPROVAL') {
+                    cssClass = 'cal-pending'; tooltipText = (leave.type || 'Leave') + ' \u2014 Pending';
+                } else if (st === 'REJECTED') {
+                    cssClass = 'cal-rejected'; tooltipText = (leave.type || 'Leave') + ' \u2014 Rejected';
                 }
+            } else if (holidayMap[dateStr]) {
+                const hol = holidayMap[dateStr];
+                if ((hol.type || '').toLowerCase() === 'floater') {
+                    cssClass = 'cal-floater-holiday'; tooltipText = hol.name + ' (Floater)';
+                } else {
+                    cssClass = 'cal-fixed-holiday'; tooltipText = hol.name;
+                }
+            } else if (isWeekend) {
+                cssClass = 'cal-weekend';
             }
-            // Future weekdays just show the date number
 
+            const safeTooltip = tooltipText.replace(/'/g, "\\'");
+            const tooltipAttr = tooltipText ? ` onmouseenter="showCalTooltip(event, '${safeTooltip}')" onmouseleave="hideCalTooltip(event)"` : '';
             html += `
-                <div class="${dayClass}">
-                    ${dayContent}
+                <div class="calendar-day ${cssClass}"${tooltipAttr}>
+                    ${day}
                 </div>
             `;
         }
 
-        document.getElementById('calendarGrid').innerHTML = html;
+        const grid = document.getElementById('calendarDaysGrid');
+        if (grid) grid.innerHTML = html;
     }
 
-    // 3. Render Recent Timecards Panel
-    function renderRecentTimecards(timesheets) {
-        const container = document.getElementById('recentTimecardsContainer');
-        container.innerHTML = '';
+    window.showCalTooltip = function(e, text) {
+        const el = e.target; 
+        const tip = document.createElement('div');
+        tip.className = 'cal-tooltip'; 
+        tip.textContent = text;
+        tip.style.position = 'absolute';
+        tip.style.bottom = '100%';
+        tip.style.left = '50%';
+        tip.style.transform = 'translateX(-50%)';
+        tip.style.background = '#1e293b';
+        tip.style.color = '#fff';
+        tip.style.padding = '4px 8px';
+        tip.style.borderRadius = '4px';
+        tip.style.fontSize = '0.75rem';
+        tip.style.whiteSpace = 'nowrap';
+        tip.style.zIndex = '100';
+        el.style.position = 'relative'; 
+        el.appendChild(tip);
+    }
 
+    window.hideCalTooltip = function(e) {
+        const tip = e.target.querySelector('.cal-tooltip'); 
+        if (tip) tip.remove();
+    }
+
+    window.navigateMonth = function(dir) {
+        calendarMonth += dir;
+        if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+        if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+        fetchCalendarData(calendarMonth, calendarYear);
+    };
+
+	function renderDynamicMatrixRows(timesheets) {
+        const tbody = document.getElementById('matrixTableBody');
+        
         if (!timesheets || timesheets.length === 0) {
-            container.innerHTML = '<div class="p-4 text-center text-muted"><i class="fas fa-folder-open mb-2 fs-3 opacity-50"></i><br>No recent timesheets found.</div>';
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px; color: #64748b;">No recent timesheets found.</td></tr>';
             return;
         }
+        
+        tbody.innerHTML = ''; // Clear placeholder row to inject real data
 
-        const recentFour = timesheets.slice(0, 4);
+        timesheets.forEach(ts => {
+            const startStr = new Date(ts.weekStartDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const endStr = new Date(ts.weekEndDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const subStr = ts.submissionDate ? new Date(ts.submissionDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Pending';
 
-        recentFour.forEach(ts => {
-            const startDate = new Date(ts.weekStartDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
-            const endDate = new Date(ts.weekEndDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+            // Normalize the status string from backend to match your rules
+            const currentStatus = ts.status ? ts.status.toUpperCase() : 'PENDING';
 
-            // FIXED TYPO HERE!
-            let badgeClass = 'bg-secondary';
-            if (ts.status === 'DRAFT') badgeClass = 'bg-warning text-dark';
-            if (ts.status === 'SUBMITTED') badgeClass = 'bg-primary text-white';
-            if (ts.status === 'APPROVED') badgeClass = 'bg-success text-white';
-            if (ts.status === 'REJECTED') badgeClass = 'bg-danger text-white';
+            let cellClass = '';
+            let statusLabel = '';
 
-            const html = `
-                <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="transition: background-color 0.2s cursor: pointer;" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">
-                    <div>
-                        <h6 class="mb-1 fw-bold text-dark">${startDate} - ${endDate}</h6>
-                        <small class="text-muted"><i class="fas fa-clock me-1 text-primary"></i>Total: ${ts.totalWeekHours || 0} Hours</small>
-                    </div>
-                    <div>
-                        <span class="badge ${badgeClass} rounded-pill px-3 py-2 shadow-sm">${ts.status}</span>
-                    </div>
-                </div>
+            // Strict Status Mapping Matrix
+            if (currentStatus === 'APPROVED') {
+                cellClass = 'class="status-txt-approved"';
+                statusLabel = 'Approved';
+            } else if (currentStatus === 'REJECTED') {
+                cellClass = 'class="status-txt-rejected"';
+                statusLabel = 'Rejected';
+            } else if (currentStatus === 'DRAFT') {
+                cellClass = 'style="color: #eab308; font-weight: 500;"';
+                statusLabel = 'Draft';
+            } else {
+                // Captures 'PENDING', 'SUBMITTED', or any initial saved state as Pending
+                cellClass = 'style="color: #64748b; font-weight: 700;"'; // Clean slate-gray for Pending states
+                statusLabel = 'Pending';
+            }
+
+            let editBtn = '';
+            if (currentStatus === 'APPROVED') {
+                editBtn = `<button class="table-action-icon-btn" disabled style="opacity: 0.4; cursor: not-allowed;" title="Approved timesheets cannot be edited"><i class="fas fa-pencil-alt"></i></button>`;
+            } else {
+                editBtn = `<button class="table-action-icon-btn" title="Edit Timesheet" onclick="window.location.href='/employee/timecard-entry?start=${ts.weekStartDate}&end=${ts.weekEndDate}'"><i class="fas fa-pencil-alt"></i></button>`;
+            }
+
+            const row = `
+                <tr>
+                    <td ${cellClass}>${statusLabel}</td>
+                    <td>Project</td>
+                    <td>${startStr}</td>
+                    <td>${endStr}</td>
+                    <td>${ts.totalWeekHours || 0}</td>
+                    <td>${subStr}</td>
+                    <td>${editBtn}</td>
+                    <td><button class="table-action-icon-btn icon-folder-accent"><i class="fas fa-folder"></i></button></td>
+                </tr>
             `;
-            container.innerHTML += html;
+            tbody.innerHTML += row;
         });
     }
-
-    // 4. Navigation Controls
-    function changeMonth(step) {
-        const today = new Date();
-
-        // Calculate what the new month and year WOULD be if we let them click it
-        const targetDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + step, 1);
-
-        // Check if the target month/year is in the future
-        if (targetDate.getFullYear() > today.getFullYear() ||
-           (targetDate.getFullYear() === today.getFullYear() && targetDate.getMonth() > today.getMonth())) {
-
-            alert("Company Policy: You cannot view or draft timesheets for future months.");
-            return; // Instantly stops the code so the calendar does NOT change!
-        }
-        // If it's a past or current month, allow the change
+    function navigateMonth(step) {
         currentDate.setMonth(currentDate.getMonth() + step);
         renderCalendar();
     }
-
-    function goToToday() {
-        currentDate = new Date();
-        renderCalendar();
-    }
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,31 @@
+.page-title{
+    font-size:72px;
+    font-weight:700;
+    line-height:1.1;
+    margin-bottom:60px;
+    letter-spacing:-2px;
+}
+
+.section-title{
+    font-size:32px;
+    font-weight:600;
+    margin-bottom:24px;
+}
+
+.label{
+    font-size:16px;
+    font-weight:500;
+    color:var(--text-light);
+}
+
+.text-sm{
+    font-size:14px;
+}
+
+.text-md{
+    font-size:16px;
+}
+
+.text-lg{
+    font-size:20px;
+}

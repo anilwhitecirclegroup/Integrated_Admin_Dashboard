@@ -396,7 +396,6 @@
                                     <option value="Casual">Casual Leave (CL)</option>
                                     <option value="Sick">Sick Leave (SL)</option>
                                     <option value="Earned">Earned Leave (EL)</option>
-                                    
                                 </select>
                             </div>
                             <div class="col-md-6">
@@ -645,29 +644,44 @@
             }
 
             // --- DYNAMIC BALANCE RESTRICTION ---
-            if (leaveType && leaveType !== 'Select Type...' && leaveType !== 'WFH') {
-                const availableBalance = window.availableLeaveBalances[leaveType] || 0;
+            if (leaveType && leaveType !== 'Select Type...') {
 
-                if (diffDays > availableBalance) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Limit Exceeded',
-                        text: `You only have ${availableBalance} ${leaveType} leave(s) remaining. You cannot select ${diffDays} days.`,
-                        confirmButtonColor: '#1e3a8a'
-                    });
+            let balanceKey = leaveType;
 
-                    endInput.value = '';
-                    totalInput.value = "0";
-                    return;
-                }
+            if (leaveType === "Casual")
+                balanceKey = "CL";
+
+            else if (leaveType === "Sick")
+                balanceKey = "SL";
+
+            else if (leaveType === "Earned")
+                balanceKey = "EL";
+
+            const availableBalance =
+                window.availableLeaveBalances[balanceKey] || 0;
+
+            if (diffDays > availableBalance) {
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Insufficient Balance',
+                    text:
+                        `You requested ${diffDays} days, `
+                        + `but you only have ${availableBalance} `
+                        + `${leaveType} leave(s) remaining.`,
+                    confirmButtonColor: '#1e3a8a'
+                });
+
+                totalInput.value = "0";
+                return;
             }
+        }
 
-            totalInput.value = diffDays;
-        } else {
+        totalInput.value = diffDays;
+    } else {
             totalInput.value = "0";
         }
     }
-
     // 3. Submit Request Logic (Upgraded with SweetAlert2)
     async function submitLeaveRequest() {
         const leaveType = document.getElementById("leaveType").value;
@@ -724,21 +738,7 @@
             }
         }
 
-        // ---VALIDATION WARNING FOR INSUFFICIENT BALANCE ---
-        // We skip this check for Work From Home (WFH) since it doesn't usually pull from balance pools
-        if (leaveType !== 'WFH') {
-            const availableBalance = window.availableLeaveBalances[leaveType] || 0;
-            if (requestedDays > availableBalance) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Insufficient Balance',
-                    text: `You requested ${requestedDays} days, but you only have ${availableBalance} ${leaveType} leave(s) remaining.`,
-                    confirmButtonColor: '#1e3a8a'
-                });
-                return; // Stop the submission!
-            }
-        }
-
+        // ---VALIDATION WARNING FOR INSUFFICIENT BALANCE---
         // Beautiful Confirmation Modal
         const confirmResult = await Swal.fire({
             title: 'Submit Leave Request?',
@@ -971,31 +971,31 @@
 
             const data = await response.json();
 
-            if (data.Sick) {
-                data.Sick.total = 20;
-                data.Sick.left = Math.max(0, data.Sick.total - (data.Sick.used || 0));
+            if (data.SL) {
+                data.SL.total = 20;
+                data.SL.left = Math.max(0, data.SL.total - (data.SL.used || 0));
             }
 
             // --- NEW: STORE BALANCES GLOBALLY FOR VALIDATION ---
-            if (data.Casual) window.availableLeaveBalances.Casual = data.Casual.left;
-            if (data.Sick) window.availableLeaveBalances.Sick = data.Sick.left;
-            if (data.Earned) window.availableLeaveBalances.Earned = data.Earned.left;
+            if (data.CL) window.availableLeaveBalances.CL = data.CL.left;
+            if (data.SL) window.availableLeaveBalances.SL = data.SL.left;
+            if (data.EL) window.availableLeaveBalances.EL = data.EL.left;
 
-            const clPercent = (data.Casual.used / data.Casual.total) * 100;
-            const slPercent = (data.Sick.used / data.Sick.total) * 100;
-            const elPercent = (data.Earned.used / data.Earned.total) * 100;
+            const clPercent = (data.CL.used / data.CL.total) * 100;
+            const slPercent = (data.SL.used / data.SL.total) * 100;
+            const elPercent = (data.EL.used / data.EL.total) * 100;
 
-            document.getElementById('cl-text').textContent = `${data.Casual.left} / ${data.Casual.total} Left`;
-            document.getElementById('cl-subtext').innerHTML = `Used: ${data.Casual.used} &bull; Total: ${data.Casual.total}`;
+            document.getElementById('cl-text').textContent = `${data.CL.left} / ${data.CL.total} Left`;
+            document.getElementById('cl-subtext').innerHTML = `Used: ${data.CL.used} &bull; Total: ${data.CL.total}`;
             document.getElementById('cl-bar').style.width = `${clPercent}%`;
 
-            document.getElementById('sl-text').textContent = `${data.Sick.left} / ${data.Sick.total} Left`;
-            document.getElementById('sl-subtext').innerHTML = `Used: ${data.Sick.used} &bull; Total: ${data.Sick.total}`;
+            document.getElementById('sl-text').textContent = `${data.SL.left} / ${data.SL.total} Left`;
+            document.getElementById('sl-subtext').innerHTML = `Used: ${data.SL.used} &bull; Total: ${data.SL.total}`;
             document.getElementById('sl-bar').style.width = `${slPercent}%`;
 
-            document.getElementById('el-left').textContent = data.Earned.left;
-            document.getElementById('el-used').textContent = `Used: ${data.Earned.used}`;
-            document.getElementById('el-total').textContent = `Total Credited: ${data.Earned.total}`;
+            document.getElementById('el-left').textContent = data.EL.left;
+            document.getElementById('el-used').textContent = `Used: ${data.EL.used}`;
+            document.getElementById('el-total').textContent = `Total Credited: ${data.EL.total}`;
             document.getElementById('el-bar').style.width = `${elPercent}%`;
 
         } catch (error) {
@@ -1004,7 +1004,7 @@
     }
 
 
-    window.availableLeaveBalances = { Casual: 0, Sick: 0, Earned: 0, WFH: 365 };
+    window.availableLeaveBalances = { Casual: 0, Sick: 0, Earned: 0};
     document.addEventListener("DOMContentLoaded", function() {
         fetchRecentLeaves();
         fetchLeaveBalance();

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Tax Calculator – WhiteCircle Group</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+    <link rel="stylesheet" th:href="@{/css/base/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/variables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/typography.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/dashboard-layout.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/sidebar.css}"/>
+    
+    <style>
+        .tax-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .tax-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .tax-user-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .tax-user-icon {
+            width: 48px;
+            height: 48px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            overflow: hidden;
+        }
+        .tax-user-icon i {
+            margin-top: 10px;
+        }
+        
+        .tax-user-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .page-title-large {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 40px;
+        }
+        
+        .calc-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .calc-column {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        /* Add a vertical divider between columns */
+        .calc-column:first-child::after {
+            content: '';
+            position: absolute;
+            right: -20px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: #d1d1d1;
+        }
+        
+        .col-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        
+        .col-icon {
+            font-size: 24px;
+            color: #2b5dff;
+        }
+        
+        .col-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+        }
+        
+        /* Left Column Forms */
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .form-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #000;
+        }
+        
+        .form-select-group {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .form-select-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .form-input {
+            width: 100%;
+            height: 44px;
+            border: 1px solid #b0b0b0;
+            border-radius: 8px;
+            padding: 0 16px;
+            font-size: 14px;
+            color: #333;
+            outline: none;
+            background-color: white;
+        }
+        
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 10px;
+            border-radius: 22px; /* Pill shape for selects */
+        }
+        
+        .form-input-small {
+            width: 160px;
+            height: 38px;
+            border: 1px solid #b0b0b0;
+            border-radius: 20px;
+            padding: 0 16px;
+            font-size: 14px;
+            color: #333;
+            outline: none;
+            background-color: white;
+            text-align: right;
+        }
+        
+        .form-input-small::placeholder {
+            color: #999;
+            text-align: left;
+        }
+        
+        .calc-btn {
+            background-color: #2b5dff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 24px;
+            align-self: center;
+            box-shadow: 0 4px 10px rgba(43, 93, 255, 0.2);
+            transition: transform 0.2s;
+        }
+        .calc-btn:hover { transform: translateY(-2px); }
+        
+        /* Right Column Table */
+        .tax-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .tax-table th {
+            background-color: #e5e5e5;
+            color: #333;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 16px;
+            text-align: left;
+        }
+        .tax-table th:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+        .tax-table th:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+        
+        .tax-table td {
+            padding: 24px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            border-bottom: 1px solid #ebebeb;
+        }
+        
+        .tax-table .red-text { color: #e53935; }
+        
+        .tax-table tr.total-row td {
+            font-weight: 700;
+            font-size: 15px;
+            color: #000;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        @media (max-width: 900px) {
+            .calc-container { grid-template-columns: 1fr; }
+            .calc-column:first-child::after { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-layout">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+    <main class="main-content">
+        
+        <div class="tax-header">
+            <img th:src="@{/images/white-logo.png}" alt="Logo" class="tax-logo">
+            
+            <a href="/payroll/my-profile" class="tax-user-profile">
+                <div class="tax-user-icon"><i class="fa-solid fa-user"></i></div>
+                <div class="tax-user-name" th:text="${user != null ? user.fullName : 'Rohit Sharma'}">Rohit Sharma</div>
+            </a>
+        </div>
+        
+        <h1 class="page-title-large">Income Tax Calculator</h1>
+
+        <div class="calc-container">
+            
+            <!-- Left Column -->
+            <div class="calc-column">
+                <div class="col-header">
+                    <i class="fa-solid fa-calculator col-icon"></i>
+                    <div class="col-title">Simulate Your Tax</div>
+                </div>
+                
+                <div class="form-select-group">
+                    <div class="form-select-wrap">
+                        <label class="form-label">Tax Year</label>
+                        <select class="form-input form-select">
+                            <option>2026</option>
+                            <option>2025</option>
+                        </select>
+                    </div>
+                    <div class="form-select-wrap">
+                        <label class="form-label">Age Group</label>
+                        <select class="form-input form-select">
+                            <option>Below 60</option>
+                            <option>60 to 80</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-select-wrap" style="margin-bottom: 32px;">
+                    <label class="form-label">Gross Annual Salary</label>
+                    <input type="text" class="form-input" style="border-radius: 22px;" placeholder="Enter Gross Salary" />
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">Exemptions<br><span style="font-size: 13px; font-weight: 400; color: #555;">(Section 10 & 17)</span></label>
+                    <input type="text" class="form-input-small" placeholder="Enter" />
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">Professional Tax</label>
+                    <input type="text" class="form-input-small" placeholder="Enter" />
+                </div>
+                
+                <div class="form-row" style="margin-bottom: 8px;">
+                    <label class="form-label" style="margin-bottom: 0;">Standard Deduction:</label>
+                </div>
+                <div class="form-row" style="margin-top: 0; padding-left: 16px;">
+                    <label class="form-label" style="font-weight: 500;">Old Regime</label>
+                    <input type="text" class="form-input-small" placeholder="Enter" />
+                </div>
+                <div class="form-row" style="padding-left: 16px;">
+                    <label class="form-label" style="font-weight: 500;">New Regime</label>
+                    <input type="text" class="form-input-small" placeholder="Enter" />
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">Income From House Property</label>
+                    <input type="text" class="form-input-small" placeholder="Enter" />
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">Income From Other Sources</label>
+                    <input type="text" class="form-input-small" placeholder="Enter" />
+                </div>
+                
+                <button class="calc-btn" onclick="alert('Tax calculation simulation coming soon.')">Calculate Result</button>
+            </div>
+            
+            <!-- Right Column -->
+            <div class="calc-column">
+                <div class="col-header">
+                    <i class="fa-solid fa-scale-unbalanced col-icon" style="background-color: #eef2ff; padding: 12px; border-radius: 8px; font-size: 20px;"></i>
+                    <div class="col-title">Tax Comparison</div>
+                </div>
+                
+                <table class="tax-table">
+                    <thead>
+                        <tr>
+                            <th>Metrics</th>
+                            <th>Old Regime</th>
+                            <th>New Regime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Gross Salary</td>
+                            <td>RS. 1,40,000</td>
+                            <td>RS. 1,85,000</td>
+                        </tr>
+                        <tr>
+                            <td>Standard Deduction</td>
+                            <td class="red-text">RS. -40,000</td>
+                            <td class="red-text">RS. -40,000</td>
+                        </tr>
+                        <tr>
+                            <td>Taxable Income</td>
+                            <td>RS. 11,40,000</td>
+                            <td>RS. 12,40,000</td>
+                        </tr>
+                        <tr>
+                            <td>Income Tax Payable</td>
+                            <td>RS. 11,00,00</td>
+                            <td>RS. 11,00,00</td>
+                        </tr>
+                        <tr>
+                            <td>Surcharge</td>
+                            <td>RS. 1000</td>
+                            <td>RS. 1000</td>
+                        </tr>
+                        <tr>
+                            <td>Health & Education</td>
+                            <td>RS. 10,000</td>
+                            <td>RS. 10,000</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>TOTAL TAX</td>
+                            <td>RS. 10,00,000</td>
+                            <td>RS. 10,00,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </main>
+</div>
+<script th:src="@{/js/common/sidebar.js}"></script>
+</body>
+</html>

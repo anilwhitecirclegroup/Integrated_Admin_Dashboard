@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP & Timesheet Portal Login - WhiteCircle</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CORE STABILIZATION --- */
+        html, body {
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+        }
+
+        .split-screen-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* --- LEFT SIDE: IMAGE PANEL (60%) --- */
+        .image-side-panel {
+            width: 60%;
+            height: 100%;
+            background: url('/images/wcg-building.png') no-repeat center center;
+            background-size: cover;
+            position: relative;
+        }
+
+        /* --- RIGHT SIDE: FORM PANEL (40%) --- */
+        .form-side-panel {
+            width: 40%;
+            height: 100%;
+            background-color: #dddddd;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 60px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* --- BACK ACCELERATOR BUTTON --- */
+        .back-circular-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            width: 48px;
+            height: 48px;
+            background-color: #0066ff;
+            color: #ffffff !important;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            text-decoration: none;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 4px 10px rgba(0, 102, 255, 0.25);
+            border: none;
+            outline: none;
+        }
+        .back-circular-btn:hover {
+            background-color: #0052cc;
+            transform: scale(1.04);
+        }
+
+        /* --- INTERMEDIARY MODULE ALIGNMENT --- */
+        .login-card-content {
+            width: 100%;
+            max-width: 360px;
+            margin-top: auto;
+            margin-bottom: auto;
+            text-align: center;
+        }
+
+        .brand-square-logo {
+            width: 82px;
+            height: 82px;
+            background-color: #000000;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .brand-square-logo img {
+            width: 72%;
+            height: 72%;
+            object-fit: contain;
+        }
+
+        .welcome-headline {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 35px;
+            letter-spacing: -0.5px;
+        }
+
+        /* --- FORM FIELDS COMPONENT BLOCK --- */
+        .custom-input-container {
+            text-align: left;
+            margin-bottom: 22px;
+            width: 100%;
+        }
+
+        .custom-input-container label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #000000;
+            margin-bottom: 6px;
+        }
+
+        .input-icon-group {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-icon-group i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777777;
+            font-size: 0.95rem;
+        }
+
+        .login-field-control {
+            width: 100%;
+            height: 42px;
+            background-color: #cccccc;
+            border: 1px solid #777777;
+            border-radius: 10px;
+            padding: 8px 12px 8px 38px;
+            font-size: 0.9rem;
+            color: #000000;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .login-field-control::placeholder {
+            color: #777777;
+        }
+        .login-field-control:focus {
+            border-color: #0066ff;
+            background-color: #c5c5c5;
+        }
+
+        .forgot-password-link {
+            display: block;
+            text-align: left;
+            color: #ff3333;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: -12px;
+            margin-bottom: 32px;
+        }
+        .forgot-password-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-execution-solid {
+            width: 100%;
+            height: 46px;
+            background-color: #2563eb;
+            color: #ffffff !important;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border-radius: 10px;
+            border: none;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+        .btn-execution-solid:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        /* --- BASELINE FOOTER ARCHITECTURE --- */
+        .social-anchors-footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 36px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .social-link-item {
+            color: #000000;
+            font-size: 1.7rem;
+            text-decoration: none;
+            transition: transform 0.2s, color 0.2s;
+        }
+        .social-link-item:hover {
+            color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        /* --- RESPONSIVE ADAPTATION INTERNALS --- */
+        @media(max-width: 991px) {
+            .image-side-panel {
+                display: none !important;
+            }
+            .form-side-panel {
+                width: 100%;
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="split-screen-container">
+
+    <div class="image-side-panel"></div>
+
+    <div class="form-side-panel">
+        
+        <a href="/employee/dashboard" class="back-circular-btn" title="Back to Main Dashboard">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <div class="login-card-content">
+            
+            <div class="brand-square-logo">
+                <img src="/images/wcg-logo.jpg" alt="W">
+            </div>
+
+            <h2 class="welcome-headline">Welcome Back!</h2>
+
+            <form id="erpAuthPipelineForm" action="/erp-timesheet" method="POST">
+                
+                <div th:if="${authError}" class="alert alert-danger p-2 text-center mb-3" style="border-radius: 8px; font-size: 0.85rem; font-weight: 600;">
+                    <i class="fas fa-exclamation-triangle me-2"></i> <span th:text="${authError}">Error Message</span>
+                </div>
+
+                <div class="custom-input-container">
+                    <label>Username or email address</label>
+                    <div class="input-icon-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" 
+                               id="authIdentifier" 
+                               name="username"
+                               class="login-field-control" 
+                               placeholder="enter your username"
+                               required autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="custom-input-container">
+                    <label>Password</label>
+                    <div class="input-icon-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" 
+                               id="authSecretKey" 
+                               name="password"
+                               class="login-field-control" 
+                               placeholder="enter your password" 
+                               required autocomplete="current-password">
+                    </div>
+                </div>
+
+                <a href="#" class="forgot-password-link" onclick="triggerPasswordRecoveryAlert(event)">Forgot Password?</a>
+
+                <button type="submit" class="btn-execution-solid">
+                    Continue to ERP & Timesheet
+                </button>
+
+            </form>
+        </div>
+
+        <div class="social-anchors-footer">
+            <a href="#" class="social-link-item"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link-item"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="social-link-item"><i class="far fa-envelope"></i></a>
+            <a href="#" class="social-link-item"><i class="fab fa-whatsapp"></i></a>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function triggerPasswordRecoveryAlert(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Reset Password',
+            text: 'Password recovery module channel directions have been sent to system administrators.',
+            icon: 'info',
+            confirmButtonColor: '#2563eb'
+        });
+    }
+</script>
+</body>
+</html>

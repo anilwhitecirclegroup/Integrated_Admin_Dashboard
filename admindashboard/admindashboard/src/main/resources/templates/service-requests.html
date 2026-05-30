@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Software Service Requests - WhiteCircle</title>
+    <title>Service Request Form - WhiteCircle</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -11,572 +11,504 @@
 
     <style>
         :root {
-            --navy: #1e3a8a;
-            --navy-hover: #172a6b;
-            --bg-color: #f1f5f9;
-            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --primary-blue: #2563eb;
+            --hover-blue: #1d4ed8;
+            --border-color: #d1d5db;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: #0f172a;
-            padding-top: 120px;
-        }
-
-        .master-nav {
-            position: fixed; top: 0; left: 0; right: 0; height: 80px;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 45px; z-index: 1000; border-bottom: 2px solid var(--navy);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-        }
-
-        .btn-navy { background-color: var(--navy); color: white; border: none; transition: all 0.3s ease; }
-        .btn-navy:hover { background-color: var(--navy-hover); color: white; transform: translateY(-1px); }
-        .text-navy { color: var(--navy) !important; }
-
-        .btn-back {
-            background: #1e3a8a; color: white;
-            padding: 10px 24px; border-radius: 10px; font-size: 0.95rem; text-decoration: none;
-            border: none; transition: all 0.2s;
-            box-shadow: 0 2px 5px rgba(30, 58, 138, 0.2);
-        }
-        .btn-back:hover { background: #172554; color: white; transform: translateY(-1px); }
-
-        .main-container { max-width: 1400px; width: 96%; margin: 0 auto; padding: 0 20px; }
-
-        /* QUICK ACTION CARDS  */
-        .catalog-card {
-            background: white; border-radius: 12px; padding: 25px;
-            border: 1px solid #e2e8f0; border-top: 4px solid var(--navy);
-            transition: all 0.3s ease; cursor: pointer; height: 100%;
-        }
-        .catalog-card:hover {
-            transform: translateY(-5px); box-shadow: 0 10px 20px rgba(30, 58, 138, 0.08);
-            border-color: #cbd5e1;
-        }
-        .catalog-icon {
-            width: 50px; height: 50px; border-radius: 10px; background: #eff6ff;
-            color: var(--navy); display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; margin-bottom: 15px;
-        }
-
-        .ticket-container {
-            background: white; border-radius: 12px; border: 1px solid #e2e8f0;
-            overflow: hidden; box-shadow: var(--card-shadow);
-        }
-        .ticket-header {
-            background: var(--navy); padding: 18px 25px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .ticket-header h6 { color: white !important; margin: 0; font-weight: 700; }
-
-        .table-custom { margin-bottom: 0; }
-        .table-custom thead { background: #f8fafc; color: #64748b; font-size: 0.8rem; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
-        .table-custom th, .table-custom td { padding: 16px 25px; vertical-align: middle; }
-
-        .status-badge { padding: 6px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-        .bg-pending { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
-        .bg-progress { background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; }
-        .bg-resolved { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-
-        .ticket-id { font-family: monospace; font-weight: 700; color: #64748b; background: #f1f5f9; padding: 4px 8px; border-radius: 4px; }
-
-        /* RICH MODAL STYLING */
-        .modal-content {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-        }
-        .modal-header-custom {
-            background: var(--navy);
-            padding: 20px 30px;
-            color: white;
-            border-bottom: none;
-        }
-        .modal-title-custom {
-            font-weight: 700;
-            font-size: 1.25rem;
+            background-color: #ffffff;
+            color: #000000;
             margin: 0;
+            padding: 0;
+        }
+		.form-grid-container .col-sm-3, 
+		.form-content-area .col-sm-3 {
+		    text-align: right !important;
+		    display: flex;
+		    justify-content: flex-end;
+		    align-items: center;
+		}
+
+		.form-label-custom, 
+		.custom-form-label {
+		    text-shadow: none;
+		    white-space: nowrap !important; 
+		    word-break: keep-all !important;
+		    margin-bottom: 0px !important;
+		    justify-content: flex-end;
+		}
+		.textarea-block-group label,
+		.row.mt-2 label.form-label-custom {
+		    text-align: left !important;
+		    justify-content: flex-start !important;
+		    white-space: nowrap !important;
+		}
+
+
+        /* ---------- HERO SECTION ---------- */
+
+        .hero-banner-container {
+            position: relative;
+            width: 100%;
+            height: 310px;
+            background: linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.05)),
+                        url('/images/report-issue.jpeg');
+            background-size: cover;
+            background-position: center;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
         }
-        .btn-close-white {
-            filter: invert(1) grayscale(100%) brightness(200%);
-            opacity: 0.8;
+
+        .hero-banner-container h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #000000;
+            z-index: 2;
+            margin: 0;
         }
-        .btn-close-white:hover { opacity: 1; }
 
-        .modal-body-custom { padding: 30px; background: #ffffff; }
-
-        .custom-form-label {
-            font-weight: 600;
-            color: #475569;
+        .btn-back-dashboard {
+            position: absolute;
+            top: 25px;
+            right: 40px;
+            background-color: var(--primary-blue);
+            color: #ffffff !important;
             font-size: 0.85rem;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .custom-form-control {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 12px 15px;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-        }
-        .custom-form-control:focus {
-            background-color: #ffffff;
-            border-color: var(--navy);
-            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
-            outline: none;
-        }
-
-        .modal-footer-custom {
-            padding: 20px 30px;
-            background: #f8fafc;
-            border-top: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-        .btn-cancel {
-            background: white;
-            color: #64748b;
-            border: 1px solid #cbd5e1;
-            padding: 10px 24px;
-            border-radius: 10px;
             font-weight: 600;
-            transition: all 0.2s;
-        }
-        .btn-cancel:hover { background: #f1f5f9; color: #0f172a; }
-
-        /* ELITE IT-PORTAL SWEETALERT STYLING  */
-        div:where(.swal2-container) { font-family: 'Inter', sans-serif !important; }
-        .swal2-popup {
-            border-radius: 24px !important;
-            padding: 2.5em !important;
-            border: 1px solid rgba(30, 58, 138, 0.2) !important;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2) !important;
-            backdrop-filter: blur(8px);
-        }
-        .swal2-title { color: #1e3a8a !important; font-weight: 800 !important; font-size: 1.6rem !important; }
-        .swal2-html-container { color: #475569 !important; font-weight: 500 !important; line-height: 1.6; }
-        .swal2-confirm {
-            border-radius: 12px !important; padding: 14px 35px !important;
-            font-weight: 700 !important; letter-spacing: 0.5px;
-            background-color: #1e3a8a !important;
-            box-shadow: 0 8px 15px rgba(30, 58, 138, 0.25) !important;
-        }
-        .swal2-cancel {
-            border-radius: 12px !important; padding: 14px 35px !important;
-            font-weight: 600 !important; background-color: #f1f5f9 !important; color: #64748b !important;
+            padding: 10px 22px;
+            border-radius: 6px;
+            text-decoration: none;
+            z-index: 10;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
         }
 
-        /* Animated Success Icon color to match your Navy theme */
-        .swal2-icon.swal2-success [class^=swal2-success-line] { background-color: #10b981 !important; }
-        .swal2-icon.swal2-success .swal2-success-ring { border-color: rgba(16, 185, 129, 0.3) !important; }
+        .btn-back-dashboard:hover {
+            background-color: var(--hover-blue);
+        }
 
+		/* ---------- FORM WRAPPER ---------- */
+
+		.form-content-area {
+		     max-width: 1100px;
+		    margin: 40px auto 80px auto;
+		    padding: 0 6px;
+		}
+
+		.instruction-text {
+		    font-size: 1.05rem;
+		    font-weight: 700;
+		    color: #000000;
+		    margin-bottom: 34px;
+		}
+
+		/* ---------- FORM GRID ---------- */
+
+		.main-form-grid {
+		    row-gap: 0;
+		}
+
+		.form-section-column {
+		    padding-left: 4px;
+		    padding-right: 4px;
+		}
+
+		.form-row-custom {
+		    display: flex;
+		    align-items: center;
+		    margin-bottom: 16px;
+		}
+
+		.form-label-wrapper {
+		    width: 26%;
+		    display: flex;
+		    justify-content: flex-end;
+		    align-items: center;
+		    padding-right: 8px;
+		}
+
+		.form-input-wrapper {
+		    width: 74%;
+		}
+
+		.form-label-custom {
+		    font-size: 0.95rem;
+		    font-weight: 600;
+		    color: #6b7280;
+		    margin: 10px;
+		    white-space: nowrap;
+		}
+
+		.form-control-custom {
+		    width: 100%;
+		    height: 38px;
+		    border: 1px solid var(--border-color);
+		    border-radius: 4px;
+		    padding: 6px 12px;
+		    font-size: 0.9rem;
+		    background-color: #ffffff;
+		    color: #000000;
+		    box-sizing: border-box;
+		}
+
+		.form-control-custom:focus {
+		    border-color: var(--primary-blue);
+		    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+		    outline: none;
+		}
+
+		select.form-control-custom {
+		    color: #6b7280;
+		}
+
+		/* ---------- DESCRIPTION ---------- */
+
+		.description-section {
+		    margin-top: 6px;
+		}
+		.description-section textarea{
+		    margin-left: 30px;
+		}
+
+		.description-section .form-label-custom {
+		    justify-content: flex-end;
+			padding-right: 8px;
+		    height: auto;
+		}
+
+		.description-section textarea.form-control-custom {
+		    min-height: 115px;
+		    height: 115px;
+		    resize: none;
+		    padding-top: 10px;
+		}
+		
+		/* ---------- UPLOAD ---------- */
+
+		.upload-dropzone {
+		    border: 1.5px dashed #9ca3af;
+		    border-radius: 6px;
+		    background-color: #ffffff;
+		    padding: 24px;
+		    text-align: center;
+		    color: #4b5563;
+		    font-size: 1rem;
+		    font-weight: 500;
+		    margin-top: 24px;
+		    cursor: pointer;
+		    transition: background-color 0.2s;
+		}
+
+		.upload-dropzone:hover {
+		    background-color: #f9fafb;
+		}
+
+		.upload-dropzone span {
+		    color: var(--primary-blue);
+		    font-weight: 600;
+		}
+
+		/* ---------- BUTTONS ---------- */
+
+		.form-actions-row {
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    gap: 34px;
+		    margin-top: 42px;
+		    flex-wrap: wrap;
+		}
+
+		.btn-submit-custom {
+		    background-color: var(--primary-blue);
+		    color: #ffffff;
+		    font-weight: 600;
+		    font-size: 0.9rem;
+		    padding: 10px 30px;
+		    border-radius: 6px;
+		    border: none;
+		    transition: background-color 0.2s;
+		}
+
+		.btn-submit-custom:hover {
+		    background-color: var(--hover-blue);
+		}
+
+		.btn-outline-custom {
+		    background-color: #ffffff;
+		    color: var(--primary-blue);
+		    font-weight: 600;
+		    font-size: 0.9rem;
+		    padding: 10px 42px;
+		    border-radius: 6px;
+		    border: 1.5px solid var(--primary-blue);
+		    transition: background-color 0.2s;
+		}
+
+		.btn-outline-custom:hover {
+		    background-color: #f3f4f6;
+		}
+
+		.hidden-tracker-feed {
+		    display: none !important;
+		}
+
+		/* ---------- RESPONSIVE ---------- */
+
+		@media (max-width: 768px) {
+
+		    .form-section-column {
+		        padding-left: 10px;
+		        padding-right: 10px;
+		    }
+
+		    .form-row-custom {
+		        flex-direction: column;
+		        align-items: flex-start;
+		    }
+
+		    .form-label-wrapper {
+		        width: 100%;
+		        justify-content: flex-start;
+		        padding-right: 0;
+		        margin-bottom: 6px;
+		    }
+
+		    .form-input-wrapper {
+		        width: 100%;
+		    }
+
+		    .form-actions-row {
+		        gap: 16px;
+		    }
+		}
     </style>
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/dark-mode.css" rel="stylesheet">
-    <script src="/js/theme-engine.js"></script>
 </head>
+
 <body>
 
-<header class="master-nav">
-    <div class="d-flex align-items-center">
-        <i class="fas fa-laptop-code text-dark" style="font-size: 2.5rem;"></i>
-
-        <div style="border-left: 2px solid #cbd5e1; padding-left: 17px; margin-left: 15px;">
-            <span class="fw-bold text-dark d-block" style="font-size: 1.5rem; letter-spacing: 0.5px; line-height: 1.2;">SOFTWARE & ACCESS SERVICES</span>
-            <small class="text-muted fw-bold" style="letter-spacing: 0.3px;">IT Helpdesk Portal</small>
-        </div>
-    </div>
-    <a href="/tickets" class="btn-back">
-        <i class="fas fa-arrow-left me-2"></i>Back to Helpdesk
+<div class="hero-banner-container">
+    <a th:href="@{/ticket-dashboard(dept=${currentDept})}" class="btn-back-dashboard">
+        Back to Dashboard
     </a>
-</header>
 
-<div class="main-container">
-
-    <div class="mb-4">
-        <h4 class="fw-bold text-navy">Service Catalog</h4>
-        <p class="text-muted">Select a category below to raise a new software or access request.</p>
-    </div>
-
-    <div class="row g-4 mb-5">
-
-        <div class="col-md-4">
-            <div class="catalog-card" onclick="openRequestModal('Software License')">
-                <div class="catalog-icon"><i class="fas fa-laptop-code"></i></div>
-                <h5 class="fw-bold text-dark mb-2">Software Licenses</h5>
-                <p class="text-muted small mb-0">Request licenses for tools like IntelliJ, Adobe Creative Cloud, or specialized IDEs.</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="catalog-card" style="border-top-color: #10b981;" onclick="openRequestModal('System Access')">
-                <div class="catalog-icon" style="color: #10b981; background: #ecfdf5;"><i class="fas fa-key"></i></div>
-                <h5 class="fw-bold text-dark mb-2">System Access</h5>
-                <p class="text-muted small mb-0">Request access to internal portals, AWS environments, databases, or Jira boards.</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="catalog-card" style="border-top-color: #f59e0b;" onclick="openRequestModal('Permission Modification')">
-                <div class="catalog-icon" style="color: #f59e0b; background: #fffbeb;"><i class="fas fa-user-shield"></i></div>
-                <h5 class="fw-bold text-dark mb-2">Modify Permissions</h5>
-                <p class="text-muted small mb-0">Request admin rights, VPN access changes, or role elevations for your current profile.</p>
-            </div>
-        </div>
-
-    </div>
-
-    <h5 class="fw-bold text-navy mb-3"><i class="fas fa-ticket-alt me-2"></i>My Active Service Requests</h5>
-
-    <div class="ticket-container mb-5">
-        <div class="ticket-header">
-            <h6>Recent Software Tickets</h6>
-            <div class="d-flex gap-2">
-                <select id="statusFilter" class="form-select form-select-sm border-0 rounded-pill px-3 shadow-sm" style="width: 150px;" onchange="filterMyRequests()">
-                    <option value="All">All Statuses</option>
-                    <option value="Open">Open</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Closed">Closed</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table table-custom table-hover">
-                <thead>
-                <tr>
-                    <th>Ticket ID</th>
-                    <th>Request Type</th>
-                    <th>Subject</th>
-                    <th>Submitted On</th>
-                    <th>Status</th>
-                    <th class="text-end">Action</th>
-                </tr>
-                </thead>
-                <tbody id="employeeTicketTableBody">
-                <tr th:each="req : ${myRequests}" th:if="${req.type == 'SOFTWARE' or req.type == 'ACCESS' or req.type == 'PERMISSION'}" th:data-status="${req.status}" class="ticket-row">
-                    <td><span class="ticket-id" th:text="${req.ticketId}">SR-0000</span></td>
-                    <td><span class="fw-bold text-dark" th:text="${req.category}">Category</span></td>
-                    <td class="text-muted" th:text="${req.detailItem + (req.durationOrLevel != 'N/A' ? ' (' + req.durationOrLevel + ')' : '')}">
-                        Subject Details
-                    </td>
-                    <td class="text-muted fw-semibold" th:text="${#temporals.format(req.submissionDate, 'dd MMM yyyy')}">Date</td>
-
-                    <td>
-                            <span class="status-badge"
-                                  th:classappend="${req.status == 'Open' ? 'bg-pending' : (req.status == 'Closed' or req.status == 'Resolved' ? 'bg-resolved' : 'bg-progress')}"
-                                  th:text="${req.status}">Status</span>
-                    </td>
-                    <td class="text-end">
-                        <button class="btn btn-sm btn-light border text-navy fw-bold rounded-pill px-3"
-                                th:onclick="'viewMyRequestDetails(' + ${req.id} + ')'">View</button>
-                    </td>
-                </tr>
-                <tr id="emptyFilterRow" style="display: none;">
-                    <td colspan="6" class="text-center py-5 text-muted">
-                        <i class="fas fa-search fa-2x mb-3 opacity-50"></i>
-                        <p class="mb-0 fw-bold">No requests match this filter.</p>
-                    </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(myRequests.?[type == 'SOFTWARE' or type == 'ACCESS' or type == 'PERMISSION'])}">
-                    <td colspan="6" class="text-center py-5 text-muted">
-                        <i class="fas fa-inbox fa-2x mb-3 opacity-50"></i>
-                        <p class="mb-0 fw-bold">No active requests found.</p>
-                        <small>Your submitted software and access requests will appear here.</small>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <h1>Service Request Form</h1>
 </div>
 
-<div class="modal fade" id="softwareLicenseModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header-custom d-flex justify-content-between align-items-center">
-                <h5 class="modal-title-custom" id="modalDynamicTitle">
-                    <i class="fas fa-laptop-code"></i> Request Software License
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body-custom">
-                <form id="softwareRequestForm">
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <label class="custom-form-label">Select Software / Tool <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="" selected disabled>Choose from catalog...</option>
-                                <option value="IntelliJ IDEA Ultimate">JetBrains IntelliJ IDEA Ultimate</option>
-                                <option value="Adobe Creative Cloud">Adobe Creative Cloud (All Apps)</option>
-                                <option value="Microsoft Visio">Microsoft Visio Professional</option>
-                                <option value="Docker Desktop">Docker Desktop Pro</option>
-                                <option value="Other">Other (Specify in justification)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="custom-form-label">Required Duration <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="Permanent">Permanent / Annual Renewal</option>
-                                <option value="6 Months">Project Based (6 Months)</option>
-                                <option value="3 Months">Project Based (3 Months)</option>
-                                <option value="Trial">Trial / Evaluation (30 Days)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="custom-form-label">Operating System <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="" selected disabled>Select OS...</option>
-                                <option value="Windows 11">Windows 11</option>
-                                <option value="Windows 10">Windows 10</option>
-                                <option value="macOS">macOS</option>
-                                <option value="Linux">Linux (Ubuntu/CentOS)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="custom-form-label">Priority Level <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="Low">Low </option>
-                                <option value="Medium" selected>Medium</option>
-                                <option value="High">High (Urgent)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="custom-form-label">Date Submitted</label>
-                            <input type="text" class="form-control custom-form-control text-muted fw-bold" id="submissionDate" readonly style="background-color: #e2e8f0; cursor: not-allowed;">
-                        </div>
-                        <div class="col-12">
-                            <label class="custom-form-label">Business Justification & Cost Center <span class="text-danger">*</span></label>
-                            <textarea class="form-control custom-form-control" rows="3" placeholder="Please explain why this software is required for your role, and provide your project code if applicable..." required></textarea>
-                            <small class="text-muted mt-2 d-block"><i class="fas fa-info-circle me-1"></i> IT will verify this request with your reporting manager for cost approval.</small>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer-custom">
-                <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-navy" style="padding: 10px 24px; border-radius: 10px; font-weight: 600;" onclick="submitSoftwareRequest()">
-                    <i class="fas fa-paper-plane me-2"></i>Submit Request
-                </button>
-            </div>
-        </div>
+<div class="form-content-area">
+
+    <div class="instruction-text">
+        Fill the required details to request a service
     </div>
-</div>
 
-<div class="modal fade" id="systemAccessModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header-custom d-flex justify-content-between align-items-center">
-                <h5 class="modal-title-custom" id="systemModalTitle">
-                    <i class="fas fa-key"></i> Request System Access
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body-custom">
-                <form id="systemAccessForm">
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <label class="custom-form-label">Target System / Portal <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="" selected disabled>Select system...</option>
-                                <option value="AWS Console">AWS Environment Console</option>
-                                <option value="Jira / Confluence">Jira / Confluence Workspace</option>
-                                <option value="Staging Database">Staging Database</option>
-                                <option value="Production Database">Production Database</option>
-                                <option value="Corporate VPN">Corporate VPN</option>
-                                <option value="Other">Other (Specify below)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="custom-form-label">Requested Access Level <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="" selected disabled>Select access level...</option>
-                                <option value="Read-Only">Viewer / Read-Only</option>
-                                <option value="Contributor">Contributor / Editor</option>
-                                <option value="Admin">Administrator / Superuser</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="custom-form-label">Environment <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="Not Applicable">Not Applicable</option>
-                                <option value="Development">Development (DEV)</option>
-                                <option value="Staging">Staging (UAT)</option>
-                                <option value="Production">Production (PROD)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="custom-form-label">Required Duration <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="Permanent" selected>Permanent (Role Based)</option>
-                                <option value="Temporary - 1 Month">Temporary (1 Month)</option>
-                                <option value="Temporary - 1 Week">Temporary (1 Week)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="custom-form-label">Date Submitted</label>
-                            <input type="text" class="form-control custom-form-control text-muted fw-bold" id="sysSubmissionDate" readonly style="background-color: #e2e8f0; cursor: not-allowed;">
-                        </div>
-                        <div class="col-12">
-                            <label class="custom-form-label">Business Justification <span class="text-danger">*</span></label>
-                            <textarea class="form-control custom-form-control" rows="3" placeholder="Please detail why you need this access, linking any relevant Jira tickets or project codes..." required></textarea>
-                            <small class="text-muted mt-2 d-block"><i class="fas fa-shield-alt me-1 text-success"></i> Production and Admin access requests require secondary security approval from the IT Director.</small>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer-custom">
-                <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-navy" style="padding: 10px 24px; border-radius: 10px; font-weight: 600;" onclick="submitSystemAccessRequest()">
-                    <i class="fas fa-paper-plane me-2"></i>Submit Request
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+    <form id="serviceFormMain">
 
-<div class="modal fade" id="modifyPermissionModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header-custom d-flex justify-content-between align-items-center">
-                <h5 class="modal-title-custom" id="permissionModalTitle">
-                    <i class="fas fa-user-shield"></i> Modify Permissions
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body-custom">
-                <form id="permissionRequestForm">
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <label class="custom-form-label">Application / System <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="" selected disabled>Select application...</option>
-                                <option value="GitHub Enterprise">GitHub Enterprise</option>
-                                <option value="Jira">Jira Workspace</option>
-                                <option value="AWS IAM">AWS IAM Roles</option>
-                                <option value="Internal HRMS">Internal HRMS Portal</option>
-                                <option value="Other">Other (Specify below)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="custom-form-label">Action Required <span class="text-danger">*</span></label>
-                            <select class="form-select custom-form-control" required>
-                                <option value="" selected disabled>Select action...</option>
-                                <option value="Elevate">Elevate Access (Upgrade)</option>
-                                <option value="Revoke">Revoke Access (Downgrade/Remove)</option>
-                                <option value="Transfer">Transfer Role (Department Change)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="custom-form-label">Current Role <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control custom-form-control" placeholder="e.g., Developer, Viewer" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="custom-form-label">Requested Role <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control custom-form-control" placeholder="e.g., Admin, Maintainer" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="custom-form-label">Date Submitted</label>
-                            <input type="text" class="form-control custom-form-control text-muted fw-bold" id="permSubmissionDate" readonly style="background-color: #e2e8f0; cursor: not-allowed;">
-                        </div>
-                        <div class="col-12">
-                            <label class="custom-form-label">Business Justification <span class="text-danger">*</span></label>
-                            <textarea class="form-control custom-form-control" rows="3" placeholder="Please explain why your current permissions are insufficient and why this change is needed..." required></textarea>
-                            <small class="text-muted mt-2 d-block"><i class="fas fa-exclamation-triangle me-1 text-warning"></i> Elevating privileges to Admin/Superuser will trigger an automatic audit review.</small>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer-custom">
-                <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-navy" style="padding: 10px 24px; border-radius: 10px; font-weight: 600;" onclick="submitPermissionRequest()">
-                    <i class="fas fa-paper-plane me-2"></i>Submit Request
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+        <input type="hidden" id="serviceDeptType" th:value="${currentDept}">
 
-<div class="modal fade" id="viewMyRequestModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content" style="border: none; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
-            <div class="modal-header" style="background-color: #1e3a8a; color: white; border-bottom: none; padding: 20px 30px;">
-                <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
-                    <i class="fas fa-file-invoice"></i> Ticket Details: <span id="myModalTicketId" class="badge bg-light text-dark ms-2"></span>
-                </h5>
-                <button type="button" class="btn-close" style="filter: invert(1);" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="container-fluid p-0">
+
+            <div class="row gx-3 gy-1 main-form-grid">
+
+				<div class="col-md-6 form-section-column">
+
+				    <div class="form-row-custom">
+				        <div class="form-label-wrapper">
+				            <label class="form-label-custom">Category*</label>
+				        </div>
+
+				        <div class="form-input-wrapper">
+				            <select class="form-select form-control-custom" id="solCategory" required>
+				                <option value="" selected disabled hidden>Select</option>
+
+				                <option th:each="cat : ${categoriesList}"
+				                        th:value="${cat}"
+				                        th:text="${cat}">
+				                </option>
+				            </select>
+				        </div>
+				    </div>
+
+				    <div class="form-row-custom">
+				        <div class="form-label-wrapper">
+				            <label class="form-label-custom">Severity Level*</label>
+				        </div>
+
+				        <div class="form-input-wrapper">
+				            <select class="form-select form-control-custom" id="solSeverity" required>
+				                <option value="" selected disabled hidden>Select</option>
+				                <option value="Low">Low</option>
+				                <option value="Medium">Medium</option>
+				                <option value="High">High</option>
+				            </select>
+				        </div>
+				    </div>
+
+				    <div class="form-row-custom">
+				        <div class="form-label-wrapper">
+				            <label class="form-label-custom">Subject</label>
+				        </div>
+
+				        <div class="form-input-wrapper">
+				            <input type="text"
+				                   class="form-control form-control-custom"
+				                   id="solSubject"
+				                   required>
+				        </div>
+				    </div>
+
+				    <div class="form-row-custom">
+				        <div class="form-label-wrapper">
+				            <label class="form-label-custom">Mobile No.*</label>
+				        </div>
+
+				        <div class="form-input-wrapper">
+				            <input type="text"
+				                   class="form-control form-control-custom"
+				                   id="solMobile"
+				                   required
+				                   pattern="[0-9]{10}"
+				                   maxlength="10">
+				        </div>
+				    </div>
+
+				    <div class="form-row-custom">
+				        <div class="form-label-wrapper">
+				            <label class="form-label-custom">Email ID*</label>
+				        </div>
+
+				        <div class="form-input-wrapper">
+				            <input type="email"
+				                   class="form-control form-control-custom"
+				                   id="solEmail"
+				                   required>
+				        </div>
+				    </div>
+
+				</div>
+
+				<div class="col-md-6 form-section-column">
+
+				    <div class="form-row-custom">
+				        <div class="form-label-wrapper">
+				            <label class="form-label-custom">Item</label>
+				        </div>
+
+				        <div class="form-input-wrapper">
+				            <input type="text"
+				                   class="form-control form-control-custom"
+				                   id="solItemField"
+				                   placeholder="Select category first">
+				        </div>
+				    </div>
+
+				    <div class="form-row-custom">
+				        <div class="form-label-wrapper">
+				            <label class="form-label-custom">Subcategory</label>
+				        </div>
+
+				        <div class="form-input-wrapper">
+				            <input type="text"
+				                   class="form-control form-control-custom"
+				                   id="solSubcategoryField">
+				        </div>
+				    </div>
+
+				    <div class="form-row-custom">
+				        <div class="form-label-wrapper">
+				            <label class="form-label-custom">Location*</label>
+				        </div>
+
+				        <div class="form-input-wrapper">
+				            <select class="form-select form-control-custom"
+				                    id="solLocation"
+				                    required>
+
+				                <option value="" selected disabled hidden>Select</option>
+				                <option value="Noida">Noida</option>
+				                <option value="Pune">Pune</option>
+				                <option value="Remote">Remote</option>
+				            </select>
+				        </div>
+				    </div>
+
+				</div>
+                    
+
             </div>
-            <div class="modal-body" style="padding: 30px;">
-                <div class="row g-4">
-                    <div class="col-md-6 border-end">
-                        <p class="text-muted small mb-1 fw-bold text-uppercase">Submitted By</p>
-                        <h6 class="fw-bold text-dark mb-0" id="myModalEmpName"></h6>
-                        <p class="small text-muted mb-2" id="myModalEmpId"></p>
-                        <div class="d-flex align-items-center gap-2 text-muted small">
-                            <i class="fas fa-building"></i> <span id="myModalDept"></span>
-                        </div>
+
+           
+
+            <div class="description-section">
+
+                <div class="row align-items-start">
+
+                    <div class="col-md-1 pe-0">
+                        <label class="form-label-custom pt-1">
+                            Description
+                        </label>
                     </div>
 
-                    <div class="col-md-6">
-                        <div class="row g-3">
-                            <div class="col-6">
-                                <p class="text-muted small mb-1 fw-bold text-uppercase">Submitted On</p>
-                                <h6 class="fw-bold mb-0" id="myModalDate"></h6>
-                            </div>
-                            <div class="col-6">
-                                <p class="text-muted small mb-1 fw-bold text-uppercase">Priority</p>
-                                <span class="badge bg-secondary px-3 py-2" id="myModalPriority"></span>
-                            </div>
-                            <div class="col-6">
-                                <p class="text-muted small mb-1 fw-bold text-uppercase">Category</p>
-                                <h6 class="fw-bold text-navy mb-0" id="myModalCategory"></h6>
-                            </div>
-                            <div class="col-6">
-                                <p class="text-muted small mb-1 fw-bold text-uppercase">Current Status</p>
-                                <span class="badge px-3 py-2" id="myModalStatus"></span>
-                            </div>
-                        </div>
+                    <div class="col-md-11 ps-0">
+                        <textarea class="form-control form-control-custom"
+                                  id="srvDescription"
+                                  rows="5"
+                                  required></textarea>
                     </div>
 
-                    <div class="col-12"><hr class="text-muted opacity-25"></div>
-
-                    <div class="col-12">
-                        <p class="text-muted small mb-1 fw-bold text-uppercase">Requested Item / Subject</p>
-                        <h5 class="fw-bold text-dark mb-1" id="myModalDetails"></h5>
-                        <p class="text-muted small mb-0" id="myModalDuration"></p>
-                    </div>
-
-                    <div class="col-12 mt-3">
-                        <div class="p-4 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #1e3a8a;">
-                            <p class="text-navy small mb-2 fw-bold"><i class="fas fa-comment-dots me-2"></i>MY JUSTIFICATION</p>
-                            <p class="mb-0 text-dark" id="myModalJustification" style="white-space: pre-wrap; line-height: 1.6;"></p>
-                        </div>
-                    </div>
                 </div>
+
             </div>
-            <div class="modal-footer" style="background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 15px 30px;">
-                <button type="button" class="btn btn-light border fw-bold text-muted" data-bs-dismiss="modal">Close</button>
+
+            <div class="upload-dropzone"
+                 id="dropzoneContainer"
+                 onclick="document.getElementById('fileInputHidden').click()">
+
+                <span id="dropzoneText">Browse files</span> or drag files here
+
+                <input type="file"
+                       id="fileInputHidden"
+                       style="display: none;"
+                       onchange="displaySelectedFile(this)">
             </div>
+
+            <div class="form-actions-row">
+
+                <button type="button"
+                        class="btn-submit-custom"
+                        onclick="executeServiceFormSubmission()">
+
+                    Add Request
+                </button>
+
+                <button type="reset"
+                        class="btn-outline-custom"
+                        onclick="resetServiceFormContent()">
+
+                    Reset
+                </button>
+
+                <button type="button"
+                        class="btn-outline-custom"
+                        th:onclick="|window.location.href='/ticket-dashboard?dept=' + document.getElementById('serviceDeptType').value|">
+
+                    Cancel
+                </button>
+
+            </div>
+
         </div>
-    </div>
+
+    </form>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script th:inline="javascript">
-
-    // FIXED: Safe Thymeleaf extraction utilizing the EmployeeProfile vault
     const sessionUser = {
         id: /*[[${user != null ? user.username : 'EMP-0000'}]]*/ 'EMP-0000',
         name: /*[[${user != null ? user.fullName : 'Unknown User'}]]*/ 'Unknown User',
@@ -584,225 +516,128 @@
         manager: /*[[${user?.employeeProfile?.reportingManager ?: 'Admin'}]]*/ 'Admin'
     };
 
-    function openRequestModal(type) {
-        const today = new Date();
-        const options = { day: '2-digit', month: 'short', year: 'numeric' };
-        const formattedDate = today.toLocaleDateString('en-GB', options);
+	function resetServiceFormContent() {
+	    // 1. This line targets the hidden input and wipes the selected file completely
+	    if (document.getElementById('fileInputHidden')) {
+	        document.getElementById('fileInputHidden').value = "";
+	    }
+	    
+	    // 2. This line changes the text on your dropzone layout back to the standard placeholder text
+	    if (document.getElementById('dropzoneText')) {
+	        document.getElementById('dropzoneText').innerHTML = "Browse files";
+	    }
+	}
 
-        if (type === 'Software License') {
-            document.getElementById('submissionDate').value = formattedDate;
-            setupValidation('softwareRequestForm');
-            let softwareModal = new bootstrap.Modal(document.getElementById('softwareLicenseModal'));
-            softwareModal.show();
-        } else if (type === 'System Access') {
-            document.getElementById('sysSubmissionDate').value = formattedDate;
-            setupValidation('systemAccessForm');
-            let systemModal = new bootstrap.Modal(document.getElementById('systemAccessModal'));
-            systemModal.show();
-        } else if (type === 'Permission Modification') {
-            document.getElementById('permSubmissionDate').value = formattedDate;
-            setupValidation('permissionRequestForm');
-            let permissionModal = new bootstrap.Modal(document.getElementById('modifyPermissionModal'));
-            permissionModal.show();
-        }
-    }
+    async function executeServiceFormSubmission() {
+        const typeContext = document.getElementById('serviceDeptType').value;
+        
+        // Corrected JavaScript to grab the values from the actual element IDs present in your HTML
+        const category = document.getElementById('solCategory').value;
+        const subcategory = document.getElementById('solSubcategoryField').value.trim();
+        const locationVal = document.getElementById('solLocation').value;
+        const mobile = document.getElementById('solMobile').value.trim();
+        const email = document.getElementById('solEmail').value.trim();
+        const subject = document.getElementById('solSubject').value.trim();
+        const description = document.getElementById('srvDescription').value.trim();
+        const priority = document.getElementById('solSeverity').value || 'Medium';
+        
+        const itemVal = document.getElementById('solItemField').value.trim();
 
-    function setupValidation(formId) {
-        const form = document.getElementById(formId);
-        const submitBtn = form.closest('.modal-content').querySelector('.btn-navy');
-        submitBtn.disabled = true;
-        submitBtn.style.opacity = "0.5";
-
-        const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-        inputs.forEach(input => {
-            input.addEventListener('input', () => {
-                const allFilled = Array.from(inputs).every(i => i.value.trim() !== "");
-                submitBtn.disabled = !allFilled;
-                submitBtn.style.opacity = allFilled ? "1" : "0.5";
+        if (!category || !locationVal || !mobile || !email || !subject || !description) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Required Fields Missing',
+                text: 'Please populate all mandatory items marked with (*)',
+                confirmButtonColor: '#2563eb'
             });
-        });
-    }
+            return;
+        }
 
-    // FIXED: Upgraded submission engine to correctly parse Software/Access fields
-    async function handleSubmission(formId, categoryName) {
-        const form = document.getElementById(formId);
-        const selects = form.querySelectorAll('select');
-        const inputs = form.querySelectorAll('input[type="text"]:not([readonly])');
-        const textarea = form.querySelector('textarea');
+        const mobileRegex = /^[6-9]\d{9}$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-        // Extract priority safely
-        let priorityValue = "Medium";
-        const priorityDropdown = Array.from(selects).find(sel =>
-            Array.from(sel.options).some(opt => opt.value === 'Medium')
-        );
-        if (priorityDropdown) priorityValue = priorityDropdown.value;
+        if (!mobileRegex.test(mobile)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Mobile Number',
+                text: 'Please enter a valid 10-digit mobile number.',
+                confirmButtonColor: '#2563eb'
+            });
+            return;
+        }
 
-        // Grab values from the specific forms
-        let detailValue = selects[0] ? selects[0].value : "N/A";
-        let durationLevel = selects[1] ? selects[1].value : "N/A";
+        if (!emailRegex.test(email)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Email ID',
+                text: 'Please enter a valid email address.',
+                confirmButtonColor: '#2563eb'
+            });
+            return;
+        }
 
-        const formData = {
+        // Configured payload strictly as standard application/json object maps matching your stable controller parameters
+        const payload = {
             employeeId: sessionUser.id,
             employeeName: sessionUser.name,
             department: sessionUser.dept,
             managerName: sessionUser.manager,
-            type: "SOFTWARE",
-            category: categoryName,
-            detailItem: detailValue,
-            durationOrLevel: durationLevel,
-            assetTag: "N/A",
-            location: "N/A",
-            priority: priorityValue,
-            justification: textarea ? textarea.value : "N/A",
-            status: "Open"
+            type: typeContext,
+            category: category,
+            detailItem: subject,
+            durationOrLevel: itemVal || "N/A", 
+            operatingSystem: subcategory || "N/A",
+            priority: priority,
+            justification: description,
+            location: locationVal,
+            status: "Open",
+            notificationEmailPrimary: /*[[${@environment.getProperty('app.notification.email.primary')}]]*/ 'primary_fallback@example.com',
+            notificationEmailSecondary: /*[[${@environment.getProperty('app.notification.email.secondary')}]]*/ 'secondary_fallback@example.com'
         };
 
-        const confirmResult = await Swal.fire({
-            title: `Submit Service Request?`,
-            html: `You are requesting <b>${categoryName}</b> for <b>${formData.detailItem}</b>.<br><br>Priority: <b>${priorityValue}</b>`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Confirm & Submit',
-            cancelButtonText: 'Edit Request',
-            reverseButtons: true
-        });
-
-        if (!confirmResult.isConfirmed) return;
-
         Swal.fire({
-            title: 'Processing Request...',
-            text: 'Allocating ticket and notifying IT Department...',
+            title: 'Processing Submission...',
+            text: 'Saving your service request inside database records...',
             allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
+            didOpen: () => { Swal.showLoading(); }
         });
-
-        const startTime = Date.now();
 
         try {
             const response = await fetch('/api/requests/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload)
             });
-
-            const elapsedTime = Date.now() - startTime;
-            const minimumDisplayTime = 1500;
-            if (elapsedTime < minimumDisplayTime) {
-                await new Promise(resolve => setTimeout(resolve, minimumDisplayTime - elapsedTime));
-            }
 
             if (response.ok) {
                 await Swal.fire({
                     icon: 'success',
-                    title: 'Request Logged!',
-                    html: `Your <b>${categoryName}</b> request has been successfully queued. IT will review your justification shortly.`,
-                    confirmButtonText: 'Understood',
-                    timer: 4000,
-                    timerProgressBar: true
+                    title: 'Ticket Saved!',
+                    text: 'Your service ticket request has been logged successfully.',
+                    confirmButtonColor: '#2563eb'
                 });
-                location.reload();
+                window.location.href = '/ticket-dashboard?dept=' + typeContext;
             } else {
-                throw new Error("Server Error");
+                throw new Error("Server Response Error");
             }
         } catch (error) {
             Swal.fire({
                 icon: 'error',
                 title: 'Submission Failed',
-                text: 'The Portal could not connect to the database. Please check your connection.',
-                confirmButtonColor: '#1e3a8a'
+                text: 'Could not communicate with server database adapter pipelines.',
+                confirmButtonColor: '#2563eb'
             });
         }
     }
 
-    // Connect buttons to the handler safely
-    function submitSoftwareRequest() { handleSubmission('softwareRequestForm', 'Software License'); }
-    function submitSystemAccessRequest() { handleSubmission('systemAccessForm', 'System Access'); }
-    function submitPermissionRequest() { handleSubmission('permissionRequestForm', 'Permission Modification'); }
-
-    async function viewMyRequestDetails(id) {
-        try {
-            const response = await fetch('/api/requests/' + id);
-
-            if (response.ok) {
-                const data = await response.json();
-
-                document.getElementById('myModalTicketId').textContent = data.ticketId;
-                document.getElementById('myModalEmpName').textContent = data.employeeName;
-                document.getElementById('myModalEmpId').textContent = data.employeeId;
-                document.getElementById('myModalDept').textContent = data.department || 'Department N/A';
-
-                document.getElementById('myModalCategory').textContent = data.category;
-                document.getElementById('myModalDetails').textContent = data.detailItem;
-
-                let subText = data.durationOrLevel !== 'N/A' ? data.durationOrLevel : '';
-                document.getElementById('myModalDuration').textContent = subText;
-
-                document.getElementById('myModalDate').textContent = data.submissionDate;
-                document.getElementById('myModalJustification').textContent = data.justification;
-
-                const pBadge = document.getElementById('myModalPriority');
-                pBadge.textContent = data.priority;
-                pBadge.className = 'badge px-3 py-2 ' +
-                    (data.priority === 'High' ? 'bg-danger' : (data.priority === 'Medium' ? 'bg-warning text-dark' : 'bg-info text-dark'));
-
-                const statusBadge = document.getElementById('myModalStatus');
-                statusBadge.textContent = data.status;
-                statusBadge.className = 'badge px-3 py-2 ';
-
-                // UPDATED: Modal Status Colors
-                if (data.status === 'Open') {
-                    statusBadge.style.backgroundColor = '#fef3c7';
-                    statusBadge.style.color = '#b45309';
-                    statusBadge.style.border = '1px solid #fde68a';
-                } else if (data.status === 'Closed' || data.status === 'Resolved') {
-                    statusBadge.style.backgroundColor = '#dcfce7';
-                    statusBadge.style.color = '#166534';
-                    statusBadge.style.border = '1px solid #bbf7d0';
-                } else if (data.status === 'In Progress') {
-                    statusBadge.style.backgroundColor = '#e0e7ff';
-                    statusBadge.style.color = '#4338ca';
-                    statusBadge.style.border = '1px solid #c7d2fe';
-                } else {
-                    statusBadge.style.backgroundColor = '#f1f5f9';
-                    statusBadge.style.color = '#64748b';
-                }
-
-                const detailsModal = new bootstrap.Modal(document.getElementById('viewMyRequestModal'));
-                detailsModal.show();
-            } else {
-                alert("Could not locate ticket details in the database.");
-            }
-        } catch (error) {
-            console.error("Error fetching ticket details:", error);
-            alert("Network connection error.");
-        }
-    }
-
-    function filterMyRequests() {
-        const filterValue = document.getElementById('statusFilter').value;
-        const rows = document.querySelectorAll('.ticket-row');
-        let visibleCount = 0;
-
-        rows.forEach(row => {
-            const rowStatus = row.getAttribute('data-status');
-
-            // UPDATED: Cleaned up the filter logic
-            if (filterValue === 'All' || rowStatus === filterValue) {
-                row.style.display = '';
-                visibleCount++;
-            } else {
-                row.style.display = 'none';
-            }
-        });
-
-        const emptyRow = document.getElementById('emptyFilterRow');
-        if (emptyRow) {
-            emptyRow.style.display = (visibleCount === 0 && rows.length > 0) ? '' : 'none';
-        }
-    }
-
+	function displaySelectedFile(input) {
+	    const textWrapper = document.getElementById('dropzoneText');
+	    if (input.files && input.files.length > 0) {
+	        const file = input.files[0];
+	        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+	        textWrapper.innerHTML = `<i class="fas fa-file-alt me-2" style="color: #2563eb;"></i> <strong>${file.name}</strong> (${fileSizeMB} MB) <span class="ms-3 text-secondary" style="font-size: 0.85rem; text-decoration: underline;">Change file</span>`;
+	    }
+	}
 </script>
 </body>
 </html>

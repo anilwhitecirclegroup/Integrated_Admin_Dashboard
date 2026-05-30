@@ -253,9 +253,9 @@
         </div>
     </div>
     <div class="d-flex gap-3">
-        <a href="/apply-leave" class="btn-apply text-decoration-none"><i class="fas fa-calendar-plus me-2"></i>Apply for Leave</a>
-        <a th:href="@{/my-whitecircle}" class="btn-back-home ms-3">
-            <i class="fas fa-arrow-left me-2"></i> Back to My WhiteCircle
+        <a href="/leave-management" class="btn-apply text-decoration-none"><i class="fas fa-calendar-plus me-2"></i>Apply for Leave</a>
+        <a th:href="@{/default-redirect}" class="btn-back-home ms-3">
+            <i class="fas fa-arrow-left me-2"></i> Back to Home
         </a>
     </div>
 </header>
@@ -280,7 +280,9 @@
                 <div class="mt-auto">
                     <div class="d-flex justify-content-between mb-1 small fw-bold">
                         <span class="text-muted" style="font-size: 0.75rem;">Used: <span id="cl-used">0</span></span>
-                        <span class="text-dark" style="font-size: 0.75rem;">Total: 12</span>
+                        <span class="text-dark" style="font-size: 0.75rem;">
+                            Total: <span id="cl-total">12</span>
+                        </span>
                     </div>
                     <div class="progress" style="height: 6px; background-color: #e2e8f0;">
                         <div class="progress-bar bg-primary" id="cl-bar" style="width: 0%; transition: 1s;"></div>
@@ -301,7 +303,9 @@
                 <div class="mt-auto">
                     <div class="d-flex justify-content-between mb-1 small fw-bold">
                         <span class="text-muted" style="font-size: 0.75rem;">Used: <span id="sl-used">0</span></span>
-                        <span class="text-dark" style="font-size: 0.75rem;">Total: 20</span>
+                        <span class="text-dark" style="font-size: 0.75rem;">
+                            Total: <span id="sl-total">20</span>
+                        </span>
                     </div>
                     <div class="progress" style="height: 6px; background-color: #e2e8f0;">
                         <div class="progress-bar bg-success" id="sl-bar" style="width: 0%; transition: 1s;"></div>
@@ -322,7 +326,7 @@
                 <div class="mt-auto">
                     <div class="d-flex justify-content-between mb-1 small fw-bold">
                         <span class="text-muted" style="font-size: 0.75rem;">Used: <span id="el-used">0</span></span>
-                        <span class="text-dark" style="font-size: 0.75rem;">Credited: <span id="el-total">0</span></span>
+                        <span class="text-dark" style="font-size: 0.75rem;">Total Credited: <span id="el-credited">18</span></span>
                     </div>
                     <div class="progress" style="height: 6px; background-color: #e2e8f0;">
                         <div class="progress-bar bg-warning" id="el-bar" style="width: 0%; transition: 1s;"></div>
@@ -421,42 +425,42 @@
 
     //  FETCH AND POPULATE BALANCE CARDS
     async function fetchLeaveBalance() {
-        try {
-            const response = await fetch('/api/leave/balance');
-            if (!response.ok) throw new Error("Failed to fetch balance");
-            const data = await response.json();
+    try {
+        const response = await fetch('/api/leave/balance');
 
-            // Override Sick Leave Total to 20
-            if (data.Sick) {
-                data.Sick.total = 20;
-				data.Sick.left = Math.max(0, data.Sick.total - (data.Sick.used || 0));
-            }
-
-            // Calculations
-            const clPercent = (data.Casual.used / data.Casual.total) * 100;
-            const slPercent = (data.Sick.used / data.Sick.total) * 100;
-            const elPercent = (data.Earned.used / data.Earned.total) * 100;
-
-            // DOM Updates - Casual
-            document.getElementById('cl-big').textContent = data.Casual.left;
-            document.getElementById('cl-used').textContent = data.Casual.used;
-            document.getElementById('cl-bar').style.width = `${clPercent}%`;
-
-            // DOM Updates - Sick
-            document.getElementById('sl-big').textContent = data.Sick.left;
-            document.getElementById('sl-used').textContent = data.Sick.used;
-            document.getElementById('sl-bar').style.width = `${slPercent}%`;
-
-            // DOM Updates - Earned
-            document.getElementById('el-big').textContent = data.Earned.left;
-            document.getElementById('el-used').textContent = data.Earned.used;
-            document.getElementById('el-total').textContent = data.Earned.total;
-            document.getElementById('el-bar').style.width = `${elPercent}%`;
-
-        } catch (error) {
-            console.error("Error fetching balance:", error);
+        if (!response.ok) {
+            throw new Error("Failed to fetch balance");
         }
+
+        const data = await response.json();
+        console.log("BALANCE API RESPONSE =", data);
+
+        console.log("Leave Balance API:", data);
+
+        // Safe defaults
+        const cl = data.CL || {};
+        const sl = data.SL || {};
+        const el = data.EL || {};
+
+        // Casual Leave
+        document.getElementById("cl-big").innerText = cl.left || 0;
+        document.getElementById("cl-used").innerText = cl.used || 0;
+        document.getElementById("cl-total").innerText = cl.total || 0;
+
+        // Sick Leave
+        document.getElementById("sl-big").innerText = sl.left || 0;
+        document.getElementById("sl-used").innerText = sl.used || 0;
+        document.getElementById("sl-total").innerText = sl.total || 0;
+
+        // Earned Leave
+        document.getElementById("el-big").innerText = el.left || 0;
+        document.getElementById("el-used").innerText = el.used || 0;
+        document.getElementById("el-credited").innerText = el.total || 0;
+
+    } catch (error) {
+        console.error("Error fetching balance:", error);
     }
+}
 
     //  FETCH AND POPULATE HISTORY TABLE
     async function fetchLeaveHistory() {

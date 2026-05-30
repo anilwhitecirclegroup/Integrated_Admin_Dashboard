@@ -140,7 +140,7 @@
             text-underline-offset: 4px; /* Drops the underline down slightly so it looks modern */
         }
 
-        /*  DYNAMIC CALENDAR STYLES  */
+        /* DYNAMIC CALENDAR STYLES  */
         .dash-calendar-card {
             background: #ffffff;
             border-radius: 10px;
@@ -188,7 +188,7 @@
             margin-bottom: 10px;
         }
 
-        /*  CALENDAR LAYOUT FIX  */
+        /* CALENDAR LAYOUT FIX  */
         .cal-navigation-wrapper {
             padding-top: 2px; /* Reduced slightly to prevent bottom cut-off */
             margin-bottom: 10px;
@@ -441,7 +441,7 @@
             width: 100%; /* Expand to full width on hover */
         }
 
-        /*  Special Navy Header (For APPS & SELF SERVICE)  */
+        /* Special Navy Header (For APPS & SELF SERVICE)  */
         .navy-header {
             background-color: var(--bs-primary); /* Navy Blue Background */
             color: white !important; /* Main Text White */
@@ -483,7 +483,7 @@
             transform: translateY(-2px); /* Lifts it up smoothly */
         }
 
-        /*  MODERN DROPDOWN CARD  */
+        /* MODERN DROPDOWN CARD  */
         .search-dropdown-card {
             position: absolute;
             top: 100%;
@@ -498,7 +498,7 @@
             z-index: 1050;
         }
 
-        /*  RESULT ITEM LAYOUT  */
+        /* RESULT ITEM LAYOUT  */
         .search-result-item {
             display: flex;
             align-items: center;
@@ -526,7 +526,7 @@
             font-size: 1.1rem;
         }
 
-        /*  FESTIVE BIRTHDAY WIDGET STYLES */
+        /* FESTIVE BIRTHDAY WIDGET STYLES */
         .birthday-card-active {
             background: linear-gradient(135deg, #ffffff 0%, #fdf4ff 100%);
             border: 1px solid #f5d0fe !important;
@@ -687,7 +687,7 @@
             #employeeDirModal .d-flex.flex-md-row { margin-top: -25px !important; margin-bottom: 8px !important; }
             #modalEmpAvatar { width: 55px !important; height: 55px !important; font-size: 1.3rem !important; border: 2px solid #fff !important; }
             #modalEmpName { font-size: 0.95rem !important; margin-bottom: 0 !important; }
-            #modalEmpDesignation { font-size: 0.7rem !important; opacity: 0.8; }
+            #modalEmpDesignation { font-size: 0.7rem !opacity: 0.8; }
             #modalEmpLocation { font-size: 0.6rem !important; padding: 2px 8px !important; }
             #employeeDirModal .row.g-4 { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
             #employeeDirModal .col-md-6 h6 { grid-column: span 2 !important; margin-top: 5px !important; margin-bottom: 3px !important; font-size: 0.6rem !important; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -831,9 +831,9 @@
                             </a>
                         </div>
                         <div class="col-md-6">
-                            <a href="/apply-leave" class="app-btn">
+                            <a href="/leave-management" class="app-btn">
                                 <i class="fas fa-calendar-minus text-primary me-2 fs-5"></i>
-                                <span class="app-text">Apply For Leave</span>
+                                <span class="app-text">Leave Management System (LMS)</span>
                             </a>
                         </div>
                         <div class="col-md-6">
@@ -882,14 +882,14 @@
                                 <span class="app-text">My WhiteCircle</span>
                             </a>
                         </div>
+						<div class="col-md-6">
+						    <a onclick="window.location.href='/erp/authenticate'" class="app-btn" style="cursor: pointer;">
+						        <i class="fas fa-business-time text-primary me-2 fs-5"></i>
+						        <span class="app-text">ERP and Time Sheet</span>
+						    </a>
+						</div>
                         <div class="col-md-6">
-                            <a href="/employee/erp-timesheet" class="app-btn">
-                                <i class="fas fa-business-time text-primary me-2 fs-5"></i>
-                                <span class="app-text">ERP and Time Sheet</span>
-                            </a>
-                        </div>
-                        <div class="col-md-6">
-                            <a href="/tickets" class="app-btn">
+                            <a href="/tickets/authenticate" class="app-btn">
                                 <i class="fas fa-ticket-alt text-primary me-2 fs-5"></i>
                                 <span class="app-text">Log Tickets</span>
                             </a>
@@ -903,7 +903,7 @@
                         <div class="col-md-6">
                             <a href="/developer/board" class="app-btn">
                                 <i class="fas fa-tasks text-primary me-2 fs-5"></i>
-                                <span class="app-text">My Assigned Tasks</span>
+                                <span class="app-text">My Learnings</span>
                             </a>
                         </div>
                         <div class="col-md-6">
@@ -938,32 +938,7 @@
     <div class="row g-3" style="flex: 1; min-height: 0;">
 
         <div class="col-lg-4 h-100">
-            <div class="dash-calendar-card">
-                <div class="cal-header-navy">
-                    <span class="fw-bold"><i class="fas fa-calendar-alt me-2"></i> YEARLY CALENDAR</span>
-                    <a href="/holiday-list" class="text-white text-decoration-none small holiday-link fw-bold opacity-75">Holiday List </a>
-                </div>
-
-                <div class="cal-body">
-                    <div class="cal-navigation-wrapper px-2">
-                        <button id="prevMonthBtn" class="btn btn-sm border-0 text-primary fs-5" style="background: transparent; box-shadow: none;"><i class="fas fa-chevron-left"></i></button>
-                        <h5 class="cal-month-title fw-bold mb-0" id="dynamicMonthYear" style="color: #1e3a8a;">Loading...</h5>
-                        <button id="nextMonthBtn" class="btn btn-sm border-0 text-primary fs-5" style="background: transparent; box-shadow: none;"><i class="fas fa-chevron-right"></i></button>
-                    </div>
-
-                    <div class="cal-weekdays">
-                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-                    </div>
-
-                    <div class="cal-days-grid" id="dynamicDaysGrid"></div>
-
-                    <div class="cal-legend mt-4">
-                        <span class="legend-item"><span class="legend-dot dot-today"></span> Today</span>
-                        <span class="legend-item"><span class="legend-dot dot-event"></span> Holiday</span>
-                        <span class="legend-item"><span class="legend-dot dot-major"></span> Major Fest</span>
-                    </div>
-                </div>
-            </div>
+            <div th:replace="~{fragments/spiral-calendar :: spiralCalendar}"></div>
         </div>
 
         <div class="col-lg-4 h-100">
@@ -974,7 +949,7 @@
                         <span class="fw-bold text-dark" style="font-size: 0.9rem; letter-spacing: 0.5px;">
                             <i class="fas fa-ticket-alt text-primary me-2"></i> TICKET STATUS
                         </span>
-                        <a href="/tickets" class="text-primary text-decoration-none" style="font-size: 0.8rem; font-weight: 700;">View All</a>
+                        <a th:href="@{/tickets/authenticate}" class="text-primary text-decoration-none" style="font-size: 0.8rem; font-weight: 700;">View All</a>
                     </div>
 
                     <div class="widget-body flex-grow-1 d-flex flex-column" th:classappend="${#lists.isEmpty(recentTickets)} ? 'justify-content-center' : 'justify-content-start'" style="overflow-y: auto;">
@@ -1149,114 +1124,102 @@
 
     document.addEventListener("DOMContentLoaded", function() {
 
-    // 1. Define your events/festivals here (Format: "YYYY-MM-DD")
-    const calendarEvents = {
-        "2026-02-14": "Company Townhall",
-        // Removed the Feb 28th event so it acts as a normal "Today"
-        "2026-03-08": "Holi Festival",
-        "2026-08-15": "Independence Day"
-    };
+    let calendarMonth = new Date().getMonth();
+    let calendarYear = new Date().getFullYear();
+    let calendarData = { leaves: [], holidays: [] };
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-    // DYNAMIC EXPLORABLE CALENDAR LOGIC
-    let currentDisplayDate = new Date();
-
-    // Updated Holiday Data with Type Mapping
-    const holidayData = {
-        "2026-01-26": { name: "Republic Day", type: "standard" },
-        "2026-03-02": { name: "Holi Celebrations", type: "major" },
-        "2026-03-03": { name: "Holi Celebrations", type: "major" },
-        "2026-03-04": { name: "Holi Celebrations", type: "major" },
-        "2026-04-03": { name: "Good Friday", type: "standard" },
-        "2026-05-01": { name: "Labour / Maharashtra Day", type: "standard" },
-        "2026-08-15": { name: "Independence Day", type: "standard" },
-        "2026-09-14": { name: "Ganesh Chaturthi", type: "standard" },
-        "2026-10-02": { name: "Gandhi Jayanti", type: "standard" },
-        "2026-10-19": { name: "Dussehra", type: "standard" },
-        "2026-11-06": { name: "Diwali Holidays", type: "major" },
-        "2026-11-07": { name: "Diwali Holidays", type: "major" },
-        "2026-11-08": { name: "Diwali Holidays", type: "major" },
-        "2026-11-09": { name: "Diwali Holidays", type: "major" },
-        "2026-12-25": { name: "Christmas Day", type: "standard" }
-    };
-
-    function renderDashboardCalendar(dateToRender = new Date()) {
-        const today = new Date();
-        // Now dateToRender will never be undefined!
-        const month = dateToRender.getMonth();
-        const year = dateToRender.getFullYear();
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-        // Update Month/Year Header
-        document.getElementById('dynamicMonthYear').textContent = `${monthNames[month]} ${year}`;
-
-        const grid = document.getElementById('dynamicDaysGrid');
-        grid.innerHTML = '';
-
-        const firstDayOfMonth = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-        // 1. Empty cells for alignment
-        for (let i = 0; i < firstDayOfMonth; i++) {
-            grid.innerHTML += `<div class="cal-day-cell text-transparent pointer-events-none"></div>`;
+    async function fetchCalendarData(month, year) {
+        try {
+            const res = await fetch('/api/leave/calendar-data?month=' + (month + 1) + '&year=' + year);
+            if (!res.ok) throw new Error('Failed');
+            calendarData = await res.json();
+        } catch (e) {
+            calendarData = { leaves: [], holidays: [] };
         }
-
-        // 2. Render Days
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            let isToday = (day === today.getDate() && month === today.getMonth() && year === today.getFullYear());
-            let holidayInfo = holidayData[dateStr];
-
-            let numberClasses = 'day-number';
-            let tooltip = '';
-
-            if (isToday) {
-                numberClasses += ' day-today';
-                tooltip = holidayInfo ? `title="Today: ${holidayInfo.name}"` : `title="Today"`;
-            } else if (holidayInfo) {
-                // Apply Purple for Standard and Amber for Major
-                numberClasses += (holidayInfo.type === 'major') ? ' day-major-event' : ' day-event';
-                tooltip = `title="${holidayInfo.name}"`;
-            }
-            grid.innerHTML += `
-                <div class="cal-day-cell">
-                    <span class="${numberClasses}" ${tooltip} data-bs-toggle="tooltip">${day}</span>
-                </div>
-            `;
-        }
-
-        // Update the Legend Colors Dynamically to match your new scheme
-        const legendDots = document.querySelectorAll('.legend-dot');
-        if (legendDots.length >= 3) {
-            legendDots[1].style.backgroundColor = "#7e22ce"; // Purple for Holiday
-            legendDots[2].style.backgroundColor = "#f59e0b"; // Amber for Major
-        }
-
-        // Re-initialize Bootstrap Tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        tooltipTriggerList.map(function (el) {
-            // Dispose existing tooltip if it exists to prevent ghosting
-            let existing = bootstrap.Tooltip.getInstance(el);
-            if(existing) existing.dispose();
-            return new bootstrap.Tooltip(el);
-        });
+        renderCalendar(month, year);
     }
 
+    function renderCalendar(month, year) {
+        const grid = document.getElementById('calendarDaysGrid');
+        const title = document.getElementById('calendarMonthTitle');
+        if(!grid || !title) return;
+        
+        title.textContent = monthNames[month] + ' ' + year;
 
-    // Navigation Button Listeners
-    document.getElementById('prevMonthBtn').addEventListener('click', function(e) {
-        e.preventDefault();
-        currentDisplayDate.setMonth(currentDisplayDate.getMonth() - 1);
-        renderDashboardCalendar(currentDisplayDate);
-    });
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const totalDays = lastDay.getDate();
+        let startDay = firstDay.getDay() - 1;
+        if (startDay < 0) startDay = 6;
 
-    document.getElementById('nextMonthBtn').addEventListener('click', function(e) {
-        e.preventDefault();
-        currentDisplayDate.setMonth(currentDisplayDate.getMonth() + 1);
-        renderDashboardCalendar(currentDisplayDate);
-    });
+        const today = new Date();
+        const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
 
-    // Initial Load
-    renderDashboardCalendar(currentDisplayDate);
+        const leaveMap = {};
+        (calendarData.leaves || []).forEach(l => { leaveMap[l.date] = l; });
+        const holidayMap = {};
+        (calendarData.holidays || []).forEach(h => { holidayMap[h.date] = h; });
+
+        let html = '';
+        for (let i = 0; i < startDay; i++) {
+            html += '<div class="calendar-day cal-empty"></div>';
+        }
+
+        for (let d = 1; d <= totalDays; d++) {
+            const dateStr = year + '-' + String(month+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+            const dayOfWeek = new Date(year, month, d).getDay();
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+
+            let cssClass = '';
+            let tooltipText = '';
+
+            if (dateStr === todayStr) {
+                cssClass = 'cal-today'; tooltipText = 'Today';
+            } else if (leaveMap[dateStr]) {
+                const leave = leaveMap[dateStr];
+                const st = (leave.status || '').toUpperCase();
+                if (st === 'APPROVED' || st === 'AUTO_APPROVED' || st === 'AUTO APPROVED') {
+                    cssClass = 'cal-approved'; tooltipText = (leave.type || 'Leave') + ' \u2014 Approved';
+                } else if (st === 'PENDING' || st === 'PENDING_APPROVAL') {
+                    cssClass = 'cal-pending'; tooltipText = (leave.type || 'Leave') + ' \u2014 Pending';
+                } else if (st === 'REJECTED') {
+                    cssClass = 'cal-rejected'; tooltipText = (leave.type || 'Leave') + ' \u2014 Rejected';
+                }
+            } else if (holidayMap[dateStr]) {
+                const hol = holidayMap[dateStr];
+                if ((hol.type || '').toLowerCase() === 'floater') {
+                    cssClass = 'cal-floater-holiday'; tooltipText = hol.name + ' (Floater)';
+                } else {
+                    cssClass = 'cal-fixed-holiday'; tooltipText = hol.name;
+                }
+            } else if (isWeekend) {
+                cssClass = 'cal-weekend';
+            }
+
+            const safeTooltip = tooltipText.replace(/'/g, "\\'");
+            const tooltipAttr = tooltipText ? ' onmouseenter="showCalTooltip(event, \'' + safeTooltip + '\')" onmouseleave="hideCalTooltip(event)"' : '';
+            html += '<div class="calendar-day ' + cssClass + '"' + tooltipAttr + '>' + d + '</div>';
+        }
+        grid.innerHTML = html;
+    }
+
+    window.showCalTooltip = function(e, text) {
+        const el = e.target; const tip = document.createElement('div');
+        tip.className = 'cal-tooltip'; tip.textContent = text;
+        el.style.position = 'relative'; el.appendChild(tip);
+    };
+    window.hideCalTooltip = function(e) {
+        const tip = e.target.querySelector('.cal-tooltip'); if (tip) tip.remove();
+    };
+    window.navigateMonth = function(dir) {
+        calendarMonth += dir;
+        if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+        if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+        fetchCalendarData(calendarMonth, calendarYear);
+    };
+
+    fetchCalendarData(calendarMonth, calendarYear);
     });
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -1487,4 +1450,3 @@
 </script>
 </body>
 </html>
-

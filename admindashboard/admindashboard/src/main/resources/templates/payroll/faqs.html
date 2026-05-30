@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>FAQs – WhiteCircle Group</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+    <link rel="stylesheet" th:href="@{/css/base/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/variables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base/typography.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/dashboard-layout.css}"/>
+    <link rel="stylesheet" th:href="@{/css/layouts/sidebar.css}"/>
+    
+    <style>
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .user-profile-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .user-avatar-icon {
+            width: 48px;
+            height: 48px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            overflow: hidden;
+        }
+        .user-avatar-icon i {
+            margin-top: 10px;
+        }
+        
+        .user-name-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .page-title-large {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 40px;
+        }
+        
+        /* FAQs List */
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            max-width: 900px;
+        }
+        
+        .faq-item {
+            background-color: #fff;
+            border: 1px solid #777; /* prominent border like Figma */
+            border-radius: 16px;
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .faq-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
+        }
+        
+        .faq-question {
+            font-size: 22px;
+            font-weight: 500;
+            color: #000;
+        }
+        
+        .faq-icon {
+            font-size: 24px;
+            color: #000;
+            font-weight: 300;
+        }
+        
+    </style>
+</head>
+<body>
+
+<div class="app-layout">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+    <main class="main-content">
+        
+        <div class="page-header">
+            <img th:src="@{/images/white-logo.png}" alt="Logo" class="header-logo">
+            
+            <a href="/payroll/my-profile" class="user-profile-link">
+                <div class="user-avatar-icon"><i class="fa-solid fa-user"></i></div>
+                <div class="user-name-text" th:text="${user != null ? user.fullName : 'Rohit Sharma'}">Rohit Sharma</div>
+            </a>
+        </div>
+        
+        <h1 class="page-title-large">FAQs</h1>
+
+        <div class="faq-list">
+            
+            <div class="faq-item" onclick="alert('FAQ details coming soon.')">
+                <div class="faq-question">When do I need to submit my Investment Proofs</div>
+                <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            </div>
+            
+            <div class="faq-item" onclick="alert('FAQ details coming soon.')">
+                <div class="faq-question">What is the cut off date for Investment Declaration</div>
+                <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            </div>
+            
+            <div class="faq-item" onclick="alert('FAQ details coming soon.')">
+                <div class="faq-question">My colleague did not receive login credentials yet</div>
+                <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            </div>
+            
+            <div class="faq-item" onclick="alert('FAQ details coming soon.')">
+                <div class="faq-question">My Profile details need to be updated/corrected</div>
+                <div class="faq-icon"><i class="fa-solid fa-plus"></i></div>
+            </div>
+            
+        </div>
+
+    </main>
+</div>
+<script th:src="@{/js/common/sidebar.js}"></script>
+</body>
+</html>

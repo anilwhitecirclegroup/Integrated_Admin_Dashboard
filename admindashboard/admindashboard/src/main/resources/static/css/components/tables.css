@@ -1,0 +1,65 @@
+/* ==========================================
+   Shared Data Table Styles
+   ========================================== */
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.data-table thead {
+    background: #F8F9FA;
+}
+
+.data-table th {
+    padding: 16px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+    border-bottom: 2px solid #EEEEEE;
+}
+
+.data-table td {
+    padding: 16px 20px;
+    font-size: 15px;
+    color: var(--text-dark);
+    border-bottom: 1px solid #F3F3F3;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+    background: #FAFBFC;
+}
+
+.data-table .row-total td {
+    font-weight: 700;
+    background: #F8F9FA;
+    border-top: 2px solid #EEEEEE;
+}
+
+/* Right-aligned numbers */
+.data-table .text-right {
+    text-align: right;
+}
+
+/* Table wrapper for scroll on mobile */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
